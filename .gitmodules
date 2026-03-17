@@ -1,0 +1,3 @@
+[submodule "cryptnox-sdk-cpp"]
+	path = cryptnox-sdk-cpp
+	url = https://github.com/embarquech/cryptnox-sdk-cpp.git
