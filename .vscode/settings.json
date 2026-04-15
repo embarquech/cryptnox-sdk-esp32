@@ -1,0 +1,17 @@
+{
+    "idf.espIdfPath": "C:\\Espressif\\frameworks\\esp-idf-v5.5",
+    "idf.toolsPath": "C:\\Espressif",
+    "idf.port": "COM3",
+    "idf.adapterTargetName": "esp32s3",
+    "idf.currentSetup": "C:/Espressif/frameworks/esp-idf-v5.5/",
+    "idf.customExtraVars": {
+        "OPENOCD_SCRIPTS": "C:\\Users\\danph\\.espressif\\tools\\openocd-esp32\\v0.10.0-esp32-20200709/openocd-esp32/share/openocd/scripts",
+        "IDF_CCACHE_ENABLE": "1",
+        "IDF_TARGET": "esp32s3"
+    },
+    "idf.openOcdConfigs": [
+        "board/esp32s3-builtin.cfg"
+    ],
+    "idf.portWin": "COM5",
+    "idf.flashType": "JTAG"
+}
