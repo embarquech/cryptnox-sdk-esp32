@@ -161,17 +161,17 @@ static void hw_reset(epaper_t *dev)
 
 static void set_ram_window(epaper_t *dev)
 {
-    // X: 0 to (WIDTH/8 - 1)
+    // X: source bytes 0 to (WIDTH/8 - 1) = 0..49
     send_cmd(dev, CMD_SET_RAMX_ADDR);
     send_data(dev, 0x00);
-    send_data(dev, (EPAPER_HEIGHT / 8) - 1);
+    send_data(dev, (EPAPER_WIDTH / 8) - 1);
 
-    // Y: 0 to (WIDTH - 1)
+    // Y: gates 0 to (HEIGHT - 1) = 0..299
     send_cmd(dev, CMD_SET_RAMY_ADDR);
     send_data(dev, 0x00);
     send_data(dev, 0x00);
-    send_data(dev, (EPAPER_WIDTH - 1) & 0xFF);
-    send_data(dev, (EPAPER_WIDTH - 1) >> 8);
+    send_data(dev, (EPAPER_HEIGHT - 1) & 0xFF);
+    send_data(dev, (EPAPER_HEIGHT - 1) >> 8);
 }
 
 static void set_ram_cursor(epaper_t *dev)
@@ -246,8 +246,8 @@ esp_err_t epaper_init(epaper_t *dev, const epaper_config_t *cfg)
     send_data(dev, 0x3B);
 
     send_cmd(dev, CMD_DRIVER_OUTPUT_CTRL);
-    send_data(dev, (EPAPER_WIDTH - 1) & 0xFF);
-    send_data(dev, (EPAPER_WIDTH - 1) >> 8);
+    send_data(dev, (EPAPER_HEIGHT - 1) & 0xFF);
+    send_data(dev, (EPAPER_HEIGHT - 1) >> 8);
     send_data(dev, 0x00);
 
     send_cmd(dev, CMD_DATA_ENTRY_MODE);
@@ -268,8 +268,19 @@ esp_err_t epaper_init(epaper_t *dev, const epaper_config_t *cfg)
     set_ram_cursor(dev);
     wait_busy(dev);
 
-    memset(dev->buf, 0xFF, EPAPER_BUF_SIZE); // white
-    ESP_LOGI(TAG, "E-paper initialized (SSD1680, %dx%d)", EPAPER_WIDTH, EPAPER_HEIGHT);
+    // Clear RED RAM first (0x00 = no red; RAM is retained across resets so must be explicit)
+    memset(dev->buf, 0x00, EPAPER_BUF_SIZE);
+    set_ram_cursor(dev);
+    send_cmd(dev, 0x26); // CMD_WRITE_RAM_RED
+    spi_send(dev, true, dev->buf, EPAPER_BUF_SIZE);
+
+    // Clear BW RAM to white
+    memset(dev->buf, 0xFF, EPAPER_BUF_SIZE);
+    set_ram_cursor(dev);
+    send_cmd(dev, CMD_WRITE_RAM_BW);
+    spi_send(dev, true, dev->buf, EPAPER_BUF_SIZE);
+
+    ESP_LOGI(TAG, "E-paper initialized (%dx%d)", EPAPER_WIDTH, EPAPER_HEIGHT);
     return ESP_OK;
 }
 
@@ -278,15 +289,12 @@ void epaper_clear(epaper_t *dev, uint8_t color)
     memset(dev->buf, color ? 0xFF : 0x00, EPAPER_BUF_SIZE);
 }
 
-// Draw one pixel into the framebuffer (x: 0..WIDTH-1, y: 0..HEIGHT-1)
 static void draw_pixel(epaper_t *dev, int x, int y)
 {
     if (x < 0 || x >= EPAPER_WIDTH || y < 0 || y >= EPAPER_HEIGHT) return;
-    // Landscape: WIDTH=296 horizontal, HEIGHT=128 vertical
-    // byte index: each row has WIDTH/8 bytes, pixel x is in column x, row y
-    int byte_idx = (y / 8) + (x * (EPAPER_HEIGHT / 8));
-    int bit_pos  = 7 - (y % 8);
-    dev->buf[byte_idx] &= ~(1 << bit_pos); // clear bit = black pixel
+    int byte_idx = y * (EPAPER_WIDTH / 8) + x / 8;
+    int bit_pos  = 7 - (x % 8);
+    dev->buf[byte_idx] &= ~(1 << bit_pos);
 }
 
 void epaper_draw_char(epaper_t *dev, int x, int y, char c)
@@ -313,10 +321,16 @@ void epaper_draw_string(epaper_t *dev, int x, int y, const char *str)
 
 void epaper_refresh(epaper_t *dev)
 {
+    // Write BW image
     set_ram_cursor(dev);
-
     send_cmd(dev, CMD_WRITE_RAM_BW);
     spi_send(dev, true, dev->buf, EPAPER_BUF_SIZE);
+
+    // Keep RED RAM clear (0x00 = no red) to prevent artifacts on 3-color displays
+    static const uint8_t red_clear[EPAPER_BUF_SIZE];  // zero-initialized by default
+    set_ram_cursor(dev);
+    send_cmd(dev, 0x26); // CMD_WRITE_RAM_RED
+    spi_send(dev, true, red_clear, EPAPER_BUF_SIZE);
 
     send_cmd(dev, CMD_DISPLAY_UPDATE_CTRL2);
     send_data(dev, 0xF7);

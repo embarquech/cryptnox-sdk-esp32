@@ -4,8 +4,8 @@
 #include "driver/gpio.h"
 #include "esp_err.h"
 
-#define EPAPER_WIDTH   296
-#define EPAPER_HEIGHT  128
+#define EPAPER_WIDTH   400
+#define EPAPER_HEIGHT  300
 #define EPAPER_BUF_SIZE (EPAPER_WIDTH * EPAPER_HEIGHT / 8)
 
 typedef struct {
