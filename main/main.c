@@ -5,37 +5,31 @@
 #include "driver/spi_master.h"
 #include "driver/gpio.h"
 #include "esp_log.h"
-#include "pn532.h"
 #include "epd.h"
 #include "logo.h"
 
 static const char *TAG = "main";
 
-// Shared SPI bus (MOSI=IO11, SCLK=IO12, MISO=IO13)
 #define SPI_MOSI  11
 #define SPI_MISO  13
 #define SPI_SCLK  12
 
-// PN532 (HAT)
-#define NFC_CS    10
-
-// E-Paper
 #define EPD_PIN_CS    38
 #define EPD_PIN_DC    40
 #define EPD_PIN_RST   41
 #define EPD_PIN_BUSY  42
 
-// 4.2" = 400x300
-#define EPD_WIDTH  400
-#define EPD_HEIGHT 300
+// WeAct 1.54" B/W (SSD1681): 200x200
+#define EPD_WIDTH  200
+#define EPD_HEIGHT 200
+#define EPD_STRIDE (EPD_WIDTH / 8)
 
-static uint8_t image_bw[EPD_WIDTH / 8 * EPD_HEIGHT];
+static uint8_t image_bw[EPD_STRIDE * EPD_HEIGHT];
 
-static void draw_logo(void)
+static void __attribute__((unused)) draw_logo(void)
 {
-    uint16_t buf_stride = EPD_WIDTH / 8;
     uint16_t off_x_px = (EPD_WIDTH - LOGO_H) / 2;
-    uint16_t off_y = (EPD_HEIGHT - LOGO_W) / 2;
+    uint16_t off_y    = (EPD_HEIGHT - LOGO_W) / 2;
 
     for (uint16_t sy = 0; sy < LOGO_H; sy++) {
         for (uint16_t sx = 0; sx < LOGO_W; sx++) {
@@ -46,7 +40,7 @@ static void draw_logo(void)
             uint8_t pixel = src_bit ? 0 : 1;
             uint16_t bx = off_x_px + dx;
             uint16_t by = off_y + dy;
-            uint32_t addr = by * buf_stride + bx / 8;
+            uint32_t addr = by * EPD_STRIDE + bx / 8;
             if (pixel)
                 image_bw[addr] |= (0x80 >> (bx % 8));
             else
@@ -55,24 +49,8 @@ static void draw_logo(void)
     }
 }
 
-static void epd_show_uid(uint32_t uid)
-{
-    char buf[32];
-    snprintf(buf, sizeof(buf), "UID: %08lX", (unsigned long)uid);
-
-    epd_paint_selectimage(image_bw);
-    epd_paint_clear(EPD_COLOR_BLACK);
-    draw_logo();
-    epd_paint_showString(10, 10, (uint8_t *)buf, EPD_FONT_SIZE24x12, EPD_COLOR_WHITE);
-
-    epd_init_fast();
-    epd_displayBW_fast(image_bw);
-    epd_enter_deepsleepmode(EPD_DEEPSLEEP_MODE1);
-}
-
 void app_main(void)
 {
-    // --- Init shared SPI bus ---
     spi_bus_config_t buscfg = {
         .mosi_io_num = SPI_MOSI,
         .miso_io_num = SPI_MISO,
@@ -83,7 +61,6 @@ void app_main(void)
     };
     ESP_ERROR_CHECK(spi_bus_initialize(SPI2_HOST, &buscfg, SPI_DMA_CH_AUTO));
 
-    // --- Init E-Paper ---
     epd_config_t epd_cfg = {
         .spi_host = SPI2_HOST,
         .pin_cs   = EPD_PIN_CS,
@@ -96,58 +73,52 @@ void app_main(void)
         ESP_LOGE(TAG, "EPD init failed");
         return;
     }
-    epd_set_panel(EPD420, EPD_WIDTH, EPD_HEIGHT);
+    epd_set_panel(EPD154, EPD_WIDTH, EPD_HEIGHT);
 
-    // Draw welcome screen with logo
-    epd_paint_newimage(image_bw, EPD_WIDTH, EPD_HEIGHT, EPD_ROTATE_0, EPD_COLOR_WHITE);
-    epd_paint_clear(EPD_COLOR_BLACK);
-    draw_logo();
+    // Init buffer to white background (ROTATE_270 = identity: paint x,y = memory x,y)
+    epd_paint_newimage(image_bw, EPD_WIDTH, EPD_HEIGHT, EPD_ROTATE_270, EPD_COLOR_WHITE);
+    epd_paint_clear(EPD_COLOR_WHITE);
 
     if (epd_init()) {
         ESP_LOGE(TAG, "EPD init failed (busy timeout?)");
-    } else {
-        epd_displayBW(image_bw);
-        ESP_LOGI(TAG, "EPD: logo displayed");
-        epd_enter_deepsleepmode(EPD_DEEPSLEEP_MODE1);
-    }
-
-    // --- Init PN532 ---
-    pn532_t nfc;
-    pn532_config_t nfc_cfg = {
-        .spi_host = SPI2_HOST,
-        .pin_cs   = NFC_CS,
-        .skip_bus_init = true,
-    };
-    if (pn532_init(&nfc, &nfc_cfg) != ESP_OK) {
-        ESP_LOGE(TAG, "PN532 init failed");
         return;
     }
+    epd_displayBW(image_bw);
+    ESP_LOGI(TAG, "EPD: white background set");
 
-    uint32_t version = pn532_get_firmware_version(&nfc);
-    if (!version) {
-        ESP_LOGE(TAG, "PN532 not found");
-        return;
-    }
-    ESP_LOGI(TAG, "PN5%02X firmware v%d.%d",
-             (version >> 24) & 0xFF,
-             (version >> 16) & 0xFF,
-             (version >> 8) & 0xFF);
+    epd_init_partial();
 
-    if (!pn532_sam_config(&nfc)) {
-        ESP_LOGE(TAG, "SAMConfig failed");
-        return;
-    }
+    // Clock box centered on 200×200: HH:MM:SS font 24×12 → 96 × 24
+    const uint16_t clk_x = (EPD_WIDTH - 96) / 2;   // 52
+    const uint16_t clk_y = (EPD_HEIGHT - 24) / 2;  // 88
+    const uint16_t clk_w = 96, clk_h = 24;
 
-    ESP_LOGI(TAG, "Ready — scan a tag");
+    uint32_t seconds = 0;
+    char time_buf[16];
 
-    uint32_t last_uid = 0;
     while (1) {
-        uint32_t uid = pn532_read_passive_target_id(&nfc, PN532_MIFARE_ISO14443A);
-        if (uid != 0 && uid != last_uid) {
-            ESP_LOGI(TAG, "Tag: 0x%08lX", (unsigned long)uid);
-            epd_show_uid(uid);
-            last_uid = uid;
+        uint32_t h = (seconds / 3600) % 24;
+        uint32_t m = (seconds / 60) % 60;
+        uint32_t s = seconds % 60;
+        snprintf(time_buf, sizeof(time_buf), "%02lu:%02lu:%02lu",
+                 (unsigned long)h, (unsigned long)m, (unsigned long)s);
+
+        // Erase the clock box to white, draw black digits
+        epd_paint_drawRectangle(clk_x, clk_y, clk_x + clk_w, clk_y + clk_h,
+                                EPD_COLOR_WHITE, 1);
+        epd_paint_showString(clk_x, clk_y, (uint8_t *)time_buf,
+                             EPD_FONT_SIZE24x12, EPD_COLOR_BLACK);
+
+        // Every 30s: fast refresh (cmd 0xC7) to clear ghosting with reduced flash
+        if (seconds > 0 && seconds % 30 == 0) {
+            epd_init_fast();
+            epd_displayBW_fast(image_bw);
+            epd_init_partial();
+        } else {
+            epd_displayBW_partial(image_bw);
         }
-        vTaskDelay(pdMS_TO_TICKS(500));
+
+        vTaskDelay(pdMS_TO_TICKS(1000));
+        seconds++;
     }
 }
