@@ -6,11 +6,12 @@
 
 static const char *TAG = "epaper";
 
-// SSD1680 commands
+// SSD1683 commands (GDEY042T81)
 #define CMD_DRIVER_OUTPUT_CTRL     0x01
 #define CMD_DATA_ENTRY_MODE        0x11
 #define CMD_SW_RESET               0x12
 #define CMD_TEMP_SENSOR_CTRL       0x18
+#define CMD_WRITE_TEMP             0x1A
 #define CMD_MASTER_ACTIVATION      0x20
 #define CMD_DISPLAY_UPDATE_CTRL1   0x21
 #define CMD_DISPLAY_UPDATE_CTRL2   0x22
@@ -20,8 +21,6 @@ static const char *TAG = "epaper";
 #define CMD_SET_RAMY_ADDR          0x45
 #define CMD_SET_RAMX_COUNTER       0x4E
 #define CMD_SET_RAMY_COUNTER       0x4F
-#define CMD_ANALOG_BLOCK_CTRL      0x74
-#define CMD_DIGITAL_BLOCK_CTRL     0x7E
 
 // 5x7 font for ASCII 32–126
 static const uint8_t font5x7[][5] = {
@@ -152,11 +151,11 @@ static void wait_busy(epaper_t *dev)
 static void hw_reset(epaper_t *dev)
 {
     gpio_set_level(dev->pin_rst, 1);
-    vTaskDelay(pdMS_TO_TICKS(10));
+    vTaskDelay(pdMS_TO_TICKS(5));
     gpio_set_level(dev->pin_rst, 0);
-    vTaskDelay(pdMS_TO_TICKS(10));
+    vTaskDelay(pdMS_TO_TICKS(5));
     gpio_set_level(dev->pin_rst, 1);
-    vTaskDelay(pdMS_TO_TICKS(10));
+    vTaskDelay(pdMS_TO_TICKS(5));
 }
 
 static void set_ram_window(epaper_t *dev)
@@ -221,7 +220,7 @@ esp_err_t epaper_init(epaper_t *dev, const epaper_config_t *cfg)
     }
 
     spi_device_interface_config_t devcfg = {
-        .clock_speed_hz = 4 * 1000 * 1000,
+        .clock_speed_hz = 20 * 1000 * 1000,
         .mode           = 0,
         .spics_io_num   = cfg->pin_cs,
         .queue_size     = 1,
@@ -232,55 +231,31 @@ esp_err_t epaper_init(epaper_t *dev, const epaper_config_t *cfg)
         return ret;
     }
 
-    // Hardware reset and SSD1680 init sequence
+    // Hardware reset + SSD1683 init sequence (matches GxEPD2 reference driver)
     hw_reset(dev);
-    wait_busy(dev);
+    vTaskDelay(pdMS_TO_TICKS(10));  // fixed delay — open-ended wait_busy here blocks for seconds
 
     send_cmd(dev, CMD_SW_RESET);
-    wait_busy(dev);
-
-    send_cmd(dev, CMD_ANALOG_BLOCK_CTRL);
-    send_data(dev, 0x54);
-
-    send_cmd(dev, CMD_DIGITAL_BLOCK_CTRL);
-    send_data(dev, 0x3B);
+    vTaskDelay(pdMS_TO_TICKS(10));  // 10ms per datasheet, not an open-ended wait
 
     send_cmd(dev, CMD_DRIVER_OUTPUT_CTRL);
     send_data(dev, (EPAPER_HEIGHT - 1) & 0xFF);
     send_data(dev, (EPAPER_HEIGHT - 1) >> 8);
     send_data(dev, 0x00);
 
-    send_cmd(dev, CMD_DATA_ENTRY_MODE);
-    send_data(dev, 0x03); // x-increment, y-increment
-
-    set_ram_window(dev);
-
     send_cmd(dev, CMD_BORDER_WAVEFORM_CTRL);
-    send_data(dev, 0x05);
+    send_data(dev, 0x01);
 
     send_cmd(dev, CMD_TEMP_SENSOR_CTRL);
-    send_data(dev, 0x80); // use internal sensor
-
-    send_cmd(dev, CMD_DISPLAY_UPDATE_CTRL1);
-    send_data(dev, 0x00);
     send_data(dev, 0x80);
 
-    set_ram_cursor(dev);
-    wait_busy(dev);
+    send_cmd(dev, CMD_DATA_ENTRY_MODE);
+    send_data(dev, 0x03);
 
-    // Clear RED RAM first (0x00 = no red; RAM is retained across resets so must be explicit)
-    memset(dev->buf, 0x00, EPAPER_BUF_SIZE);
+    set_ram_window(dev);
     set_ram_cursor(dev);
-    send_cmd(dev, 0x26); // CMD_WRITE_RAM_RED
-    spi_send(dev, true, dev->buf, EPAPER_BUF_SIZE);
 
-    // Clear BW RAM to white
-    memset(dev->buf, 0xFF, EPAPER_BUF_SIZE);
-    set_ram_cursor(dev);
-    send_cmd(dev, CMD_WRITE_RAM_BW);
-    spi_send(dev, true, dev->buf, EPAPER_BUF_SIZE);
-
-    ESP_LOGI(TAG, "E-paper initialized (%dx%d)", EPAPER_WIDTH, EPAPER_HEIGHT);
+    ESP_LOGI(TAG, "E-paper (SSD1683) initialized (%dx%d)", EPAPER_WIDTH, EPAPER_HEIGHT);
     return ESP_OK;
 }
 
@@ -321,23 +296,41 @@ void epaper_draw_string(epaper_t *dev, int x, int y, const char *str)
 
 void epaper_refresh(epaper_t *dev)
 {
-    // Write BW image
     set_ram_cursor(dev);
     send_cmd(dev, CMD_WRITE_RAM_BW);
     spi_send(dev, true, dev->buf, EPAPER_BUF_SIZE);
 
-    // Keep RED RAM clear (0x00 = no red) to prevent artifacts on 3-color displays
-    static const uint8_t red_clear[EPAPER_BUF_SIZE];  // zero-initialized by default
+    send_cmd(dev, CMD_DISPLAY_UPDATE_CTRL1);
+    send_data(dev, 0x40);
+    send_data(dev, 0x00);
+
+    send_cmd(dev, CMD_WRITE_TEMP);
+    send_data(dev, 0x6E);
+
+    send_cmd(dev, CMD_DISPLAY_UPDATE_CTRL2);
+    send_data(dev, 0xD7);
+
+    send_cmd(dev, CMD_MASTER_ACTIVATION);
+    wait_busy(dev);
+    ESP_LOGI(TAG, "Display refreshed");
+}
+
+void epaper_refresh_full(epaper_t *dev)
+{
     set_ram_cursor(dev);
-    send_cmd(dev, 0x26); // CMD_WRITE_RAM_RED
-    spi_send(dev, true, red_clear, EPAPER_BUF_SIZE);
+    send_cmd(dev, CMD_WRITE_RAM_BW);
+    spi_send(dev, true, dev->buf, EPAPER_BUF_SIZE);
+
+    send_cmd(dev, CMD_DISPLAY_UPDATE_CTRL1);
+    send_data(dev, 0x40);
+    send_data(dev, 0x00);
 
     send_cmd(dev, CMD_DISPLAY_UPDATE_CTRL2);
     send_data(dev, 0xF7);
 
     send_cmd(dev, CMD_MASTER_ACTIVATION);
     wait_busy(dev);
-    ESP_LOGI(TAG, "Display refreshed");
+    ESP_LOGI(TAG, "Display refreshed (full)");
 }
 
 void epaper_sleep(epaper_t *dev)

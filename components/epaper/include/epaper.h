@@ -32,4 +32,5 @@ void epaper_clear(epaper_t *dev, uint8_t color);
 void epaper_draw_char(epaper_t *dev, int x, int y, char c);
 void epaper_draw_string(epaper_t *dev, int x, int y, const char *str);
 void epaper_refresh(epaper_t *dev);
+void epaper_refresh_full(epaper_t *dev);
 void epaper_sleep(epaper_t *dev);
