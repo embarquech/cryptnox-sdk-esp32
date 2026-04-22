@@ -5,10 +5,13 @@
 #include "driver/spi_master.h"
 #include "driver/gpio.h"
 #include "esp_log.h"
-#include "pn532.h"
 #include "epd.h"
 #include "logo.h"
 #include "CryptnoxUtils.h"
+
+extern "C" {
+#include "pn532.h"
+}
 
 static const char *TAG = "main";
 
@@ -102,7 +105,7 @@ static void show_uid_on_epd(uint32_t uid) {
     epd_enter_deepsleepmode(EPD_DEEPSLEEP_MODE1);
 }
 
-void app_main(void) {
+extern "C" void app_main(void) {
     uint8_t rnd[16U];
     bool    rnd_ok = CryptnoxUtils_random(rnd, sizeof(rnd));
     if (rnd_ok) {
