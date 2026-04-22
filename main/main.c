@@ -8,6 +8,7 @@
 #include "pn532.h"
 #include "epd.h"
 #include "logo.h"
+#include "CryptnoxUtils.h"
 
 static const char *TAG = "main";
 
@@ -102,6 +103,17 @@ static void show_uid_on_epd(uint32_t uid) {
 }
 
 void app_main(void) {
+    uint8_t rnd[16U];
+    bool    rnd_ok = CryptnoxUtils_random(rnd, sizeof(rnd));
+    if (rnd_ok) {
+        ESP_LOGI(TAG, "TRNG: %02X%02X%02X%02X%02X%02X%02X%02X"
+                      "%02X%02X%02X%02X%02X%02X%02X%02X",
+                 rnd[0],  rnd[1],  rnd[2],  rnd[3],
+                 rnd[4],  rnd[5],  rnd[6],  rnd[7],
+                 rnd[8],  rnd[9],  rnd[10], rnd[11],
+                 rnd[12], rnd[13], rnd[14], rnd[15]);
+    }
+
     spi_bus_config_t buscfg = {
         .mosi_io_num     = SPI_MOSI,
         .miso_io_num     = SPI_MISO,
