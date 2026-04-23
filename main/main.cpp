@@ -52,7 +52,34 @@ static const uint32_t POLL_DELAY_MS      = 500U;
 /* UID string buffer length (8 hex chars + "UID: " prefix + NUL) */
 #define UID_STR_LEN  32U
 
+/* Cryptnox application AID: A0 00 00 10 00 01 12 */
+#define CRYPTNOX_AID_LEN    (7U)
+
+/* SELECT APDU: CLA=00 INS=A4 P1=04 P2=00 Lc=07 AID[7] */
+#define SELECT_APDU_HDR_LEN (5U)
+#define SELECT_APDU_LEN     (SELECT_APDU_HDR_LEN + CRYPTNOX_AID_LEN)
+
+/* Maximum expected response length for a SELECT command. */
+#define SELECT_RESP_MAX_LEN (26U)
+
+/* ISO 7816 status words for success. */
+#define SW1_SUCCESS         (0x90U)
+#define SW2_SUCCESS         (0x00U)
+
+/* Offsets of SW1/SW2 from the end of an APDU response. */
+#define SW1_END_OFFSET      (2U)
+#define SW2_END_OFFSET      (1U)
+
+/* Minimum response that can carry valid status words. */
+#define RESP_MIN_LEN_FOR_SW (2U)
+
 static uint8_t image_bw[EPD_WIDTH / BITS_PER_BYTE * EPD_HEIGHT];
+
+static const uint8_t s_selectApdu[SELECT_APDU_LEN] = {
+    0x00U, 0xA4U, 0x04U, 0x00U,
+    static_cast<uint8_t>(CRYPTNOX_AID_LEN),
+    0xA0U, 0x00U, 0x00U, 0x10U, 0x00U, 0x01U, 0x12U
+};
 
 static void draw_logo(void) {
     uint16_t buf_stride = (uint16_t)(EPD_WIDTH  / BITS_PER_BYTE);
@@ -188,9 +215,38 @@ extern "C" void app_main(void) {
                                            &nfc, PN532_MIFARE_ISO14443A);
                     bool     new_tag = ((uid != 0U) && (uid != last_uid));
                     if (new_tag) {
+                        uint8_t resp[SELECT_RESP_MAX_LEN] = { 0U };
+                        uint8_t resp_len = static_cast<uint8_t>(SELECT_RESP_MAX_LEN);
+                        bool    apdu_ok  = false;
+
                         ESP_LOGI(TAG, "Tag: 0x%08lX", (unsigned long)uid);
                         show_uid_on_epd(uid);
                         last_uid = uid;
+
+                        apdu_ok = pn532_send_apdu(
+                            &nfc, s_selectApdu,
+                            static_cast<uint8_t>(SELECT_APDU_LEN),
+                            resp, &resp_len);
+                        if (!apdu_ok) {
+                            ESP_LOGE(TAG, "APDU exchange failed");
+                        } else if (resp_len < static_cast<uint8_t>(RESP_MIN_LEN_FOR_SW)) {
+                            ESP_LOGE(TAG, "Response too short: %u byte(s)",
+                                     static_cast<unsigned int>(resp_len));
+                        } else {
+                            uint8_t sw1 = resp[static_cast<size_t>(resp_len)
+                                               - static_cast<size_t>(SW1_END_OFFSET)];
+                            uint8_t sw2 = resp[static_cast<size_t>(resp_len)
+                                               - static_cast<size_t>(SW2_END_OFFSET)];
+                            if ((sw1 == static_cast<uint8_t>(SW1_SUCCESS))
+                                && (sw2 == static_cast<uint8_t>(SW2_SUCCESS))) {
+                                ESP_LOGI(TAG, "SELECT OK — Cryptnox applet active (SW=9000)");
+                            } else {
+                                ESP_LOGW(TAG, "SELECT SW=%02X%02X",
+                                         static_cast<unsigned int>(sw1),
+                                         static_cast<unsigned int>(sw2));
+                            }
+                        }
+                        (void)pn532_release_target(&nfc);
                     }
                     vTaskDelay(pdMS_TO_TICKS(POLL_DELAY_MS));
                 }
