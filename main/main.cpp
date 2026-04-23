@@ -104,7 +104,7 @@ static void show_uid_on_epd(uint32_t uid) {
 
 extern "C" void app_main(void) {
     uint8_t rnd[RND_BUF_SIZE];
-    bool    rnd_ok = CryptnoxUtils_random(rnd, sizeof(rnd));
+    bool    rnd_ok = CryptnoxUtils::fill_secure_random(rnd, sizeof(rnd));
     if (rnd_ok) {
         ESP_LOGI(TAG, "TRNG: %02X%02X%02X%02X%02X%02X%02X%02X"
                       "%02X%02X%02X%02X%02X%02X%02X%02X",
