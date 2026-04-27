@@ -5,7 +5,8 @@
 static bool wifi_is_active(void) {
     wifi_mode_t mode = WIFI_MODE_NULL;
     esp_err_t err = esp_wifi_get_mode(&mode);
-    return (err == ESP_OK) && (mode != WIFI_MODE_NULL);
+    bool wifi_active = ((err == ESP_OK) && (mode != WIFI_MODE_NULL));
+    return wifi_active;
 }
 
 bool CryptnoxUtils::fill_secure_random(uint8_t* dest, size_t len) {
