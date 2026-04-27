@@ -15,6 +15,7 @@ typedef struct {
     int pin_miso;
     int pin_sclk;
     int pin_cs;
+    bool skip_bus_init;  // set true if SPI bus already initialized
 } pn532_config_t;
 
 typedef struct {
