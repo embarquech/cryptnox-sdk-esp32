@@ -160,17 +160,19 @@ esp_err_t pn532_init(pn532_t *dev, const pn532_config_t *config)
     gpio_set_level(config->pin_cs, 1);
     dev->pin_cs = config->pin_cs;
 
-    // Configure SPI bus
-    spi_bus_config_t buscfg = {
-        .mosi_io_num = config->pin_mosi,
-        .miso_io_num = config->pin_miso,
-        .sclk_io_num = config->pin_sclk,
-        .quadwp_io_num = -1,
-        .quadhd_io_num = -1,
-        .max_transfer_sz = 0,
-    };
-    esp_err_t ret = spi_bus_initialize(config->spi_host, &buscfg, SPI_DMA_CH_AUTO);
-    if (ret != ESP_OK) return ret;
+    // Configure SPI bus (skip if already initialized externally)
+    if (!config->skip_bus_init) {
+        spi_bus_config_t buscfg = {
+            .mosi_io_num = config->pin_mosi,
+            .miso_io_num = config->pin_miso,
+            .sclk_io_num = config->pin_sclk,
+            .quadwp_io_num = -1,
+            .quadhd_io_num = -1,
+            .max_transfer_sz = 0,
+        };
+        esp_err_t ret = spi_bus_initialize(config->spi_host, &buscfg, SPI_DMA_CH_AUTO);
+        if (ret != ESP_OK) return ret;
+    }
 
     // Add PN532 device: SPI mode 0, LSB first, 1 MHz
     spi_device_interface_config_t devcfg = {
@@ -180,7 +182,7 @@ esp_err_t pn532_init(pn532_t *dev, const pn532_config_t *config)
         .queue_size = 1,
         .flags = SPI_DEVICE_BIT_LSBFIRST,
     };
-    ret = spi_bus_add_device(config->spi_host, &devcfg, &dev->spi);
+    esp_err_t ret = spi_bus_add_device(config->spi_host, &devcfg, &dev->spi);
     if (ret != ESP_OK) return ret;
 
     // Wake up PN532: toggle CS and send wakeup bytes
