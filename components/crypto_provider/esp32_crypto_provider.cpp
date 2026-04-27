@@ -4,7 +4,7 @@
 #include "mbedtls/sha512.h"
 #include "mbedtls/aes.h"
 #include "esp_random.h"
-#include <string.h>
+#include <algorithm>
 
 /******************************************************************
  * 1. Module constants
@@ -36,10 +36,12 @@
  * 2. SHA methods
  ******************************************************************/
 
+/** @brief Compute SHA-256 over the input buffer, writing 32 bytes to out. */
 void ESP32CryptoProvider::sha256(const uint8_t* data, size_t len, uint8_t* out) {
     (void)mbedtls_sha256(data, len, out, MBEDTLS_SHA256_MODE);
 }
 
+/** @brief Compute SHA-512 over the input buffer, writing 64 bytes to out. */
 void ESP32CryptoProvider::sha512(const uint8_t* data, size_t len, uint8_t* out) {
     (void)mbedtls_sha512(data, len, out, MBEDTLS_SHA512_MODE);
 }
@@ -48,6 +50,7 @@ void ESP32CryptoProvider::sha512(const uint8_t* data, size_t len, uint8_t* out) 
  * 3. AES-CBC encrypt
  ******************************************************************/
 
+/** @brief AES-CBC encrypt with optional ISO/IEC 9797-1 Method 2 bit padding. */
 uint16_t ESP32CryptoProvider::aesCbcEncrypt(const uint8_t* in, uint16_t len, uint8_t* out,
                                              const uint8_t* key, uint8_t keyLen,
                                              uint8_t* iv, bool bitPadding) {
@@ -59,24 +62,24 @@ uint16_t ESP32CryptoProvider::aesCbcEncrypt(const uint8_t* in, uint16_t len, uin
 
         if (bitPadding) {
             /* Round up to next block boundary after appending the 0x80 marker. */
-            uint32_t paddedLen32 = ((static_cast<uint32_t>(len) + 1U + 15U) / 16U) * 16U;
+            uint32_t paddedLen32 = ((static_cast<uint32_t>(len) + 1U + (AES_BLOCK_SIZE_BYTES - 1U)) / AES_BLOCK_SIZE_BYTES) * AES_BLOCK_SIZE_BYTES;
             uint16_t paddedLen   = static_cast<uint16_t>(paddedLen32);
 
             if (paddedLen <= static_cast<uint16_t>(AES_PAD_BUF_SIZE)) {
-                memcpy(padBuf, in, static_cast<size_t>(len));
+                (void)std::copy_n(in, static_cast<size_t>(len), padBuf);
                 padBuf[static_cast<size_t>(len)] = BIT_PADDING_MARKER;
                 /* Remaining bytes already zero from initialisation. */
                 encLen = paddedLen;
             }
         } else {
             if (len <= static_cast<uint16_t>(AES_PAD_BUF_SIZE)) {
-                memcpy(padBuf, in, static_cast<size_t>(len));
+                (void)std::copy_n(in, static_cast<size_t>(len), padBuf);
                 encLen = len;
             }
         }
 
         if (encLen > 0U) {
-            mbedtls_aes_context ctx;
+            mbedtls_aes_context ctx = {};
             mbedtls_aes_init(&ctx);
 
             unsigned int keyBits = static_cast<unsigned int>(
@@ -105,6 +108,7 @@ uint16_t ESP32CryptoProvider::aesCbcEncrypt(const uint8_t* in, uint16_t len, uin
  * 4. AES-CBC decrypt
  ******************************************************************/
 
+/** @brief AES-CBC decrypt with optional ISO/IEC 9797-1 Method 2 bit-padding removal. */
 uint16_t ESP32CryptoProvider::aesCbcDecrypt(uint8_t* in, uint16_t len, uint8_t* out,
                                              const uint8_t* key, uint8_t keyLen,
                                              uint8_t* iv, bool bitPadding) {
@@ -114,7 +118,7 @@ uint16_t ESP32CryptoProvider::aesCbcDecrypt(uint8_t* in, uint16_t len, uint8_t* 
         bool blockAligned = ((static_cast<uint32_t>(len) % AES_BLOCK_SIZE_BYTES) == 0U);
 
         if (blockAligned) {
-            mbedtls_aes_context ctx;
+            mbedtls_aes_context ctx = {};
             mbedtls_aes_init(&ctx);
 
             unsigned int keyBits = static_cast<unsigned int>(
@@ -168,26 +172,31 @@ uint16_t ESP32CryptoProvider::aesCbcDecrypt(uint8_t* in, uint16_t len, uint8_t* 
  * 5. ECDH and key generation (delegated to uECC shim)
  ******************************************************************/
 
+/** @brief Compute ECDH shared secret: X-coordinate of privKey * pubKey point. */
 bool ESP32CryptoProvider::ecdh(const uint8_t* pubKey, const uint8_t* privKey,
                                 uint8_t* secret, const uECC_Curve_t* curve) {
-    int ret = uECC_shared_secret(pubKey, privKey, secret, curve);
-    return (ret == UECC_SUCCESS);
+    int  ret    = uECC_shared_secret(pubKey, privKey, secret, curve);
+    bool result = (ret == UECC_SUCCESS);
+    return result;
 }
 
+/** @brief Generate an ECC key pair via mbedTLS and the ESP32 hardware RNG. */
 bool ESP32CryptoProvider::makeKey(uint8_t* pubKey, uint8_t* privKey,
                                    const uECC_Curve_t* curve) {
-    int ret = uECC_make_key(pubKey, privKey, curve);
-    return (ret == UECC_SUCCESS);
+    int  ret    = uECC_make_key(pubKey, privKey, curve);
+    bool result = (ret == UECC_SUCCESS);
+    return result;
 }
 
 /******************************************************************
  * 6. Random bytes from ESP32 hardware True RNG
  ******************************************************************/
 
+/** @brief Fill dest with size cryptographically random bytes from the ESP32 hardware TRNG. */
 bool ESP32CryptoProvider::random(uint8_t* dest, unsigned size) {
     bool result = false;
 
-    if (dest != NULL) {
+    if ((dest != NULL) && (size > 0U)) {
         esp_fill_random(dest, static_cast<size_t>(size));
         result = true;
     }

@@ -1,4 +1,4 @@
 idf_component_register(
-    SRCS "test_esp32_crypto_provider.cpp"
+    SRCS
     REQUIRES unity crypto_provider
 )

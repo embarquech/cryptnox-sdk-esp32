@@ -2,7 +2,7 @@
 #include "mbedtls/ecp.h"
 #include "mbedtls/ecdsa.h"
 #include "esp_random.h"
-#include <string.h>
+#include <algorithm>
 
 /******************************************************************
  * 1. Module constants
@@ -11,12 +11,14 @@
 #define COORD_SIZE_BYTES       (32U)  /* bytes per coordinate (256-bit curve) */
 #define UNCOMPRESSED_PUB_SIZE  (65U)  /* 0x04 || X[32] || Y[32]              */
 #define UNCOMPRESSED_PREFIX    (0x04U)
+#define POINT_PREFIX_OFFSET    (0U)   /* byte offset of the 0x04 prefix      */
 #define COORD_X_OFFSET         (1U)   /* byte offset of X in 65-byte key     */
 #define RAW_SIG_R_OFFSET       (0U)   /* byte offset of r in 64-byte raw sig */
 #define RAW_SIG_S_OFFSET       (32U)  /* byte offset of s in 64-byte raw sig */
 #define UECC_SUCCESS           (1)
 #define UECC_FAILURE           (0)
 #define MBEDTLS_OK             (0)
+#define RNG_ERROR              (-1)  /* returned by RNG callback on invalid arguments */
 
 /******************************************************************
  * 2. uECC_Curve_t definition (opaque in uECC.h)
@@ -38,37 +40,47 @@ static const uECC_Curve_t s_secp256k1 = { MBEDTLS_ECP_DP_SECP256K1 };
  ******************************************************************/
 
 static int esp32_mbedtls_rng(void *ctx, unsigned char *output, size_t len) {
+    int result = RNG_ERROR;
     (void)ctx;
-    esp_fill_random(output, len);
-    return MBEDTLS_OK;
+
+    if ((output != NULL) && (len > 0U)) {
+        esp_fill_random(output, len);
+        result = MBEDTLS_OK;
+    }
+
+    return result;
 }
 
 /******************************************************************
  * 5. Public API
  ******************************************************************/
 
+/** @brief Return the static secp256r1 curve descriptor. */
 const uECC_Curve_t* uECC_secp256r1(void) {
     return &s_secp256r1;
 }
 
+/** @brief Return the static secp256k1 curve descriptor. */
 const uECC_Curve_t* uECC_secp256k1(void) {
     return &s_secp256k1;
 }
 
+/** @brief No-op: ESP32 hardware RNG is used internally; no external callback needed. */
 void uECC_set_rng(uECC_RNG_Function rng_function) {
     /* ESP32 hardware RNG is used directly through mbedTLS — no external
      * callback is needed.  Accept the pointer to satisfy the API contract. */
     (void)rng_function;
 }
 
+/** @brief Generate an ECC key pair using mbedTLS and the ESP32 hardware RNG. */
 int uECC_make_key(uint8_t *public_key, uint8_t *private_key,
                   const uECC_Curve_t *curve) {
     int result = UECC_FAILURE;
 
     if ((public_key != NULL) && (private_key != NULL) && (curve != NULL)) {
-        mbedtls_ecp_group grp;
-        mbedtls_mpi      d;
-        mbedtls_ecp_point Q;
+        mbedtls_ecp_group grp = {};
+        mbedtls_mpi       d   = {};
+        mbedtls_ecp_point Q   = {};
 
         mbedtls_ecp_group_init(&grp);
         mbedtls_mpi_init(&d);
@@ -94,9 +106,9 @@ int uECC_make_key(uint8_t *public_key, uint8_t *private_key,
                                                   &olen,
                                                   pub65, sizeof(pub65));
             if (ret == MBEDTLS_OK) {
-                memcpy(public_key,
-                       pub65 + COORD_X_OFFSET,
-                       static_cast<size_t>(COORD_SIZE_BYTES * 2U));
+                (void)std::copy_n(pub65 + COORD_X_OFFSET,
+                                  static_cast<size_t>(COORD_SIZE_BYTES * 2U),
+                                  public_key);
             }
         }
 
@@ -112,16 +124,17 @@ int uECC_make_key(uint8_t *public_key, uint8_t *private_key,
     return result;
 }
 
+/** @brief Compute ECDH shared secret (X-coordinate of privKey * pubKey). */
 int uECC_shared_secret(const uint8_t *public_key, const uint8_t *private_key,
                        uint8_t *secret, const uECC_Curve_t *curve) {
     int result = UECC_FAILURE;
 
     if ((public_key != NULL) && (private_key != NULL) &&
         (secret    != NULL) && (curve       != NULL)) {
-        mbedtls_ecp_group grp;
-        mbedtls_ecp_point remote_Q;
-        mbedtls_mpi       local_d;
-        mbedtls_ecp_point shared_R;
+        mbedtls_ecp_group grp      = {};
+        mbedtls_ecp_point remote_Q = {};
+        mbedtls_mpi       local_d  = {};
+        mbedtls_ecp_point shared_R = {};
 
         mbedtls_ecp_group_init(&grp);
         mbedtls_ecp_point_init(&remote_Q);
@@ -132,9 +145,10 @@ int uECC_shared_secret(const uint8_t *public_key, const uint8_t *private_key,
 
         if (ret == MBEDTLS_OK) {
             uint8_t pub65[UNCOMPRESSED_PUB_SIZE] = { 0U };
-            pub65[0U] = UNCOMPRESSED_PREFIX;
-            memcpy(pub65 + COORD_X_OFFSET, public_key,
-                   static_cast<size_t>(COORD_SIZE_BYTES * 2U));
+            pub65[POINT_PREFIX_OFFSET] = UNCOMPRESSED_PREFIX;
+            (void)std::copy_n(public_key,
+                              static_cast<size_t>(COORD_SIZE_BYTES * 2U),
+                              pub65 + COORD_X_OFFSET);
             ret = mbedtls_ecp_point_read_binary(&grp, &remote_Q,
                                                  pub65, sizeof(pub65));
         }
@@ -157,8 +171,9 @@ int uECC_shared_secret(const uint8_t *public_key, const uint8_t *private_key,
                                                   &olen,
                                                   shared65, sizeof(shared65));
             if (ret == MBEDTLS_OK) {
-                memcpy(secret, shared65 + COORD_X_OFFSET,
-                       static_cast<size_t>(COORD_SIZE_BYTES));
+                (void)std::copy_n(shared65 + COORD_X_OFFSET,
+                                  static_cast<size_t>(COORD_SIZE_BYTES),
+                                  secret);
             }
         }
 
@@ -175,16 +190,17 @@ int uECC_shared_secret(const uint8_t *public_key, const uint8_t *private_key,
     return result;
 }
 
+/** @brief Verify an ECDSA signature (raw 64-byte r||s) against a hash. */
 int uECC_verify(const uint8_t *public_key, const uint8_t *hash, unsigned hash_size,
                 const uint8_t *signature, const uECC_Curve_t *curve) {
     int result = UECC_FAILURE;
 
     if ((public_key != NULL) && (hash != NULL) &&
         (signature  != NULL) && (curve != NULL)) {
-        mbedtls_ecp_group grp;
-        mbedtls_ecp_point Q;
-        mbedtls_mpi       r;
-        mbedtls_mpi       s;
+        mbedtls_ecp_group grp = {};
+        mbedtls_ecp_point Q   = {};
+        mbedtls_mpi       r   = {};
+        mbedtls_mpi       s   = {};
 
         mbedtls_ecp_group_init(&grp);
         mbedtls_ecp_point_init(&Q);
@@ -195,9 +211,10 @@ int uECC_verify(const uint8_t *public_key, const uint8_t *hash, unsigned hash_si
 
         if (ret == MBEDTLS_OK) {
             uint8_t pub65[UNCOMPRESSED_PUB_SIZE] = { 0U };
-            pub65[0U] = UNCOMPRESSED_PREFIX;
-            memcpy(pub65 + COORD_X_OFFSET, public_key,
-                   static_cast<size_t>(COORD_SIZE_BYTES * 2U));
+            pub65[POINT_PREFIX_OFFSET] = UNCOMPRESSED_PREFIX;
+            (void)std::copy_n(public_key,
+                              static_cast<size_t>(COORD_SIZE_BYTES * 2U),
+                              pub65 + COORD_X_OFFSET);
             ret = mbedtls_ecp_point_read_binary(&grp, &Q,
                                                  pub65, sizeof(pub65));
         }
