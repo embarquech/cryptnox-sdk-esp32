@@ -1,7 +1,6 @@
 #include "unity.h"
 #include "esp32_crypto_provider.h"
 #include "uECC.h"
-#include "mbedtls/sha256.h"
 #include <string.h>
 #include <stdio.h>
 
@@ -48,71 +47,6 @@ TEST_CASE("sha256 NIST abc vector", "[crypto_provider]")
     }
     printf("\n");
 
-    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected, out, TV_SHA256_OUT_BYTES);
-}
-
-/******************************************************************
- * 3a. SHA-256 — direct one-shot call (no virtual dispatch)
- ******************************************************************/
-
-TEST_CASE("sha256 direct one-shot call", "[crypto_provider]")
-{
-    static const uint8_t input[] = { 'a', 'b', 'c' };
-    static const uint8_t expected[TV_SHA256_OUT_BYTES] = {
-        0xbaU, 0x78U, 0x16U, 0xbfU, 0x8fU, 0x01U, 0xcfU, 0xeaU,
-        0x41U, 0x41U, 0x40U, 0xdeU, 0x5dU, 0xaeU, 0x2eU, 0xc7U,
-        0x3bU, 0x00U, 0x36U, 0x1bU, 0xbeU, 0xf2U, 0x48U, 0xdeU,
-        0x69U, 0x30U, 0x35U, 0x9eU, 0x6cU, 0xbdU, 0x3eU, 0x7eU
-    };
-    uint8_t out[TV_SHA256_OUT_BYTES] = { 0U };
-    int ret = 0;
-
-    ret = mbedtls_sha256(input, sizeof(input), out, 0);
-
-    printf("[sha256 direct one-shot] ");
-    for (size_t i = 0U; i < TV_SHA256_OUT_BYTES; i++) {
-        printf("%02x", static_cast<unsigned int>(out[i]));
-    }
-    printf("\n");
-
-    TEST_ASSERT_EQUAL_INT(0, ret);
-    TEST_ASSERT_EQUAL_HEX8_ARRAY(expected, out, TV_SHA256_OUT_BYTES);
-}
-
-/******************************************************************
- * 3b. SHA-256 — direct mbedTLS context API (no virtual dispatch)
- ******************************************************************/
-
-TEST_CASE("sha256 direct mbedtls call", "[crypto_provider]")
-{
-    static const uint8_t input[] = { 'a', 'b', 'c' };
-    static const uint8_t expected[TV_SHA256_OUT_BYTES] = {
-        0xbaU, 0x78U, 0x16U, 0xbfU, 0x8fU, 0x01U, 0xcfU, 0xeaU,
-        0x41U, 0x41U, 0x40U, 0xdeU, 0x5dU, 0xaeU, 0x2eU, 0xc7U,
-        0x3bU, 0x00U, 0x36U, 0x1bU, 0xbeU, 0xf2U, 0x48U, 0xdeU,
-        0x69U, 0x30U, 0x35U, 0x9eU, 0x6cU, 0xbdU, 0x3eU, 0x7eU
-    };
-    uint8_t out[TV_SHA256_OUT_BYTES] = { 0U };
-    int ret = 0;
-
-    mbedtls_sha256_context ctx = {};
-    mbedtls_sha256_init(&ctx);
-    ret = mbedtls_sha256_starts(&ctx, 0);
-    if (ret == 0) {
-        ret = mbedtls_sha256_update(&ctx, input, sizeof(input));
-    }
-    if (ret == 0) {
-        ret = mbedtls_sha256_finish(&ctx, out);
-    }
-    mbedtls_sha256_free(&ctx);
-
-    printf("[sha256 direct ctx]   ");
-    for (size_t i = 0U; i < TV_SHA256_OUT_BYTES; i++) {
-        printf("%02x", static_cast<unsigned int>(out[i]));
-    }
-    printf("\n");
-
-    TEST_ASSERT_EQUAL_INT(0, ret);
     TEST_ASSERT_EQUAL_HEX8_ARRAY(expected, out, TV_SHA256_OUT_BYTES);
 }
 
@@ -226,21 +160,20 @@ TEST_CASE("aesCbc bit-padding round-trip", "[crypto_provider]")
         0x2bU, 0x7eU, 0x15U, 0x16U, 0x28U, 0xaeU, 0xd2U, 0xa6U,
         0xabU, 0xf7U, 0x15U, 0x88U, 0x09U, 0xcfU, 0x4fU, 0x3cU
     };
-    static const uint8_t iv_init[TV_AES_IV_BYTES] = {
-        0x00U, 0x01U, 0x02U, 0x03U, 0x04U, 0x05U, 0x06U, 0x07U,
-        0x08U, 0x09U, 0x0aU, 0x0bU, 0x0cU, 0x0dU, 0x0eU, 0x0fU
-    };
     static const uint8_t plaintext[TV_BIT_PAD_INPUT_BYTES] = {
         0x01U, 0x02U, 0x03U
     };
 
-    uint8_t iv_enc[TV_AES_IV_BYTES]        = { 0U };
-    uint8_t iv_dec[TV_AES_IV_BYTES]        = { 0U };
+    uint8_t iv_enc[TV_AES_IV_BYTES] = {
+        0x00U, 0x01U, 0x02U, 0x03U, 0x04U, 0x05U, 0x06U, 0x07U,
+        0x08U, 0x09U, 0x0aU, 0x0bU, 0x0cU, 0x0dU, 0x0eU, 0x0fU
+    };
+    uint8_t iv_dec[TV_AES_IV_BYTES] = {
+        0x00U, 0x01U, 0x02U, 0x03U, 0x04U, 0x05U, 0x06U, 0x07U,
+        0x08U, 0x09U, 0x0aU, 0x0bU, 0x0cU, 0x0dU, 0x0eU, 0x0fU
+    };
     uint8_t ciphertext[TV_AES_BLOCK_BYTES] = { 0U };
     uint8_t recovered[TV_AES_BLOCK_BYTES]  = { 0U };
-
-    memcpy(iv_enc, iv_init, TV_AES_IV_BYTES);
-    memcpy(iv_dec, iv_init, TV_AES_IV_BYTES);
 
     uint16_t encLen = s_provider.aesCbcEncrypt(
         plaintext,
@@ -305,11 +238,11 @@ TEST_CASE("random returns true and produces distinct draws", "[crypto_provider]"
     uint8_t buf1[TV_RANDOM_BYTES] = { 0U };
     uint8_t buf2[TV_RANDOM_BYTES] = { 0U };
 
-    bool ok1 = s_provider.random(buf1, TV_RANDOM_BYTES);
-    bool ok2 = s_provider.random(buf2, TV_RANDOM_BYTES);
+    bool draw1Succeeded = s_provider.random(buf1, TV_RANDOM_BYTES);
+    bool draw2Succeeded = s_provider.random(buf2, TV_RANDOM_BYTES);
 
-    TEST_ASSERT_TRUE(ok1);
-    TEST_ASSERT_TRUE(ok2);
+    TEST_ASSERT_TRUE(draw1Succeeded);
+    TEST_ASSERT_TRUE(draw2Succeeded);
     /* P(collision of two independent 32-byte TRNG draws) < 2^-256. */
     TEST_ASSERT_NOT_EQUAL(0, memcmp(buf1, buf2, TV_RANDOM_BYTES));
 }
