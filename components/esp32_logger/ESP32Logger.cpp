@@ -30,6 +30,7 @@ static const char HEX_CHARS[]      = "0123456789ABCDEF";
  * 3. Static helpers
  ******************************************************************/
 
+/** Clamp base to the valid [NUM_BASE_MIN, NUM_BASE_MAX] range; returns DEC on out-of-range input. */
 static uint32_t clamp_base(int base)
 {
     uint32_t result = static_cast<uint32_t>(DEC);
@@ -41,15 +42,17 @@ static uint32_t clamp_base(int base)
     return result;
 }
 
+/** Transmit a NUL-terminated string to stdout via fwrite. */
 static void uart_write_str(const char *str)
 {
     size_t len = strlen(str);
     (void)fwrite(str, ELEMENT_SIZE, len, stdout);
 }
 
+/** Convert value to ASCII digits in the given base and write the result to stdout. */
 static void write_uint_to_uart(uint32_t value, uint32_t base)
 {
-    char     buf[NUM_BUF_SIZE] = {};
+    char     buf[NUM_BUF_SIZE] = { 0 };
     uint32_t pos               = NUM_BUF_SIZE - 1U;
     uint32_t v                 = value;
 
@@ -75,7 +78,7 @@ static void write_uint_to_uart(uint32_t value, uint32_t base)
 
 bool ESP32Logger::begin(unsigned long baudRate)
 {
-    uart_config_t cfg = {};
+    uart_config_t cfg = { 0 };
     cfg.baud_rate           = static_cast<int>(baudRate);
     cfg.data_bits           = UART_DATA_8_BITS;
     cfg.parity              = UART_PARITY_DISABLE;
