@@ -2,6 +2,7 @@
 #include "mbedtls/ecp.h"
 #include "mbedtls/ecdsa.h"
 #include "esp_random.h"
+#include "esp_wifi.h"
 #include <algorithm>
 
 /******************************************************************
@@ -44,9 +45,13 @@ static int esp32_mbedtls_rng(void *ctx, unsigned char *output, size_t len) {
     (void)ctx;
 
     if ((output != NULL) && (len > 0U)) {
-        /* esp_fill_random is void; it always succeeds on ESP32 (hardware TRNG is always available). */
-        esp_fill_random(output, len);
-        result = MBEDTLS_OK;
+        wifi_mode_t mode     = WIFI_MODE_NULL;
+        esp_err_t   wifi_err = esp_wifi_get_mode(&mode);
+        bool        rf_active = ((wifi_err == ESP_OK) && (mode != WIFI_MODE_NULL));
+        if (rf_active) {
+            esp_fill_random(output, len);
+            result = MBEDTLS_OK;
+        }
     }
 
     return result;
