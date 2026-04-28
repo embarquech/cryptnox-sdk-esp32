@@ -238,11 +238,11 @@ TEST_CASE("random returns true and produces distinct draws", "[crypto_provider]"
     uint8_t buf1[TV_RANDOM_BYTES] = { 0U };
     uint8_t buf2[TV_RANDOM_BYTES] = { 0U };
 
-    bool draw1Succeeded = s_provider.random(buf1, TV_RANDOM_BYTES);
-    bool draw2Succeeded = s_provider.random(buf2, TV_RANDOM_BYTES);
+    bool randomGeneration1Succeeded = s_provider.random(buf1, TV_RANDOM_BYTES);
+    bool randomGeneration2Succeeded = s_provider.random(buf2, TV_RANDOM_BYTES);
 
-    TEST_ASSERT_TRUE(draw1Succeeded);
-    TEST_ASSERT_TRUE(draw2Succeeded);
+    TEST_ASSERT_TRUE(randomGeneration1Succeeded);
+    TEST_ASSERT_TRUE(randomGeneration2Succeeded);
     /* P(collision of two independent 32-byte TRNG draws) < 2^-256. */
     TEST_ASSERT_NOT_EQUAL(0, memcmp(buf1, buf2, TV_RANDOM_BYTES));
 }
