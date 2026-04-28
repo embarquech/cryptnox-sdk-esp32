@@ -1,10 +1,10 @@
 #include "esp32_crypto_provider.h"
+#include "CW_Utils.h"
 #include "uECC.h"
 #include "mbedtls/sha256.h"
 #include "mbedtls/sha512.h"
 #include "mbedtls/aes.h"
 #include "esp_random.h"
-#include <algorithm>
 
 /******************************************************************
  * 1. Module constants
@@ -66,20 +66,20 @@ uint16_t ESP32CryptoProvider::aesCbcEncrypt(const uint8_t* in, uint16_t len, uin
             uint16_t paddedLen   = static_cast<uint16_t>(paddedLen32);
 
             if (paddedLen <= static_cast<uint16_t>(AES_PAD_BUF_SIZE)) {
-                (void)std::copy_n(in, static_cast<size_t>(len), padBuf);
+                (void)CW_Utils::safe_memcpy(padBuf, sizeof(padBuf), in, static_cast<size_t>(len));
                 padBuf[static_cast<size_t>(len)] = BIT_PADDING_MARKER;
                 /* Remaining bytes already zero from initialisation. */
                 encLen = paddedLen;
             }
         } else {
             if (len <= static_cast<uint16_t>(AES_PAD_BUF_SIZE)) {
-                (void)std::copy_n(in, static_cast<size_t>(len), padBuf);
+                (void)CW_Utils::safe_memcpy(padBuf, sizeof(padBuf), in, static_cast<size_t>(len));
                 encLen = len;
             }
         }
 
         if (encLen > 0U) {
-            mbedtls_aes_context ctx = {};
+            mbedtls_aes_context ctx = { 0 };
             mbedtls_aes_init(&ctx);
 
             unsigned int keyBits = static_cast<unsigned int>(
@@ -118,7 +118,7 @@ uint16_t ESP32CryptoProvider::aesCbcDecrypt(uint8_t* in, uint16_t len, uint8_t* 
         bool blockAligned = ((static_cast<uint32_t>(len) % AES_BLOCK_SIZE_BYTES) == 0U);
 
         if (blockAligned) {
-            mbedtls_aes_context ctx = {};
+            mbedtls_aes_context ctx = { 0 };
             mbedtls_aes_init(&ctx);
 
             unsigned int keyBits = static_cast<unsigned int>(
@@ -175,17 +175,15 @@ uint16_t ESP32CryptoProvider::aesCbcDecrypt(uint8_t* in, uint16_t len, uint8_t* 
 /** @brief Compute ECDH shared secret: X-coordinate of privKey * pubKey point. */
 bool ESP32CryptoProvider::ecdh(const uint8_t* pubKey, const uint8_t* privKey,
                                 uint8_t* secret, const uECC_Curve_t* curve) {
-    int  ret    = uECC_shared_secret(pubKey, privKey, secret, curve);
-    bool result = (ret == UECC_SUCCESS);
-    return result;
+    int ret = uECC_shared_secret(pubKey, privKey, secret, curve);
+    return (ret == UECC_SUCCESS);
 }
 
 /** @brief Generate an ECC key pair via mbedTLS and the ESP32 hardware RNG. */
 bool ESP32CryptoProvider::makeKey(uint8_t* pubKey, uint8_t* privKey,
                                    const uECC_Curve_t* curve) {
-    int  ret    = uECC_make_key(pubKey, privKey, curve);
-    bool result = (ret == UECC_SUCCESS);
-    return result;
+    int ret = uECC_make_key(pubKey, privKey, curve);
+    return (ret == UECC_SUCCESS);
 }
 
 /******************************************************************
@@ -197,6 +195,7 @@ bool ESP32CryptoProvider::random(uint8_t* dest, unsigned size) {
     bool result = false;
 
     if ((dest != NULL) && (size > 0U)) {
+        /* esp_fill_random is void; it always succeeds on ESP32 (hardware TRNG is always available). */
         esp_fill_random(dest, static_cast<size_t>(size));
         result = true;
     }
