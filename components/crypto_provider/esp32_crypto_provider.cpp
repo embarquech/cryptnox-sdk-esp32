@@ -5,7 +5,6 @@
 #include "mbedtls/sha512.h"
 #include "mbedtls/aes.h"
 #include "esp_random.h"
-#include "esp_wifi.h"
 
 /******************************************************************
  * 1. Module constants
@@ -196,13 +195,9 @@ bool ESP32CryptoProvider::random(uint8_t* dest, unsigned size) {
     bool result = false;
 
     if ((dest != NULL) && (size > 0U)) {
-        wifi_mode_t mode      = WIFI_MODE_NULL;
-        esp_err_t   wifi_err  = esp_wifi_get_mode(&mode);
-        bool        rf_active = ((wifi_err == ESP_OK) && (mode != WIFI_MODE_NULL));
-        if (rf_active) {
-            esp_fill_random(dest, static_cast<size_t>(size));
-            result = true;
-        }
+        /* Caller must ensure WiFi or Bluetooth is active to properly seed the hardware TRNG. */
+        esp_fill_random(dest, static_cast<size_t>(size));
+        result = true;
     }
 
     return result;

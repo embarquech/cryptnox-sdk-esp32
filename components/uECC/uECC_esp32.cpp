@@ -2,7 +2,6 @@
 #include "mbedtls/ecp.h"
 #include "mbedtls/ecdsa.h"
 #include "esp_random.h"
-#include "esp_wifi.h"
 #include <algorithm>
 
 /******************************************************************
@@ -45,13 +44,9 @@ static int esp32_mbedtls_rng(void *ctx, unsigned char *output, size_t len) {
     (void)ctx;
 
     if ((output != NULL) && (len > 0U)) {
-        wifi_mode_t mode     = WIFI_MODE_NULL;
-        esp_err_t   wifi_err = esp_wifi_get_mode(&mode);
-        bool        rf_active = ((wifi_err == ESP_OK) && (mode != WIFI_MODE_NULL));
-        if (rf_active) {
-            esp_fill_random(output, len);
-            result = MBEDTLS_OK;
-        }
+        /* Caller must ensure WiFi or Bluetooth is active to properly seed the hardware TRNG. */
+        esp_fill_random(output, len);
+        result = MBEDTLS_OK;
     }
 
     return result;
@@ -84,9 +79,9 @@ int uECC_make_key(uint8_t *public_key, uint8_t *private_key,
     int result = UECC_FAILURE;
 
     if ((public_key != NULL) && (private_key != NULL) && (curve != NULL)) {
-        mbedtls_ecp_group grp = { 0 };
-        mbedtls_mpi       d   = { 0 };
-        mbedtls_ecp_point Q   = { 0 };
+        mbedtls_ecp_group grp = {};
+        mbedtls_mpi       d   = {};
+        mbedtls_ecp_point Q   = {};
 
         mbedtls_ecp_group_init(&grp);
         mbedtls_mpi_init(&d);
@@ -137,10 +132,10 @@ int uECC_shared_secret(const uint8_t *public_key, const uint8_t *private_key,
 
     if ((public_key != NULL) && (private_key != NULL) &&
         (secret    != NULL) && (curve       != NULL)) {
-        mbedtls_ecp_group grp      = { 0 };
-        mbedtls_ecp_point remote_Q = { 0 };
-        mbedtls_mpi       local_d  = { 0 };
-        mbedtls_ecp_point shared_R = { 0 };
+        mbedtls_ecp_group grp      = {};
+        mbedtls_ecp_point remote_Q = {};
+        mbedtls_mpi       local_d  = {};
+        mbedtls_ecp_point shared_R = {};
 
         mbedtls_ecp_group_init(&grp);
         mbedtls_ecp_point_init(&remote_Q);
@@ -203,10 +198,10 @@ int uECC_verify(const uint8_t *public_key, const uint8_t *hash, unsigned hash_si
 
     if ((public_key != NULL) && (hash != NULL) &&
         (signature  != NULL) && (curve != NULL)) {
-        mbedtls_ecp_group grp = { 0 };
-        mbedtls_ecp_point Q   = { 0 };
-        mbedtls_mpi       r   = { 0 };
-        mbedtls_mpi       s   = { 0 };
+        mbedtls_ecp_group grp = {};
+        mbedtls_ecp_point Q   = {};
+        mbedtls_mpi       r   = {};
+        mbedtls_mpi       s   = {};
 
         mbedtls_ecp_group_init(&grp);
         mbedtls_ecp_point_init(&Q);
