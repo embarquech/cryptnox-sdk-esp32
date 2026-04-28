@@ -27,8 +27,7 @@ static const char *TAG = "epd_hello_world";
 
 static uint8_t image_buf[EPD_DISP_WIDTH / BITS_PER_BYTE * EPD_DISP_HEIGHT];
 
-void app_main(void)
-{
+void app_main(void) {
     epd_config_t cfg = {
         .spi_host      = SPI3_HOST,
         .pin_mosi      = EPD_PIN_MOSI,
@@ -40,11 +39,9 @@ void app_main(void)
         .skip_bus_init = false,
     };
 
-    esp_err_t ret   = epd_io_init(&cfg);
-    bool      io_ok = (ret == ESP_OK);
+    esp_err_t ret = epd_io_init(&cfg);
 
-    if (io_ok)
-    {
+    if (ret == ESP_OK) {
         epd_set_panel((uint8_t)EPD420,
                       (uint16_t)EPD_DISP_WIDTH, (uint16_t)EPD_DISP_HEIGHT);
         epd_paint_newimage(image_buf,
@@ -55,20 +52,14 @@ void app_main(void)
                              (uint8_t *)"Hello World",
                              (uint16_t)EPD_FONT_SIZE24x12, (uint16_t)EPD_COLOR_BLACK);
 
-        bool panel_ok = (epd_init() == 0U);
-        if (panel_ok)
-        {
+        if (epd_init() == 0U) {
             epd_displayBW(image_buf);
             epd_enter_deepsleepmode(EPD_DEEPSLEEP_MODE1);
             ESP_LOGI(TAG, "Hello World displayed on e-paper");
-        }
-        else
-        {
+        } else {
             ESP_LOGE(TAG, "EPD panel init failed (busy timeout)");
         }
-    }
-    else
-    {
+    } else {
         ESP_LOGE(TAG, "EPD SPI init failed: %s", esp_err_to_name(ret));
     }
 }

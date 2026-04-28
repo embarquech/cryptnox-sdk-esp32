@@ -53,16 +53,13 @@ static const char *TAG = "main";
 
 static uint8_t image_bw[EPD_WIDTH / BITS_PER_BYTE * EPD_HEIGHT];
 
-static void draw_logo(void)
-{
+static void draw_logo(void) {
     uint16_t buf_stride = (uint16_t)(EPD_WIDTH  / BITS_PER_BYTE);
     uint16_t off_x_px   = (uint16_t)((EPD_WIDTH  - LOGO_H) / 2U);
     uint16_t off_y      = (uint16_t)((EPD_HEIGHT - LOGO_W) / 2U);
 
-    for (uint16_t sy = 0U; sy < (uint16_t)LOGO_H; sy++)
-    {
-        for (uint16_t sx = 0U; sx < (uint16_t)LOGO_W; sx++)
-        {
+    for (uint16_t sy = 0U; sy < (uint16_t)LOGO_H; sy++) {
+        for (uint16_t sx = 0U; sx < (uint16_t)LOGO_W; sx++) {
             uint32_t src_idx   = (uint32_t)sy * (uint32_t)(LOGO_W / BITS_PER_BYTE)
                                  + (uint32_t)(sx / BITS_PER_BYTE);
             uint8_t  src_byte  = logo_cryptnox[src_idx];
@@ -78,12 +75,9 @@ static void draw_logo(void)
                                  + (uint32_t)(bx / BITS_PER_BYTE);
             uint8_t  bx_bit    = (uint8_t)(bx % BITS_PER_BYTE);
             uint8_t  bit_mask  = (uint8_t)(BYTE_MSB >> bx_bit);
-            if (pix_set)
-            {
+            if (pix_set) {
                 image_bw[addr] = (uint8_t)(image_bw[addr] | bit_mask);
-            }
-            else
-            {
+            } else {
                 image_bw[addr] = (uint8_t)(image_bw[addr]
                                            & (uint8_t)(~(unsigned int)bit_mask));
             }
@@ -91,8 +85,7 @@ static void draw_logo(void)
     }
 }
 
-static void show_uid_on_epd(uint32_t uid)
-{
+static void show_uid_on_epd(uint32_t uid) {
     char uid_str[UID_STR_LEN];
     (void)memset(uid_str, 0, sizeof(uid_str));
     (void)snprintf(uid_str, sizeof(uid_str), "UID: %08lX", (unsigned long)uid);
@@ -108,8 +101,7 @@ static void show_uid_on_epd(uint32_t uid)
     epd_enter_deepsleepmode(EPD_DEEPSLEEP_MODE1);
 }
 
-void app_main(void)
-{
+void app_main(void) {
     spi_bus_config_t buscfg = {
         .mosi_io_num     = SPI_MOSI,
         .miso_io_num     = SPI_MISO,
@@ -131,8 +123,7 @@ void app_main(void)
     esp_err_t epd_ret = epd_io_init(&epd_cfg);
     bool      epd_ok  = (epd_ret == ESP_OK);
 
-    if (epd_ok)
-    {
+    if (epd_ok) {
         epd_set_panel((uint8_t)EPD420,
                       (uint16_t)EPD_WIDTH, (uint16_t)EPD_HEIGHT);
         epd_paint_newimage(image_bw,
@@ -142,19 +133,14 @@ void app_main(void)
         draw_logo();
 
         bool epd_busy = (epd_init() != 0U);
-        if (epd_busy)
-        {
+        if (epd_busy) {
             ESP_LOGE(TAG, "EPD init failed (busy timeout)");
-        }
-        else
-        {
+        } else {
             epd_displayBW(image_bw);
             ESP_LOGI(TAG, "EPD: logo displayed");
             epd_enter_deepsleepmode(EPD_DEEPSLEEP_MODE1);
         }
-    }
-    else
-    {
+    } else {
         ESP_LOGE(TAG, "EPD SPI init failed");
     }
 
@@ -167,48 +153,37 @@ void app_main(void)
     esp_err_t nfc_ret = pn532_init(&nfc, &nfc_cfg);
     bool      nfc_ok  = (nfc_ret == ESP_OK);
 
-    if (nfc_ok)
-    {
+    if (nfc_ok) {
         uint32_t version = pn532_get_firmware_version(&nfc);
         bool     fw_ok   = (version != 0U);
-        if (fw_ok)
-        {
+        if (fw_ok) {
             ESP_LOGI(TAG, "PN5%02X firmware v%u.%u",
                      (unsigned int)((version >> FW_IC_SHIFT)  & FW_BYTE_MASK),
                      (unsigned int)((version >> FW_VER_SHIFT) & FW_BYTE_MASK),
                      (unsigned int)((version >> FW_REV_SHIFT) & FW_BYTE_MASK));
 
             bool sam_ok = pn532_sam_config(&nfc);
-            if (sam_ok)
-            {
+            if (sam_ok) {
                 ESP_LOGI(TAG, "Ready — scan a tag");
                 uint32_t last_uid = 0U;
-                while (true)
-                {
+                while (true) {
                     uint32_t uid     = pn532_read_passive_target_id(
                                            &nfc, PN532_MIFARE_ISO14443A);
                     bool     new_tag = ((uid != 0U) && (uid != last_uid));
-                    if (new_tag)
-                    {
+                    if (new_tag) {
                         ESP_LOGI(TAG, "Tag: 0x%08lX", (unsigned long)uid);
                         show_uid_on_epd(uid);
                         last_uid = uid;
                     }
                     vTaskDelay(pdMS_TO_TICKS(POLL_DELAY_MS));
                 }
-            }
-            else
-            {
+            } else {
                 ESP_LOGE(TAG, "SAMConfig failed");
             }
-        }
-        else
-        {
+        } else {
             ESP_LOGE(TAG, "PN532 not found");
         }
-    }
-    else
-    {
+    } else {
         ESP_LOGE(TAG, "PN532 init failed");
     }
 }
