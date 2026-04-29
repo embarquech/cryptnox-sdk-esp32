@@ -1,0 +1,9 @@
+idf_component_register(
+    SRCS
+        "main.c"
+        "${CMAKE_CURRENT_SOURCE_DIR}/../../components/crypto_provider/test/test_esp32_crypto_provider.cpp"
+    REQUIRES
+        unity
+        crypto_provider
+    WHOLE_ARCHIVE
+)
