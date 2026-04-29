@@ -4,6 +4,14 @@
 #include "esp_random.h"
 #include <algorithm>
 
+#ifdef CONFIG_ESP_WIFI_ENABLED
+#include "esp_wifi.h"
+#endif
+
+#ifdef CONFIG_BT_ENABLED
+#include "esp_bt.h"
+#endif
+
 /******************************************************************
  * 1. Module constants
  ******************************************************************/
@@ -36,15 +44,44 @@ static const uECC_Curve_t s_secp256r1 = { MBEDTLS_ECP_DP_SECP256R1 };
 static const uECC_Curve_t s_secp256k1 = { MBEDTLS_ECP_DP_SECP256K1 };
 
 /******************************************************************
- * 4. Internal RNG adapter for mbedTLS
+ * 4. TRNG readiness helpers
+ ******************************************************************/
+
+#ifdef CONFIG_ESP_WIFI_ENABLED
+static bool wifi_is_active(void) {
+    wifi_mode_t mode        = WIFI_MODE_NULL;
+    esp_err_t   err         = esp_wifi_get_mode(&mode);
+    bool        wifi_active = ((err == ESP_OK) && (mode != WIFI_MODE_NULL));
+    return wifi_active;
+}
+#endif
+
+#ifdef CONFIG_BT_ENABLED
+static bool bt_is_active(void) {
+    esp_bt_controller_status_t status    = esp_bt_controller_get_status();
+    bool                       bt_active = (status == ESP_BT_CONTROLLER_STATUS_ENABLED);
+    return bt_active;
+}
+#endif
+
+/******************************************************************
+ * 5. Internal RNG adapter for mbedTLS
  ******************************************************************/
 
 static int esp32_mbedtls_rng(void *ctx, unsigned char *output, size_t len) {
-    int result = RNG_ERROR;
+    int  result      = RNG_ERROR;
+    bool wifi_seeded = false;
+    bool bt_seeded   = false;
     (void)ctx;
+#ifdef CONFIG_ESP_WIFI_ENABLED
+    wifi_seeded = wifi_is_active();
+#endif
+#ifdef CONFIG_BT_ENABLED
+    bt_seeded = bt_is_active();
+#endif
+    bool trng_seeded = (wifi_seeded || bt_seeded);
 
-    if ((output != NULL) && (len > 0U)) {
-        /* Caller must ensure WiFi or Bluetooth is active to properly seed the hardware TRNG. */
+    if ((output != NULL) && (len > 0U) && trng_seeded) {
         esp_fill_random(output, len);
         result = MBEDTLS_OK;
     }
@@ -53,7 +90,7 @@ static int esp32_mbedtls_rng(void *ctx, unsigned char *output, size_t len) {
 }
 
 /******************************************************************
- * 5. Public API
+ * 6. Public API
  ******************************************************************/
 
 /** @brief Return the static secp256r1 curve descriptor. */
