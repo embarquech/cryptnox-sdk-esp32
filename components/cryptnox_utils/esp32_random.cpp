@@ -27,14 +27,16 @@ static bool bt_is_active(void) {
 #endif
 
 bool CryptnoxUtils::fill_secure_random(uint8_t *dest, size_t len) {
-    bool trng_seeded = false;
+    bool wifi_seeded = false;
+    bool bt_seeded   = false;
 #ifdef CONFIG_ESP_WIFI_ENABLED
-    trng_seeded = (trng_seeded || wifi_is_active());
+    wifi_seeded = wifi_is_active();
 #endif
 #ifdef CONFIG_BT_ENABLED
-    trng_seeded = (trng_seeded || bt_is_active());
+    bt_seeded = bt_is_active();
 #endif
-    bool is_ready = ((dest != nullptr) && (len != 0U) && trng_seeded);
+    bool trng_seeded = (wifi_seeded || bt_seeded);
+    bool is_ready    = ((dest != nullptr) && (len != 0U) && trng_seeded);
     if (is_ready) {
         esp_fill_random(dest, len);
     }
