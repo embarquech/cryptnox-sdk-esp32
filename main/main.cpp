@@ -5,11 +5,21 @@
 #include "driver/spi_master.h"
 #include "driver/gpio.h"
 #include "esp_log.h"
-#include "pn532.h"
 #include "epd.h"
 #include "logo.h"
+#include "CryptnoxUtils.h"
 
-static const char *TAG = "main";
+extern "C" {
+#include "pn532.h"
+}
+
+static const char    *TAG                = "main";
+static const size_t   RND_BUF_SIZE       = 16U;
+static const uint32_t PN532_FW_IC_SHIFT  = 24U;
+static const uint32_t PN532_FW_VER_SHIFT = 16U;
+static const uint32_t PN532_FW_REV_SHIFT = 8U;
+static const uint32_t BYTE_MASK          = 0xFFU;
+static const uint32_t POLL_DELAY_MS      = 500U;
 
 /* Shared SPI bus: MOSI=IO11, SCLK=IO12, MISO=IO13 */
 #define SPI_MOSI             11
@@ -34,15 +44,6 @@ static const char *TAG = "main";
 /* Bitmap bit-packing constants */
 #define BITS_PER_BYTE   8U
 #define BYTE_MSB        0x80U
-
-/* PN532 firmware version field shifts */
-#define FW_IC_SHIFT    24U
-#define FW_VER_SHIFT   16U
-#define FW_REV_SHIFT    8U
-#define FW_BYTE_MASK   0xFFU
-
-/* NFC poll interval */
-#define POLL_DELAY_MS  500U
 
 /* UID text overlay position on display */
 #define UID_TEXT_X  10U
@@ -101,7 +102,23 @@ static void show_uid_on_epd(uint32_t uid) {
     epd_enter_deepsleepmode(EPD_DEEPSLEEP_MODE1);
 }
 
-void app_main(void) {
+extern "C" void app_main(void) {
+    uint8_t rnd[RND_BUF_SIZE] = { 0U };
+    bool    rnd_ok = CryptnoxUtils::fill_secure_random(rnd, sizeof(rnd));
+    if (rnd_ok) {
+        ESP_LOGI(TAG, "TRNG: %02X%02X%02X%02X%02X%02X%02X%02X"
+                      "%02X%02X%02X%02X%02X%02X%02X%02X",
+                 rnd[0],  rnd[1],  rnd[2],  rnd[3],
+                 rnd[4],  rnd[5],  rnd[6],  rnd[7],
+                 rnd[8],  rnd[9],  rnd[10], rnd[11],
+                 rnd[12], rnd[13], rnd[14], rnd[15]);
+    }
+
+    volatile uint8_t *rnd_ptr = rnd;
+    for (size_t i = 0U; i < sizeof(rnd); i++) {
+        rnd_ptr[i] = 0U;
+    }
+
     spi_bus_config_t buscfg = {
         .mosi_io_num     = SPI_MOSI,
         .miso_io_num     = SPI_MISO,
@@ -158,9 +175,9 @@ void app_main(void) {
         bool     fw_ok   = (version != 0U);
         if (fw_ok) {
             ESP_LOGI(TAG, "PN5%02X firmware v%u.%u",
-                     (unsigned int)((version >> FW_IC_SHIFT)  & FW_BYTE_MASK),
-                     (unsigned int)((version >> FW_VER_SHIFT) & FW_BYTE_MASK),
-                     (unsigned int)((version >> FW_REV_SHIFT) & FW_BYTE_MASK));
+                     (unsigned int)((version >> PN532_FW_IC_SHIFT)  & BYTE_MASK),
+                     (unsigned int)((version >> PN532_FW_VER_SHIFT) & BYTE_MASK),
+                     (unsigned int)((version >> PN532_FW_REV_SHIFT) & BYTE_MASK));
 
             bool sam_ok = pn532_sam_config(&nfc);
             if (sam_ok) {
