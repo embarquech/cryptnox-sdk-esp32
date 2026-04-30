@@ -160,8 +160,6 @@ static const uint8_t pn532_response_fw[PN532_FIRMWARE_HDR_LEN] = {
     0x00U, 0x00U, 0xFFU, 0x06U, 0xFAU, 0xD5U, 0x03U
 };
 
-static uint8_t pn532_packetbuffer[PN532_PACK_BUFF_SIZE];
-
 /******************************************************************
  * Low-level SPI helpers
  ******************************************************************/
@@ -354,6 +352,9 @@ esp_err_t pn532_init(pn532_t *dev, const pn532_config_t *config)
     }
 
     if (ret == ESP_OK) {
+        uint8_t init_cmd[PN532_FIRMWARE_CMD_LEN];
+        (void)memset(init_cmd, 0, sizeof(init_cmd));
+
         /* Wakeup sequence: assert CS, send 0x55 0x55 then three zero bytes. */
         (void)gpio_set_level(dev->pin_cs, 0U);
         vTaskDelay(pdMS_TO_TICKS(PN532_CS_TOGGLE_DELAY_MS));
@@ -366,8 +367,8 @@ esp_err_t pn532_init(pn532_t *dev, const pn532_config_t *config)
         vTaskDelay(pdMS_TO_TICKS(PN532_WAKEUP_DELAY_MS));
 
         /* Dummy GetFirmwareVersion to sync the SPI state machine. */
-        pn532_packetbuffer[0] = PN532_FIRMWAREVERSION;
-        (void)send_command_check_ack(dev, pn532_packetbuffer,
+        init_cmd[0] = PN532_FIRMWAREVERSION;
+        (void)send_command_check_ack(dev, init_cmd,
                                      PN532_FIRMWARE_CMD_LEN, PN532_CMD_TIMEOUT_MS);
         vTaskDelay(pdMS_TO_TICKS(PN532_SYNC_DELAY_MS));
 
@@ -379,9 +380,11 @@ esp_err_t pn532_init(pn532_t *dev, const pn532_config_t *config)
 
 uint32_t pn532_get_firmware_version(pn532_t *dev)
 {
+    uint8_t  pn532_packetbuffer[PN532_FIRMWARE_RESP_LEN];
     uint32_t response = 0U;
-    bool ok = false;
+    bool     ok       = false;
 
+    (void)memset(pn532_packetbuffer, 0, sizeof(pn532_packetbuffer));
     pn532_packetbuffer[0] = PN532_FIRMWAREVERSION;
     ok = send_command_check_ack(dev, pn532_packetbuffer,
                                 PN532_FIRMWARE_CMD_LEN, PN532_CMD_TIMEOUT_MS);
@@ -411,9 +414,11 @@ uint32_t pn532_get_firmware_version(pn532_t *dev)
 
 bool pn532_sam_config(pn532_t *dev)
 {
-    bool ok = false;
-    bool result = false;
+    uint8_t pn532_packetbuffer[PN532_SAM_RESP_LEN];
+    bool    ok     = false;
+    bool    result = false;
 
+    (void)memset(pn532_packetbuffer, 0, sizeof(pn532_packetbuffer));
     pn532_packetbuffer[0] = PN532_SAMCONFIGURATION;
     pn532_packetbuffer[1] = PN532_SAM_NORMAL_MODE;
     pn532_packetbuffer[2] = PN532_SAM_TIMEOUT;
@@ -432,11 +437,13 @@ bool pn532_sam_config(pn532_t *dev)
 
 uint32_t pn532_read_passive_target_id(pn532_t *dev, uint8_t cardbaudrate)
 {
-    uint32_t cid = 0U;
-    uint8_t uid_len = 0U;
-    uint8_t i = 0U;
-    bool ok = false;
+    uint8_t  pn532_packetbuffer[PN532_PASSIVE_RESP_LEN];
+    uint32_t cid     = 0U;
+    uint8_t  uid_len = 0U;
+    uint8_t  i       = 0U;
+    bool     ok      = false;
 
+    (void)memset(pn532_packetbuffer, 0, sizeof(pn532_packetbuffer));
     pn532_packetbuffer[0] = PN532_INLISTPASSIVETARGET;
     pn532_packetbuffer[1] = PN532_PASSIVE_MAX_TARGETS;
     pn532_packetbuffer[2] = cardbaudrate;
@@ -463,47 +470,54 @@ bool pn532_send_apdu(pn532_t *dev,
                      const uint8_t *apdu, uint8_t apdu_len,
                      uint8_t *response, uint8_t *resp_len)
 {
-    uint8_t cmd_buf_len = 0U;
+    uint8_t pn532_packetbuffer[PN532_PACK_BUFF_SIZE];
+    uint8_t cmd_buf_len   = 0U;
     uint8_t full_read_len = 0U;
-    uint8_t data_len = 0U;
-    bool ok = false;
-    bool result = false;
+    uint8_t data_len      = 0U;
+    bool    ok            = false;
+    bool    result        = false;
 
-    cmd_buf_len = (uint8_t)(apdu_len + PN532_INDATAEXCHANGE_CMD_OVERHEAD);
+    (void)memset(pn532_packetbuffer, 0, sizeof(pn532_packetbuffer));
 
-    pn532_packetbuffer[0] = PN532_INDATAEXCHANGE;
-    pn532_packetbuffer[1] = PN532_TARGET_NUM;
-    (void)memcpy(&pn532_packetbuffer[PN532_INDATAEXCHANGE_DATA_OFFSET],
-                 apdu, (size_t)apdu_len);
+    if (apdu_len > (uint8_t)(255U - PN532_INDATAEXCHANGE_CMD_OVERHEAD)) {
+        result = false;
+    } else {
+        cmd_buf_len = (uint8_t)(apdu_len + PN532_INDATAEXCHANGE_CMD_OVERHEAD);
 
-    ok = send_command_check_ack(dev, pn532_packetbuffer,
-                                cmd_buf_len, PN532_CMD_TIMEOUT_MS);
+        pn532_packetbuffer[0] = PN532_INDATAEXCHANGE;
+        pn532_packetbuffer[1] = PN532_TARGET_NUM;
+        (void)memcpy(&pn532_packetbuffer[PN532_INDATAEXCHANGE_DATA_OFFSET],
+                     apdu, (size_t)apdu_len);
 
-    if (ok) {
-        /* Read the entire response frame in one SPI transaction.
-         * The PN532 resets its frame pointer each time DATAREAD (0x03)
-         * is sent; splitting across two read_data calls would re-read
-         * the preamble instead of the status and APDU payload.
-         * Guard against uint8_t overflow: clamp resp_len to APDU_RESP_MAX_LEN
-         * (245) before adding the 10-byte frame overhead so full_read_len
-         * stays within uint8_t range. */
-        if (*resp_len > (uint8_t)PN532_APDU_RESP_MAX_LEN) {
-            full_read_len = (uint8_t)(PN532_APDU_RESP_MAX_LEN + PN532_RESP_FRAME_OVERHEAD);
-        } else {
-            full_read_len = (uint8_t)(PN532_RESP_FRAME_OVERHEAD + *resp_len);
-        }
-        read_data(dev, pn532_packetbuffer, full_read_len);
+        ok = send_command_check_ack(dev, pn532_packetbuffer,
+                                    cmd_buf_len, PN532_CMD_TIMEOUT_MS);
 
-        /* data_len = APDU response bytes from the card. */
-        data_len = (uint8_t)(pn532_packetbuffer[PN532_RESP_LEN_BYTE_IDX] - (uint8_t)PN532_RESP_LEN_OVERHEAD);
+        if (ok) {
+            /* Read the entire response frame in one SPI transaction.
+             * The PN532 resets its frame pointer each time DATAREAD (0x03)
+             * is sent; splitting across two read_data calls would re-read
+             * the preamble instead of the status and APDU payload.
+             * Guard against uint8_t overflow: clamp resp_len to APDU_RESP_MAX_LEN
+             * (245) before adding the 10-byte frame overhead so full_read_len
+             * stays within uint8_t range. */
+            if (*resp_len > (uint8_t)PN532_APDU_RESP_MAX_LEN) {
+                full_read_len = (uint8_t)(PN532_APDU_RESP_MAX_LEN + PN532_RESP_FRAME_OVERHEAD);
+            } else {
+                full_read_len = (uint8_t)(PN532_RESP_FRAME_OVERHEAD + *resp_len);
+            }
+            read_data(dev, pn532_packetbuffer, full_read_len);
 
-        if (data_len <= *resp_len) {
-            if (pn532_packetbuffer[PN532_RESP_STATUS_OFFSET] == (uint8_t)PN532_INDATAEXCHANGE_STATUS_OK) {
-                (void)memcpy(response,
-                             &pn532_packetbuffer[PN532_RESP_DATA_OFFSET],
-                             (size_t)data_len);
-                *resp_len = data_len;
-                result    = true;
+            /* data_len = APDU response bytes from the card. */
+            data_len = (uint8_t)(pn532_packetbuffer[PN532_RESP_LEN_BYTE_IDX] - (uint8_t)PN532_RESP_LEN_OVERHEAD);
+
+            if (data_len <= *resp_len) {
+                if (pn532_packetbuffer[PN532_RESP_STATUS_OFFSET] == (uint8_t)PN532_INDATAEXCHANGE_STATUS_OK) {
+                    (void)memcpy(response,
+                                 &pn532_packetbuffer[PN532_RESP_DATA_OFFSET],
+                                 (size_t)data_len);
+                    *resp_len = data_len;
+                    result    = true;
+                }
             }
         }
     }
@@ -513,9 +527,12 @@ bool pn532_send_apdu(pn532_t *dev,
 
 bool pn532_release_target(pn532_t *dev)
 {
+    uint8_t pn532_packetbuffer[PN532_RELEASE_CMD_LEN];
     uint8_t resp[PN532_RELEASE_RESP_LEN];
-    bool ok = false;
-    bool result = false;
+    bool    ok     = false;
+    bool    result = false;
+
+    (void)memset(pn532_packetbuffer, 0, sizeof(pn532_packetbuffer));
     (void)memset(resp, 0, sizeof(resp));
 
     pn532_packetbuffer[0] = PN532_INRELEASE;
