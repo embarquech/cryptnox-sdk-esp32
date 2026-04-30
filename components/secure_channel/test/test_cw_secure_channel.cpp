@@ -25,6 +25,7 @@
 #define SC_CERT_KEY_OFFSET          (SC_CERT_MARKER_BYTES + SC_CERT_NONCE_BYTES)
 
 /* APDU response sizes (data + 2-byte SW) */
+#define SC_SW_BYTES                  (2U)
 #define SC_SELECT_RESP_BYTES        (26U)
 #define SC_GET_CERT_RESP_BYTES     (148U)
 #define SC_OPEN_SC_RESP_BYTES       (34U)
@@ -39,17 +40,14 @@
 #define SC_APDU_MAC_OFFSET           (5U)   /* header[4] + Lc[1] */
 #define SC_APDU_MAC_BYTES           (16U)
 
-/* Pairing data string (without NUL terminator) */
-#define SC_PAIRING_DATA "Cryptnox Basic CommonPairingData"
-#define SC_PAIRING_DATA_BYTES       (32U)
-
 /* Card response used in the AES-CBC round-trip test */
 #define SC_CARD_RESP_PAYLOAD_BYTES   (4U)
-#define SC_CARD_RESP_TOTAL_BYTES     (SC_CARD_RESP_PAYLOAD_BYTES + 2U)  /* +SW */
+#define SC_CARD_RESP_TOTAL_BYTES     (SC_CARD_RESP_PAYLOAD_BYTES + SC_SW_BYTES)
 
 /* Mock scripting limits */
 #define MOCK_MAX_SCRIPTS             (8U)
 #define MOCK_MAX_RESP_BYTES        (255U)
+#define MOCK_UART_BAUD_RATE    (115200UL)
 
 /* Known P-256 public key (NIST FIPS 186-4 test vector) used as the
  * card's ephemeral key in mock-transport tests.
@@ -93,23 +91,41 @@ static const uint8_t K_CARD_RESP_PLAINTEXT[SC_CARD_RESP_TOTAL_BYTES] = {
 
 class MockLogger : public CW_Logger {
 public:
-    bool begin(unsigned long = 115200UL) override { return true; }
-    void print(const __FlashStringHelper*) override {}
-    void print(const char*) override {}
-    void print(char) override {}
-    void print(uint8_t, int = DEC) override {}
-    void print(uint16_t, int = DEC) override {}
-    void print(uint32_t, int = DEC) override {}
-    void print(int, int = DEC) override {}
-    void println() override {}
-    void println(const __FlashStringHelper*) override {}
-    void println(const char*) override {}
-    void println(char) override {}
-    void println(uint8_t, int = DEC) override {}
-    void println(uint16_t, int = DEC) override {}
-    void println(uint32_t, int = DEC) override {}
-    void println(int, int = DEC) override {}
-    ~MockLogger() override {}
+    bool begin(unsigned long = MOCK_UART_BAUD_RATE) override {
+        return true;
+    }
+    void print(const __FlashStringHelper*) override {
+    }
+    void print(const char*) override {
+    }
+    void print(char) override {
+    }
+    void print(uint8_t, int = DEC) override {
+    }
+    void print(uint16_t, int = DEC) override {
+    }
+    void print(uint32_t, int = DEC) override {
+    }
+    void print(int, int = DEC) override {
+    }
+    void println() override {
+    }
+    void println(const __FlashStringHelper*) override {
+    }
+    void println(const char*) override {
+    }
+    void println(char) override {
+    }
+    void println(uint8_t, int = DEC) override {
+    }
+    void println(uint16_t, int = DEC) override {
+    }
+    void println(uint32_t, int = DEC) override {
+    }
+    void println(int, int = DEC) override {
+    }
+    ~MockLogger() override {
+    }
 };
 
 /******************************************************************
@@ -124,29 +140,36 @@ struct MockScriptEntry {
 
 class ScriptedMockNfcTransport : public CW_NfcTransport {
 public:
-    MockScriptEntry scripts[MOCK_MAX_SCRIPTS];
-    uint8_t         scriptCount;
-    uint8_t         callIdx;
+    MockScriptEntry scripts[MOCK_MAX_SCRIPTS]{};
+    uint8_t         scriptCount = 0U;
+    uint8_t         callIdx     = 0U;
 
     void reset() {
         scriptCount = 0U;
         callIdx     = 0U;
-        memset(scripts, 0, sizeof(scripts));
+        (void)memset(scripts, 0, sizeof(scripts));
     }
 
     void addScript(const uint8_t* data, uint8_t len, bool succeed = true) {
         if (scriptCount < MOCK_MAX_SCRIPTS) {
-            memcpy(scripts[scriptCount].data, data, static_cast<size_t>(len));
+            (void)memcpy(scripts[scriptCount].data, data, static_cast<size_t>(len));
             scripts[scriptCount].len     = len;
             scripts[scriptCount].succeed = succeed;
             scriptCount++;
         }
     }
 
-    bool begin() override { return true; }
-    bool inListPassiveTarget() override { return true; }
-    void resetReader() override {}
-    bool printFirmwareVersion() override { return true; }
+    bool begin() override {
+        return true;
+    }
+    bool inListPassiveTarget() override {
+        return true;
+    }
+    void resetReader() override {
+    }
+    bool printFirmwareVersion() override {
+        return true;
+    }
 
     bool sendAPDU(const uint8_t* apdu, uint8_t apduLen,
                   uint8_t* response, uint8_t& responseLen) override {
@@ -158,7 +181,7 @@ public:
             const MockScriptEntry& e = scripts[callIdx];
             callIdx++;
             if (e.succeed) {
-                memcpy(response, e.data, static_cast<size_t>(e.len));
+                (void)memcpy(response, e.data, static_cast<size_t>(e.len));
                 responseLen = e.len;
                 result = true;
             }
@@ -166,7 +189,8 @@ public:
         return result;
     }
 
-    ~ScriptedMockNfcTransport() override {}
+    ~ScriptedMockNfcTransport() override {
+    }
 };
 
 /******************************************************************
@@ -183,13 +207,20 @@ public:
 
 class ReflectiveMockNfcTransport : public CW_NfcTransport {
 public:
-    const CW_SecureSession* session;
-    CW_CryptoProvider*      crypto;
+    const CW_SecureSession* session = nullptr;
+    CW_CryptoProvider*      crypto  = nullptr;
 
-    bool begin() override { return true; }
-    bool inListPassiveTarget() override { return true; }
-    void resetReader() override {}
-    bool printFirmwareVersion() override { return true; }
+    bool begin() override {
+        return true;
+    }
+    bool inListPassiveTarget() override {
+        return true;
+    }
+    void resetReader() override {
+    }
+    bool printFirmwareVersion() override {
+        return true;
+    }
 
     bool sendAPDU(const uint8_t* apdu, uint8_t apduLen,
                   uint8_t* response, uint8_t& responseLen) override {
@@ -199,12 +230,12 @@ public:
             (apduLen > static_cast<uint8_t>(SC_APDU_MAC_OFFSET + SC_APDU_MAC_BYTES))) {
             /* Step 1: extract sentMAC — used as IV when the channel decrypts the response */
             uint8_t sentMacIv[SC_AES_BLOCK_BYTES] = { 0U };
-            memcpy(sentMacIv, apdu + SC_APDU_MAC_OFFSET, SC_AES_BLOCK_BYTES);
+            (void)memcpy(sentMacIv, apdu + SC_APDU_MAC_OFFSET, SC_AES_BLOCK_BYTES);
 
             /* Step 2: encrypt K_CARD_RESP_PLAINTEXT using Kenc, sentMAC as IV, bit-padding */
             uint8_t cipherResp[SC_AES_BLOCK_BYTES * 2U] = { 0U };
             uint8_t encIv[SC_AES_BLOCK_BYTES] = { 0U };
-            memcpy(encIv, sentMacIv, SC_AES_BLOCK_BYTES);
+            (void)memcpy(encIv, sentMacIv, SC_AES_BLOCK_BYTES);
 
             uint16_t cipherRespLen = crypto->aesCbcEncrypt(
                 K_CARD_RESP_PLAINTEXT,
@@ -220,8 +251,8 @@ public:
             uint8_t totalDataLen = static_cast<uint8_t>(SC_AES_BLOCK_BYTES + cipherRespLen);
             uint8_t macInput[SC_AES_BLOCK_BYTES + SC_AES_BLOCK_BYTES * 2U] = { 0U };
             macInput[0U] = totalDataLen;
-            memcpy(macInput + SC_AES_BLOCK_BYTES, cipherResp,
-                   static_cast<size_t>(cipherRespLen));
+            (void)memcpy(macInput + SC_AES_BLOCK_BYTES, cipherResp,
+                         static_cast<size_t>(cipherRespLen));
 
             uint16_t macInputLen = static_cast<uint16_t>(SC_AES_BLOCK_BYTES) + cipherRespLen;
 
@@ -242,12 +273,12 @@ public:
 
             /* Step 5: assemble response = responseMac[16] || cipherResp[N] || SW[2] */
             uint8_t totalRespLen = static_cast<uint8_t>(
-                static_cast<uint16_t>(SC_AES_BLOCK_BYTES) + cipherRespLen + 2U);
+                static_cast<uint16_t>(SC_AES_BLOCK_BYTES) + cipherRespLen + SC_SW_BYTES);
 
-            memcpy(response, responseMac, SC_AES_BLOCK_BYTES);
-            memcpy(response + SC_AES_BLOCK_BYTES, cipherResp,
-                   static_cast<size_t>(cipherRespLen));
-            response[SC_AES_BLOCK_BYTES + cipherRespLen]      = 0x90U;
+            (void)memcpy(response, responseMac, SC_AES_BLOCK_BYTES);
+            (void)memcpy(response + SC_AES_BLOCK_BYTES, cipherResp,
+                         static_cast<size_t>(cipherRespLen));
+            response[SC_AES_BLOCK_BYTES + cipherRespLen]             = 0x90U;
             response[SC_AES_BLOCK_BYTES + cipherRespLen + 1U] = 0x00U;
             responseLen = totalRespLen;
             result = true;
@@ -256,7 +287,8 @@ public:
         return result;
     }
 
-    ~ReflectiveMockNfcTransport() override {}
+    ~ReflectiveMockNfcTransport() override {
+    }
 };
 
 /******************************************************************
@@ -279,7 +311,8 @@ public:
         }
         return result;
     }
-    ~TestCryptoProvider() override {}
+    ~TestCryptoProvider() override {
+    }
 };
 
 /******************************************************************
@@ -495,7 +528,7 @@ TEST_CASE("mutuallyAuthenticate: sets session IV to first 16 bytes of mock respo
     /* Use the known P-256 public key as the card's ephemeral key.
      * Any valid point on secp256r1 works here — ECDH must not fail. */
     uint8_t cardEphemeralPub[SC_EC_PUBKEY_BYTES] = { 0U };
-    memcpy(cardEphemeralPub, K_CARD_EPHEMERAL_PUB, SC_EC_PUBKEY_BYTES);
+    (void)memcpy(cardEphemeralPub, K_CARD_EPHEMERAL_PUB, SC_EC_PUBKEY_BYTES);
 
     uint8_t clientPub[SC_EC_PUBKEY_BYTES]  = { 0U };
     uint8_t clientPriv[SC_EC_COORD_BYTES]  = { 0U };
@@ -566,10 +599,10 @@ TEST_CASE("key derivation: ECDH + SHA-512 split yields distinct Kenc and Kmac",
         0x09U, 0x0aU, 0x0bU, 0x0cU, 0x0dU, 0x0eU, 0x0fU, 0x10U
     };
 
-    uint8_t concat[SC_EC_COORD_BYTES + SC_PAIRING_DATA_BYTES + SC_SALT_BYTES] = { 0U };
-    memcpy(concat, secretAB, SC_EC_COORD_BYTES);
-    memcpy(concat + SC_EC_COORD_BYTES, SC_PAIRING_DATA, SC_PAIRING_DATA_BYTES);
-    memcpy(concat + SC_EC_COORD_BYTES + SC_PAIRING_DATA_BYTES, SALT, SC_SALT_BYTES);
+    uint8_t concat[SC_EC_COORD_BYTES + CW_PAIRING_DATA_BYTES + SC_SALT_BYTES] = { 0U };
+    (void)memcpy(concat, secretAB, SC_EC_COORD_BYTES);
+    (void)memcpy(concat + SC_EC_COORD_BYTES, CW_PAIRING_DATA, CW_PAIRING_DATA_BYTES);
+    (void)memcpy(concat + SC_EC_COORD_BYTES + CW_PAIRING_DATA_BYTES, SALT, SC_SALT_BYTES);
 
     uint8_t sha512Out[SC_SHA512_OUT_BYTES] = { 0U };
     s_crypto.sha512(concat, sizeof(concat), sha512Out);
@@ -615,9 +648,9 @@ TEST_CASE("aesCbcEncrypt/aesCbcDecrypt: round-trip via reflective mock returns c
 {
     /* Set up a session with known keys and a zero IV */
     CW_SecureSession session;
-    memcpy(session.aesKey, K_TEST_KENC, SC_AES_KEY_BYTES);
-    memcpy(session.macKey, K_TEST_KMAC, SC_AES_KEY_BYTES);
-    memset(session.iv, 0x00U, SC_IV_BYTES);
+    (void)memcpy(session.aesKey, K_TEST_KENC, SC_AES_KEY_BYTES);
+    (void)memcpy(session.macKey, K_TEST_KMAC, SC_AES_KEY_BYTES);
+    (void)memset(session.iv, 0x00U, SC_IV_BYTES);
 
     /* Wire the reflective mock to this session */
     s_reflectiveTransport.session = &session;
