@@ -5,10 +5,10 @@
 static const char *TAG = "pn532_adapter";
 
 /* Bit positions used to extract firmware version fields from the packed uint32_t. */
-static const uint32_t FW_IC_SHIFT      = 24U;
-static const uint32_t FW_VER_SHIFT     = 16U;
-static const uint32_t FW_REV_SHIFT     = 8U;
-static const uint32_t FW_BYTE_MASK     = 0xFFU;
+static const uint32_t FW_IC_SHIFT = 24U;
+static const uint32_t FW_VER_SHIFT = 16U;
+static const uint32_t FW_REV_SHIFT = 8U;
+static const uint32_t FW_BYTE_MASK = 0xFFU;
 
 PN532Adapter::PN532Adapter(const pn532_config_t &config, CW_Logger &logger)
     : _config(config), _dev{}, _logger(logger), _initialized(false)
@@ -25,7 +25,7 @@ bool PN532Adapter::begin()
         ESP_LOGE(TAG, "pn532_init failed: %s", esp_err_to_name(ret));
     } else {
         _initialized = true;
-        result       = true;
+        result = true;
     }
 
     return result;
@@ -37,7 +37,7 @@ bool PN532Adapter::inListPassiveTarget()
     bool result = false;
 
     if (_initialized) {
-        uid    = pn532_read_passive_target_id(&_dev, PN532_MIFARE_ISO14443A);
+        uid = pn532_read_passive_target_id(&_dev, PN532_MIFARE_ISO14443A);
         result = (uid != 0U);
     }
 

@@ -13,13 +13,13 @@ extern "C" {
 #include "pn532.h"
 }
 
-static const char    *TAG                = "main";
-static const size_t   RND_BUF_SIZE       = 16U;
-static const uint32_t PN532_FW_IC_SHIFT  = 24U;
+static const char *TAG = "main";
+static const size_t RND_BUF_SIZE = 16U;
+static const uint32_t PN532_FW_IC_SHIFT = 24U;
 static const uint32_t PN532_FW_VER_SHIFT = 16U;
 static const uint32_t PN532_FW_REV_SHIFT = 8U;
-static const uint32_t BYTE_MASK          = 0xFFU;
-static const uint32_t POLL_DELAY_MS      = 500U;
+static const uint32_t BYTE_MASK = 0xFFU;
+static const uint32_t POLL_DELAY_MS = 500U;
 
 /* Shared SPI bus: MOSI=IO11, SCLK=IO12, MISO=IO13 */
 #define SPI_MOSI             11
@@ -82,27 +82,27 @@ static const uint8_t s_selectApdu[SELECT_APDU_LEN] = {
 };
 
 static void draw_logo(void) {
-    uint16_t buf_stride = (uint16_t)(EPD_WIDTH  / BITS_PER_BYTE);
-    uint16_t off_x_px   = (uint16_t)((EPD_WIDTH  - LOGO_H) / 2U);
-    uint16_t off_y      = (uint16_t)((EPD_HEIGHT - LOGO_W) / 2U);
+    uint16_t buf_stride = (uint16_t)(EPD_WIDTH / BITS_PER_BYTE);
+    uint16_t off_x_px = (uint16_t)((EPD_WIDTH - LOGO_H) / 2U);
+    uint16_t off_y = (uint16_t)((EPD_HEIGHT - LOGO_W) / 2U);
 
     for (uint16_t sy = 0U; sy < (uint16_t)LOGO_H; sy++) {
         for (uint16_t sx = 0U; sx < (uint16_t)LOGO_W; sx++) {
-            uint32_t src_idx   = (uint32_t)sy * (uint32_t)(LOGO_W / BITS_PER_BYTE)
-                                 + (uint32_t)(sx / BITS_PER_BYTE);
-            uint8_t  src_byte  = logo_cryptnox[src_idx];
-            uint8_t  sx_bit    = (uint8_t)(sx % BITS_PER_BYTE);
-            uint8_t  shift     = (uint8_t)((BITS_PER_BYTE - 1U) - (unsigned int)sx_bit);
-            uint8_t  src_bit   = (uint8_t)((src_byte >> shift) & 1U);
-            bool     pix_set   = (src_bit == 0U);
-            uint16_t dx        = sy;
-            uint16_t dy        = (uint16_t)((uint16_t)(LOGO_W - 1U) - sx);
-            uint16_t bx        = (uint16_t)(off_x_px + dx);
-            uint16_t by        = (uint16_t)(off_y    + dy);
-            uint32_t addr      = (uint32_t)by * (uint32_t)buf_stride
-                                 + (uint32_t)(bx / BITS_PER_BYTE);
-            uint8_t  bx_bit    = (uint8_t)(bx % BITS_PER_BYTE);
-            uint8_t  bit_mask  = (uint8_t)(BYTE_MSB >> bx_bit);
+            uint32_t src_idx = (uint32_t)sy * (uint32_t)(LOGO_W / BITS_PER_BYTE)
+                               + (uint32_t)(sx / BITS_PER_BYTE);
+            uint8_t src_byte = logo_cryptnox[src_idx];
+            uint8_t sx_bit = (uint8_t)(sx % BITS_PER_BYTE);
+            uint8_t shift = (uint8_t)((BITS_PER_BYTE - 1U) - (unsigned int)sx_bit);
+            uint8_t src_bit = (uint8_t)((src_byte >> shift) & 1U);
+            bool pix_set = (src_bit == 0U);
+            uint16_t dx = sy;
+            uint16_t dy = (uint16_t)((uint16_t)(LOGO_W - 1U) - sx);
+            uint16_t bx = (uint16_t)(off_x_px + dx);
+            uint16_t by = (uint16_t)(off_y + dy);
+            uint32_t addr = (uint32_t)by * (uint32_t)buf_stride
+                            + (uint32_t)(bx / BITS_PER_BYTE);
+            uint8_t bx_bit = (uint8_t)(bx % BITS_PER_BYTE);
+            uint8_t bit_mask = (uint8_t)(BYTE_MSB >> bx_bit);
             if (pix_set) {
                 image_bw[addr] = (uint8_t)(image_bw[addr] | bit_mask);
             } else {
@@ -131,7 +131,7 @@ static void show_uid_on_epd(uint32_t uid) {
 
 extern "C" void app_main(void) {
     uint8_t rnd[RND_BUF_SIZE] = { 0U };
-    bool    rnd_ok = CryptnoxUtils::fill_secure_random(rnd, sizeof(rnd));
+    bool rnd_ok = CryptnoxUtils::fill_secure_random(rnd, sizeof(rnd));
     if (rnd_ok) {
         ESP_LOGI(TAG, "TRNG: %02X%02X%02X%02X%02X%02X%02X%02X"
                       "%02X%02X%02X%02X%02X%02X%02X%02X",
@@ -147,25 +147,25 @@ extern "C" void app_main(void) {
     }
 
     spi_bus_config_t buscfg = {
-        .mosi_io_num     = SPI_MOSI,
-        .miso_io_num     = SPI_MISO,
-        .sclk_io_num     = SPI_SCLK,
-        .quadwp_io_num   = SPI_PIN_UNUSED,
-        .quadhd_io_num   = SPI_PIN_UNUSED,
+        .mosi_io_num = SPI_MOSI,
+        .miso_io_num = SPI_MISO,
+        .sclk_io_num = SPI_SCLK,
+        .quadwp_io_num = SPI_PIN_UNUSED,
+        .quadhd_io_num = SPI_PIN_UNUSED,
         .max_transfer_sz = SPI_MAX_TRANSFER_SZ,
     };
     ESP_ERROR_CHECK(spi_bus_initialize(SPI2_HOST, &buscfg, SPI_DMA_CH_AUTO));
 
     epd_config_t epd_cfg = {
-        .spi_host      = SPI2_HOST,
-        .pin_cs        = EPD_PIN_CS,
-        .pin_dc        = EPD_PIN_DC,
-        .pin_rst       = EPD_PIN_RST,
-        .pin_busy      = EPD_PIN_BUSY,
+        .spi_host = SPI2_HOST,
+        .pin_cs = EPD_PIN_CS,
+        .pin_dc = EPD_PIN_DC,
+        .pin_rst = EPD_PIN_RST,
+        .pin_busy = EPD_PIN_BUSY,
         .skip_bus_init = true,
     };
     esp_err_t epd_ret = epd_io_init(&epd_cfg);
-    bool      epd_ok  = (epd_ret == ESP_OK);
+    bool epd_ok = (epd_ret == ESP_OK);
 
     if (epd_ok) {
         epd_set_panel((uint8_t)EPD420,
@@ -188,21 +188,21 @@ extern "C" void app_main(void) {
         ESP_LOGE(TAG, "EPD SPI init failed");
     }
 
-    pn532_t        nfc     = { 0 };
+    pn532_t nfc = { 0 };
     pn532_config_t nfc_cfg = {
-        .spi_host      = SPI2_HOST,
-        .pin_cs        = NFC_CS,
+        .spi_host = SPI2_HOST,
+        .pin_cs = NFC_CS,
         .skip_bus_init = true,
     };
     esp_err_t nfc_ret = pn532_init(&nfc, &nfc_cfg);
-    bool      nfc_ok  = (nfc_ret == ESP_OK);
+    bool nfc_ok = (nfc_ret == ESP_OK);
 
     if (nfc_ok) {
         uint32_t version = pn532_get_firmware_version(&nfc);
-        bool     fw_ok   = (version != 0U);
+        bool fw_ok = (version != 0U);
         if (fw_ok) {
             ESP_LOGI(TAG, "PN5%02X firmware v%u.%u",
-                     (unsigned int)((version >> PN532_FW_IC_SHIFT)  & BYTE_MASK),
+                     (unsigned int)((version >> PN532_FW_IC_SHIFT) & BYTE_MASK),
                      (unsigned int)((version >> PN532_FW_VER_SHIFT) & BYTE_MASK),
                      (unsigned int)((version >> PN532_FW_REV_SHIFT) & BYTE_MASK));
 
@@ -211,13 +211,13 @@ extern "C" void app_main(void) {
                 ESP_LOGI(TAG, "Ready — scan a tag");
                 uint32_t last_uid = 0U;
                 while (true) {
-                    uint32_t uid     = pn532_read_passive_target_id(
-                                           &nfc, PN532_MIFARE_ISO14443A);
-                    bool     new_tag = ((uid != 0U) && (uid != last_uid));
+                    uint32_t uid = pn532_read_passive_target_id(
+                                       &nfc, PN532_MIFARE_ISO14443A);
+                    bool new_tag = ((uid != 0U) && (uid != last_uid));
                     if (new_tag) {
                         uint8_t resp[SELECT_RESP_MAX_LEN] = { 0U };
                         uint8_t resp_len = static_cast<uint8_t>(SELECT_RESP_MAX_LEN);
-                        bool    apdu_ok  = false;
+                        bool apdu_ok = false;
 
                         ESP_LOGI(TAG, "Tag: 0x%08lX", (unsigned long)uid);
                         show_uid_on_epd(uid);

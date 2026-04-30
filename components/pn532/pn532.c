@@ -168,7 +168,7 @@ static void spi_write_byte(pn532_t *dev, uint8_t data)
 {
     spi_transaction_t t;
     (void)memset(&t, 0, sizeof(t));
-    t.length    = 8U;
+    t.length = 8U;
     t.tx_buffer = &data;
     (void)spi_device_transmit(dev->spi, &t);
 }
@@ -179,8 +179,8 @@ static uint8_t spi_read_byte(pn532_t *dev)
     uint8_t tx = 0x00U;
     spi_transaction_t t;
     (void)memset(&t, 0, sizeof(t));
-    t.length    = 8U;
-    t.rxlength  = 8U;
+    t.length = 8U;
+    t.rxlength = 8U;
     t.tx_buffer = &tx;
     t.rx_buffer = &rx;
     (void)spi_device_transmit(dev->spi, &t);
@@ -224,8 +224,8 @@ static bool check_spi_ack(pn532_t *dev)
 static void write_command(pn532_t *dev, uint8_t *cmd, uint8_t cmd_len)
 {
     uint8_t frame_len = (uint8_t)(cmd_len + 1U);   /* +1 for HOSTTOPN532 TFI byte */
-    uint8_t checksum  = (uint8_t)(PN532_PREAMBLE + PN532_PREAMBLE + PN532_STARTCODE2);
-    uint8_t i         = 0U;
+    uint8_t checksum = (uint8_t)(PN532_PREAMBLE + PN532_PREAMBLE + PN532_STARTCODE2);
+    uint8_t i = 0U;
 
     (void)gpio_set_level(dev->pin_cs, 0U);
     vTaskDelay(pdMS_TO_TICKS(PN532_CS_TOGGLE_DELAY_MS));
@@ -253,10 +253,10 @@ static void write_command(pn532_t *dev, uint8_t *cmd, uint8_t cmd_len)
 static bool send_command_check_ack(pn532_t *dev, uint8_t *cmd,
                                    uint8_t cmd_len, uint16_t timeout)
 {
-    uint16_t timer   = 0U;
-    bool timed_out   = false;
-    bool ack_ok      = false;
-    bool result      = false;
+    uint16_t timer = 0U;
+    bool timed_out = false;
+    bool ack_ok = false;
+    bool result = false;
 
     write_command(dev, cmd, cmd_len);
 
@@ -278,7 +278,7 @@ static bool send_command_check_ack(pn532_t *dev, uint8_t *cmd,
     }
 
     if (ack_ok) {
-        timer     = 0U;
+        timer = 0U;
         timed_out = false;
 
         /* Wait until the PN532 signals it is ready to send the response. */
@@ -306,18 +306,18 @@ static bool send_command_check_ack(pn532_t *dev, uint8_t *cmd,
 
 esp_err_t pn532_init(pn532_t *dev, const pn532_config_t *config)
 {
-    gpio_config_t               io_conf;
-    spi_bus_config_t            buscfg;
+    gpio_config_t io_conf;
+    spi_bus_config_t buscfg;
     spi_device_interface_config_t devcfg;
     esp_err_t ret = ESP_FAIL;
 
     /* Configure CS pin as GPIO output, managed manually. */
     (void)memset(&io_conf, 0, sizeof(io_conf));
-    io_conf.pin_bit_mask  = (1ULL << (uint32_t)config->pin_cs);
-    io_conf.mode          = GPIO_MODE_OUTPUT;
-    io_conf.pull_up_en    = GPIO_PULLUP_DISABLE;
-    io_conf.pull_down_en  = GPIO_PULLDOWN_DISABLE;
-    io_conf.intr_type     = GPIO_INTR_DISABLE;
+    io_conf.pin_bit_mask = (1ULL << (uint32_t)config->pin_cs);
+    io_conf.mode = GPIO_MODE_OUTPUT;
+    io_conf.pull_up_en = GPIO_PULLUP_DISABLE;
+    io_conf.pull_down_en = GPIO_PULLDOWN_DISABLE;
+    io_conf.intr_type = GPIO_INTR_DISABLE;
     (void)gpio_config(&io_conf);
     (void)gpio_set_level(config->pin_cs, 1U);
     dev->pin_cs = config->pin_cs;
@@ -327,11 +327,11 @@ esp_err_t pn532_init(pn532_t *dev, const pn532_config_t *config)
     } else {
         /* Initialise SPI bus. */
         (void)memset(&buscfg, 0, sizeof(buscfg));
-        buscfg.mosi_io_num     = config->pin_mosi;
-        buscfg.miso_io_num     = config->pin_miso;
-        buscfg.sclk_io_num     = config->pin_sclk;
-        buscfg.quadwp_io_num   = PN532_SPI_NO_PIN;
-        buscfg.quadhd_io_num   = PN532_SPI_NO_PIN;
+        buscfg.mosi_io_num = config->pin_mosi;
+        buscfg.miso_io_num = config->pin_miso;
+        buscfg.sclk_io_num = config->pin_sclk;
+        buscfg.quadwp_io_num = PN532_SPI_NO_PIN;
+        buscfg.quadhd_io_num = PN532_SPI_NO_PIN;
         buscfg.max_transfer_sz = 0;
         ret = spi_bus_initialize(config->spi_host, &buscfg, SPI_DMA_CH_AUTO);
     }
@@ -339,11 +339,11 @@ esp_err_t pn532_init(pn532_t *dev, const pn532_config_t *config)
     if (ret == ESP_OK) {
         /* Add PN532 device: mode 0, LSB-first, 1 MHz, CS managed manually. */
         (void)memset(&devcfg, 0, sizeof(devcfg));
-        devcfg.mode           = PN532_SPI_MODE;
+        devcfg.mode = PN532_SPI_MODE;
         devcfg.clock_speed_hz = (int)PN532_SPI_CLOCK_HZ;
-        devcfg.spics_io_num   = PN532_SPI_NO_PIN;
-        devcfg.queue_size     = PN532_SPI_QUEUE_SIZE;
-        devcfg.flags          = SPI_DEVICE_BIT_LSBFIRST;
+        devcfg.spics_io_num = PN532_SPI_NO_PIN;
+        devcfg.queue_size = PN532_SPI_QUEUE_SIZE;
+        devcfg.flags = SPI_DEVICE_BIT_LSBFIRST;
         ret = spi_bus_add_device(config->spi_host, &devcfg, &dev->spi);
 
         if ((ret != ESP_OK) && (!config->skip_bus_init)) {
@@ -380,9 +380,9 @@ esp_err_t pn532_init(pn532_t *dev, const pn532_config_t *config)
 
 uint32_t pn532_get_firmware_version(pn532_t *dev)
 {
-    uint8_t  pn532_packetbuffer[PN532_FIRMWARE_RESP_LEN];
+    uint8_t pn532_packetbuffer[PN532_FIRMWARE_RESP_LEN];
     uint32_t response = 0U;
-    bool     ok       = false;
+    bool ok = false;
 
     (void)memset(pn532_packetbuffer, 0, sizeof(pn532_packetbuffer));
     pn532_packetbuffer[0] = PN532_FIRMWAREVERSION;
@@ -399,7 +399,7 @@ uint32_t pn532_get_firmware_version(pn532_t *dev)
         if (memcmp(pn532_packetbuffer, pn532_response_fw, PN532_FIRMWARE_HDR_LEN) != 0) {
             ESP_LOGE(TAG, "Unexpected firmware response");
         } else {
-            response  = (uint32_t)pn532_packetbuffer[PN532_FW_IC_OFFSET];
+            response = (uint32_t)pn532_packetbuffer[PN532_FW_IC_OFFSET];
             response <<= 8U;
             response |= (uint32_t)pn532_packetbuffer[PN532_FW_VER_OFFSET];
             response <<= 8U;
@@ -415,8 +415,8 @@ uint32_t pn532_get_firmware_version(pn532_t *dev)
 bool pn532_sam_config(pn532_t *dev)
 {
     uint8_t pn532_packetbuffer[PN532_SAM_RESP_LEN];
-    bool    ok     = false;
-    bool    result = false;
+    bool ok = false;
+    bool result = false;
 
     (void)memset(pn532_packetbuffer, 0, sizeof(pn532_packetbuffer));
     pn532_packetbuffer[0] = PN532_SAMCONFIGURATION;
@@ -437,11 +437,11 @@ bool pn532_sam_config(pn532_t *dev)
 
 uint32_t pn532_read_passive_target_id(pn532_t *dev, uint8_t cardbaudrate)
 {
-    uint8_t  pn532_packetbuffer[PN532_PASSIVE_RESP_LEN];
-    uint32_t cid     = 0U;
-    uint8_t  uid_len = 0U;
-    uint8_t  i       = 0U;
-    bool     ok      = false;
+    uint8_t pn532_packetbuffer[PN532_PASSIVE_RESP_LEN];
+    uint32_t cid = 0U;
+    uint8_t uid_len = 0U;
+    uint8_t i = 0U;
+    bool ok = false;
 
     (void)memset(pn532_packetbuffer, 0, sizeof(pn532_packetbuffer));
     pn532_packetbuffer[0] = PN532_INLISTPASSIVETARGET;
@@ -458,7 +458,7 @@ uint32_t pn532_read_passive_target_id(pn532_t *dev, uint8_t cardbaudrate)
             uid_len = pn532_packetbuffer[PN532_PASSIVE_UID_LEN_OFFSET];
             for (i = 0U; i < uid_len; i++) {
                 cid <<= PN532_PASSIVE_UID_SHIFT_BITS;
-                cid  |= (uint32_t)pn532_packetbuffer[PN532_PASSIVE_UID_DATA_OFFSET + i];
+                cid |= (uint32_t)pn532_packetbuffer[PN532_PASSIVE_UID_DATA_OFFSET + i];
             }
         }
     }
@@ -471,11 +471,11 @@ bool pn532_send_apdu(pn532_t *dev,
                      uint8_t *response, uint8_t *resp_len)
 {
     uint8_t pn532_packetbuffer[PN532_PACK_BUFF_SIZE];
-    uint8_t cmd_buf_len   = 0U;
+    uint8_t cmd_buf_len = 0U;
     uint8_t full_read_len = 0U;
-    uint8_t data_len      = 0U;
-    bool    ok            = false;
-    bool    result        = false;
+    uint8_t data_len = 0U;
+    bool ok = false;
+    bool result = false;
 
     (void)memset(pn532_packetbuffer, 0, sizeof(pn532_packetbuffer));
 
@@ -516,7 +516,7 @@ bool pn532_send_apdu(pn532_t *dev,
                                  &pn532_packetbuffer[PN532_RESP_DATA_OFFSET],
                                  (size_t)data_len);
                     *resp_len = data_len;
-                    result    = true;
+                    result = true;
                 }
             }
         }
@@ -529,8 +529,8 @@ bool pn532_release_target(pn532_t *dev)
 {
     uint8_t pn532_packetbuffer[PN532_RELEASE_CMD_LEN];
     uint8_t resp[PN532_RELEASE_RESP_LEN];
-    bool    ok     = false;
-    bool    result = false;
+    bool ok = false;
+    bool result = false;
 
     (void)memset(pn532_packetbuffer, 0, sizeof(pn532_packetbuffer));
     (void)memset(resp, 0, sizeof(resp));
