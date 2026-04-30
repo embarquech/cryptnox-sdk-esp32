@@ -7,7 +7,6 @@
 #include <stdbool.h>
 #include "driver/spi_master.h"
 
-/* cppcheck-suppress misra-c2012-2.5 */
 #define PN532_MIFARE_ISO14443A (0x00U)
 
 typedef struct {

@@ -8,61 +8,118 @@
 #include "freertos/task.h"
 #include <string.h>
 
-static const char *PN532_TAG = "pn532";
+static const char *const TAG = "pn532";
 
-#define PN532_PREAMBLE              (0x00U)
-#define PN532_STARTCODE2            (0xFFU)
-#define PN532_POSTAMBLE             (0x00U)
-#define PN532_HOSTTOPN532           (0xD4U)
+/******************************************************************
+ * PN532 frame constants
+ ******************************************************************/
 
-#define PN532_FIRMWAREVERSION       (0x02U)
-#define PN532_SAMCONFIGURATION      (0x14U)
-#define PN532_INLISTPASSIVETARGET   (0x4AU)
+#define PN532_PREAMBLE     (0x00U)
+#define PN532_STARTCODE1   (0x00U)
+#define PN532_STARTCODE2   (0xFFU)
+#define PN532_POSTAMBLE    (0x00U)
+#define PN532_HOSTTOPN532  (0xD4U)
 
-#define PN532_SPI_STATREAD          (0x02U)
-#define PN532_SPI_DATAWRITE         (0x01U)
-#define PN532_SPI_DATAREAD          (0x03U)
-#define PN532_SPI_READY             (0x01U)
+/******************************************************************
+ * PN532 command codes
+ ******************************************************************/
 
-#define PN532_PACK_BUFF_SIZE        (64U)
-#define PN532_ACK_FRAME_LEN         (6U)
-#define PN532_FW_RESP_PREFIX_LEN    (7U)
-#define PN532_FW_RESP_READ_LEN      (12U)
-#define PN532_FW_IC_OFFSET          (7U)
-#define PN532_FW_VER_OFFSET         (8U)
-#define PN532_FW_REV_OFFSET         (9U)
-#define PN532_FW_SUPPORT_OFFSET     (10U)
-#define PN532_SAM_READ_LEN          (9U)
-#define PN532_SAM_STATUS_OFFSET     (6U)
-#define PN532_SAM_STATUS_OK         (0x15U)
-#define PN532_CARD_READ_LEN         (21U)
-#define PN532_CARD_NB_OFFSET        (8U)
-#define PN532_CARD_NB_EXPECTED      (1U)
-#define PN532_CARD_LEN_OFFSET       (13U)
-#define PN532_CARD_ID_BASE_OFFSET   (14U)
-#define PN532_TIMER_STEP_MS         (10U)
-#define PN532_WAKEUP_BYTE           (0x55U)
-#define PN532_WAKEUP_DELAY_MS       (1000U)
-#define PN532_POST_SYNC_DELAY_MS    (100U)
-#define PN532_CS_SETTLE_DELAY_MS    (2U)
-#define PN532_READ_DELAY_MS         (1U)
-#define PN532_BITS_PER_BYTE         (8U)
-#define PN532_CID_SHIFT             (8U)
-#define PN532_CMD_LEN_OFFSET        (1U)
-#define PN532_CHECKSUM_INIT \
-    ((uint8_t)(PN532_PREAMBLE + PN532_PREAMBLE + PN532_STARTCODE2))
+#define PN532_FIRMWAREVERSION      (0x02U)
+#define PN532_SAMCONFIGURATION     (0x14U)
+#define PN532_INLISTPASSIVETARGET  (0x4AU)
 
-/* SPI bus / device configuration constants */
-#define PN532_SPI_PIN_UNUSED        (-1)
-#define PN532_SPI_MAX_TRANSFER      (0)
-#define PN532_SPI_MODE              (0U)
-#define PN532_SPI_CLOCK_HZ          (1000000U)
-#define PN532_SPI_QUEUE_SIZE        (1U)
+/******************************************************************
+ * SPI protocol constants
+ ******************************************************************/
 
-/* Timeout used for all command/ACK exchanges (milliseconds) */
-#define PN532_CMD_TIMEOUT_MS        (1000U)
+#define PN532_SPI_STATREAD    (0x02U)
+#define PN532_SPI_DATAWRITE   (0x01U)
+#define PN532_SPI_DATAREAD    (0x03U)
+#define PN532_SPI_READY       (0x01U)
+#define PN532_SPI_CLOCK_HZ    (1000000U)
+#define PN532_SPI_MODE        (0U)
+#define PN532_SPI_NO_PIN      (-1)
+#define PN532_SPI_QUEUE_SIZE  (1U)
+#define PN532_SPI_BITS        (8U)
 
-static uint8_t pn532_packetbuffer[PN532_PACK_BUFF_SIZE];
+/******************************************************************
+ * Timing constants (milliseconds)
+ ******************************************************************/
+
+#define PN532_CS_TOGGLE_DELAY_MS  (2U)
+#define PN532_WAKEUP_DELAY_MS     (1000U)
+#define PN532_SYNC_DELAY_MS       (100U)
+#define PN532_POLL_INTERVAL_MS    (10U)
+#define PN532_CMD_TIMEOUT_MS      (1000U)
+#define PN532_BYTE_DELAY_MS       (1U)
+
+/******************************************************************
+ * Wakeup sequence constants
+ ******************************************************************/
+
+#define PN532_WAKEUP_BYTE  (0x55U)
+
+/******************************************************************
+ * ACK frame
+ ******************************************************************/
+
+#define PN532_ACK_LEN  (6U)
+
+/******************************************************************
+ * Frame structure constants
+ ******************************************************************/
+
+/* HOSTTOPN532 TFI byte added to cmd_len when building a frame. */
+#define PN532_FRAME_TFI_OVERHEAD  (1U)
+
+/******************************************************************
+ * Firmware version response offsets and lengths
+ ******************************************************************/
+
+#define PN532_FIRMWARE_CMD_LEN     (1U)
+#define PN532_FIRMWARE_RESP_LEN    (12U)
+#define PN532_FIRMWARE_HDR_LEN     (7U)
+#define PN532_FW_IC_OFFSET         (7U)
+#define PN532_FW_VER_OFFSET        (8U)
+#define PN532_FW_REV_OFFSET        (9U)
+#define PN532_FW_SUPPORT_OFFSET    (10U)
+
+/******************************************************************
+ * SAMConfiguration constants
+ ******************************************************************/
+
+#define PN532_SAM_CMD_LEN           (4U)
+#define PN532_SAM_RESP_LEN          (9U)
+#define PN532_SAM_RESP_CODE_OFFSET  (6U)
+#define PN532_SAM_RESP_CODE         (0x15U)  /* SAMCONFIGURATION + 1 */
+#define PN532_SAM_NORMAL_MODE       (0x01U)
+#define PN532_SAM_TIMEOUT           (0x14U)  /* 50 ms × 20 = 1 s */
+#define PN532_SAM_USE_IRQ           (0x01U)
+
+/******************************************************************
+ * InListPassiveTarget constants
+ ******************************************************************/
+
+#define PN532_PASSIVE_CMD_LEN             (3U)
+#define PN532_PASSIVE_RESP_LEN            (21U)
+#define PN532_PASSIVE_MAX_TARGETS         (1U)
+#define PN532_PASSIVE_NUM_TARGETS_OFFSET  (7U)
+#define PN532_PASSIVE_EXPECTED_TARGETS    (1U)
+#define PN532_PASSIVE_UID_LEN_OFFSET      (12U)
+#define PN532_PASSIVE_UID_DATA_OFFSET     (13U)
+#define PN532_PASSIVE_UID_SHIFT_BITS      (8U)
+
+/******************************************************************
+ * Module-level static data
+ ******************************************************************/
+
+static const uint8_t pn532_ack[PN532_ACK_LEN] = {
+    0x00U, 0x00U, 0xFFU, 0x00U, 0xFFU, 0x00U
+};
+
+static const uint8_t pn532_response_fw[PN532_FIRMWARE_HDR_LEN] = {
+    0x00U, 0x00U, 0xFFU, 0x06U, 0xFAU, 0xD5U, 0x03U
+};
 
 /******************************************************************
  * Low-level SPI helpers
@@ -70,10 +127,10 @@ static uint8_t pn532_packetbuffer[PN532_PACK_BUFF_SIZE];
 
 static void spi_write_byte(pn532_t *dev, uint8_t data)
 {
-    spi_transaction_t t = {
-        .length    = PN532_BITS_PER_BYTE,
-        .tx_buffer = &data,
-    };
+    spi_transaction_t t;
+    (void)memset(&t, 0, sizeof(t));
+    t.length = PN532_SPI_BITS;
+    t.tx_buffer = &data;
     (void)spi_device_transmit(dev->spi, &t);
 }
 
@@ -81,95 +138,99 @@ static uint8_t spi_read_byte(pn532_t *dev)
 {
     uint8_t rx = 0U;
     uint8_t tx = 0x00U;
-    spi_transaction_t t = {
-        .length    = PN532_BITS_PER_BYTE,
-        .rxlength  = PN532_BITS_PER_BYTE,
-        .tx_buffer = &tx,
-        .rx_buffer = &rx,
-    };
+    spi_transaction_t t;
+    (void)memset(&t, 0, sizeof(t));
+    t.length = PN532_SPI_BITS;
+    t.rxlength = PN532_SPI_BITS;
+    t.tx_buffer = &tx;
+    t.rx_buffer = &rx;
     (void)spi_device_transmit(dev->spi, &t);
     return rx;
 }
 
 static uint8_t read_spi_status(pn532_t *dev)
 {
-    (void)gpio_set_level(dev->pin_cs, 0);
-    vTaskDelay(pdMS_TO_TICKS(PN532_CS_SETTLE_DELAY_MS));
+    uint8_t status = 0U;
+    (void)gpio_set_level(dev->pin_cs, 0U);
+    vTaskDelay(pdMS_TO_TICKS(PN532_CS_TOGGLE_DELAY_MS));
     spi_write_byte(dev, PN532_SPI_STATREAD);
-    uint8_t status = spi_read_byte(dev);
-    (void)gpio_set_level(dev->pin_cs, 1);
+    status = spi_read_byte(dev);
+    (void)gpio_set_level(dev->pin_cs, 1U);
     return status;
 }
 
 static void read_data(pn532_t *dev, uint8_t *buff, uint8_t n)
 {
-    (void)gpio_set_level(dev->pin_cs, 0);
-    vTaskDelay(pdMS_TO_TICKS(PN532_CS_SETTLE_DELAY_MS));
+    uint8_t i = 0U;
+    (void)gpio_set_level(dev->pin_cs, 0U);
+    vTaskDelay(pdMS_TO_TICKS(PN532_CS_TOGGLE_DELAY_MS));
     spi_write_byte(dev, PN532_SPI_DATAREAD);
-    for (uint8_t i = 0U; i < n; i++) {
-        vTaskDelay(pdMS_TO_TICKS(PN532_READ_DELAY_MS));
+    for (i = 0U; i < n; i++) {
+        vTaskDelay(pdMS_TO_TICKS(PN532_BYTE_DELAY_MS));
         buff[i] = spi_read_byte(dev);
     }
-    (void)gpio_set_level(dev->pin_cs, 1);
+    (void)gpio_set_level(dev->pin_cs, 1U);
 }
 
 static bool check_spi_ack(pn532_t *dev)
 {
-    static const uint8_t ack_frame[PN532_ACK_FRAME_LEN] = {
-        0x00U, 0x00U, 0xFFU, 0x00U, 0xFFU, 0x00U
-    };
-    uint8_t ackbuff[PN532_ACK_FRAME_LEN];
-    read_data(dev, ackbuff, (uint8_t)PN532_ACK_FRAME_LEN);
-    return (memcmp(ackbuff, ack_frame, PN532_ACK_FRAME_LEN) == 0);
+    uint8_t ackbuff[PN532_ACK_LEN];
+    bool result = false;
+    (void)memset(ackbuff, 0, sizeof(ackbuff));
+    read_data(dev, ackbuff, PN532_ACK_LEN);
+    result = (memcmp(ackbuff, pn532_ack, PN532_ACK_LEN) == 0);
+    return result;
 }
 
 static void write_command(pn532_t *dev, const uint8_t *cmd, uint8_t cmd_len)
 {
-    uint8_t len      = (uint8_t)(cmd_len + PN532_CMD_LEN_OFFSET);
-    uint8_t checksum = PN532_CHECKSUM_INIT;
+    uint8_t frame_len = (uint8_t)(cmd_len + PN532_FRAME_TFI_OVERHEAD);
+    uint8_t checksum = (uint8_t)(PN532_PREAMBLE + PN532_PREAMBLE + PN532_STARTCODE2);
+    uint8_t i = 0U;
 
-    (void)gpio_set_level(dev->pin_cs, 0);
-    vTaskDelay(pdMS_TO_TICKS(PN532_CS_SETTLE_DELAY_MS));
+    (void)gpio_set_level(dev->pin_cs, 0U);
+    vTaskDelay(pdMS_TO_TICKS(PN532_CS_TOGGLE_DELAY_MS));
     spi_write_byte(dev, PN532_SPI_DATAWRITE);
 
     spi_write_byte(dev, PN532_PREAMBLE);
     spi_write_byte(dev, PN532_PREAMBLE);
     spi_write_byte(dev, PN532_STARTCODE2);
 
-    spi_write_byte(dev, len);
-    spi_write_byte(dev, (uint8_t)((uint8_t)(~len) + 1U));
+    spi_write_byte(dev, frame_len);
+    spi_write_byte(dev, (uint8_t)(~frame_len + 1U));
 
     spi_write_byte(dev, PN532_HOSTTOPN532);
     checksum = (uint8_t)(checksum + PN532_HOSTTOPN532);
 
-    for (uint8_t i = 0U; i < (uint8_t)(len - 1U); i++) {
+    for (i = 0U; i < cmd_len; i++) {
         spi_write_byte(dev, cmd[i]);
         checksum = (uint8_t)(checksum + cmd[i]);
     }
     spi_write_byte(dev, (uint8_t)(~checksum));
     spi_write_byte(dev, PN532_POSTAMBLE);
-    (void)gpio_set_level(dev->pin_cs, 1);
+    (void)gpio_set_level(dev->pin_cs, 1U);
 }
 
 static bool send_command_check_ack(pn532_t *dev, const uint8_t *cmd,
                                    uint8_t cmd_len, uint16_t timeout)
 {
-    uint16_t timer     = 0U;
-    bool     timed_out = false;
-    bool     ack_ok    = false;
-    bool     result    = false;
+    uint16_t timer = 0U;
+    bool timed_out = false;
+    bool ack_ok = false;
+    bool result = false;
 
     write_command(dev, cmd, cmd_len);
 
+    /* Wait until the PN532 signals it is ready to send the ACK frame. */
     while ((read_spi_status(dev) != PN532_SPI_READY) && (!timed_out)) {
         if (timeout != 0U) {
-            timer = (uint16_t)(timer + PN532_TIMER_STEP_MS);
+            timer = (uint16_t)(timer + PN532_POLL_INTERVAL_MS);
             if (timer > timeout) {
                 timed_out = true;
             }
         }
         if (!timed_out) {
-            vTaskDelay(pdMS_TO_TICKS(PN532_TIMER_STEP_MS));
+            vTaskDelay(pdMS_TO_TICKS(PN532_POLL_INTERVAL_MS));
         }
     }
 
@@ -178,20 +239,22 @@ static bool send_command_check_ack(pn532_t *dev, const uint8_t *cmd,
     }
 
     if (ack_ok) {
-        timer     = 0U;
+        timer = 0U;
         timed_out = false;
 
+        /* Wait until the PN532 signals it is ready to send the response. */
         while ((read_spi_status(dev) != PN532_SPI_READY) && (!timed_out)) {
             if (timeout != 0U) {
-                timer = (uint16_t)(timer + PN532_TIMER_STEP_MS);
+                timer = (uint16_t)(timer + PN532_POLL_INTERVAL_MS);
                 if (timer > timeout) {
                     timed_out = true;
                 }
             }
             if (!timed_out) {
-                vTaskDelay(pdMS_TO_TICKS(PN532_TIMER_STEP_MS));
+                vTaskDelay(pdMS_TO_TICKS(PN532_POLL_INTERVAL_MS));
             }
         }
+
         result = !timed_out;
     }
 
@@ -204,109 +267,130 @@ static bool send_command_check_ack(pn532_t *dev, const uint8_t *cmd,
 
 esp_err_t pn532_init(pn532_t *dev, const pn532_config_t *config)
 {
-    gpio_config_t io_conf = {
-        .pin_bit_mask = (1ULL << (uint32_t)config->pin_cs),
-        .mode         = GPIO_MODE_OUTPUT,
-        .pull_up_en   = GPIO_PULLUP_DISABLE,
-        .pull_down_en = GPIO_PULLDOWN_DISABLE,
-        .intr_type    = GPIO_INTR_DISABLE,
-    };
+    gpio_config_t io_conf;
+    spi_bus_config_t buscfg;
+    spi_device_interface_config_t devcfg;
+    esp_err_t ret = ESP_FAIL;
+
+    /* Configure CS pin as GPIO output, managed manually. */
+    (void)memset(&io_conf, 0, sizeof(io_conf));
+    io_conf.pin_bit_mask = (1ULL << (uint32_t)config->pin_cs);
+    io_conf.mode = GPIO_MODE_OUTPUT;
+    io_conf.pull_up_en = GPIO_PULLUP_DISABLE;
+    io_conf.pull_down_en = GPIO_PULLDOWN_DISABLE;
+    io_conf.intr_type = GPIO_INTR_DISABLE;
     (void)gpio_config(&io_conf);
-    (void)gpio_set_level(config->pin_cs, 1);
+    (void)gpio_set_level(config->pin_cs, 1U);
     dev->pin_cs = config->pin_cs;
 
-    esp_err_t result = ESP_OK;
-
-    if (!config->skip_bus_init) {
-        spi_bus_config_t buscfg = {
-            .mosi_io_num     = config->pin_mosi,
-            .miso_io_num     = config->pin_miso,
-            .sclk_io_num     = config->pin_sclk,
-            .quadwp_io_num   = PN532_SPI_PIN_UNUSED,
-            .quadhd_io_num   = PN532_SPI_PIN_UNUSED,
-            .max_transfer_sz = PN532_SPI_MAX_TRANSFER,
-        };
-        result = spi_bus_initialize(config->spi_host, &buscfg, SPI_DMA_CH_AUTO);
+    if (config->skip_bus_init) {
+        ret = ESP_OK;
+    } else {
+        /* Initialise SPI bus. */
+        (void)memset(&buscfg, 0, sizeof(buscfg));
+        buscfg.mosi_io_num = config->pin_mosi;
+        buscfg.miso_io_num = config->pin_miso;
+        buscfg.sclk_io_num = config->pin_sclk;
+        buscfg.quadwp_io_num = PN532_SPI_NO_PIN;
+        buscfg.quadhd_io_num = PN532_SPI_NO_PIN;
+        buscfg.max_transfer_sz = 0;
+        ret = spi_bus_initialize(config->spi_host, &buscfg, SPI_DMA_CH_AUTO);
     }
 
-    if (result == ESP_OK) {
-        spi_device_interface_config_t devcfg = {
-            .mode           = PN532_SPI_MODE,
-            .clock_speed_hz = PN532_SPI_CLOCK_HZ,
-            .spics_io_num   = PN532_SPI_PIN_UNUSED,
-            .queue_size     = PN532_SPI_QUEUE_SIZE,
-            .flags          = SPI_DEVICE_BIT_LSBFIRST,
-        };
-        result = spi_bus_add_device(config->spi_host, &devcfg, &dev->spi);
+    if (ret == ESP_OK) {
+        /* Add PN532 device: mode 0, LSB-first, 1 MHz, CS managed manually. */
+        (void)memset(&devcfg, 0, sizeof(devcfg));
+        devcfg.mode = PN532_SPI_MODE;
+        devcfg.clock_speed_hz = (int)PN532_SPI_CLOCK_HZ;
+        devcfg.spics_io_num = PN532_SPI_NO_PIN;
+        devcfg.queue_size = PN532_SPI_QUEUE_SIZE;
+        devcfg.flags = SPI_DEVICE_BIT_LSBFIRST;
+        ret = spi_bus_add_device(config->spi_host, &devcfg, &dev->spi);
+
+        if ((ret != ESP_OK) && (!config->skip_bus_init)) {
+            (void)spi_bus_free(config->spi_host);
+        }
     }
 
-    if (result == ESP_OK) {
-        (void)gpio_set_level(dev->pin_cs, 0);
-        vTaskDelay(pdMS_TO_TICKS(PN532_CS_SETTLE_DELAY_MS));
+    if (ret == ESP_OK) {
+        uint8_t init_cmd[PN532_FIRMWARE_CMD_LEN];
+        (void)memset(init_cmd, 0, sizeof(init_cmd));
+
+        /* Wakeup sequence: assert CS, send 0x55 0x55 then three zero bytes. */
+        (void)gpio_set_level(dev->pin_cs, 0U);
+        vTaskDelay(pdMS_TO_TICKS(PN532_CS_TOGGLE_DELAY_MS));
         spi_write_byte(dev, PN532_WAKEUP_BYTE);
         spi_write_byte(dev, PN532_WAKEUP_BYTE);
-        spi_write_byte(dev, 0x00U);
-        spi_write_byte(dev, 0x00U);
-        spi_write_byte(dev, 0x00U);
-        (void)gpio_set_level(dev->pin_cs, 1);
+        spi_write_byte(dev, PN532_PREAMBLE);
+        spi_write_byte(dev, PN532_PREAMBLE);
+        spi_write_byte(dev, PN532_PREAMBLE);
+        (void)gpio_set_level(dev->pin_cs, 1U);
         vTaskDelay(pdMS_TO_TICKS(PN532_WAKEUP_DELAY_MS));
 
-        pn532_packetbuffer[0] = PN532_FIRMWAREVERSION;
-        (void)send_command_check_ack(dev, pn532_packetbuffer, 1U, PN532_CMD_TIMEOUT_MS);
-        vTaskDelay(pdMS_TO_TICKS(PN532_POST_SYNC_DELAY_MS));
+        /* Dummy GetFirmwareVersion to sync the SPI state machine. */
+        init_cmd[0] = PN532_FIRMWAREVERSION;
+        (void)send_command_check_ack(dev, init_cmd,
+                                     PN532_FIRMWARE_CMD_LEN, PN532_CMD_TIMEOUT_MS);
+        vTaskDelay(pdMS_TO_TICKS(PN532_SYNC_DELAY_MS));
 
-        ESP_LOGI(PN532_TAG, "PN532 initialized");
+        ESP_LOGI(TAG, "PN532 initialized");
     }
 
-    return result;
+    return ret;
 }
 
 uint32_t pn532_get_firmware_version(pn532_t *dev)
 {
-    static const uint8_t fw_prefix[PN532_FW_RESP_PREFIX_LEN] = {
-        0x00U, 0x00U, 0xFFU, 0x06U, 0xFAU, 0xD5U, 0x03U
-    };
-    uint32_t result = 0U;
+    uint8_t pn532_packetbuffer[PN532_FIRMWARE_RESP_LEN];
+    uint32_t response = 0U;
+    bool ok = false;
 
+    (void)memset(pn532_packetbuffer, 0, sizeof(pn532_packetbuffer));
     pn532_packetbuffer[0] = PN532_FIRMWAREVERSION;
+    ok = send_command_check_ack(dev, pn532_packetbuffer,
+                                PN532_FIRMWARE_CMD_LEN, PN532_CMD_TIMEOUT_MS);
 
-    bool ack = send_command_check_ack(dev, pn532_packetbuffer, 1U, PN532_CMD_TIMEOUT_MS);
-    if (!ack) {
-        ESP_LOGE(PN532_TAG, "No ACK from PN532");
+    if (!ok) {
+        ESP_LOGE(TAG, "No ACK from PN532");
     } else {
-        read_data(dev, pn532_packetbuffer, (uint8_t)PN532_FW_RESP_READ_LEN);
-        ESP_LOG_BUFFER_HEX_LEVEL(PN532_TAG, pn532_packetbuffer,
-                                 PN532_FW_RESP_READ_LEN, ESP_LOG_INFO);
+        read_data(dev, pn532_packetbuffer, PN532_FIRMWARE_RESP_LEN);
+        ESP_LOG_BUFFER_HEX_LEVEL(TAG, pn532_packetbuffer,
+                                 PN532_FIRMWARE_RESP_LEN, ESP_LOG_INFO);
 
-        if (memcmp(pn532_packetbuffer, fw_prefix, PN532_FW_RESP_PREFIX_LEN) != 0) {
-            ESP_LOGE(PN532_TAG, "Unexpected firmware response");
+        if (memcmp(pn532_packetbuffer, pn532_response_fw, PN532_FIRMWARE_HDR_LEN) != 0) {
+            ESP_LOGE(TAG, "Unexpected firmware response");
         } else {
-            result  = (uint32_t)pn532_packetbuffer[PN532_FW_IC_OFFSET];
-            result  = (result << PN532_CID_SHIFT);
-            result |= (uint32_t)pn532_packetbuffer[PN532_FW_VER_OFFSET];
-            result  = (result << PN532_CID_SHIFT);
-            result |= (uint32_t)pn532_packetbuffer[PN532_FW_REV_OFFSET];
-            result  = (result << PN532_CID_SHIFT);
-            result |= (uint32_t)pn532_packetbuffer[PN532_FW_SUPPORT_OFFSET];
+            response = (uint32_t)pn532_packetbuffer[PN532_FW_IC_OFFSET];
+            response <<= 8U;
+            response |= (uint32_t)pn532_packetbuffer[PN532_FW_VER_OFFSET];
+            response <<= 8U;
+            response |= (uint32_t)pn532_packetbuffer[PN532_FW_REV_OFFSET];
+            response <<= 8U;
+            response |= (uint32_t)pn532_packetbuffer[PN532_FW_SUPPORT_OFFSET];
         }
     }
 
-    return result;
+    return response;
 }
 
 bool pn532_sam_config(pn532_t *dev)
 {
+    uint8_t pn532_packetbuffer[PN532_SAM_RESP_LEN];
+    bool ok = false;
     bool result = false;
 
+    (void)memset(pn532_packetbuffer, 0, sizeof(pn532_packetbuffer));
     pn532_packetbuffer[0] = PN532_SAMCONFIGURATION;
-    pn532_packetbuffer[1] = 0x01U;
-    pn532_packetbuffer[2] = 0x14U;
-    pn532_packetbuffer[3] = 0x01U;
+    pn532_packetbuffer[1] = PN532_SAM_NORMAL_MODE;
+    pn532_packetbuffer[2] = PN532_SAM_TIMEOUT;
+    pn532_packetbuffer[3] = PN532_SAM_USE_IRQ;
 
-    bool ack = send_command_check_ack(dev, pn532_packetbuffer, 4U, PN532_CMD_TIMEOUT_MS);
-    if (ack) {
-        read_data(dev, pn532_packetbuffer, (uint8_t)PN532_SAM_READ_LEN);
-        result = (pn532_packetbuffer[PN532_SAM_STATUS_OFFSET] == PN532_SAM_STATUS_OK);
+    ok = send_command_check_ack(dev, pn532_packetbuffer,
+                                PN532_SAM_CMD_LEN, PN532_CMD_TIMEOUT_MS);
+
+    if (ok) {
+        read_data(dev, pn532_packetbuffer, PN532_SAM_RESP_LEN);
+        result = (pn532_packetbuffer[PN532_SAM_RESP_CODE_OFFSET] == PN532_SAM_RESP_CODE);
     }
 
     return result;
@@ -314,23 +398,31 @@ bool pn532_sam_config(pn532_t *dev)
 
 uint32_t pn532_read_passive_target_id(pn532_t *dev, uint8_t cardbaudrate)
 {
-    uint32_t result = 0U;
+    uint8_t pn532_packetbuffer[PN532_PASSIVE_RESP_LEN];
+    uint32_t cid = 0U;
+    uint8_t uid_len = 0U;
+    uint8_t i = 0U;
+    bool ok = false;
 
+    (void)memset(pn532_packetbuffer, 0, sizeof(pn532_packetbuffer));
     pn532_packetbuffer[0] = PN532_INLISTPASSIVETARGET;
-    pn532_packetbuffer[1] = 1U;
+    pn532_packetbuffer[1] = PN532_PASSIVE_MAX_TARGETS;
     pn532_packetbuffer[2] = cardbaudrate;
 
-    bool ack = send_command_check_ack(dev, pn532_packetbuffer, 3U, PN532_CMD_TIMEOUT_MS);
-    if (ack) {
-        read_data(dev, pn532_packetbuffer, (uint8_t)PN532_CARD_READ_LEN);
+    ok = send_command_check_ack(dev, pn532_packetbuffer,
+                                PN532_PASSIVE_CMD_LEN, PN532_CMD_TIMEOUT_MS);
 
-        if (pn532_packetbuffer[PN532_CARD_NB_OFFSET] == PN532_CARD_NB_EXPECTED) {
-            for (uint8_t i = 0U; i < pn532_packetbuffer[PN532_CARD_LEN_OFFSET]; i++) {
-                result  = (result << PN532_CID_SHIFT);
-                result |= (uint32_t)pn532_packetbuffer[PN532_CARD_ID_BASE_OFFSET + i];
+    if (ok) {
+        read_data(dev, pn532_packetbuffer, PN532_PASSIVE_RESP_LEN);
+
+        if (pn532_packetbuffer[PN532_PASSIVE_NUM_TARGETS_OFFSET] == PN532_PASSIVE_EXPECTED_TARGETS) {
+            uid_len = pn532_packetbuffer[PN532_PASSIVE_UID_LEN_OFFSET];
+            for (i = 0U; i < uid_len; i++) {
+                cid <<= PN532_PASSIVE_UID_SHIFT_BITS;
+                cid |= (uint32_t)pn532_packetbuffer[PN532_PASSIVE_UID_DATA_OFFSET + i];
             }
         }
     }
 
-    return result;
+    return cid;
 }
