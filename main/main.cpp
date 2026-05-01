@@ -7,18 +7,14 @@
 #include "esp_log.h"
 #include "epd.h"
 #include "logo.h"
-#include "CryptnoxUtils.h"
-
-extern "C" {
-#include "pn532.h"
-}
+#include "CW_Utils.h"
+#include "CryptnoxWallet.h"
+#include "Pn532NfcTransport.h"
+#include "ESP32Logger.h"
+#include "esp32_crypto_provider.h"
 
 static const char *const TAG = "main";
 static const size_t RND_BUF_SIZE = 16U;
-static const uint32_t PN532_FW_IC_SHIFT = 24U;
-static const uint32_t PN532_FW_VER_SHIFT = 16U;
-static const uint32_t PN532_FW_REV_SHIFT = 8U;
-static const uint32_t BYTE_MASK = 0xFFU;
 static const uint32_t POLL_DELAY_MS = 500U;
 
 /* Shared SPI bus: MOSI=IO11, SCLK=IO12, MISO=IO13 */
@@ -42,23 +38,19 @@ static const uint32_t POLL_DELAY_MS = 500U;
 #define EPD_HEIGHT 300U
 
 /* Bitmap bit-packing constants */
-#define BITS_PER_BYTE 8U
-#define BYTE_MSB      0x80U
-
-/* UID text overlay position on display */
-#define UID_TEXT_X 10U
-#define UID_TEXT_Y 10U
-
-/* UID string buffer length (8 hex chars + "UID: " prefix + NUL) */
-#define UID_STR_LEN 32U
+#define BITS_PER_BYTE    8U
+#define BYTE_MSB         0x80U
+#define CENTER_DIVISOR   2U  /* halves a pixel dimension to compute a centred offset */
+#define LAST_IDX_OFFSET  1U  /* subtracts from an inclusive count to give the last index */
+#define BIT_EXTRACT_MASK 1U  /* isolates the single shifted bit from a byte */
 
 static uint8_t image_bw[EPD_WIDTH / BITS_PER_BYTE * EPD_HEIGHT];
 
 static void draw_logo(void)
 {
     uint16_t buf_stride = static_cast<uint16_t>(EPD_WIDTH / BITS_PER_BYTE);
-    uint16_t off_x_px = static_cast<uint16_t>((EPD_WIDTH - LOGO_H) / 2U);
-    uint16_t off_y = static_cast<uint16_t>((EPD_HEIGHT - LOGO_W) / 2U);
+    uint16_t off_x_px = static_cast<uint16_t>((EPD_WIDTH - LOGO_H) / CENTER_DIVISOR);
+    uint16_t off_y = static_cast<uint16_t>((EPD_HEIGHT - LOGO_W) / CENTER_DIVISOR);
 
     for (uint16_t sy = 0U; sy < static_cast<uint16_t>(LOGO_H); sy++) {
         for (uint16_t sx = 0U; sx < static_cast<uint16_t>(LOGO_W); sx++) {
@@ -66,11 +58,11 @@ static void draw_logo(void)
                                + static_cast<uint32_t>(sx / BITS_PER_BYTE);
             uint8_t src_byte = logo_cryptnox[src_idx];
             uint8_t sx_bit = static_cast<uint8_t>(sx % BITS_PER_BYTE);
-            uint8_t shift = static_cast<uint8_t>((BITS_PER_BYTE - 1U) - static_cast<unsigned int>(sx_bit));
-            uint8_t src_bit = static_cast<uint8_t>((src_byte >> shift) & 1U);
+            uint8_t shift = static_cast<uint8_t>((BITS_PER_BYTE - LAST_IDX_OFFSET) - static_cast<unsigned int>(sx_bit));
+            uint8_t src_bit = static_cast<uint8_t>((src_byte >> shift) & BIT_EXTRACT_MASK);
             bool pix_set = (src_bit == 0U);
             uint16_t dx = sy;
-            uint16_t dy = static_cast<uint16_t>(static_cast<uint16_t>(LOGO_W - 1U) - sx);
+            uint16_t dy = static_cast<uint16_t>(static_cast<uint16_t>(LOGO_W - LAST_IDX_OFFSET) - sx);
             uint16_t bx = static_cast<uint16_t>(off_x_px + dx);
             uint16_t by = static_cast<uint16_t>(off_y + dy);
             uint32_t addr = static_cast<uint32_t>(by) * static_cast<uint32_t>(buf_stride)
@@ -87,30 +79,62 @@ static void draw_logo(void)
     }
 }
 
-static void show_uid_on_epd(uint32_t uid)
+static void run_wallet_loop(CryptnoxWallet &wallet)
 {
-    char uid_str[UID_STR_LEN];
-    (void)memset(uid_str, 0, sizeof(uid_str));
-    (void)snprintf(uid_str, sizeof(uid_str), "UID: %08lX", static_cast<unsigned long>(uid));
+    /* SHA-256 of "CryptnoxTest\0" padded to 32 bytes — deterministic test vector. */
+    static const uint8_t TEST_HASH[CW_HASH_SIZE] = {
+        0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U,
+        0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U,
+        0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U,
+        0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x01U,
+    };
+    /* Replace with the card's actual PIN (ASCII digits, 4-9 characters). */
+    static const uint8_t TEST_PIN[CW_MAX_PIN_LENGTH] = {
+        '0', '0', '0', '0', '0', '0', '0', '0', '0'
+    };
 
-    epd_paint_selectimage(image_bw);
-    epd_paint_clear(static_cast<uint16_t>(EPD_COLOR_BLACK));
-    draw_logo();
-    epd_paint_showString(static_cast<uint16_t>(UID_TEXT_X),
-                         static_cast<uint16_t>(UID_TEXT_Y),
-                         reinterpret_cast<uint8_t *>(uid_str),
-                         static_cast<uint16_t>(EPD_FONT_SIZE24x12),
-                         static_cast<uint16_t>(EPD_COLOR_WHITE));
-    (void)epd_init_fast();
-    epd_displayBW_fast(image_bw);
-    epd_enter_deepsleepmode(EPD_DEEPSLEEP_MODE1);
+    while (true) {
+        CW_SecureSession session;
+        bool connected = wallet.connect(session);
+
+        if (!connected) {
+            ESP_LOGW(TAG, "Card not found or secure channel failed - retrying");
+        }
+
+        if (connected) {
+            CW_SignRequest req(session,
+                              CW_SIGN_CURR_K1,
+                              CW_SIGN_SIG_ECDSA_LOW_S,
+                              CW_SIGN_WITH_PIN);
+            req.hash = TEST_HASH;
+            req.hashLength = static_cast<uint8_t>(CW_HASH_SIZE);
+            (void)memcpy(req.pin, TEST_PIN, CW_MAX_PIN_LENGTH);
+
+            CW_SignResult result = wallet.sign(req);
+
+            if (result.errorCode == CW_OK) {
+                ESP_LOGI(TAG, "Sign OK - r:");
+                ESP_LOG_BUFFER_HEX_LEVEL(TAG, &result.signature[CW_SIG_R_OFFSET],
+                                         CW_HASH_SIZE, ESP_LOG_INFO);
+                ESP_LOGI(TAG, "s:");
+                ESP_LOG_BUFFER_HEX_LEVEL(TAG, &result.signature[CW_SIG_S_OFFSET],
+                                         CW_HASH_SIZE, ESP_LOG_INFO);
+            } else {
+                ESP_LOGE(TAG, "Sign failed: 0x%02X",
+                         static_cast<unsigned int>(result.errorCode));
+            }
+        }
+
+        wallet.disconnect(session);
+        vTaskDelay(pdMS_TO_TICKS(POLL_DELAY_MS));
+    }
 }
 
 extern "C" void app_main(void)
 {
     uint8_t rnd[RND_BUF_SIZE] = { 0U };
-    bool rnd_ok = CryptnoxUtils::fill_secure_random(rnd, sizeof(rnd));
-    if (rnd_ok) {
+    bool rnd_result = CW_Utils::fill_secure_random(rnd, sizeof(rnd));
+    if (rnd_result) {
         ESP_LOGI(TAG, "TRNG: %02X%02X%02X%02X%02X%02X%02X%02X"
                       "%02X%02X%02X%02X%02X%02X%02X%02X",
                  rnd[0],  rnd[1],  rnd[2],  rnd[3],
@@ -143,9 +167,8 @@ extern "C" void app_main(void)
         .skip_bus_init = true,
     };
     esp_err_t epd_ret = epd_io_init(&epd_cfg);
-    bool epd_ok = (epd_ret == ESP_OK);
 
-    if (epd_ok) {
+    if (epd_ret == ESP_OK) {
         epd_set_panel(static_cast<uint8_t>(EPD420),
                       static_cast<uint16_t>(EPD_WIDTH),
                       static_cast<uint16_t>(EPD_HEIGHT));
@@ -176,37 +199,21 @@ extern "C" void app_main(void)
         .skip_bus_init = true,
     };
     esp_err_t nfc_ret = pn532_init(&nfc, &nfc_cfg);
-    bool nfc_ok = (nfc_ret == ESP_OK);
 
-    if (nfc_ok) {
-        uint32_t version = pn532_get_firmware_version(&nfc);
-        bool fw_ok = (version != 0U);
-        if (fw_ok) {
-            ESP_LOGI(TAG, "PN5%02X firmware v%u.%u",
-                     static_cast<unsigned int>((version >> PN532_FW_IC_SHIFT) & BYTE_MASK),
-                     static_cast<unsigned int>((version >> PN532_FW_VER_SHIFT) & BYTE_MASK),
-                     static_cast<unsigned int>((version >> PN532_FW_REV_SHIFT) & BYTE_MASK));
+    if (nfc_ret == ESP_OK) {
+        ESP32Logger logger;
+        (void)logger.begin(115200UL);
 
-            bool sam_ok = pn532_sam_config(&nfc);
-            if (sam_ok) {
-                ESP_LOGI(TAG, "Ready — scan a tag");
-                uint32_t last_uid = 0U;
-                while (true) {
-                    uint32_t uid = pn532_read_passive_target_id(
-                                       &nfc, PN532_MIFARE_ISO14443A);
-                    bool new_tag = ((uid != 0U) && (uid != last_uid));
-                    if (new_tag) {
-                        ESP_LOGI(TAG, "Tag: 0x%08lX", static_cast<unsigned long>(uid));
-                        show_uid_on_epd(uid);
-                        last_uid = uid;
-                    }
-                    vTaskDelay(pdMS_TO_TICKS(POLL_DELAY_MS));
-                }
-            } else {
-                ESP_LOGE(TAG, "SAMConfig failed");
-            }
+        ESP32CryptoProvider cryptoProvider;
+        Pn532NfcTransport nfcTransport(&nfc, logger);
+        CryptnoxWallet wallet(nfcTransport, logger, cryptoProvider);
+
+        if (wallet.begin()) {
+            (void)nfcTransport.printFirmwareVersion();
+            ESP_LOGI(TAG, "Wallet ready - hold card to scan");
+            run_wallet_loop(wallet);
         } else {
-            ESP_LOGE(TAG, "PN532 not found");
+            ESP_LOGE(TAG, "Wallet init failed (SAMConfig)");
         }
     } else {
         ESP_LOGE(TAG, "PN532 init failed");
