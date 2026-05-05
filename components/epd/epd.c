@@ -152,7 +152,6 @@ static void _epd_write_data(const uint8_t *data, uint32_t len)
 
     while (remaining > 0U) {
         uint32_t current_chunk = (remaining > chunk_size) ? chunk_size : remaining;
-        /* cppcheck-suppress misra-c2012-18.4 */
         spi_send(&data[offset], current_chunk);
         offset    += current_chunk;
         remaining -= current_chunk;
@@ -323,7 +322,6 @@ uint8_t epd_init(void)
         return result;
     }
 
-    /* cppcheck-suppress misra-c2012-15.7 */
     if ((epd_type == (uint8_t)EPD213_219) || (epd_type == (uint8_t)EPD154)) {
         epd_write_reg(0x01U);
         if (epd_type == (uint8_t)EPD213_219) {
@@ -448,7 +446,6 @@ uint8_t epd_init_partial(void)
         return result;
     }
 
-    /* cppcheck-suppress misra-c2012-15.7 */
     if (epd_type == (uint8_t)EPD213_219) {
         epd_write_reg(0x32U);
         epd_cs_reset();
@@ -896,7 +893,6 @@ void epd_paint_drawLine(uint16_t Xstart, uint16_t Ystart, uint16_t Xend, uint16_
     /* cppcheck-suppress misra-c2012-15.4 */
     for (;;) {
         epd_paint_drawPoint(Xpoint, Ypoint, Color);
-        /* cppcheck-suppress misra-c2012-12.1 */
         if ((EPD_DRAW_TWO * Esp) >= dy) {
             if (Xpoint == Xend) {
                 break;
@@ -905,7 +901,6 @@ void epd_paint_drawLine(uint16_t Xstart, uint16_t Ystart, uint16_t Xend, uint16_
             /* cppcheck-suppress misra-c2012-10.8 */
             Xpoint  = (uint16_t)((int32_t)Xpoint + XAddway);
         }
-        /* cppcheck-suppress misra-c2012-12.1 */
         if ((EPD_DRAW_TWO * Esp) <= dx) {
             if (Ypoint == Yend) {
                 break;
@@ -1011,7 +1006,6 @@ void epd_paint_showChar(uint16_t x, uint16_t y, uint16_t chr, uint16_t size1, ui
     if (size1 == (uint16_t)EPD_CHAR_SIZE_8) {
         size2 = (uint16_t)EPD_CHAR_WIDTH_8;
     } else {
-        /* cppcheck-suppress misra-c2012-12.1 */
         size2 = (uint16_t)(((size1 / EPD_CHAR_SIZE_8) + (((size1 % EPD_CHAR_SIZE_8) != 0U) ? 1U : 0U))
                             * (size1 / EPD_DRAW_TWO_U));
     }
@@ -1043,7 +1037,6 @@ void epd_paint_showChar(uint16_t x, uint16_t y, uint16_t chr, uint16_t size1, ui
             temp >>= 1U;
         }
         x_pos++;
-        /* cppcheck-suppress misra-c2012-12.1 */
         if ((size1 != (uint16_t)EPD_CHAR_SIZE_8) && (((uint16_t)(x_pos - x0)) == (uint16_t)(size1 / EPD_DRAW_TWO_U))) {
             x_pos = x0;
             y0    = (uint16_t)(y0 + (uint16_t)EPD_CHAR_SIZE_8);

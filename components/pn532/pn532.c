@@ -471,7 +471,7 @@ bool pn532_send_apdu(pn532_t *dev, const uint8_t *apdu, uint8_t apdu_len,
     /* cppcheck-suppress unreadVariable */
     uint8_t data_len = 0U;
     bool valid = false;
-    /* cppcheck-suppress unreadVariable */
+    /* cppcheck-suppress variableScope */
     bool ok = false;
     bool result = false;
 
