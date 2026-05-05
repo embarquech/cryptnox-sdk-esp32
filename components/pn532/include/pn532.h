@@ -7,7 +7,7 @@
 #include <stdbool.h>
 #include "driver/spi_master.h"
 
-#define PN532_MIFARE_ISO14443A 0x00
+#define PN532_MIFARE_ISO14443A (0x00U)
 
 typedef struct {
     spi_host_device_t spi_host;

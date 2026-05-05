@@ -18,17 +18,17 @@
 static const char *EPD_TAG = "epd";
 
 static spi_device_handle_t epd_spi;
-static int _pin_dc;
-static int _pin_rst;
-static int _pin_busy;
-static int _pin_cs;
+static int epdepd_pin_dc;
+static int epdepd_pin_rst;
+static int epdepd_pin_busy;
+static int epdepd_pin_cs;
 
 uint16_t EPD_H;
 uint16_t EPD_W;
 EPD_PAINT EPD_Paint;
 uint8_t epd_type = 0U;
 
-static uint8_t _hibernating = 1U;
+static uint8_t epdepd_hibernating = 1U;
 static uint8_t old_data[30U * 416U];
 
 /* Maximum display buffer size — matches old_data. */
@@ -83,41 +83,41 @@ static void epd_delay(uint16_t ms)
 
 static void epd_res_set(void)
 {
-    (void)gpio_set_level(_pin_rst, 1);
+    (void)gpio_set_level(epd_pin_rst, 1);
 }
 
 static void epd_res_reset(void)
 {
-    (void)gpio_set_level(_pin_rst, 0);
+    (void)gpio_set_level(epd_pin_rst, 0);
 }
 
 static void epd_dc_set(void)
 {
-    (void)gpio_set_level(_pin_dc, 1);
+    (void)gpio_set_level(epd_pin_dc, 1);
 }
 
 static void epd_dc_reset(void)
 {
-    (void)gpio_set_level(_pin_dc, 0);
+    (void)gpio_set_level(epd_pin_dc, 0);
 }
 
 static void epd_cs_set(void)
 {
-    (void)gpio_set_level(_pin_cs, 1);
+    (void)gpio_set_level(epd_pin_cs, 1);
 }
 
 static void epd_cs_reset(void)
 {
-    (void)gpio_set_level(_pin_cs, 0);
+    (void)gpio_set_level(epd_pin_cs, 0);
 }
 
 static uint8_t epd_is_busy(void)
 {
     uint8_t result = 0U;
     if (epd_type == EPD370_UC8253) {
-        result = (gpio_get_level(_pin_busy) != 0) ? 0U : 1U;
+        result = (gpio_get_level(epd_pin_busy) != 0) ? 0U : 1U;
     } else {
-        result = (gpio_get_level(_pin_busy) != 0) ? 1U : 0U;
+        result = (gpio_get_level(epd_pin_busy) != 0) ? 1U : 0U;
     }
     return result;
 }
@@ -138,7 +138,7 @@ static void epd_write_data(uint8_t data)
     epd_cs_set();
 }
 
-static void _epd_write_data(const uint8_t *data, uint32_t len)
+static void epd_write_bulk(const uint8_t *data, uint32_t len)
 {
     uint32_t remaining = len;
     uint32_t offset    = 0U;
@@ -158,14 +158,14 @@ static void _epd_write_data(const uint8_t *data, uint32_t len)
 
 esp_err_t epd_io_init(const epd_config_t *config)
 {
-    _pin_dc   = config->pin_dc;
-    _pin_rst  = config->pin_rst;
-    _pin_busy = config->pin_busy;
-    _pin_cs   = config->pin_cs;
+    epd_pin_dc   = config->pin_dc;
+    epd_pin_rst  = config->pin_rst;
+    epd_pin_busy = config->pin_busy;
+    epd_pin_cs   = config->pin_cs;
 
-    uint64_t out_mask = ((1ULL << (uint32_t)_pin_dc)  |
-                         (1ULL << (uint32_t)_pin_rst)  |
-                         (1ULL << (uint32_t)_pin_cs));
+    uint64_t out_mask = ((1ULL << (uint32_t)epd_pin_dc)  |
+                         (1ULL << (uint32_t)epd_pin_rst)  |
+                         (1ULL << (uint32_t)epd_pin_cs));
     gpio_config_t io_out = {
         .pin_bit_mask = out_mask,
         .mode         = GPIO_MODE_OUTPUT,
@@ -176,7 +176,7 @@ esp_err_t epd_io_init(const epd_config_t *config)
     (void)gpio_config(&io_out);
 
     gpio_config_t io_in = {
-        .pin_bit_mask = (1ULL << (uint32_t)_pin_busy),
+        .pin_bit_mask = (1ULL << (uint32_t)epd_pin_busy),
         .mode         = GPIO_MODE_INPUT,
         .pull_up_en   = GPIO_PULLUP_DISABLE,
         .pull_down_en = GPIO_PULLDOWN_DISABLE,
@@ -241,8 +241,8 @@ static uint8_t epd_wait_busy(void)
 {
     uint32_t timeout = 0U;
     uint8_t  result  = EPD_RESULT_OK;
-    int      level   = gpio_get_level(_pin_busy);
-    ESP_LOGI(EPD_TAG, "wait_busy: BUSY pin=%d (raw level=%d)", _pin_busy, level);
+    int      level   = gpio_get_level(epd_pin_busy);
+    ESP_LOGI(EPD_TAG, "wait_busy: BUSY pin=%d (raw level=%d)", epd_pin_busy, level);
 
     while ((epd_is_busy() != 0U) && (result == EPD_RESULT_OK)) {
         timeout++;
@@ -264,7 +264,7 @@ static void epd_reset(void)
     epd_delay(EPD_RESET_DELAY_MS);
     epd_res_set();
     epd_delay(EPD_RESET_DELAY_MS);
-    _hibernating = 0U;
+    epd_hibernating = 0U;
 }
 
 void epd_set_panel(uint8_t type, uint16_t width, uint16_t height)
@@ -279,7 +279,7 @@ uint8_t epd_init(void)
 {
     uint8_t result = EPD_RESULT_OK;
 
-    if (_hibernating != 0U) {
+    if (epd_hibernating != 0U) {
         epd_reset();
     }
 
@@ -450,7 +450,7 @@ uint8_t epd_init_partial(void)
         if (epd_type == EPD213_219) {
             epd_write_reg(0x32U);
             epd_cs_reset();
-            _epd_write_data(lut_partial, sizeof(lut_partial));
+            epd_write_bulk(lut_partial, sizeof(lut_partial));
             epd_cs_set();
         } else if (epd_type == EPD420) {
             epd_write_reg(0x3CU);
@@ -483,7 +483,7 @@ void epd_enter_deepsleepmode(uint8_t mode)
         epd_write_reg(0x10U);
         epd_write_data(mode);
     }
-    _hibernating = 1U;
+    epd_hibernating = 1U;
 }
 
 uint8_t epd_power_on(void)
@@ -637,7 +637,7 @@ void epd_setpos(uint16_t x, uint16_t y)
 void epd_write_imagedata(const uint8_t *Image1, uint32_t length)
 {
     epd_cs_reset();
-    _epd_write_data(Image1, length);
+    epd_write_bulk(Image1, length);
     epd_cs_set();
 }
 
@@ -649,7 +649,7 @@ static void epd_write_imagedata_invert(const uint8_t *Image1, uint32_t length)
             epd_invert_buf[j] = (uint8_t)(~Image1[j]);
         }
         epd_cs_reset();
-        _epd_write_data(epd_invert_buf, length);
+        epd_write_bulk(epd_invert_buf, length);
         epd_cs_set();
     }
 }
@@ -1066,7 +1066,7 @@ void epd_paint_showString(uint16_t x, uint16_t y, uint8_t *chr,
     }
 }
 
-static uint32_t _Pow(uint16_t m, uint16_t n)
+static uint32_t epd_pow(uint16_t m, uint16_t n)
 {
     uint32_t result = 1U;
     uint16_t rem    = n;
@@ -1085,7 +1085,7 @@ void epd_paint_showNum(uint16_t x, uint16_t y, uint32_t num,
         m = 2U;
     }
     for (uint16_t t = 0U; t < len; t++) {
-        uint8_t  temp        = (uint8_t)((num / _Pow(10U, (uint16_t)(len - t - 1U))) % 10U);
+        uint8_t  temp        = (uint8_t)((num / epd_pow(10U, (uint16_t)(len - t - 1U))) % 10U);
         uint16_t half_plus_m = (uint16_t)((size1 / 2U) + (uint16_t)m);
         uint32_t prod        = (uint32_t)half_plus_m * (uint32_t)t;
         epd_paint_showChar(

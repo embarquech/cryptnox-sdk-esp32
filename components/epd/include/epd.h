@@ -11,36 +11,37 @@ extern "C" {
 #include <stdint.h>
 #include "driver/spi_master.h"
 
-#define EPD213_219 0
-#define EPD154 1
-#define EPD420 2
-#define EPD370_UC8253 3
+#define EPD213_219    (0U)
+#define EPD154        (1U)
+#define EPD420        (2U)
+#define EPD370_UC8253 (3U)
 
 extern uint16_t EPD_H;
 extern uint16_t EPD_W;
 extern uint8_t epd_type;
 
-#define EPD_OK 0
-#define EPD_ERROR 1
+#define EPD_OK    (0U)
+#define EPD_ERROR (1U)
 
-#define EPD_ROTATE_0 0
-#define EPD_ROTATE_90 90
-#define EPD_ROTATE_180 180
-#define EPD_ROTATE_270 270
+#define EPD_ROTATE_0   (0U)
+#define EPD_ROTATE_90  (90U)
+#define EPD_ROTATE_180 (180U)
+#define EPD_ROTATE_270 (270U)
 
-#define EPD_COLOR_WHITE 0xFF
-#define EPD_COLOR_BLACK 0x00
-#define EPD_COLOR_RED EPD_COLOR_BLACK
+#define EPD_COLOR_WHITE (0xFFU)
+#define EPD_COLOR_BLACK (0x00U)
+#define EPD_COLOR_RED   EPD_COLOR_BLACK
 
-#define EPD_FONT_SIZE8x6 (8)
-#define EPD_FONT_SIZE12x6 (12)
-#define EPD_FONT_SIZE16x8 (16)
-#define EPD_FONT_SIZE24x12 (24)
+#define EPD_FONT_SIZE8x6   (8U)
+#define EPD_FONT_SIZE12x6  (12U)
+#define EPD_FONT_SIZE16x8  (16U)
+#define EPD_FONT_SIZE24x12 (24U)
 
-#define EPD_DEEPSLEEP_MODE1 (0x01)
-#define EPD_DEEPSLEEP_MODE2 (0x03)
+#define EPD_DEEPSLEEP_MODE1 (0x01U)
+#define EPD_DEEPSLEEP_MODE2 (0x03U)
 
-#define EPD_W_BUFF_SIZE ((EPD_W % 8 == 0) ? (EPD_W / 8) : (EPD_W / 8 + 1))
+#define EPD_W_BUFF_SIZE \
+    (((EPD_W % 8U) == 0U) ? (EPD_W / 8U) : ((EPD_W / 8U) + 1U))
 
 typedef struct {
     uint8_t *Image;
