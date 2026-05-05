@@ -38,7 +38,7 @@ static const char *const EPD_LOG_TAG = "epd";
 #define EPD_BITS_PER_BYTE       (8U)
 #define EPD_EPD154_Y_OFFSET     (199U)
 #define EPD_EPD213_Y_OFFSET     (295U)
-#define EPD_MAX_BUFF_SIZE       (30U * 416U)
+#define EPD_MAX_BUFF_SIZE       (12480U)
 #define EPD_CHAR_SIZE_8         (8U)
 #define EPD_CHAR_SIZE_12        (12U)
 #define EPD_CHAR_SIZE_16        (16U)
@@ -63,7 +63,7 @@ EPD_PAINT EPD_Paint;
 uint8_t epd_type = 0U;
 
 static uint8_t _hibernating = 1U;
-static uint8_t old_data[30U * 416U] = {0U};
+static uint8_t old_data[EPD_MAX_BUFF_SIZE];
 
 /* Static invert/fill buffer — replaces malloc/free (MISRA 21.3) */
 static uint8_t epd_invert_buf[EPD_MAX_BUFF_SIZE];
@@ -131,7 +131,7 @@ static uint8_t epd_is_busy(void)
 static void spi_send(const uint8_t *data, uint32_t len)
 {
     spi_transaction_t t = {
-        .length    = (size_t)(len * EPD_BITS_PER_BYTE),
+        .length    = (size_t)len * (size_t)EPD_BITS_PER_BYTE,
         .tx_buffer = data,
     };
     (void)spi_device_transmit(epd_spi, &t);
@@ -310,6 +310,7 @@ uint8_t epd_init(void)
         epd_write_data(0x0DU);
         epd_write_reg(0x50U);
         epd_write_data(0x97U);
+        /* cppcheck-suppress misra-c2012-15.5 */
         return result;
     }
 
@@ -393,6 +394,8 @@ uint8_t epd_init(void)
 uint8_t epd_init_fast(void)
 {
     uint8_t init_result = 0U;
+    /* cppcheck-suppress variableScope */
+    /* cppcheck-suppress unreadVariable */
     uint8_t busy_result = 0U;
     uint8_t result      = 0U;
 
@@ -640,9 +643,8 @@ void epd_write_imagedata(const uint8_t *Image1, uint32_t length)
 
 static void epd_write_imagedata_invert(const uint8_t *Image1, uint32_t length)
 {
-    uint32_t j = 0U;
     if (length <= (uint32_t)EPD_MAX_BUFF_SIZE) {
-        for (j = 0U; j < length; j++) {
+        for (uint32_t j = 0U; j < length; j++) {
             epd_invert_buf[j] = (uint8_t)(~Image1[j]);
         }
         epd_cs_reset();
@@ -846,7 +848,7 @@ void epd_paint_setpixel(uint16_t Xpoint, uint16_t Ypoint, uint16_t Color)
         return;
     }
 
-    Addr  = (uint32_t)(X / EPD_BITS_PER_BYTE) + ((uint32_t)Y * (uint32_t)EPD_Paint.WidthByte);
+    Addr  = ((uint32_t)X / (uint32_t)EPD_BITS_PER_BYTE) + ((uint32_t)Y * (uint32_t)EPD_Paint.WidthByte);
     pixel = (uint8_t)(EPD_PIXEL_BIT_MASK >> (uint8_t)(X % EPD_BITS_PER_BYTE));
     if (Color == (uint16_t)EPD_COLOR_BLACK) {
         EPD_Paint.Image[Addr] = (uint8_t)(EPD_Paint.Image[Addr] & (uint8_t)(~pixel));
@@ -858,6 +860,7 @@ void epd_paint_setpixel(uint16_t Xpoint, uint16_t Ypoint, uint16_t Color)
 void epd_paint_clear(uint16_t color)
 {
     uint16_t Y = 0U;
+    /* cppcheck-suppress unreadVariable */
     uint16_t X = 0U;
     for (Y = 0U; Y < EPD_Paint.HeightByte; Y++) {
         for (X = 0U; X < EPD_Paint.WidthByte; X++) {
@@ -899,6 +902,7 @@ void epd_paint_drawLine(uint16_t Xstart, uint16_t Ystart, uint16_t Xend, uint16_
                 break;
             }
             Esp    += dy;
+            /* cppcheck-suppress misra-c2012-10.8 */
             Xpoint  = (uint16_t)((int32_t)Xpoint + XAddway);
         }
         /* cppcheck-suppress misra-c2012-12.1 */
@@ -907,6 +911,7 @@ void epd_paint_drawLine(uint16_t Xstart, uint16_t Ystart, uint16_t Xend, uint16_
                 break;
             }
             Esp    += dx;
+            /* cppcheck-suppress misra-c2012-10.8 */
             Ypoint  = (uint16_t)((int32_t)Ypoint + YAddway);
         }
     }
@@ -914,6 +919,8 @@ void epd_paint_drawLine(uint16_t Xstart, uint16_t Ystart, uint16_t Xend, uint16_
 
 void epd_paint_drawRectangle(uint16_t Xstart, uint16_t Ystart, uint16_t Xend, uint16_t Yend, uint16_t Color, uint8_t mode)
 {
+    /* cppcheck-suppress variableScope */
+    /* cppcheck-suppress unreadVariable */
     uint16_t i = 0U;
     if (mode != 0U) {
         for (i = Ystart; i < Yend; i++) {
@@ -978,6 +985,7 @@ void epd_paint_showChar(uint16_t x, uint16_t y, uint16_t chr, uint16_t size1, ui
     uint16_t x0     = x_pos;
     uint16_t y0     = y_pos;
     uint16_t i      = 0U;
+    /* cppcheck-suppress unreadVariable */
     uint16_t m      = 0U;
     uint16_t temp   = 0U;
     uint16_t size2  = 0U;
@@ -1081,6 +1089,8 @@ static uint32_t epd_pow(uint16_t m, uint16_t n)
 void epd_paint_showNum(uint16_t x, uint16_t y, uint32_t num, uint16_t len, uint16_t size1, uint16_t color)
 {
     uint16_t t    = 0U;
+    /* cppcheck-suppress variableScope */
+    /* cppcheck-suppress unreadVariable */
     uint8_t  temp = 0U;
     uint8_t  m    = 0U;
 
@@ -1104,6 +1114,7 @@ void epd_paint_showChinese(uint16_t x, uint16_t y, uint16_t num, uint16_t size1,
     uint16_t y_pos  = (uint16_t)(y + 1U);
     uint16_t x0     = x_pos;
     uint16_t y0     = y_pos;
+    /* cppcheck-suppress unreadVariable */
     uint16_t m      = 0U;
     uint16_t temp   = 0U;
     uint16_t i      = 0U;
@@ -1147,9 +1158,12 @@ void epd_paint_showPicture(uint16_t x, uint16_t y, uint16_t sizex, uint16_t size
     uint16_t x0     = x_pos;
     uint16_t y0     = y_pos;
     uint16_t j      = 0U;
+    /* cppcheck-suppress unreadVariable */
     uint16_t i      = 0U;
     uint16_t n      = 0U;
+    /* cppcheck-suppress unreadVariable */
     uint16_t temp   = 0U;
+    /* cppcheck-suppress unreadVariable */
     uint16_t m      = 0U;
     uint16_t rows   = (uint16_t)((sizey / (uint16_t)EPD_CHAR_SIZE_8)
                                  + (((sizey % (uint16_t)EPD_CHAR_SIZE_8) != 0U) ? 1U : 0U));
