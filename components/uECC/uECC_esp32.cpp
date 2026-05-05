@@ -71,19 +71,19 @@ static bool bt_is_active(void) {
 static int esp32_mbedtls_rng(void *ctx, unsigned char *output, size_t len) {
     int  result      = RNG_ERROR;
     (void)ctx;
-    // QUICK TEST: WiFi/BT seeding gate temporarily disabled to validate that
-    // the TRNG check is the root cause of failing tests.
-    // bool wifi_seeded = false;
-    // bool bt_seeded   = false;
-    // #ifdef CONFIG_ESP_WIFI_ENABLED
-    //     wifi_seeded = wifi_is_active();
-    // #endif
-    // #ifdef CONFIG_BT_ENABLED
-    //     bt_seeded = bt_is_active();
-    // #endif
-    // bool trng_seeded = (wifi_seeded || bt_seeded);
+    bool wifi_seeded = false;
+    bool bt_seeded   = false;
+#ifdef CONFIG_ESP_WIFI_ENABLED
+    wifi_seeded = wifi_is_active();
+#endif
+#ifdef CONFIG_BT_ENABLED
+    bt_seeded = bt_is_active();
+#endif
+    // cppcheck-suppress knownConditionTrueFalse
+    bool trng_seeded = (wifi_seeded || bt_seeded);
 
-    if ((output != NULL) && (len > 0U)) {
+    // cppcheck-suppress knownConditionTrueFalse
+    if ((output != NULL) && (len > 0U) && trng_seeded) {
         esp_fill_random(output, len);
         result = MBEDTLS_OK;
     }

@@ -221,20 +221,20 @@ bool ESP32CryptoProvider::makeKey(uint8_t* pubKey, uint8_t* privKey,
 
 /** @brief Fill dest with size cryptographically random bytes from the ESP32 hardware TRNG. */
 bool ESP32CryptoProvider::random(uint8_t* dest, unsigned size) {
-    bool result = false;
-    // QUICK TEST: WiFi/BT seeding gate temporarily disabled to validate that
-    // the TRNG check is the root cause of failing tests.
-    // bool wifi_seeded = false;
-    // bool bt_seeded   = false;
-    // #ifdef CONFIG_ESP_WIFI_ENABLED
-    //     wifi_seeded = wifi_is_active();
-    // #endif
-    // #ifdef CONFIG_BT_ENABLED
-    //     bt_seeded = bt_is_active();
-    // #endif
-    // bool trng_seeded = (wifi_seeded || bt_seeded);
+    bool result      = false;
+    bool wifi_seeded = false;
+    bool bt_seeded   = false;
+#ifdef CONFIG_ESP_WIFI_ENABLED
+    wifi_seeded = wifi_is_active();
+#endif
+#ifdef CONFIG_BT_ENABLED
+    bt_seeded = bt_is_active();
+#endif
+    // cppcheck-suppress knownConditionTrueFalse
+    bool trng_seeded = (wifi_seeded || bt_seeded);
 
-    if ((dest != NULL) && (size > 0U)) {
+    // cppcheck-suppress knownConditionTrueFalse
+    if ((dest != NULL) && (size > 0U) && trng_seeded) {
         esp_fill_random(dest, static_cast<size_t>(size));
         result = true;
     }
