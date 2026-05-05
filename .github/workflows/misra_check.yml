@@ -1,0 +1,57 @@
+name: MISRA C check
+permissions:
+  contents: read
+  pull-requests: write
+on:
+  push:
+  pull_request:
+jobs:
+  misra:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository (with submodules)
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install cppcheck
+        run: sudo apt-get install -y cppcheck
+
+      - name: MISRA C analysis (Cryptnox SDK core)
+        run: |
+          cppcheck \
+            --enable=all \
+            --std=c99 \
+            --language=c \
+            --addon=misra \
+            --inline-suppr \
+            --error-exitcode=1 \
+            --suppress=missingIncludeSystem \
+            --suppress=misra-config \
+            --suppress=misra-c2012-17.3 \
+            --suppress=misra-c2012-8.7 \
+            --force \
+            cryptnox-sdk-cpp/
+
+      - name: MISRA C analysis (ESP32 adapter components)
+        run: |
+          cppcheck \
+            --enable=all \
+            --std=c99 \
+            --language=c \
+            --addon=misra \
+            --inline-suppr \
+            --error-exitcode=1 \
+            --suppress=missingIncludeSystem \
+            --suppress=misra-config \
+            --suppress=misra-c2012-17.3 \
+            --suppress=misra-c2012-8.7 \
+            --force \
+            components/cryptnox_utils/ \
+            components/crypto_provider/ \
+            components/esp32_logger/ \
+            components/uECC/ \
+            components/secure_channel/ \
+            components/epd/ \
+            components/pn532/ \
+            main/
