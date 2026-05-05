@@ -4,7 +4,6 @@
 #include "mbedtls/sha256.h"
 #include "mbedtls/sha512.h"
 #include "mbedtls/aes.h"
-#include "esp_random.h"
 
 /******************************************************************
  * 1. Module constants
