@@ -20,24 +20,36 @@ extern uint16_t EPD_H;
 extern uint16_t EPD_W;
 extern uint8_t epd_type;
 
+/* cppcheck-suppress misra-c2012-2.5 */
 #define EPD_OK    (0U)
+/* cppcheck-suppress misra-c2012-2.5 */
 #define EPD_ERROR (1U)
 
 #define EPD_ROTATE_0   (0U)
+/* cppcheck-suppress misra-c2012-2.5 */
 #define EPD_ROTATE_90  (90U)
 #define EPD_ROTATE_180 (180U)
+/* cppcheck-suppress misra-c2012-2.5 */
 #define EPD_ROTATE_270 (270U)
 
+/* cppcheck-suppress misra-c2012-2.5 */
 #define EPD_COLOR_WHITE (0xFFU)
 #define EPD_COLOR_BLACK (0x00U)
+/* cppcheck-suppress misra-c2012-2.5 */
 #define EPD_COLOR_RED   EPD_COLOR_BLACK
 
+/* cppcheck-suppress misra-c2012-2.5 */
 #define EPD_FONT_SIZE8x6   (8U)
+/* cppcheck-suppress misra-c2012-2.5 */
 #define EPD_FONT_SIZE12x6  (12U)
+/* cppcheck-suppress misra-c2012-2.5 */
 #define EPD_FONT_SIZE16x8  (16U)
+/* cppcheck-suppress misra-c2012-2.5 */
 #define EPD_FONT_SIZE24x12 (24U)
 
+/* cppcheck-suppress misra-c2012-2.5 */
 #define EPD_DEEPSLEEP_MODE1 (0x01U)
+/* cppcheck-suppress misra-c2012-2.5 */
 #define EPD_DEEPSLEEP_MODE2 (0x03U)
 
 #define EPD_W_BUFF_SIZE \
