@@ -18,8 +18,7 @@ bool Pn532NfcTransport::begin()
 
 bool Pn532NfcTransport::inListPassiveTarget()
 {
-    uint32_t uid = pn532_read_passive_target_id(m_dev, PN532_MIFARE_ISO14443A);
-    bool result = (uid != 0U);
+    bool result = (pn532_read_passive_target_id(m_dev, PN532_MIFARE_ISO14443A) != 0U);
     return result;
 }
 
