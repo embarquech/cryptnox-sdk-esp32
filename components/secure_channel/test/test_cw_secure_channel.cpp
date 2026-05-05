@@ -502,8 +502,8 @@ TEST_CASE("openSecureChannel: extracts 32-byte salt from mock response", "[secur
     TEST_ASSERT_EQUAL_HEX8_ARRAY(resp, salt, SC_SALT_BYTES);
 
     /* Client keypair must have been generated (non-zero) */
-    uint8_t zeroPub[SC_EC_PUBKEY_BYTES] = { 0U };
-    uint8_t zeroPriv[SC_EC_COORD_BYTES] = { 0U };
+    const uint8_t zeroPub[SC_EC_PUBKEY_BYTES] = { 0U };
+    const uint8_t zeroPriv[SC_EC_COORD_BYTES] = { 0U };
     TEST_ASSERT_NOT_EQUAL(0, memcmp(clientPub,  zeroPub,  SC_EC_PUBKEY_BYTES));
     TEST_ASSERT_NOT_EQUAL(0, memcmp(clientPriv, zeroPriv, SC_EC_COORD_BYTES));
 }
@@ -532,7 +532,7 @@ TEST_CASE("mutuallyAuthenticate: sets session IV to first 16 bytes of mock respo
 
     uint8_t clientPub[SC_EC_PUBKEY_BYTES]  = { 0U };
     uint8_t clientPriv[SC_EC_COORD_BYTES]  = { 0U };
-    uint8_t salt[SC_SALT_BYTES]            = { 0U };
+    const uint8_t salt[SC_SALT_BYTES]      = { 0U };
     const uECC_Curve_t* curve              = uECC_secp256r1();
 
     bool keyOk = s_crypto.makeKey(clientPub, clientPriv, curve);
@@ -549,7 +549,7 @@ TEST_CASE("mutuallyAuthenticate: sets session IV to first 16 bytes of mock respo
     TEST_ASSERT_EQUAL_HEX8_ARRAY(resp, session.iv, SC_IV_BYTES);
 
     /* Session keys must be non-zero (ECDH + SHA-512 derivation ran) */
-    uint8_t zeroKey[SC_AES_KEY_BYTES] = { 0U };
+    const uint8_t zeroKey[SC_AES_KEY_BYTES] = { 0U };
     TEST_ASSERT_NOT_EQUAL(0, memcmp(session.aesKey, zeroKey, SC_AES_KEY_BYTES));
     TEST_ASSERT_NOT_EQUAL(0, memcmp(session.macKey, zeroKey, SC_AES_KEY_BYTES));
 }

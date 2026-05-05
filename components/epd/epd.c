@@ -613,8 +613,8 @@ void epd_write_imagedata(const uint8_t *Image1, uint32_t length)
 
 static void epd_write_imagedata_invert(const uint8_t *Image1, uint32_t length)
 {
-    static uint8_t epd_invert_buf[EPD_MAX_BUFF_SIZE];
     if (length <= EPD_MAX_BUFF_SIZE) {
+        static uint8_t epd_invert_buf[EPD_MAX_BUFF_SIZE];
         for (uint32_t j = 0U; j < length; j++) {
             epd_invert_buf[j] = (uint8_t)(~Image1[j]);
         }
@@ -646,7 +646,7 @@ void epd_display(const uint8_t *Image1, const uint8_t *Image2)
     }
 }
 
-void epd_displayBW(uint8_t *Image)
+void epd_displayBW(const uint8_t *Image)
 {
     uint32_t length = (uint32_t)EPD_H * (uint32_t)EPD_W_BUFF_SIZE;
 
@@ -670,7 +670,7 @@ void epd_displayBW(uint8_t *Image)
     }
 }
 
-void epd_displayBW_fast(uint8_t *Image)
+void epd_displayBW_fast(const uint8_t *Image)
 {
     uint32_t length = (uint32_t)EPD_H * (uint32_t)EPD_W_BUFF_SIZE;
 
@@ -694,7 +694,7 @@ void epd_displayBW_fast(uint8_t *Image)
     }
 }
 
-void epd_displayBW_partial(uint8_t *Image)
+void epd_displayBW_partial(const uint8_t *Image)
 {
     if (epd_type == EPD370_UC8253) {
         epd_displayBW(Image);
@@ -713,7 +713,7 @@ void epd_displayBW_partial(uint8_t *Image)
     }
 }
 
-void epd_displayRED(uint8_t *Image)
+void epd_displayRED(const uint8_t *Image)
 {
     uint32_t length = (uint32_t)EPD_H * (uint32_t)EPD_W_BUFF_SIZE;
 

@@ -84,10 +84,10 @@ void epd_update_partial(void);
 void epd_address_set(uint16_t x_start, uint16_t y_start, uint16_t x_end, uint16_t y_end);
 void epd_setpos(uint16_t x, uint16_t y);
 void epd_display(const uint8_t *Image1, const uint8_t *Image2);
-void epd_displayBW(uint8_t *Image);
-void epd_displayBW_fast(uint8_t *Image);
-void epd_displayBW_partial(uint8_t *Image);
-void epd_displayRED(uint8_t *Image);
+void epd_displayBW(const uint8_t *Image);
+void epd_displayBW_fast(const uint8_t *Image);
+void epd_displayBW_partial(const uint8_t *Image);
+void epd_displayRED(const uint8_t *Image);
 void epd_displayRED_invert(const uint8_t *Image);
 
 void epd_paint_newimage(uint8_t *image, uint16_t Width, uint16_t Height, uint16_t Rotate, uint16_t Color);
