@@ -9,6 +9,7 @@ extern "C" {
 #endif
 
 #include <stdint.h>
+#include <stdbool.h>
 #include "driver/spi_master.h"
 
 #define EPD213_219    (0U)
@@ -76,7 +77,7 @@ typedef struct {
     int pin_dc;
     int pin_rst;
     int pin_busy;
-    bool skip_bus_init;  // set true if SPI bus already initialized
+    bool skip_bus_init;  /* set true if SPI bus already initialized */
 } epd_config_t;
 
 esp_err_t epd_io_init(const epd_config_t *config);
