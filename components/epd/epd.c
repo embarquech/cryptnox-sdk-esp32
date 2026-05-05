@@ -65,6 +65,13 @@ static uint8_t old_data[30U * 416U];
 #define EPD_RESULT_OK            (0U)
 #define EPD_RESULT_ERR           (1U)
 
+/* SPI bus / device configuration constants */
+#define EPD_SPI_BUS_MAX_TRANSFER (4096)
+#define EPD_SPI_PIN_UNUSED       (-1)
+#define EPD_SPI_MODE             (3U)
+#define EPD_SPI_CLOCK_HZ         (4000000U)
+#define EPD_SPI_QUEUE_SIZE       (1U)
+
 /******************************************************************
  * 2. HAL: GPIO and SPI helpers
  ******************************************************************/
@@ -74,16 +81,39 @@ static void epd_delay(uint16_t ms)
     vTaskDelay(pdMS_TO_TICKS(ms));
 }
 
-static void epd_res_set(void)   { (void)gpio_set_level(_pin_rst,  1); }
-static void epd_res_reset(void) { (void)gpio_set_level(_pin_rst,  0); }
-static void epd_dc_set(void)    { (void)gpio_set_level(_pin_dc,   1); }
-static void epd_dc_reset(void)  { (void)gpio_set_level(_pin_dc,   0); }
-static void epd_cs_set(void)    { (void)gpio_set_level(_pin_cs,   1); }
-static void epd_cs_reset(void)  { (void)gpio_set_level(_pin_cs,   0); }
+static void epd_res_set(void)
+{
+    (void)gpio_set_level(_pin_rst, 1);
+}
+
+static void epd_res_reset(void)
+{
+    (void)gpio_set_level(_pin_rst, 0);
+}
+
+static void epd_dc_set(void)
+{
+    (void)gpio_set_level(_pin_dc, 1);
+}
+
+static void epd_dc_reset(void)
+{
+    (void)gpio_set_level(_pin_dc, 0);
+}
+
+static void epd_cs_set(void)
+{
+    (void)gpio_set_level(_pin_cs, 1);
+}
+
+static void epd_cs_reset(void)
+{
+    (void)gpio_set_level(_pin_cs, 0);
+}
 
 static uint8_t epd_is_busy(void)
 {
-    uint8_t result;
+    uint8_t result = 0U;
     if (epd_type == EPD370_UC8253) {
         result = (gpio_get_level(_pin_busy) != 0) ? 0U : 1U;
     } else {
@@ -163,21 +193,21 @@ esp_err_t epd_io_init(const epd_config_t *config)
     if (!config->skip_bus_init) {
         spi_bus_config_t buscfg = {
             .mosi_io_num     = config->pin_mosi,
-            .miso_io_num     = -1,
+            .miso_io_num     = EPD_SPI_PIN_UNUSED,
             .sclk_io_num     = config->pin_sclk,
-            .quadwp_io_num   = -1,
-            .quadhd_io_num   = -1,
-            .max_transfer_sz = 4096,
+            .quadwp_io_num   = EPD_SPI_PIN_UNUSED,
+            .quadhd_io_num   = EPD_SPI_PIN_UNUSED,
+            .max_transfer_sz = EPD_SPI_BUS_MAX_TRANSFER,
         };
         result = spi_bus_initialize(config->spi_host, &buscfg, SPI_DMA_CH_AUTO);
     }
 
     if (result == ESP_OK) {
         spi_device_interface_config_t devcfg = {
-            .mode           = 3,
-            .clock_speed_hz = 4000000,
-            .spics_io_num   = -1,
-            .queue_size     = 1,
+            .mode           = EPD_SPI_MODE,
+            .clock_speed_hz = EPD_SPI_CLOCK_HZ,
+            .spics_io_num   = EPD_SPI_PIN_UNUSED,
+            .queue_size     = EPD_SPI_QUEUE_SIZE,
         };
         result = spi_bus_add_device(config->spi_host, &devcfg, &epd_spi);
     }
@@ -890,9 +920,9 @@ void epd_paint_drawCircle(uint16_t X_Center, uint16_t Y_Center,
                            uint16_t Radius,   uint16_t Color, uint8_t mode)
 {
     int16_t f     = (int16_t)(1 - (int16_t)Radius);
-    int16_t ddF_x = 1;
+    int16_t ddF_x = (int16_t)1;
     int16_t ddF_y = (int16_t)(-2 * (int16_t)Radius);
-    int16_t x     = 0;
+    int16_t x     = (int16_t)0;
     int16_t y     = (int16_t)Radius;
 
     int32_t cx_pr = (int32_t)X_Center + (int32_t)Radius;
@@ -912,12 +942,12 @@ void epd_paint_drawCircle(uint16_t X_Center, uint16_t Y_Center,
     while (x < y) {
         if (f >= 0) {
             y--;
-            ddF_y += 2;
-            f     += ddF_y;
+            ddF_y = (int16_t)(ddF_y + (int16_t)2);
+            f     = (int16_t)(f + ddF_y);
         }
         x++;
-        ddF_x += 2;
-        f     += ddF_x;
+        ddF_x = (int16_t)(ddF_x + (int16_t)2);
+        f     = (int16_t)(f + ddF_x);
 
         int32_t cx_px = (int32_t)X_Center + (int32_t)x;
         int32_t cx_mx = (int32_t)X_Center - (int32_t)x;

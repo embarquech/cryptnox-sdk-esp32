@@ -52,6 +52,16 @@ static const char *PN532_TAG = "pn532";
 #define PN532_CHECKSUM_INIT \
     ((uint8_t)(PN532_PREAMBLE + PN532_PREAMBLE + PN532_STARTCODE2))
 
+/* SPI bus / device configuration constants */
+#define PN532_SPI_PIN_UNUSED        (-1)
+#define PN532_SPI_MAX_TRANSFER      (0)
+#define PN532_SPI_MODE              (0U)
+#define PN532_SPI_CLOCK_HZ          (1000000U)
+#define PN532_SPI_QUEUE_SIZE        (1U)
+
+/* Timeout used for all command/ACK exchanges (milliseconds) */
+#define PN532_CMD_TIMEOUT_MS        (1000U)
+
 static uint8_t pn532_packetbuffer[PN532_PACK_BUFF_SIZE];
 
 /******************************************************************
@@ -212,19 +222,19 @@ esp_err_t pn532_init(pn532_t *dev, const pn532_config_t *config)
             .mosi_io_num     = config->pin_mosi,
             .miso_io_num     = config->pin_miso,
             .sclk_io_num     = config->pin_sclk,
-            .quadwp_io_num   = -1,
-            .quadhd_io_num   = -1,
-            .max_transfer_sz = 0,
+            .quadwp_io_num   = PN532_SPI_PIN_UNUSED,
+            .quadhd_io_num   = PN532_SPI_PIN_UNUSED,
+            .max_transfer_sz = PN532_SPI_MAX_TRANSFER,
         };
         result = spi_bus_initialize(config->spi_host, &buscfg, SPI_DMA_CH_AUTO);
     }
 
     if (result == ESP_OK) {
         spi_device_interface_config_t devcfg = {
-            .mode           = 0,
-            .clock_speed_hz = 1000000,
-            .spics_io_num   = -1,
-            .queue_size     = 1,
+            .mode           = PN532_SPI_MODE,
+            .clock_speed_hz = PN532_SPI_CLOCK_HZ,
+            .spics_io_num   = PN532_SPI_PIN_UNUSED,
+            .queue_size     = PN532_SPI_QUEUE_SIZE,
             .flags          = SPI_DEVICE_BIT_LSBFIRST,
         };
         result = spi_bus_add_device(config->spi_host, &devcfg, &dev->spi);
@@ -242,7 +252,7 @@ esp_err_t pn532_init(pn532_t *dev, const pn532_config_t *config)
         vTaskDelay(pdMS_TO_TICKS(PN532_WAKEUP_DELAY_MS));
 
         pn532_packetbuffer[0] = PN532_FIRMWAREVERSION;
-        (void)send_command_check_ack(dev, pn532_packetbuffer, 1U, 1000U);
+        (void)send_command_check_ack(dev, pn532_packetbuffer, 1U, PN532_CMD_TIMEOUT_MS);
         vTaskDelay(pdMS_TO_TICKS(PN532_POST_SYNC_DELAY_MS));
 
         ESP_LOGI(PN532_TAG, "PN532 initialized");
@@ -260,7 +270,7 @@ uint32_t pn532_get_firmware_version(pn532_t *dev)
 
     pn532_packetbuffer[0] = PN532_FIRMWAREVERSION;
 
-    bool ack = send_command_check_ack(dev, pn532_packetbuffer, 1U, 1000U);
+    bool ack = send_command_check_ack(dev, pn532_packetbuffer, 1U, PN532_CMD_TIMEOUT_MS);
     if (!ack) {
         ESP_LOGE(PN532_TAG, "No ACK from PN532");
     } else {
@@ -293,7 +303,7 @@ bool pn532_sam_config(pn532_t *dev)
     pn532_packetbuffer[2] = 0x14U;
     pn532_packetbuffer[3] = 0x01U;
 
-    bool ack = send_command_check_ack(dev, pn532_packetbuffer, 4U, 1000U);
+    bool ack = send_command_check_ack(dev, pn532_packetbuffer, 4U, PN532_CMD_TIMEOUT_MS);
     if (ack) {
         read_data(dev, pn532_packetbuffer, (uint8_t)PN532_SAM_READ_LEN);
         result = (pn532_packetbuffer[PN532_SAM_STATUS_OFFSET] == PN532_SAM_STATUS_OK);
@@ -310,7 +320,7 @@ uint32_t pn532_read_passive_target_id(pn532_t *dev, uint8_t cardbaudrate)
     pn532_packetbuffer[1] = 1U;
     pn532_packetbuffer[2] = cardbaudrate;
 
-    bool ack = send_command_check_ack(dev, pn532_packetbuffer, 3U, 1000U);
+    bool ack = send_command_check_ack(dev, pn532_packetbuffer, 3U, PN532_CMD_TIMEOUT_MS);
     if (ack) {
         read_data(dev, pn532_packetbuffer, (uint8_t)PN532_CARD_READ_LEN);
 
