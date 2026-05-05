@@ -35,8 +35,10 @@ bool CW_Utils::fill_secure_random(uint8_t *dest, size_t len) {
 #ifdef CONFIG_BT_ENABLED
     bt_seeded = bt_is_active();
 #endif
+    // cppcheck-suppress knownConditionTrueFalse
     bool trng_seeded = (wifi_seeded || bt_seeded);
     bool is_ready    = ((dest != nullptr) && (len != 0U) && trng_seeded);
+    // cppcheck-suppress knownConditionTrueFalse
     if (is_ready) {
         esp_fill_random(dest, len);
     }
