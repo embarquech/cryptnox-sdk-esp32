@@ -15,7 +15,7 @@
 #include "freertos/task.h"
 #include <string.h>
 
-static const char *EPD_TAG = "epd";
+static const char *const EPD_LOG_TAG = "epd";
 
 static spi_device_handle_t epd_spi;
 static int epdepd_pin_dc;
@@ -213,7 +213,7 @@ esp_err_t epd_io_init(const epd_config_t *config)
     }
 
     if (result == ESP_OK) {
-        ESP_LOGI(EPD_TAG, "EPD SPI initialized");
+        ESP_LOGI(EPD_LOG_TAG, "EPD SPI initialized");
     }
 
     return result;
@@ -242,7 +242,7 @@ static uint8_t epd_wait_busy(void)
     uint32_t timeout = 0U;
     uint8_t  result  = EPD_RESULT_OK;
     int      level   = gpio_get_level(epd_pin_busy);
-    ESP_LOGI(EPD_TAG, "wait_busy: BUSY pin=%d (raw level=%d)", epd_pin_busy, level);
+    ESP_LOGI(EPD_LOG_TAG, "wait_busy: BUSY pin=%d (raw level=%d)", epd_pin_busy, level);
 
     while ((epd_is_busy() != 0U) && (result == EPD_RESULT_OK)) {
         timeout++;
@@ -254,7 +254,7 @@ static uint8_t epd_wait_busy(void)
         }
     }
 
-    ESP_LOGI(EPD_TAG, "wait_busy: done after %lu ms", (unsigned long)timeout);
+    ESP_LOGI(EPD_LOG_TAG, "wait_busy: done after %lu ms", (unsigned long)timeout);
     return result;
 }
 
@@ -270,9 +270,9 @@ static void epd_reset(void)
 void epd_set_panel(uint8_t type, uint16_t width, uint16_t height)
 {
     epd_type = type;
-    EPD_H    = height;
-    EPD_W    = width;
-    ESP_LOGI(EPD_TAG, "Panel: %dx%d, type: %d", EPD_W, EPD_H, epd_type);
+    EPD_H = height;
+    EPD_W = width;
+    ESP_LOGI(EPD_LOG_TAG, "Panel: %dx%d, type: %d", EPD_W, EPD_H, epd_type);
 }
 
 uint8_t epd_init(void)

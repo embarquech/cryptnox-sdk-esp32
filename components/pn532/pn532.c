@@ -8,7 +8,7 @@
 #include "freertos/task.h"
 #include <string.h>
 
-static const char *const TAG = "pn532";
+static const char *const PN532_LOG_TAG = "pn532";
 
 /******************************************************************
  * PN532 frame constants
@@ -366,7 +366,7 @@ esp_err_t pn532_init(pn532_t *dev, const pn532_config_t *config)
                                      PN532_FIRMWARE_CMD_LEN, PN532_CMD_TIMEOUT_MS);
         vTaskDelay(pdMS_TO_TICKS(PN532_SYNC_DELAY_MS));
 
-        ESP_LOGI(TAG, "PN532 initialized");
+        ESP_LOGI(PN532_LOG_TAG, "PN532 initialized");
     }
 
     return ret;
@@ -384,14 +384,14 @@ uint32_t pn532_get_firmware_version(pn532_t *dev)
                                 PN532_FIRMWARE_CMD_LEN, PN532_CMD_TIMEOUT_MS);
 
     if (!ok) {
-        ESP_LOGE(TAG, "No ACK from PN532");
+        ESP_LOGE(PN532_LOG_TAG, "No ACK from PN532");
     } else {
         read_data(dev, pn532_packetbuffer, PN532_FIRMWARE_RESP_LEN);
-        ESP_LOG_BUFFER_HEX_LEVEL(TAG, pn532_packetbuffer,
+        ESP_LOG_BUFFER_HEX_LEVEL(PN532_LOG_TAG, pn532_packetbuffer,
                                  PN532_FIRMWARE_RESP_LEN, ESP_LOG_INFO);
 
         if (memcmp(pn532_packetbuffer, pn532_response_fw, PN532_FIRMWARE_HDR_LEN) != 0) {
-            ESP_LOGE(TAG, "Unexpected firmware response");
+            ESP_LOGE(PN532_LOG_TAG, "Unexpected firmware response");
         } else {
             response = (uint32_t)pn532_packetbuffer[PN532_FW_IC_OFFSET];
             response <<= PN532_BYTE_SHIFT_BITS;
