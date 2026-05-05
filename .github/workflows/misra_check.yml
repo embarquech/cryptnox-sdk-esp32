@@ -61,6 +61,7 @@ jobs:
             --suppress=misra-config \
             --suppress=misra-c2012-17.3 \
             --suppress=misra-c2012-8.7 \
+            --suppress=unusedFunction \
             --force \
             -I components/epd/include \
             -I components/pn532/include \
