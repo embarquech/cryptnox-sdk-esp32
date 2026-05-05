@@ -95,7 +95,7 @@ static void show_uid_on_epd(uint32_t uid) {
     epd_paint_clear((uint16_t)EPD_COLOR_BLACK);
     draw_logo();
     epd_paint_showString((uint16_t)UID_TEXT_X, (uint16_t)UID_TEXT_Y,
-                         (uint8_t *)uid_str,
+                         reinterpret_cast<uint8_t *>(uid_str),
                          (uint16_t)EPD_FONT_SIZE24x12, (uint16_t)EPD_COLOR_WHITE);
     (void)epd_init_fast();
     epd_displayBW_fast(image_bw);
