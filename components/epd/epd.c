@@ -34,9 +34,6 @@ static uint8_t old_data[30U * 416U];
 /* Maximum display buffer size — matches old_data. */
 #define EPD_MAX_BUFF_SIZE    (30U * 416U)
 
-/* Static scratch buffer used by epd_write_imagedata_invert. */
-static uint8_t epd_invert_buf[EPD_MAX_BUFF_SIZE];
-
 /******************************************************************
  * 1. Module constants
  ******************************************************************/
@@ -607,7 +604,7 @@ void epd_setpos(uint16_t x, uint16_t y)
     }
 }
 
-void epd_write_imagedata(uint8_t *Image1, uint32_t length)
+void epd_write_imagedata(const uint8_t *Image1, uint32_t length)
 {
     epd_cs_reset();
     _epd_write_data(Image1, length);
@@ -616,6 +613,7 @@ void epd_write_imagedata(uint8_t *Image1, uint32_t length)
 
 static void epd_write_imagedata_invert(const uint8_t *Image1, uint32_t length)
 {
+    static uint8_t epd_invert_buf[EPD_MAX_BUFF_SIZE];
     if (length <= EPD_MAX_BUFF_SIZE) {
         for (uint32_t j = 0U; j < length; j++) {
             epd_invert_buf[j] = (uint8_t)(~Image1[j]);
@@ -626,7 +624,7 @@ static void epd_write_imagedata_invert(const uint8_t *Image1, uint32_t length)
     }
 }
 
-void epd_display(uint8_t *Image1, uint8_t *Image2)
+void epd_display(const uint8_t *Image1, const uint8_t *Image2)
 {
     if (epd_type != EPD370_UC8253) {
         uint32_t length = (uint32_t)EPD_H * (uint32_t)EPD_W_BUFF_SIZE;
@@ -731,7 +729,7 @@ void epd_displayRED(uint8_t *Image)
     epd_update();
 }
 
-void epd_displayRED_invert(uint8_t *Image)
+void epd_displayRED_invert(const uint8_t *Image)
 {
     uint32_t length = (uint32_t)EPD_H * (uint32_t)EPD_W_BUFF_SIZE;
 
@@ -760,7 +758,7 @@ void epd_paint_newimage(uint8_t *image, uint16_t Width, uint16_t Height,
     EPD_Paint.Color        = Color;
     EPD_Paint.WidthByte    = ((Width % EPD_PIXEL_BITS) == 0U) ?
                               (uint16_t)(Width / EPD_PIXEL_BITS) :
-                              (uint16_t)(Width / EPD_PIXEL_BITS + 1U);
+                              (uint16_t)((Width / EPD_PIXEL_BITS) + 1U);
     EPD_Paint.HeightByte   = Height;
     EPD_Paint.Rotate       = Rotate;
     if ((Rotate == EPD_ROTATE_0) || (Rotate == EPD_ROTATE_180)) {
@@ -774,9 +772,8 @@ void epd_paint_newimage(uint8_t *image, uint16_t Width, uint16_t Height,
 
 void epd_paint_setpixel(uint16_t Xpoint, uint16_t Ypoint, uint16_t Color)
 {
-    uint16_t X = 0U;
-    uint16_t Y = 0U;
-    uint32_t Addr;
+    uint16_t X     = 0U;
+    uint16_t Y     = 0U;
     bool     valid = true;
 
     switch (EPD_Paint.Rotate) {
@@ -802,8 +799,8 @@ void epd_paint_setpixel(uint16_t Xpoint, uint16_t Ypoint, uint16_t Color)
     }
 
     if (valid) {
-        Addr = (uint32_t)(X / EPD_PIXEL_BITS) +
-               (uint32_t)Y * (uint32_t)EPD_Paint.WidthByte;
+        uint16_t x_byte = (uint16_t)(X / EPD_PIXEL_BITS);
+        uint32_t Addr   = (uint32_t)x_byte + (uint32_t)Y * (uint32_t)EPD_Paint.WidthByte;
         if (Color == EPD_COLOR_BLACK) {
             EPD_Paint.Image[Addr] = (uint8_t)(EPD_Paint.Image[Addr] &
                                     (uint8_t)(~(uint8_t)(EPD_HIGH_BIT_MASK >>
@@ -845,8 +842,8 @@ void epd_paint_drawLine(uint16_t Xstart, uint16_t Ystart,
     int32_t dyraw  = (int32_t)Yend - (int32_t)Ystart;
     int32_t dx     = (dxraw >= 0) ? dxraw : -dxraw;
     int32_t dy     = (dyraw <= 0) ? dyraw : -dyraw;
-    int32_t XAddway = (Xstart < Xend) ? 1 : -1;
-    int32_t YAddway = (Ystart < Yend) ? 1 : -1;
+    int32_t XAddway = ((Xstart < Xend) ? (int32_t)1 : (int32_t)-1);
+    int32_t YAddway = ((Ystart < Yend) ? (int32_t)1 : (int32_t)-1);
     int32_t Esp    = dx + dy;
     bool    done   = false;
 
@@ -857,7 +854,8 @@ void epd_paint_drawLine(uint16_t Xstart, uint16_t Ystart,
                 done = true;
             } else {
                 Esp    += dy;
-                Xpoint  = (uint16_t)((int32_t)Xpoint + XAddway);
+                int32_t new_x = (int32_t)Xpoint + XAddway;
+                Xpoint  = (uint16_t)new_x;
             }
         }
         if (!done && ((Esp + Esp) <= dx)) {
@@ -865,7 +863,8 @@ void epd_paint_drawLine(uint16_t Xstart, uint16_t Ystart,
                 done = true;
             } else {
                 Esp    += dx;
-                Ypoint  = (uint16_t)((int32_t)Ypoint + YAddway);
+                int32_t new_y = (int32_t)Ypoint + YAddway;
+                Ypoint  = (uint16_t)new_y;
             }
         }
     }
@@ -896,16 +895,18 @@ void epd_paint_drawCircle(uint16_t X_Center, uint16_t Y_Center,
     int16_t x     = 0;
     int16_t y     = (int16_t)Radius;
 
+    int32_t cx_pr = (int32_t)X_Center + (int32_t)Radius;
+    int32_t cx_mr = (int32_t)X_Center - (int32_t)Radius;
+    int32_t cy_pr = (int32_t)Y_Center + (int32_t)Radius;
+    int32_t cy_mr = (int32_t)Y_Center - (int32_t)Radius;
+
     if (mode != 0U) {
-        epd_paint_drawLine((uint16_t)((int32_t)X_Center - (int32_t)Radius),
-                            Y_Center,
-                           (uint16_t)((int32_t)X_Center + (int32_t)Radius),
-                            Y_Center, Color);
+        epd_paint_drawLine((uint16_t)cx_mr, Y_Center, (uint16_t)cx_pr, Y_Center, Color);
     } else {
-        epd_paint_drawPoint(X_Center,                              (uint16_t)((int32_t)Y_Center + (int32_t)Radius), Color);
-        epd_paint_drawPoint(X_Center,                              (uint16_t)((int32_t)Y_Center - (int32_t)Radius), Color);
-        epd_paint_drawPoint((uint16_t)((int32_t)X_Center + (int32_t)Radius), Y_Center,                              Color);
-        epd_paint_drawPoint((uint16_t)((int32_t)X_Center - (int32_t)Radius), Y_Center,                              Color);
+        epd_paint_drawPoint(X_Center, (uint16_t)cy_pr, Color);
+        epd_paint_drawPoint(X_Center, (uint16_t)cy_mr, Color);
+        epd_paint_drawPoint((uint16_t)cx_pr, Y_Center, Color);
+        epd_paint_drawPoint((uint16_t)cx_mr, Y_Center, Color);
     }
 
     while (x < y) {
@@ -918,24 +919,29 @@ void epd_paint_drawCircle(uint16_t X_Center, uint16_t Y_Center,
         ddF_x += 2;
         f     += ddF_x;
 
+        int32_t cx_px = (int32_t)X_Center + (int32_t)x;
+        int32_t cx_mx = (int32_t)X_Center - (int32_t)x;
+        int32_t cx_py = (int32_t)X_Center + (int32_t)y;
+        int32_t cx_my = (int32_t)X_Center - (int32_t)y;
+        int32_t cy_px = (int32_t)Y_Center + (int32_t)x;
+        int32_t cy_mx = (int32_t)Y_Center - (int32_t)x;
+        int32_t cy_py = (int32_t)Y_Center + (int32_t)y;
+        int32_t cy_my = (int32_t)Y_Center - (int32_t)y;
+
         if (mode != 0U) {
-            epd_paint_drawLine((uint16_t)((int32_t)X_Center - x), (uint16_t)((int32_t)Y_Center + y),
-                               (uint16_t)((int32_t)X_Center + x), (uint16_t)((int32_t)Y_Center + y), Color);
-            epd_paint_drawLine((uint16_t)((int32_t)X_Center - x), (uint16_t)((int32_t)Y_Center - y),
-                               (uint16_t)((int32_t)X_Center + x), (uint16_t)((int32_t)Y_Center - y), Color);
-            epd_paint_drawLine((uint16_t)((int32_t)X_Center - y), (uint16_t)((int32_t)Y_Center + x),
-                               (uint16_t)((int32_t)X_Center + y), (uint16_t)((int32_t)Y_Center + x), Color);
-            epd_paint_drawLine((uint16_t)((int32_t)X_Center - y), (uint16_t)((int32_t)Y_Center - x),
-                               (uint16_t)((int32_t)X_Center + y), (uint16_t)((int32_t)Y_Center - x), Color);
+            epd_paint_drawLine((uint16_t)cx_mx, (uint16_t)cy_py, (uint16_t)cx_px, (uint16_t)cy_py, Color);
+            epd_paint_drawLine((uint16_t)cx_mx, (uint16_t)cy_my, (uint16_t)cx_px, (uint16_t)cy_my, Color);
+            epd_paint_drawLine((uint16_t)cx_my, (uint16_t)cy_px, (uint16_t)cx_py, (uint16_t)cy_px, Color);
+            epd_paint_drawLine((uint16_t)cx_my, (uint16_t)cy_mx, (uint16_t)cx_py, (uint16_t)cy_mx, Color);
         } else {
-            epd_paint_drawPoint((uint16_t)((int32_t)X_Center + x), (uint16_t)((int32_t)Y_Center + y), Color);
-            epd_paint_drawPoint((uint16_t)((int32_t)X_Center - x), (uint16_t)((int32_t)Y_Center + y), Color);
-            epd_paint_drawPoint((uint16_t)((int32_t)X_Center + x), (uint16_t)((int32_t)Y_Center - y), Color);
-            epd_paint_drawPoint((uint16_t)((int32_t)X_Center - x), (uint16_t)((int32_t)Y_Center - y), Color);
-            epd_paint_drawPoint((uint16_t)((int32_t)X_Center + y), (uint16_t)((int32_t)Y_Center + x), Color);
-            epd_paint_drawPoint((uint16_t)((int32_t)X_Center - y), (uint16_t)((int32_t)Y_Center + x), Color);
-            epd_paint_drawPoint((uint16_t)((int32_t)X_Center + y), (uint16_t)((int32_t)Y_Center - x), Color);
-            epd_paint_drawPoint((uint16_t)((int32_t)X_Center - y), (uint16_t)((int32_t)Y_Center - x), Color);
+            epd_paint_drawPoint((uint16_t)cx_px, (uint16_t)cy_py, Color);
+            epd_paint_drawPoint((uint16_t)cx_mx, (uint16_t)cy_py, Color);
+            epd_paint_drawPoint((uint16_t)cx_px, (uint16_t)cy_my, Color);
+            epd_paint_drawPoint((uint16_t)cx_mx, (uint16_t)cy_my, Color);
+            epd_paint_drawPoint((uint16_t)cx_py, (uint16_t)cy_px, Color);
+            epd_paint_drawPoint((uint16_t)cx_my, (uint16_t)cy_px, Color);
+            epd_paint_drawPoint((uint16_t)cx_py, (uint16_t)cy_mx, Color);
+            epd_paint_drawPoint((uint16_t)cx_my, (uint16_t)cy_mx, Color);
         }
     }
 }
@@ -960,7 +966,7 @@ void epd_paint_showChar(uint16_t x, uint16_t y, uint16_t chr,
         if (size1 == EPD_CHAR_SIZE_8) {
             size2 = EPD_FONT8_SIZE2;
         } else {
-            size2 = (uint16_t)((uint16_t)(size1 / EPD_PIXEL_BITS +
+            size2 = (uint16_t)((uint16_t)((size1 / EPD_PIXEL_BITS) +
                                (((size1 % EPD_PIXEL_BITS) != 0U) ? 1U : 0U)) *
                                (uint16_t)(size1 / 2U));
         }
@@ -989,7 +995,8 @@ void epd_paint_showChar(uint16_t x, uint16_t y, uint16_t chr,
                     if ((temp & EPD_LOW_BIT_MASK) != 0U) {
                         epd_paint_drawPoint(lx, (uint16_t)(ly + m), color);
                     } else {
-                        epd_paint_drawPoint(lx, (uint16_t)(ly + m), (uint16_t)(!color));
+                        uint16_t inv_color = (color != 0U) ? (uint16_t)0U : (uint16_t)1U;
+                        epd_paint_drawPoint(lx, (uint16_t)(ly + m), inv_color);
                     }
                 }
                 temp = (uint16_t)(temp >> 1U);
@@ -1048,9 +1055,11 @@ void epd_paint_showNum(uint16_t x, uint16_t y, uint32_t num,
         m = 2U;
     }
     for (uint16_t t = 0U; t < len; t++) {
-        uint8_t temp = (uint8_t)((num / _Pow(10U, (uint16_t)(len - t - 1U))) % 10U);
+        uint8_t  temp        = (uint8_t)((num / _Pow(10U, (uint16_t)(len - t - 1U))) % 10U);
+        uint16_t half_plus_m = (uint16_t)((size1 / 2U) + (uint16_t)m);
+        uint32_t prod        = (uint32_t)half_plus_m * (uint32_t)t;
         epd_paint_showChar(
-            (uint16_t)(x + (uint16_t)((uint32_t)(size1 / 2U + m) * (uint32_t)t)),
+            (uint16_t)(x + (uint16_t)prod),
             y,
             (uint16_t)((uint16_t)temp + (uint16_t)'0'),
             size1,
@@ -1065,7 +1074,7 @@ void epd_paint_showChinese(uint16_t x, uint16_t y, uint16_t num,
     uint16_t ly    = (uint16_t)(y + 1U);
     uint16_t lx0   = lx;
     uint16_t ly0   = ly;
-    uint16_t size3 = (uint16_t)((uint16_t)(size1 / EPD_PIXEL_BITS +
+    uint16_t size3 = (uint16_t)((uint16_t)((size1 / EPD_PIXEL_BITS) +
                                (((size1 % EPD_PIXEL_BITS) != 0U) ? 1U : 0U)) *
                                size1);
     bool     proceed = true;
@@ -1092,7 +1101,8 @@ void epd_paint_showChinese(uint16_t x, uint16_t y, uint16_t num,
                 if ((temp & EPD_LOW_BIT_MASK) != 0U) {
                     epd_paint_drawPoint(lx, ly, color);
                 } else {
-                    epd_paint_drawPoint(lx, ly, (uint16_t)(!color));
+                    uint16_t inv_color = (color != 0U) ? (uint16_t)0U : (uint16_t)1U;
+                    epd_paint_drawPoint(lx, ly, inv_color);
                 }
                 temp = (uint16_t)(temp >> 1U);
                 ly   = (uint16_t)(ly + 1U);
@@ -1114,7 +1124,7 @@ void epd_paint_showPicture(uint16_t x, uint16_t y, uint16_t sizex,
     uint16_t ly    = (uint16_t)(y + 1U);
     uint16_t lx0   = lx;
     uint16_t ly0   = ly;
-    uint16_t rows  = (uint16_t)(sizey / EPD_PIXEL_BITS +
+    uint16_t rows  = (uint16_t)((sizey / EPD_PIXEL_BITS) +
                                (((sizey % EPD_PIXEL_BITS) != 0U) ? 1U : 0U));
     uint16_t j     = 0U;
 
@@ -1124,7 +1134,8 @@ void epd_paint_showPicture(uint16_t x, uint16_t y, uint16_t sizex,
             j++;
             for (uint16_t m = 0U; m < EPD_CHAR_COL_8; m++) {
                 if ((temp & EPD_LOW_BIT_MASK) != 0U) {
-                    epd_paint_drawPoint(lx, ly, (uint16_t)(!Color));
+                    uint16_t inv_color = (Color != 0U) ? (uint16_t)0U : (uint16_t)1U;
+                    epd_paint_drawPoint(lx, ly, inv_color);
                 } else {
                     epd_paint_drawPoint(lx, ly, Color);
                 }

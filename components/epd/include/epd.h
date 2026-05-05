@@ -69,7 +69,7 @@ typedef struct {
 esp_err_t epd_io_init(const epd_config_t *config);
 void epd_io_deinit(void);
 void epd_write_reg(uint8_t reg);
-void epd_write_imagedata(uint8_t *Image1, uint32_t length);
+void epd_write_imagedata(const uint8_t *Image1, uint32_t length);
 void epd_set_panel(uint8_t type, uint16_t width, uint16_t height);
 uint8_t epd_init(void);
 uint8_t epd_init_fast(void);
@@ -83,12 +83,12 @@ void epd_update_fast(void);
 void epd_update_partial(void);
 void epd_address_set(uint16_t x_start, uint16_t y_start, uint16_t x_end, uint16_t y_end);
 void epd_setpos(uint16_t x, uint16_t y);
-void epd_display(uint8_t *Image1, uint8_t *Image2);
+void epd_display(const uint8_t *Image1, const uint8_t *Image2);
 void epd_displayBW(uint8_t *Image);
 void epd_displayBW_fast(uint8_t *Image);
 void epd_displayBW_partial(uint8_t *Image);
 void epd_displayRED(uint8_t *Image);
-void epd_displayRED_invert(uint8_t *Image);
+void epd_displayRED_invert(const uint8_t *Image);
 
 void epd_paint_newimage(uint8_t *image, uint16_t Width, uint16_t Height, uint16_t Rotate, uint16_t Color);
 void epd_paint_setpixel(uint16_t Xpoint, uint16_t Ypoint, uint16_t Color);
