@@ -1,4 +1,4 @@
-#include "CryptnoxUtils.h"
+#include "CW_Utils.h"
 #include "esp_random.h"
 
 #ifdef CONFIG_ESP_WIFI_ENABLED
@@ -26,7 +26,7 @@ static bool bt_is_active(void) {
 }
 #endif
 
-bool CryptnoxUtils::fill_secure_random(uint8_t *dest, size_t len) {
+bool CW_Utils::fill_secure_random(uint8_t *dest, size_t len) {
     bool wifi_seeded = false;
     bool bt_seeded   = false;
 #ifdef CONFIG_ESP_WIFI_ENABLED

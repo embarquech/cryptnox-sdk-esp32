@@ -2,8 +2,10 @@ idf_component_register(
     SRCS
         "main.c"
         "${CMAKE_CURRENT_SOURCE_DIR}/../../components/crypto_provider/test/test_esp32_crypto_provider.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/../../components/secure_channel/test/test_cw_secure_channel.cpp"
     REQUIRES
         unity
+        secure_channel
         crypto_provider
     WHOLE_ARCHIVE
 )
