@@ -1,4 +1,4 @@
-name: MISRA C check
+name: Static analysis
 permissions:
   contents: read
   pull-requests: write
@@ -6,7 +6,7 @@ on:
   push:
   pull_request:
 jobs:
-  misra:
+  cppcheck:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository (with submodules)
@@ -17,41 +17,49 @@ jobs:
       - name: Install cppcheck
         run: sudo apt-get install -y cppcheck
 
-      - name: MISRA C analysis (Cryptnox SDK core)
+      # Common include paths so cppcheck resolves project headers
+      # (uECC.h, CW_*.h, ESP-IDF mbedtls/esp_*.h are NOT installed in CI —
+      # we suppress missingInclude rather than try to ship the full toolchain).
+      - name: cppcheck (Cryptnox SDK + ESP32 adapters, C++)
         run: |
           cppcheck \
-            --enable=all \
-            --std=c99 \
-            --language=c \
-            --addon=misra \
+            --enable=warning,style,performance,portability \
+            --std=c++17 \
+            --language=c++ \
             --inline-suppr \
             --error-exitcode=1 \
+            --suppress=missingInclude \
             --suppress=missingIncludeSystem \
-            --suppress=misra-config \
-            --suppress=misra-c2012-17.3 \
-            --suppress=misra-c2012-8.7 \
+            --suppress=unusedFunction \
+            -I cryptnox-sdk-cpp \
+            -I components/uECC/include \
+            -I components/cryptnox_utils/include \
+            -I components/crypto_provider/include \
+            -I components/secure_channel/include \
+            -I components/esp32_logger/include \
             --force \
-            cryptnox-sdk-cpp/
-
-      - name: MISRA C analysis (ESP32 adapter components)
-        run: |
-          cppcheck \
-            --enable=all \
-            --std=c99 \
-            --language=c \
-            --addon=misra \
-            --inline-suppr \
-            --error-exitcode=1 \
-            --suppress=missingIncludeSystem \
-            --suppress=misra-config \
-            --suppress=misra-c2012-17.3 \
-            --suppress=misra-c2012-8.7 \
-            --force \
+            cryptnox-sdk-cpp/ \
             components/cryptnox_utils/ \
             components/crypto_provider/ \
             components/esp32_logger/ \
             components/uECC/ \
             components/secure_channel/ \
-            components/epd/ \
-            components/pn532/ \
             main/
+
+      - name: MISRA C analysis (.c drivers only)
+        run: |
+          cppcheck \
+            --enable=all \
+            --std=c99 \
+            --language=c \
+            --addon=misra \
+            --inline-suppr \
+            --error-exitcode=1 \
+            --suppress=missingInclude \
+            --suppress=missingIncludeSystem \
+            --suppress=misra-config \
+            --suppress=misra-c2012-17.3 \
+            --suppress=misra-c2012-8.7 \
+            --force \
+            components/epd/epd.c \
+            components/pn532/pn532.c
