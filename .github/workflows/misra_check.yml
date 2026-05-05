@@ -47,6 +47,7 @@ jobs:
             main/
 
       - name: MISRA C analysis (.c drivers only)
+        if: always()
         run: |
           cppcheck \
             --enable=all \
