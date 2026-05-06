@@ -5,6 +5,6 @@
 
 class CryptnoxUtils {
 public:
-    /* Returns false if neither WiFi nor Bluetooth is active (hardware TRNG not seeded). */
+    /* Returns false if dest is NULL or len is zero. */
     static bool fill_secure_random(uint8_t *dest, size_t len);
 };

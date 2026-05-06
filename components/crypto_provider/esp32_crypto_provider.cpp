@@ -4,7 +4,6 @@
 #include "mbedtls/sha256.h"
 #include "mbedtls/sha512.h"
 #include "mbedtls/aes.h"
-#include "esp_random.h"
 
 /******************************************************************
  * 1. Module constants
@@ -47,7 +46,7 @@ void ESP32CryptoProvider::sha512(const uint8_t* data, size_t len, uint8_t* out) 
 }
 
 /******************************************************************
- * 4. AES-CBC encrypt
+ * 3. AES-CBC encrypt
  ******************************************************************/
 
 /** @brief AES-CBC encrypt with optional ISO/IEC 9797-1 Method 2 bit padding. */
@@ -105,7 +104,7 @@ uint16_t ESP32CryptoProvider::aesCbcEncrypt(const uint8_t* in, uint16_t len, uin
 }
 
 /******************************************************************
- * 5. AES-CBC decrypt
+ * 4. AES-CBC decrypt
  ******************************************************************/
 
 /** @brief AES-CBC decrypt with optional ISO/IEC 9797-1 Method 2 bit-padding removal. */
@@ -169,7 +168,7 @@ uint16_t ESP32CryptoProvider::aesCbcDecrypt(uint8_t* in, uint16_t len, uint8_t* 
 }
 
 /******************************************************************
- * 6. ECDH and key generation (delegated to uECC shim)
+ * 5. ECDH and key generation (delegated to uECC shim)
  ******************************************************************/
 
 /** @brief Compute ECDH shared secret: X-coordinate of privKey * pubKey point. */
@@ -187,10 +186,10 @@ bool ESP32CryptoProvider::makeKey(uint8_t* pubKey, uint8_t* privKey,
 }
 
 /******************************************************************
- * 7. Random bytes from ESP32 hardware True RNG
+ * 6. Random bytes from ESP32 hardware True RNG
  ******************************************************************/
 
-/** @brief Fill dest with size cryptographically random bytes from the ESP32 hardware TRNG. */
+/** @brief Fill dest with size cryptographically random bytes from the ESP32 hardware RNG. */
 bool ESP32CryptoProvider::random(uint8_t* dest, unsigned size) {
     bool result = false;
 

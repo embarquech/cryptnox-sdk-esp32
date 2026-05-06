@@ -8,8 +8,9 @@
  * 1. Module constants
  ******************************************************************/
 
-#define COORD_SIZE_BYTES       (32U)  /* bytes per coordinate (256-bit curve) */
-#define UNCOMPRESSED_PUB_SIZE  (65U)  /* 0x04 || X[32] || Y[32]              */
+#define COORD_SIZE_BYTES       (32U)                       /* bytes per coordinate (256-bit curve) */
+#define ECC_XY_KEY_SIZE        (COORD_SIZE_BYTES * 2U)     /* X[32] || Y[32] without 0x04 prefix  */
+#define UNCOMPRESSED_PUB_SIZE  (65U)                       /* 0x04 || X[32] || Y[32]              */
 #define UNCOMPRESSED_PREFIX    (0x04U)
 #define POINT_PREFIX_OFFSET    (0U)   /* byte offset of the 0x04 prefix      */
 #define COORD_X_OFFSET         (1U)   /* byte offset of X in 65-byte key     */
@@ -55,7 +56,7 @@ static int esp32_mbedtls_rng(void *ctx, unsigned char *output, size_t len) {
 }
 
 /******************************************************************
- * 6. Public API
+ * 5. Public API
  ******************************************************************/
 
 /** @brief Return the static secp256r1 curve descriptor. */
@@ -110,7 +111,7 @@ int uECC_make_key(uint8_t *public_key, uint8_t *private_key,
                                                   pub65, sizeof(pub65));
             if (ret == MBEDTLS_OK) {
                 (void)std::copy_n(pub65 + COORD_X_OFFSET,
-                                  static_cast<size_t>(COORD_SIZE_BYTES * 2U),
+                                  static_cast<size_t>(ECC_XY_KEY_SIZE),
                                   public_key);
             }
         }
@@ -150,7 +151,7 @@ int uECC_shared_secret(const uint8_t *public_key, const uint8_t *private_key,
             uint8_t pub65[UNCOMPRESSED_PUB_SIZE] = { 0U };
             pub65[POINT_PREFIX_OFFSET] = UNCOMPRESSED_PREFIX;
             (void)std::copy_n(public_key,
-                              static_cast<size_t>(COORD_SIZE_BYTES * 2U),
+                              static_cast<size_t>(ECC_XY_KEY_SIZE),
                               pub65 + COORD_X_OFFSET);
             ret = mbedtls_ecp_point_read_binary(&grp, &remote_Q,
                                                  pub65, sizeof(pub65));
@@ -216,7 +217,7 @@ int uECC_verify(const uint8_t *public_key, const uint8_t *hash, unsigned hash_si
             uint8_t pub65[UNCOMPRESSED_PUB_SIZE] = { 0U };
             pub65[POINT_PREFIX_OFFSET] = UNCOMPRESSED_PREFIX;
             (void)std::copy_n(public_key,
-                              static_cast<size_t>(COORD_SIZE_BYTES * 2U),
+                              static_cast<size_t>(ECC_XY_KEY_SIZE),
                               pub65 + COORD_X_OFFSET);
             ret = mbedtls_ecp_point_read_binary(&grp, &Q,
                                                  pub65, sizeof(pub65));
