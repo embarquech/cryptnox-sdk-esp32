@@ -966,7 +966,6 @@ void epd_paint_showChar(uint16_t x, uint16_t y, uint16_t chr, uint16_t size1, ui
 
     if (valid) {
         uint16_t i      = 0U;
-        uint16_t m      = 0U;
         uint16_t temp   = 0U;
         uint16_t size2  = 0U;
         uint16_t chr1   = 0U;
@@ -992,7 +991,7 @@ void epd_paint_showChar(uint16_t x, uint16_t y, uint16_t chr, uint16_t size1, ui
             }
 
             if (valid) {
-                for (m = 0U; m < (uint16_t)EPD_CHAR_SIZE_8; m++) {
+                for (uint16_t m = 0U; m < (uint16_t)EPD_CHAR_SIZE_8; m++) {
                     if ((uint16_t)(y_pos + m) < EPD_W) {
                         if ((temp & (uint16_t)EPD_LOW_BIT_MASK) != 0U) {
                             epd_paint_drawPoint(x_pos, (uint16_t)(y_pos + m), color);
