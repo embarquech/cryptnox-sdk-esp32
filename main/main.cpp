@@ -6,7 +6,6 @@
 #include "driver/gpio.h"
 #include "esp_log.h"
 #include "epd.h"
-#include "logo.h"
 #include "CW_Utils.h"
 #include "CryptnoxWallet.h"
 #include "Pn532NfcTransport.h"
@@ -39,45 +38,8 @@ static const uint32_t POLL_DELAY_MS = 500U;
 
 /* Bitmap bit-packing constants */
 #define BITS_PER_BYTE    8U
-#define BYTE_MSB         0x80U
-#define CENTER_DIVISOR   2U  /* halves a pixel dimension to compute a centred offset */
-#define LAST_IDX_OFFSET  1U  /* subtracts from an inclusive count to give the last index */
-#define BIT_EXTRACT_MASK 1U  /* isolates the single shifted bit from a byte */
 
 static uint8_t image_bw[EPD_WIDTH / BITS_PER_BYTE * EPD_HEIGHT];
-
-static void draw_logo(void)
-{
-    uint16_t buf_stride = static_cast<uint16_t>(EPD_WIDTH / BITS_PER_BYTE);
-    uint16_t off_x_px = static_cast<uint16_t>((EPD_WIDTH - LOGO_H) / CENTER_DIVISOR);
-    uint16_t off_y = static_cast<uint16_t>((EPD_HEIGHT - LOGO_W) / CENTER_DIVISOR);
-
-    for (uint16_t sy = 0U; sy < static_cast<uint16_t>(LOGO_H); sy++) {
-        for (uint16_t sx = 0U; sx < static_cast<uint16_t>(LOGO_W); sx++) {
-            uint32_t src_idx = static_cast<uint32_t>(sy) * static_cast<uint32_t>(LOGO_W / BITS_PER_BYTE)
-                               + static_cast<uint32_t>(sx / BITS_PER_BYTE);
-            uint8_t src_byte = logo_cryptnox[src_idx];
-            uint8_t sx_bit = static_cast<uint8_t>(sx % BITS_PER_BYTE);
-            uint8_t shift = static_cast<uint8_t>((BITS_PER_BYTE - LAST_IDX_OFFSET) - static_cast<unsigned int>(sx_bit));
-            uint8_t src_bit = static_cast<uint8_t>((src_byte >> shift) & BIT_EXTRACT_MASK);
-            bool pix_set = (src_bit == 0U);
-            uint16_t dx = sy;
-            uint16_t dy = static_cast<uint16_t>(static_cast<uint16_t>(LOGO_W - LAST_IDX_OFFSET) - sx);
-            uint16_t bx = static_cast<uint16_t>(off_x_px + dx);
-            uint16_t by = static_cast<uint16_t>(off_y + dy);
-            uint32_t addr = static_cast<uint32_t>(by) * static_cast<uint32_t>(buf_stride)
-                            + static_cast<uint32_t>(bx / BITS_PER_BYTE);
-            uint8_t bx_bit = static_cast<uint8_t>(bx % BITS_PER_BYTE);
-            uint8_t bit_mask = static_cast<uint8_t>(BYTE_MSB >> bx_bit);
-            if (pix_set) {
-                image_bw[addr] = static_cast<uint8_t>(image_bw[addr] | bit_mask);
-            } else {
-                image_bw[addr] = static_cast<uint8_t>(
-                    image_bw[addr] & static_cast<uint8_t>(~static_cast<unsigned int>(bit_mask)));
-            }
-        }
-    }
-}
 
 static void run_wallet_loop(CryptnoxWallet &wallet)
 {
@@ -178,7 +140,6 @@ extern "C" void app_main(void)
                            static_cast<uint16_t>(EPD_ROTATE_0),
                            static_cast<uint16_t>(EPD_COLOR_WHITE));
         epd_paint_clear(static_cast<uint16_t>(EPD_COLOR_BLACK));
-        draw_logo();
 
         bool epd_busy = (epd_init() != 0U);
         if (epd_busy) {

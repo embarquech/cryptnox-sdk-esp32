@@ -1,6 +1,7 @@
 #include "unity.h"
 #include "esp32_crypto_provider.h"
 #include "uECC.h"
+#include "CW_Utils.h"
 #include <string.h>
 #include <stdio.h>
 
@@ -244,5 +245,5 @@ TEST_CASE("random returns true and produces distinct draws", "[crypto_provider]"
     TEST_ASSERT_TRUE(randomGeneration1Succeeded);
     TEST_ASSERT_TRUE(randomGeneration2Succeeded);
     /* P(collision of two independent 32-byte TRNG draws) < 2^-256. */
-    TEST_ASSERT_NOT_EQUAL(0, memcmp(buf1, buf2, TV_RANDOM_BYTES));
+    TEST_ASSERT_FALSE(CW_Utils::secure_compare(buf1, buf2, TV_RANDOM_BYTES));
 }

@@ -216,7 +216,7 @@ static bool check_spi_ack(pn532_t *dev)
     bool result = false;
     (void)memset(ackbuff, 0, sizeof(ackbuff));
     read_data(dev, ackbuff, PN532_ACK_LEN);
-    result = (memcmp(ackbuff, pn532_ack, PN532_ACK_LEN) == 0);
+    result = pn532_buffer_equal(ackbuff, pn532_ack, PN532_ACK_LEN);
     return result;
 }
 
@@ -268,7 +268,6 @@ static bool send_command_check_ack(pn532_t *dev, const uint8_t *cmd,
 {
     uint16_t timer = 0U;
     bool timed_out = false;
-    bool ack_ok = false;
     bool result = false;
 
     write_command(dev, cmd, cmd_len);
@@ -286,11 +285,7 @@ static bool send_command_check_ack(pn532_t *dev, const uint8_t *cmd,
         }
     }
 
-    if (!timed_out) {
-        ack_ok = check_spi_ack(dev);
-    }
-
-    if (ack_ok) {
+    if (!timed_out && check_spi_ack(dev)) {
         timer = 0U;
         timed_out = false;
 

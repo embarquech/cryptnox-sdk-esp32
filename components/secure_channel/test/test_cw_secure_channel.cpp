@@ -504,8 +504,8 @@ TEST_CASE("openSecureChannel: extracts 32-byte salt from mock response", "[secur
     /* Client keypair must have been generated (non-zero) */
     const uint8_t zeroPub[SC_EC_PUBKEY_BYTES] = { 0U };
     const uint8_t zeroPriv[SC_EC_COORD_BYTES] = { 0U };
-    TEST_ASSERT_NOT_EQUAL(0, memcmp(clientPub,  zeroPub,  SC_EC_PUBKEY_BYTES));
-    TEST_ASSERT_NOT_EQUAL(0, memcmp(clientPriv, zeroPriv, SC_EC_COORD_BYTES));
+    TEST_ASSERT_FALSE(CW_Utils::secure_compare(clientPub,  zeroPub,  SC_EC_PUBKEY_BYTES));
+    TEST_ASSERT_FALSE(CW_Utils::secure_compare(clientPriv, zeroPriv, SC_EC_COORD_BYTES));
 }
 
 TEST_CASE("mutuallyAuthenticate: sets session IV to first 16 bytes of mock response",
@@ -550,8 +550,8 @@ TEST_CASE("mutuallyAuthenticate: sets session IV to first 16 bytes of mock respo
 
     /* Session keys must be non-zero (ECDH + SHA-512 derivation ran) */
     const uint8_t zeroKey[SC_AES_KEY_BYTES] = { 0U };
-    TEST_ASSERT_NOT_EQUAL(0, memcmp(session.aesKey, zeroKey, SC_AES_KEY_BYTES));
-    TEST_ASSERT_NOT_EQUAL(0, memcmp(session.macKey, zeroKey, SC_AES_KEY_BYTES));
+    TEST_ASSERT_FALSE(CW_Utils::secure_compare(session.aesKey, zeroKey, SC_AES_KEY_BYTES));
+    TEST_ASSERT_FALSE(CW_Utils::secure_compare(session.macKey, zeroKey, SC_AES_KEY_BYTES));
 }
 
 /******************************************************************
@@ -611,7 +611,7 @@ TEST_CASE("key derivation: ECDH + SHA-512 split yields distinct Kenc and Kmac",
     uint8_t* derivedKenc = sha512Out;
     uint8_t* derivedKmac = sha512Out + SC_AES_KEY_BYTES;
 
-    TEST_ASSERT_NOT_EQUAL(0, memcmp(derivedKenc, derivedKmac, SC_AES_KEY_BYTES));
+    TEST_ASSERT_FALSE(CW_Utils::secure_compare(derivedKenc, derivedKmac, SC_AES_KEY_BYTES));
 
     /* Cross-check: running mutuallyAuthenticate with these inputs must set
      * the same Kenc/Kmac in the session (one scripted APDU response). */
