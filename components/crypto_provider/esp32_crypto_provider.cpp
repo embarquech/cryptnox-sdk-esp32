@@ -6,14 +6,6 @@
 #include "mbedtls/aes.h"
 #include "esp_random.h"
 
-#ifdef CONFIG_ESP_WIFI_ENABLED
-#include "esp_wifi.h"
-#endif
-
-#ifdef CONFIG_BT_ENABLED
-#include "esp_bt.h"
-#endif
-
 /******************************************************************
  * 1. Module constants
  ******************************************************************/
@@ -41,28 +33,7 @@
 #define UECC_SUCCESS             (1)
 
 /******************************************************************
- * 2. TRNG readiness helpers
- ******************************************************************/
-
-#ifdef CONFIG_ESP_WIFI_ENABLED
-static bool wifi_is_active(void) {
-    wifi_mode_t mode        = WIFI_MODE_NULL;
-    esp_err_t   err         = esp_wifi_get_mode(&mode);
-    bool        wifi_active = ((err == ESP_OK) && (mode != WIFI_MODE_NULL));
-    return wifi_active;
-}
-#endif
-
-#ifdef CONFIG_BT_ENABLED
-static bool bt_is_active(void) {
-    esp_bt_controller_status_t status    = esp_bt_controller_get_status();
-    bool                       bt_active = (status == ESP_BT_CONTROLLER_STATUS_ENABLED);
-    return bt_active;
-}
-#endif
-
-/******************************************************************
- * 3. SHA methods
+ * 2. SHA methods
  ******************************************************************/
 
 /** @brief Compute SHA-256 over the input buffer, writing 32 bytes to out. */
@@ -222,21 +193,9 @@ bool ESP32CryptoProvider::makeKey(uint8_t* pubKey, uint8_t* privKey,
 /** @brief Fill dest with size cryptographically random bytes from the ESP32 hardware TRNG. */
 bool ESP32CryptoProvider::random(uint8_t* dest, unsigned size) {
     bool result = false;
-    // QUICK TEST: WiFi/BT seeding gate temporarily disabled to validate that
-    // the TRNG check is the root cause of failing tests.
-    // bool wifi_seeded = false;
-    // bool bt_seeded   = false;
-    // #ifdef CONFIG_ESP_WIFI_ENABLED
-    //     wifi_seeded = wifi_is_active();
-    // #endif
-    // #ifdef CONFIG_BT_ENABLED
-    //     bt_seeded = bt_is_active();
-    // #endif
-    // bool trng_seeded = (wifi_seeded || bt_seeded);
 
     if ((dest != NULL) && (size > 0U)) {
-        esp_fill_random(dest, static_cast<size_t>(size));
-        result = true;
+        result = CW_Utils::fill_secure_random(dest, static_cast<size_t>(size));
     }
 
     return result;
