@@ -4,15 +4,6 @@
 #include "mbedtls/sha256.h"
 #include "mbedtls/sha512.h"
 #include "mbedtls/aes.h"
-#include "esp_random.h"
-
-#ifdef CONFIG_ESP_WIFI_ENABLED
-#include "esp_wifi.h"
-#endif
-
-#ifdef CONFIG_BT_ENABLED
-#include "esp_bt.h"
-#endif
 
 /******************************************************************
  * 1. Module constants
@@ -41,28 +32,7 @@
 #define UECC_SUCCESS             (1)
 
 /******************************************************************
- * 2. TRNG readiness helpers
- ******************************************************************/
-
-#ifdef CONFIG_ESP_WIFI_ENABLED
-static bool wifi_is_active(void) {
-    wifi_mode_t mode        = WIFI_MODE_NULL;
-    esp_err_t   err         = esp_wifi_get_mode(&mode);
-    bool        wifi_active = ((err == ESP_OK) && (mode != WIFI_MODE_NULL));
-    return wifi_active;
-}
-#endif
-
-#ifdef CONFIG_BT_ENABLED
-static bool bt_is_active(void) {
-    esp_bt_controller_status_t status    = esp_bt_controller_get_status();
-    bool                       bt_active = (status == ESP_BT_CONTROLLER_STATUS_ENABLED);
-    return bt_active;
-}
-#endif
-
-/******************************************************************
- * 3. SHA methods
+ * 2. SHA methods
  ******************************************************************/
 
 /** @brief Compute SHA-256 over the input buffer, writing 32 bytes to out. */
@@ -76,7 +46,7 @@ void ESP32CryptoProvider::sha512(const uint8_t* data, size_t len, uint8_t* out) 
 }
 
 /******************************************************************
- * 4. AES-CBC encrypt
+ * 3. AES-CBC encrypt
  ******************************************************************/
 
 /** @brief AES-CBC encrypt with optional ISO/IEC 9797-1 Method 2 bit padding. */
@@ -134,7 +104,7 @@ uint16_t ESP32CryptoProvider::aesCbcEncrypt(const uint8_t* in, uint16_t len, uin
 }
 
 /******************************************************************
- * 5. AES-CBC decrypt
+ * 4. AES-CBC decrypt
  ******************************************************************/
 
 /** @brief AES-CBC decrypt with optional ISO/IEC 9797-1 Method 2 bit-padding removal. */
@@ -198,7 +168,7 @@ uint16_t ESP32CryptoProvider::aesCbcDecrypt(uint8_t* in, uint16_t len, uint8_t* 
 }
 
 /******************************************************************
- * 6. ECDH and key generation (delegated to uECC shim)
+ * 5. ECDH and key generation (delegated to uECC shim)
  ******************************************************************/
 
 /** @brief Compute ECDH shared secret: X-coordinate of privKey * pubKey point. */
@@ -216,25 +186,15 @@ bool ESP32CryptoProvider::makeKey(uint8_t* pubKey, uint8_t* privKey,
 }
 
 /******************************************************************
- * 7. Random bytes from ESP32 hardware True RNG
+ * 6. Random bytes from ESP32 hardware True RNG
  ******************************************************************/
 
-/** @brief Fill dest with size cryptographically random bytes from the ESP32 hardware TRNG. */
+/** @brief Fill dest with size cryptographically random bytes from the ESP32 hardware RNG. */
 bool ESP32CryptoProvider::random(uint8_t* dest, unsigned size) {
-    bool result      = false;
-    bool wifi_seeded = false;
-    bool bt_seeded   = false;
-#ifdef CONFIG_ESP_WIFI_ENABLED
-    wifi_seeded = wifi_is_active();
-#endif
-#ifdef CONFIG_BT_ENABLED
-    bt_seeded = bt_is_active();
-#endif
-    bool trng_seeded = (wifi_seeded || bt_seeded);
+    bool result = false;
 
-    if ((dest != NULL) && (size > 0U) && trng_seeded) {
-        esp_fill_random(dest, static_cast<size_t>(size));
-        result = true;
+    if ((dest != NULL) && (size > 0U)) {
+        result = CW_Utils::fill_secure_random(dest, static_cast<size_t>(size));
     }
 
     return result;

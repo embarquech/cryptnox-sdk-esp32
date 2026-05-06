@@ -9,38 +9,52 @@ extern "C" {
 #endif
 
 #include <stdint.h>
+#include <stdbool.h>
 #include "driver/spi_master.h"
 
-#define EPD213_219 0
-#define EPD154 1
-#define EPD420 2
-#define EPD370_UC8253 3
+#define EPD213_219    (0U)
+#define EPD154        (1U)
+#define EPD420        (2U)
+#define EPD370_UC8253 (3U)
 
 extern uint16_t EPD_H;
 extern uint16_t EPD_W;
 extern uint8_t epd_type;
 
-#define EPD_OK 0
-#define EPD_ERROR 1
+/* cppcheck-suppress misra-c2012-2.5 */
+#define EPD_OK    (0U)
+/* cppcheck-suppress misra-c2012-2.5 */
+#define EPD_ERROR (1U)
 
-#define EPD_ROTATE_0 0
-#define EPD_ROTATE_90 90
-#define EPD_ROTATE_180 180
-#define EPD_ROTATE_270 270
+#define EPD_ROTATE_0   (0U)
+/* cppcheck-suppress misra-c2012-2.5 */
+#define EPD_ROTATE_90  (90U)
+#define EPD_ROTATE_180 (180U)
+/* cppcheck-suppress misra-c2012-2.5 */
+#define EPD_ROTATE_270 (270U)
 
-#define EPD_COLOR_WHITE 0xFF
-#define EPD_COLOR_BLACK 0x00
-#define EPD_COLOR_RED EPD_COLOR_BLACK
+/* cppcheck-suppress misra-c2012-2.5 */
+#define EPD_COLOR_WHITE (0xFFU)
+#define EPD_COLOR_BLACK (0x00U)
+/* cppcheck-suppress misra-c2012-2.5 */
+#define EPD_COLOR_RED   EPD_COLOR_BLACK
 
-#define EPD_FONT_SIZE8x6 (8)
-#define EPD_FONT_SIZE12x6 (12)
-#define EPD_FONT_SIZE16x8 (16)
-#define EPD_FONT_SIZE24x12 (24)
+/* cppcheck-suppress misra-c2012-2.5 */
+#define EPD_FONT_SIZE8x6   (8U)
+/* cppcheck-suppress misra-c2012-2.5 */
+#define EPD_FONT_SIZE12x6  (12U)
+/* cppcheck-suppress misra-c2012-2.5 */
+#define EPD_FONT_SIZE16x8  (16U)
+/* cppcheck-suppress misra-c2012-2.5 */
+#define EPD_FONT_SIZE24x12 (24U)
 
-#define EPD_DEEPSLEEP_MODE1 (0x01)
-#define EPD_DEEPSLEEP_MODE2 (0x03)
+/* cppcheck-suppress misra-c2012-2.5 */
+#define EPD_DEEPSLEEP_MODE1 (0x01U)
+/* cppcheck-suppress misra-c2012-2.5 */
+#define EPD_DEEPSLEEP_MODE2 (0x03U)
 
-#define EPD_W_BUFF_SIZE ((EPD_W % 8 == 0) ? (EPD_W / 8) : (EPD_W / 8 + 1))
+#define EPD_W_BUFF_SIZE \
+    (((EPD_W % 8U) == 0U) ? (EPD_W / 8U) : ((EPD_W / 8U) + 1U))
 
 typedef struct {
     uint8_t *Image;
@@ -63,13 +77,13 @@ typedef struct {
     int pin_dc;
     int pin_rst;
     int pin_busy;
-    bool skip_bus_init;  // set true if SPI bus already initialized
+    bool skip_bus_init;  /* set true if SPI bus already initialized */
 } epd_config_t;
 
 esp_err_t epd_io_init(const epd_config_t *config);
 void epd_io_deinit(void);
 void epd_write_reg(uint8_t reg);
-void epd_write_imagedata(uint8_t *Image1, uint32_t length);
+void epd_write_imagedata(const uint8_t *Image1, uint32_t length);
 void epd_set_panel(uint8_t type, uint16_t width, uint16_t height);
 uint8_t epd_init(void);
 uint8_t epd_init_fast(void);
@@ -83,12 +97,12 @@ void epd_update_fast(void);
 void epd_update_partial(void);
 void epd_address_set(uint16_t x_start, uint16_t y_start, uint16_t x_end, uint16_t y_end);
 void epd_setpos(uint16_t x, uint16_t y);
-void epd_display(uint8_t *Image1, uint8_t *Image2);
-void epd_displayBW(uint8_t *Image);
-void epd_displayBW_fast(uint8_t *Image);
-void epd_displayBW_partial(uint8_t *Image);
-void epd_displayRED(uint8_t *Image);
-void epd_displayRED_invert(uint8_t *Image);
+void epd_display(const uint8_t *Image1, const uint8_t *Image2);
+void epd_displayBW(const uint8_t *Image);
+void epd_displayBW_fast(const uint8_t *Image);
+void epd_displayBW_partial(const uint8_t *Image);
+void epd_displayRED(const uint8_t *Image);
+void epd_displayRED_invert(const uint8_t *Image);
 
 void epd_paint_newimage(uint8_t *image, uint16_t Width, uint16_t Height, uint16_t Rotate, uint16_t Color);
 void epd_paint_setpixel(uint16_t Xpoint, uint16_t Ypoint, uint16_t Color);

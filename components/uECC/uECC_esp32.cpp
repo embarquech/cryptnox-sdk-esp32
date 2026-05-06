@@ -1,23 +1,16 @@
 #include "uECC.h"
+#include "CW_Utils.h"
 #include "mbedtls/ecp.h"
 #include "mbedtls/ecdsa.h"
-#include "esp_random.h"
 #include <algorithm>
-
-#ifdef CONFIG_ESP_WIFI_ENABLED
-#include "esp_wifi.h"
-#endif
-
-#ifdef CONFIG_BT_ENABLED
-#include "esp_bt.h"
-#endif
 
 /******************************************************************
  * 1. Module constants
  ******************************************************************/
 
-#define COORD_SIZE_BYTES       (32U)  /* bytes per coordinate (256-bit curve) */
-#define UNCOMPRESSED_PUB_SIZE  (65U)  /* 0x04 || X[32] || Y[32]              */
+#define COORD_SIZE_BYTES       (32U)                       /* bytes per coordinate (256-bit curve) */
+#define ECC_XY_KEY_SIZE        (COORD_SIZE_BYTES * 2U)     /* X[32] || Y[32] without 0x04 prefix  */
+#define UNCOMPRESSED_PUB_SIZE  (65U)                       /* 0x04 || X[32] || Y[32]              */
 #define UNCOMPRESSED_PREFIX    (0x04U)
 #define POINT_PREFIX_OFFSET    (0U)   /* byte offset of the 0x04 prefix      */
 #define COORD_X_OFFSET         (1U)   /* byte offset of X in 65-byte key     */
@@ -44,53 +37,26 @@ static const uECC_Curve_t s_secp256r1 = { MBEDTLS_ECP_DP_SECP256R1 };
 static const uECC_Curve_t s_secp256k1 = { MBEDTLS_ECP_DP_SECP256K1 };
 
 /******************************************************************
- * 4. TRNG readiness helpers
- ******************************************************************/
-
-#ifdef CONFIG_ESP_WIFI_ENABLED
-static bool wifi_is_active(void) {
-    wifi_mode_t mode        = WIFI_MODE_NULL;
-    esp_err_t   err         = esp_wifi_get_mode(&mode);
-    bool        wifi_active = ((err == ESP_OK) && (mode != WIFI_MODE_NULL));
-    return wifi_active;
-}
-#endif
-
-#ifdef CONFIG_BT_ENABLED
-static bool bt_is_active(void) {
-    esp_bt_controller_status_t status    = esp_bt_controller_get_status();
-    bool                       bt_active = (status == ESP_BT_CONTROLLER_STATUS_ENABLED);
-    return bt_active;
-}
-#endif
-
-/******************************************************************
- * 5. Internal RNG adapter for mbedTLS
+ * 4. Internal RNG adapter for mbedTLS
  ******************************************************************/
 
 static int esp32_mbedtls_rng(void *ctx, unsigned char *output, size_t len) {
-    int  result      = RNG_ERROR;
-    bool wifi_seeded = false;
-    bool bt_seeded   = false;
+    int result = RNG_ERROR;
     (void)ctx;
-#ifdef CONFIG_ESP_WIFI_ENABLED
-    wifi_seeded = wifi_is_active();
-#endif
-#ifdef CONFIG_BT_ENABLED
-    bt_seeded = bt_is_active();
-#endif
-    bool trng_seeded = (wifi_seeded || bt_seeded);
 
-    if ((output != NULL) && (len > 0U) && trng_seeded) {
-        esp_fill_random(output, len);
-        result = MBEDTLS_OK;
+    if ((output != NULL) && (len > 0U)) {
+        bool rng_result = CW_Utils::fill_secure_random(
+                              reinterpret_cast<uint8_t *>(output), len);
+        if (rng_result) {
+            result = MBEDTLS_OK;
+        }
     }
 
     return result;
 }
 
 /******************************************************************
- * 6. Public API
+ * 5. Public API
  ******************************************************************/
 
 /** @brief Return the static secp256r1 curve descriptor. */
@@ -145,7 +111,7 @@ int uECC_make_key(uint8_t *public_key, uint8_t *private_key,
                                                   pub65, sizeof(pub65));
             if (ret == MBEDTLS_OK) {
                 (void)std::copy_n(pub65 + COORD_X_OFFSET,
-                                  static_cast<size_t>(COORD_SIZE_BYTES * 2U),
+                                  static_cast<size_t>(ECC_XY_KEY_SIZE),
                                   public_key);
             }
         }
@@ -185,7 +151,7 @@ int uECC_shared_secret(const uint8_t *public_key, const uint8_t *private_key,
             uint8_t pub65[UNCOMPRESSED_PUB_SIZE] = { 0U };
             pub65[POINT_PREFIX_OFFSET] = UNCOMPRESSED_PREFIX;
             (void)std::copy_n(public_key,
-                              static_cast<size_t>(COORD_SIZE_BYTES * 2U),
+                              static_cast<size_t>(ECC_XY_KEY_SIZE),
                               pub65 + COORD_X_OFFSET);
             ret = mbedtls_ecp_point_read_binary(&grp, &remote_Q,
                                                  pub65, sizeof(pub65));
@@ -251,7 +217,7 @@ int uECC_verify(const uint8_t *public_key, const uint8_t *hash, unsigned hash_si
             uint8_t pub65[UNCOMPRESSED_PUB_SIZE] = { 0U };
             pub65[POINT_PREFIX_OFFSET] = UNCOMPRESSED_PREFIX;
             (void)std::copy_n(public_key,
-                              static_cast<size_t>(COORD_SIZE_BYTES * 2U),
+                              static_cast<size_t>(ECC_XY_KEY_SIZE),
                               pub65 + COORD_X_OFFSET);
             ret = mbedtls_ecp_point_read_binary(&grp, &Q,
                                                  pub65, sizeof(pub65));

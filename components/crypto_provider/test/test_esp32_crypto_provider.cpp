@@ -1,6 +1,7 @@
 #include "unity.h"
 #include "esp32_crypto_provider.h"
 #include "uECC.h"
+#include "CW_Utils.h"
 #include <string.h>
 #include <stdio.h>
 
@@ -33,9 +34,9 @@ TEST_CASE("sha256 NIST abc vector", "[crypto_provider]")
     static const uint8_t input[] = { 'a', 'b', 'c' };
     static const uint8_t expected[TV_SHA256_OUT_BYTES] = {
         0xbaU, 0x78U, 0x16U, 0xbfU, 0x8fU, 0x01U, 0xcfU, 0xeaU,
-        0x41U, 0x41U, 0x40U, 0xdeU, 0x5dU, 0xaeU, 0x2eU, 0xc7U,
-        0x3bU, 0x00U, 0x36U, 0x1bU, 0xbeU, 0xf2U, 0x48U, 0xdeU,
-        0x69U, 0x30U, 0x35U, 0x9eU, 0x6cU, 0xbdU, 0x3eU, 0x7eU
+        0x41U, 0x41U, 0x40U, 0xdeU, 0x5dU, 0xaeU, 0x2eU, 0xc2U,
+        0xb0U, 0x03U, 0x61U, 0xa3U, 0x96U, 0x17U, 0x7aU, 0x9cU,
+        0xb4U, 0x10U, 0xffU, 0x61U, 0xf2U, 0x00U, 0x15U, 0xadU
     };
     uint8_t out[TV_SHA256_OUT_BYTES] = { 0U };
 
@@ -244,5 +245,5 @@ TEST_CASE("random returns true and produces distinct draws", "[crypto_provider]"
     TEST_ASSERT_TRUE(randomGeneration1Succeeded);
     TEST_ASSERT_TRUE(randomGeneration2Succeeded);
     /* P(collision of two independent 32-byte TRNG draws) < 2^-256. */
-    TEST_ASSERT_NOT_EQUAL(0, memcmp(buf1, buf2, TV_RANDOM_BYTES));
+    TEST_ASSERT_FALSE(CW_Utils::secure_compare(buf1, buf2, TV_RANDOM_BYTES));
 }

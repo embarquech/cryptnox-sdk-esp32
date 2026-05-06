@@ -6,133 +6,97 @@
 #include "driver/gpio.h"
 #include "esp_log.h"
 #include "epd.h"
-#include "logo.h"
-#include "CryptnoxUtils.h"
+#include "CW_Utils.h"
+#include "CryptnoxWallet.h"
+#include "Pn532NfcTransport.h"
+#include "ESP32Logger.h"
+#include "esp32_crypto_provider.h"
 
-extern "C" {
-#include "pn532.h"
-}
-
-static const char *TAG = "main";
+static const char *const TAG = "main";
 static const size_t RND_BUF_SIZE = 16U;
-static const uint32_t PN532_FW_IC_SHIFT = 24U;
-static const uint32_t PN532_FW_VER_SHIFT = 16U;
-static const uint32_t PN532_FW_REV_SHIFT = 8U;
-static const uint32_t BYTE_MASK = 0xFFU;
 static const uint32_t POLL_DELAY_MS = 500U;
 
 /* Shared SPI bus: MOSI=IO11, SCLK=IO12, MISO=IO13 */
-#define SPI_MOSI             11
-#define SPI_MISO             13
-#define SPI_SCLK             12
-#define SPI_MAX_TRANSFER_SZ  4096
-#define SPI_PIN_UNUSED       (-1)
+#define SPI_MOSI            11
+#define SPI_MISO            13
+#define SPI_SCLK            12
+#define SPI_MAX_TRANSFER_SZ 4096
+#define SPI_PIN_UNUSED      (-1)
 
 /* PN532 NFC reader */
-#define NFC_CS   10
+#define NFC_CS  10
 
 /* E-paper display pins */
-#define EPD_PIN_CS    38
-#define EPD_PIN_DC    40
-#define EPD_PIN_RST   41
-#define EPD_PIN_BUSY  42
+#define EPD_PIN_CS   38
+#define EPD_PIN_DC   40
+#define EPD_PIN_RST  41
+#define EPD_PIN_BUSY 42
 
 /* 4.2" display resolution */
-#define EPD_WIDTH   400
-#define EPD_HEIGHT  300
+#define EPD_WIDTH  400U
+#define EPD_HEIGHT 300U
 
 /* Bitmap bit-packing constants */
-#define BITS_PER_BYTE   8U
-#define BYTE_MSB        0x80U
-
-/* UID text overlay position on display */
-#define UID_TEXT_X  10U
-#define UID_TEXT_Y  10U
-
-/* UID string buffer length (8 hex chars + "UID: " prefix + NUL) */
-#define UID_STR_LEN  32U
-
-/* Cryptnox application AID: A0 00 00 10 00 01 12 */
-#define CRYPTNOX_AID_LEN    (7U)
-
-/* SELECT APDU: CLA=00 INS=A4 P1=04 P2=00 Lc=07 AID[7] */
-#define SELECT_APDU_HDR_LEN (5U)
-#define SELECT_APDU_LEN     (SELECT_APDU_HDR_LEN + CRYPTNOX_AID_LEN)
-
-/* Maximum expected response length for a SELECT command. */
-#define SELECT_RESP_MAX_LEN (26U)
-
-/* ISO 7816 status words for success. */
-#define SW1_SUCCESS         (0x90U)
-#define SW2_SUCCESS         (0x00U)
-
-/* Offsets of SW1/SW2 from the end of an APDU response. */
-#define SW1_END_OFFSET      (2U)
-#define SW2_END_OFFSET      (1U)
-
-/* Minimum response that can carry valid status words. */
-#define RESP_MIN_LEN_FOR_SW (2U)
+#define BITS_PER_BYTE    8U
 
 static uint8_t image_bw[EPD_WIDTH / BITS_PER_BYTE * EPD_HEIGHT];
 
-static const uint8_t s_selectApdu[SELECT_APDU_LEN] = {
-    0x00U, 0xA4U, 0x04U, 0x00U,
-    static_cast<uint8_t>(CRYPTNOX_AID_LEN),
-    0xA0U, 0x00U, 0x00U, 0x10U, 0x00U, 0x01U, 0x12U
-};
+static void run_wallet_loop(CryptnoxWallet &wallet)
+{
+    /* SHA-256 of "CryptnoxTest\0" padded to 32 bytes — deterministic test vector. */
+    static const uint8_t TEST_HASH[CW_HASH_SIZE] = {
+        0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U,
+        0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U,
+        0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U,
+        0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x00U, 0x01U,
+    };
+    /* Replace with the card's actual PIN (ASCII digits, 4-9 characters). */
+    static const uint8_t TEST_PIN[CW_MAX_PIN_LENGTH] = {
+        '0', '0', '0', '0', '0', '0', '0', '0', '0'
+    };
 
-static void draw_logo(void) {
-    uint16_t buf_stride = (uint16_t)(EPD_WIDTH / BITS_PER_BYTE);
-    uint16_t off_x_px = (uint16_t)((EPD_WIDTH - LOGO_H) / 2U);
-    uint16_t off_y = (uint16_t)((EPD_HEIGHT - LOGO_W) / 2U);
+    while (true) {
+        CW_SecureSession session;
+        bool connected = wallet.connect(session);
 
-    for (uint16_t sy = 0U; sy < (uint16_t)LOGO_H; sy++) {
-        for (uint16_t sx = 0U; sx < (uint16_t)LOGO_W; sx++) {
-            uint32_t src_idx = (uint32_t)sy * (uint32_t)(LOGO_W / BITS_PER_BYTE)
-                               + (uint32_t)(sx / BITS_PER_BYTE);
-            uint8_t src_byte = logo_cryptnox[src_idx];
-            uint8_t sx_bit = (uint8_t)(sx % BITS_PER_BYTE);
-            uint8_t shift = (uint8_t)((BITS_PER_BYTE - 1U) - (unsigned int)sx_bit);
-            uint8_t src_bit = (uint8_t)((src_byte >> shift) & 1U);
-            bool pix_set = (src_bit == 0U);
-            uint16_t dx = sy;
-            uint16_t dy = (uint16_t)((uint16_t)(LOGO_W - 1U) - sx);
-            uint16_t bx = (uint16_t)(off_x_px + dx);
-            uint16_t by = (uint16_t)(off_y + dy);
-            uint32_t addr = (uint32_t)by * (uint32_t)buf_stride
-                            + (uint32_t)(bx / BITS_PER_BYTE);
-            uint8_t bx_bit = (uint8_t)(bx % BITS_PER_BYTE);
-            uint8_t bit_mask = (uint8_t)(BYTE_MSB >> bx_bit);
-            if (pix_set) {
-                image_bw[addr] = (uint8_t)(image_bw[addr] | bit_mask);
+        if (!connected) {
+            ESP_LOGW(TAG, "Card not found or secure channel failed - retrying");
+        }
+
+        if (connected) {
+            CW_SignRequest req(session,
+                              CW_SIGN_CURR_K1,
+                              CW_SIGN_SIG_ECDSA_LOW_S,
+                              CW_SIGN_WITH_PIN);
+            req.hash = TEST_HASH;
+            req.hashLength = static_cast<uint8_t>(CW_HASH_SIZE);
+            (void)memcpy(req.pin, TEST_PIN, CW_MAX_PIN_LENGTH);
+
+            CW_SignResult result = wallet.sign(req);
+
+            if (result.errorCode == CW_OK) {
+                ESP_LOGI(TAG, "Sign OK - r:");
+                ESP_LOG_BUFFER_HEX_LEVEL(TAG, &result.signature[CW_SIG_R_OFFSET],
+                                         CW_HASH_SIZE, ESP_LOG_INFO);
+                ESP_LOGI(TAG, "s:");
+                ESP_LOG_BUFFER_HEX_LEVEL(TAG, &result.signature[CW_SIG_S_OFFSET],
+                                         CW_HASH_SIZE, ESP_LOG_INFO);
             } else {
-                image_bw[addr] = (uint8_t)(image_bw[addr]
-                                           & (uint8_t)(~(unsigned int)bit_mask));
+                ESP_LOGE(TAG, "Sign failed: 0x%02X",
+                         static_cast<unsigned int>(result.errorCode));
             }
         }
+
+        wallet.disconnect(session);
+        vTaskDelay(pdMS_TO_TICKS(POLL_DELAY_MS));
     }
 }
 
-static void show_uid_on_epd(uint32_t uid) {
-    char uid_str[UID_STR_LEN];
-    (void)memset(uid_str, 0, sizeof(uid_str));
-    (void)snprintf(uid_str, sizeof(uid_str), "UID: %08lX", (unsigned long)uid);
-
-    epd_paint_selectimage(image_bw);
-    epd_paint_clear((uint16_t)EPD_COLOR_BLACK);
-    draw_logo();
-    epd_paint_showString((uint16_t)UID_TEXT_X, (uint16_t)UID_TEXT_Y,
-                         (uint8_t *)uid_str,
-                         (uint16_t)EPD_FONT_SIZE24x12, (uint16_t)EPD_COLOR_WHITE);
-    (void)epd_init_fast();
-    epd_displayBW_fast(image_bw);
-    epd_enter_deepsleepmode(EPD_DEEPSLEEP_MODE1);
-}
-
-extern "C" void app_main(void) {
+extern "C" void app_main(void)
+{
     uint8_t rnd[RND_BUF_SIZE] = { 0U };
-    bool rnd_ok = CryptnoxUtils::fill_secure_random(rnd, sizeof(rnd));
-    if (rnd_ok) {
+    bool rnd_result = CW_Utils::fill_secure_random(rnd, sizeof(rnd));
+    if (rnd_result) {
         ESP_LOGI(TAG, "TRNG: %02X%02X%02X%02X%02X%02X%02X%02X"
                       "%02X%02X%02X%02X%02X%02X%02X%02X",
                  rnd[0],  rnd[1],  rnd[2],  rnd[3],
@@ -165,16 +129,17 @@ extern "C" void app_main(void) {
         .skip_bus_init = true,
     };
     esp_err_t epd_ret = epd_io_init(&epd_cfg);
-    bool epd_ok = (epd_ret == ESP_OK);
 
-    if (epd_ok) {
-        epd_set_panel((uint8_t)EPD420,
-                      (uint16_t)EPD_WIDTH, (uint16_t)EPD_HEIGHT);
+    if (epd_ret == ESP_OK) {
+        epd_set_panel(static_cast<uint8_t>(EPD420),
+                      static_cast<uint16_t>(EPD_WIDTH),
+                      static_cast<uint16_t>(EPD_HEIGHT));
         epd_paint_newimage(image_bw,
-                           (uint16_t)EPD_WIDTH, (uint16_t)EPD_HEIGHT,
-                           (uint16_t)EPD_ROTATE_0, (uint16_t)EPD_COLOR_WHITE);
-        epd_paint_clear((uint16_t)EPD_COLOR_BLACK);
-        draw_logo();
+                           static_cast<uint16_t>(EPD_WIDTH),
+                           static_cast<uint16_t>(EPD_HEIGHT),
+                           static_cast<uint16_t>(EPD_ROTATE_0),
+                           static_cast<uint16_t>(EPD_COLOR_WHITE));
+        epd_paint_clear(static_cast<uint16_t>(EPD_COLOR_BLACK));
 
         bool epd_busy = (epd_init() != 0U);
         if (epd_busy) {
@@ -188,73 +153,28 @@ extern "C" void app_main(void) {
         ESP_LOGE(TAG, "EPD SPI init failed");
     }
 
-    pn532_t nfc = { 0 };
+    pn532_t nfc = {};
     pn532_config_t nfc_cfg = {
         .spi_host = SPI2_HOST,
         .pin_cs = NFC_CS,
         .skip_bus_init = true,
     };
     esp_err_t nfc_ret = pn532_init(&nfc, &nfc_cfg);
-    bool nfc_ok = (nfc_ret == ESP_OK);
 
-    if (nfc_ok) {
-        uint32_t version = pn532_get_firmware_version(&nfc);
-        bool fw_ok = (version != 0U);
-        if (fw_ok) {
-            ESP_LOGI(TAG, "PN5%02X firmware v%u.%u",
-                     (unsigned int)((version >> PN532_FW_IC_SHIFT) & BYTE_MASK),
-                     (unsigned int)((version >> PN532_FW_VER_SHIFT) & BYTE_MASK),
-                     (unsigned int)((version >> PN532_FW_REV_SHIFT) & BYTE_MASK));
+    if (nfc_ret == ESP_OK) {
+        ESP32Logger logger;
+        (void)logger.begin(115200UL);
 
-            bool sam_ok = pn532_sam_config(&nfc);
-            if (sam_ok) {
-                ESP_LOGI(TAG, "Ready — scan a tag");
-                uint32_t last_uid = 0U;
-                while (true) {
-                    uint32_t uid = pn532_read_passive_target_id(
-                                       &nfc, PN532_MIFARE_ISO14443A);
-                    bool new_tag = ((uid != 0U) && (uid != last_uid));
-                    if (new_tag) {
-                        uint8_t resp[SELECT_RESP_MAX_LEN] = { 0U };
-                        uint8_t resp_len = static_cast<uint8_t>(SELECT_RESP_MAX_LEN);
-                        bool apdu_ok = false;
+        ESP32CryptoProvider cryptoProvider;
+        Pn532NfcTransport nfcTransport(&nfc, logger);
+        CryptnoxWallet wallet(nfcTransport, logger, cryptoProvider);
 
-                        ESP_LOGI(TAG, "Tag: 0x%08lX", (unsigned long)uid);
-                        show_uid_on_epd(uid);
-                        last_uid = uid;
-
-                        apdu_ok = pn532_send_apdu(
-                            &nfc, s_selectApdu,
-                            static_cast<uint8_t>(SELECT_APDU_LEN),
-                            resp, &resp_len);
-                        if (!apdu_ok) {
-                            ESP_LOGE(TAG, "APDU exchange failed");
-                        } else if (resp_len < static_cast<uint8_t>(RESP_MIN_LEN_FOR_SW)) {
-                            ESP_LOGE(TAG, "Response too short: %u byte(s)",
-                                     static_cast<unsigned int>(resp_len));
-                        } else {
-                            uint8_t sw1 = resp[static_cast<size_t>(resp_len)
-                                               - static_cast<size_t>(SW1_END_OFFSET)];
-                            uint8_t sw2 = resp[static_cast<size_t>(resp_len)
-                                               - static_cast<size_t>(SW2_END_OFFSET)];
-                            if ((sw1 == static_cast<uint8_t>(SW1_SUCCESS))
-                                && (sw2 == static_cast<uint8_t>(SW2_SUCCESS))) {
-                                ESP_LOGI(TAG, "SELECT OK — Cryptnox applet active (SW=9000)");
-                            } else {
-                                ESP_LOGW(TAG, "SELECT SW=%02X%02X",
-                                         static_cast<unsigned int>(sw1),
-                                         static_cast<unsigned int>(sw2));
-                            }
-                        }
-                        (void)pn532_release_target(&nfc);
-                    }
-                    vTaskDelay(pdMS_TO_TICKS(POLL_DELAY_MS));
-                }
-            } else {
-                ESP_LOGE(TAG, "SAMConfig failed");
-            }
+        if (wallet.begin()) {
+            (void)nfcTransport.printFirmwareVersion();
+            ESP_LOGI(TAG, "Wallet ready - hold card to scan");
+            run_wallet_loop(wallet);
         } else {
-            ESP_LOGE(TAG, "PN532 not found");
+            ESP_LOGE(TAG, "Wallet init failed (SAMConfig)");
         }
     } else {
         ESP_LOGE(TAG, "PN532 init failed");
