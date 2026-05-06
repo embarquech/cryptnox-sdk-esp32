@@ -385,14 +385,14 @@ uint32_t pn532_get_firmware_version(pn532_t *dev)
 {
     uint8_t pn532_packetbuffer[PN532_FIRMWARE_RESP_LEN];
     uint32_t response = 0U;
-    bool ok = false;
+    bool ack_received = false;
 
     (void)memset(pn532_packetbuffer, 0, sizeof(pn532_packetbuffer));
     pn532_packetbuffer[0] = PN532_FIRMWAREVERSION;
-    ok = send_command_check_ack(dev, pn532_packetbuffer,
-                                PN532_FIRMWARE_CMD_LEN, PN532_CMD_TIMEOUT_MS);
+    ack_received = send_command_check_ack(dev, pn532_packetbuffer,
+                                          PN532_FIRMWARE_CMD_LEN, PN532_CMD_TIMEOUT_MS);
 
-    if (!ok) {
+    if (!ack_received) {
         ESP_LOGE(PN532_LOG_TAG, "No ACK from PN532");
     } else {
         read_data(dev, pn532_packetbuffer, PN532_FIRMWARE_RESP_LEN);
@@ -442,7 +442,7 @@ uint32_t pn532_read_passive_target_id(pn532_t *dev, uint8_t cardbaudrate)
 {
     uint8_t pn532_packetbuffer[PN532_PASSIVE_RESP_LEN];
     uint32_t cid = 0U;
-    bool ok = false;
+    bool ack_received = false;
 
     (void)memset(pn532_packetbuffer, 0, sizeof(pn532_packetbuffer));
     pn532_packetbuffer[0] = PN532_INLISTPASSIVETARGET;
@@ -480,16 +480,16 @@ bool pn532_send_apdu(pn532_t *dev, const uint8_t *apdu, uint8_t apdu_len,
 
     if (apdu_len <= PN532_MAX_APDU_LEN) {
         uint8_t cmd_total_len = 0U;
-        bool ok = false;
+        bool ack_received = false;
 
         cmd[0] = PN532_INDATAEXCHANGE;
         cmd[1] = PN532_EXCHANGE_TG;
         (void)memcpy(&cmd[PN532_EXCHANGE_CMD_OVERHEAD], apdu, apdu_len);
         cmd_total_len = (uint8_t)(apdu_len + PN532_EXCHANGE_CMD_OVERHEAD);
 
-        ok = send_command_check_ack(dev, cmd, cmd_total_len, PN532_APDU_TIMEOUT_MS);
+        ack_received = send_command_check_ack(dev, cmd, cmd_total_len, PN532_APDU_TIMEOUT_MS);
 
-        if (ok) {
+        if (ack_received) {
             read_data(dev, frame, PN532_EXCHANGE_FRAME_MAX);
 
             if ((frame[PN532_EXCHANGE_STATUS_OFFSET] == PN532_EXCHANGE_STATUS_OK) &&
@@ -509,7 +509,7 @@ bool pn532_release_target(pn532_t *dev)
 {
     uint8_t cmd[PN532_INRELEASE_CMD_LEN];
     uint8_t resp[PN532_INRELEASE_RESP_LEN];
-    bool ok = false;
+    bool ack_received = false;
     bool result = false;
 
     (void)memset(cmd, 0, sizeof(cmd));
@@ -518,9 +518,9 @@ bool pn532_release_target(pn532_t *dev)
     cmd[0] = PN532_INRELEASE;
     cmd[1] = PN532_EXCHANGE_TG;
 
-    ok = send_command_check_ack(dev, cmd, PN532_INRELEASE_CMD_LEN, PN532_CMD_TIMEOUT_MS);
+    ack_received = send_command_check_ack(dev, cmd, PN532_INRELEASE_CMD_LEN, PN532_CMD_TIMEOUT_MS);
 
-    if (ok) {
+    if (ack_received) {
         read_data(dev, resp, PN532_INRELEASE_RESP_LEN);
         result = (resp[PN532_EXCHANGE_STATUS_OFFSET] == PN532_EXCHANGE_STATUS_OK);
     }
