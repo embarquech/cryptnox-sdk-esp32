@@ -458,8 +458,6 @@ uint32_t pn532_read_passive_target_id(pn532_t *dev, uint8_t cardbaudrate)
                                           PN532_PASSIVE_CMD_LEN, PN532_CMD_TIMEOUT_MS);
 
     if (ack_received) {
-        uint8_t uid_len = 0U;
-        uint8_t i = 0U;
         read_data(dev, pn532_packetbuffer, PN532_PASSIVE_RESP_LEN);
 
         if (pn532_packetbuffer[PN532_PASSIVE_NUM_TARGETS_OFFSET] == PN532_PASSIVE_EXPECTED_TARGETS) {
@@ -497,12 +495,11 @@ bool pn532_send_apdu(pn532_t *dev, const uint8_t *apdu, uint8_t apdu_len,
         ok = send_command_check_ack(dev, cmd, cmd_total_len, PN532_APDU_TIMEOUT_MS);
 
         if (ok) {
-            uint8_t data_len = 0U;
             read_data(dev, frame, PN532_EXCHANGE_FRAME_MAX);
 
             if ((frame[PN532_EXCHANGE_STATUS_OFFSET] == PN532_EXCHANGE_STATUS_OK) &&
                 (frame[PN532_EXCHANGE_LEN_OFFSET] >= PN532_EXCHANGE_LEN_BIAS)) {
-                data_len = (uint8_t)(frame[PN532_EXCHANGE_LEN_OFFSET] - PN532_EXCHANGE_LEN_BIAS);
+                uint8_t data_len = (uint8_t)(frame[PN532_EXCHANGE_LEN_OFFSET] - PN532_EXCHANGE_LEN_BIAS);
                 (void)memcpy(response, &frame[PN532_EXCHANGE_DATA_OFFSET], data_len);
                 *response_len = data_len;
                 result = true;
