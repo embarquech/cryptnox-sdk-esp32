@@ -26,7 +26,7 @@ typedef struct {
 
 typedef struct {
     spi_device_handle_t spi;
-    int pin_cs;
+    int                 pin_cs;
 } pn532_t;
 
 esp_err_t pn532_init(pn532_t *dev, const pn532_config_t *config);
