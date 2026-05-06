@@ -458,6 +458,8 @@ uint32_t pn532_read_passive_target_id(pn532_t *dev, uint8_t cardbaudrate)
                                           PN532_PASSIVE_CMD_LEN, PN532_CMD_TIMEOUT_MS);
 
     if (ack_received) {
+        uint8_t uid_len = 0U;
+        uint8_t i = 0U;
         read_data(dev, pn532_packetbuffer, PN532_PASSIVE_RESP_LEN);
 
         if (pn532_packetbuffer[PN532_PASSIVE_NUM_TARGETS_OFFSET] == PN532_PASSIVE_EXPECTED_TARGETS) {
@@ -478,24 +480,15 @@ bool pn532_send_apdu(pn532_t *dev, const uint8_t *apdu, uint8_t apdu_len,
 {
     uint8_t cmd[PN532_MAX_APDU_LEN + PN532_EXCHANGE_CMD_OVERHEAD];
     uint8_t frame[PN532_EXCHANGE_FRAME_MAX];
-    /* cppcheck-suppress variableScope */
-    /* cppcheck-suppress unreadVariable */
-    uint8_t cmd_total_len = 0U;
-    /* cppcheck-suppress variableScope */
-    /* cppcheck-suppress unreadVariable */
-    uint8_t data_len = 0U;
-    bool valid = false;
-    /* cppcheck-suppress variableScope */
-    /* cppcheck-suppress unreadVariable */
-    bool ok = false;
     bool result = false;
 
     (void)memset(cmd, 0, sizeof(cmd));
     (void)memset(frame, 0, sizeof(frame));
 
-    valid = (apdu_len <= PN532_MAX_APDU_LEN);
+    if (apdu_len <= PN532_MAX_APDU_LEN) {
+        uint8_t cmd_total_len = 0U;
+        bool ok = false;
 
-    if (valid) {
         cmd[0] = PN532_INDATAEXCHANGE;
         cmd[1] = PN532_EXCHANGE_TG;
         (void)memcpy(&cmd[PN532_EXCHANGE_CMD_OVERHEAD], apdu, apdu_len);
@@ -504,6 +497,7 @@ bool pn532_send_apdu(pn532_t *dev, const uint8_t *apdu, uint8_t apdu_len,
         ok = send_command_check_ack(dev, cmd, cmd_total_len, PN532_APDU_TIMEOUT_MS);
 
         if (ok) {
+            uint8_t data_len = 0U;
             read_data(dev, frame, PN532_EXCHANGE_FRAME_MAX);
 
             if ((frame[PN532_EXCHANGE_STATUS_OFFSET] == PN532_EXCHANGE_STATUS_OK) &&
