@@ -1,0 +1,254 @@
+@startuml
+title Cryptnox SDK ESP32 - Layered architecture
+
+package "Cryptnox SDK Cpp" <<Frame>> {
+
+package "Library" {
+    class CryptnoxWallet {
+        + CryptnoxWallet(driver, logger, crypto, platform)
+        + begin()
+        + connect(session)
+        + establishSecureChannel(session)
+        + disconnect(session)
+        + getCardInfo(session)
+        + verifyPin(session, pin, pinLength)
+        + sign(request) : CW_SignResult
+        + writeUserData(session, slot, data, len)
+        + {static} parseDerSignature(der, derLen, r, rLen, s, sLen)
+        --
+        - _logger : CW_Logger&
+        - _platform : CW_Platform&
+        - _secure : CW_SecureChannel
+    }
+}
+
+package "Secure stack" {
+    class CW_SecureChannel {
+        + CW_SecureChannel(driver, logger, crypto, platform)
+        + begin()
+        + inListPassiveTarget()
+        + resetReader()
+        + printFirmwareVersion()
+        + selectApdu()
+        + getCardCertificate(cert, certLen)
+        + extractCardEphemeralKey(cert, pubKey64, pubKey65)
+        + openSecureChannel(salt, clientPubKey, clientPrivKey, curve)
+        + mutuallyAuthenticate(session, salt, ...)
+        + aesCbcEncrypt(session, apdu, apduLen, data, dataLen, ...)
+        + aesCbcDecrypt(session, response, responseLen, macValue, ...)
+        + checkStatusWord(response, len, sw1, sw2)
+        --
+        - _driver : CW_NfcTransport&
+        - _logger : CW_Logger&
+        - _crypto : CW_CryptoProvider&
+        - _platform : CW_Platform&
+    }
+
+    class CW_SecureSession {
+        + aesKey[32]
+        + macKey[32]
+        + iv[16]
+        --
+        + CW_SecureSession()
+        + clear() : void
+    }
+
+    class CW_SignRequest {
+        + session : CW_SecureSession&
+        + keyType : uint8_t
+        + signatureType : uint8_t
+        + pin[9]
+        + pinLessMode : bool
+        + hash : const uint8_t*
+        + hashLength : uint8_t
+        + derivePath : const uint8_t*
+        + derivePathLength : uint8_t
+        --
+        + CW_SignRequest(sess, kType, sigType, pinless)
+    }
+
+    class CW_SignResult {
+        + signature[64]
+        + errorCode : uint8_t
+        --
+        + CW_SignResult()
+    }
+}
+
+package "Crypto abstraction" {
+    enum CW_Curve {
+        CW_CURVE_SECP256R1
+        CW_CURVE_SECP256K1
+    }
+
+    abstract class CW_CryptoProvider {
+        + sha256(data, len, out)
+        + sha512(data, len, out)
+        + aesCbcEncrypt(in, len, out, key, keyLen, iv, bitPadding)
+        + aesCbcDecrypt(in, len, out, key, keyLen, iv, bitPadding)
+        + ecdh(pubKey, privKey, secret, curve : CW_Curve)
+        + makeKey(pubKey, privKey, curve : CW_Curve)
+        + ecdsaVerify(pubKey, hash, hashLen, sig, curve : CW_Curve)
+        + random(dest, size)
+    }
+
+    class ESP32CryptoProvider {
+        + ESP32CryptoProvider()
+        + sha256(...)
+        + sha512(...)
+        + aesCbcEncrypt(...)
+        + aesCbcDecrypt(...)
+        + ecdh(...)
+        + makeKey(...)
+        + ecdsaVerify(...)
+        + random(...)
+    }
+}
+
+package "Transport" {
+    abstract class CW_NfcTransport {
+        + begin()
+        + inListPassiveTarget()
+        + sendAPDU(apdu, apduLen, response, responseLen)
+        + resetReader()
+        + printFirmwareVersion()
+    }
+
+    class Pn532NfcTransport {
+        + Pn532NfcTransport(dev, logger)
+        + begin()
+        + inListPassiveTarget()
+        + sendAPDU(...)
+        + resetReader()
+        + printFirmwareVersion()
+        --
+        - m_dev : pn532_t*
+        - m_logger : CW_Logger&
+    }
+}
+
+package "Logging" {
+    abstract class CW_Logger {
+        + begin(baudRate)
+        + print(...)
+        + println(...)
+    }
+
+    class ESP32Logger {
+        + ESP32Logger()
+        + begin(baudRate)
+        + print(...)
+        + println(...)
+    }
+}
+
+package "Platform" {
+    abstract class CW_Platform {
+        + sleep_ms(ms)
+    }
+
+    class ESP32Platform {
+        + ESP32Platform()
+        + sleep_ms(ms)
+    }
+}
+
+package "Utilities" {
+    class CW_Utils <<static>> {
+        + {static} secure_compare(a, b, len) : bool
+        + {static} secure_wipe(buf, len) : void
+        + {static} safe_memcpy(dst, dstSize, src, count) : bool
+        + {static} fill_secure_random(dest, len) : bool
+    }
+}
+
+}
+
+package "External Libraries" <<Frame>> #FFFDE7 {
+
+    class "pn532 (ESP-IDF driver)" as pn532_drv <<library>> {
+        + pn532_init(dev, config) : esp_err_t
+        + pn532_get_firmware_version(dev) : uint32_t
+        + pn532_sam_config(dev) : bool
+        + pn532_read_passive_target_id(dev, baudrate) : uint32_t
+    }
+
+    class "mbedtls/aes" as mbedtls_aes <<library>> {
+        + mbedtls_aes_init(ctx) : void
+        + mbedtls_aes_setkey_enc/dec(...) : int
+        + mbedtls_aes_crypt_cbc(...) : int
+    }
+
+    class "mbedtls/sha256 + sha512" as mbedtls_sha <<library>> {
+        + mbedtls_sha256(data, len, out, mode) : int
+        + mbedtls_sha512(data, len, out, mode) : int
+    }
+
+    class "mbedtls/ecp + ecdsa" as mbedtls_ecp <<library>> {
+        + mbedtls_ecp_gen_keypair(...) : int
+        + mbedtls_ecp_mul(...) : int
+        + mbedtls_ecdsa_verify(...) : int
+    }
+
+    class "uECC (ESP32 shim)" as uECC <<library>> {
+        + uECC_make_key(pubKey, privKey, curve) : int
+        + uECC_shared_secret(pubKey, privKey, secret, curve) : int
+        + uECC_verify(pubKey, hash, hashSize, sig, curve) : int
+        + uECC_secp256r1() : uECC_Curve_t*
+    }
+
+    class "esp_random" as esp_random <<ESP-IDF>> {
+        + esp_fill_random(buf, len) : void
+    }
+
+    class "esp_log / driver/uart" as esp_log <<ESP-IDF>> {
+        + ESP_LOGI / ESP_LOGE / ESP_LOGW (...)
+        + uart_driver_install(...) : esp_err_t
+    }
+
+    class "freertos" as esp_time <<ESP-IDF>> {
+        + vTaskDelay(ticks) : void
+    }
+}
+
+' ==============================
+' Relations
+' ==============================
+
+CryptnoxWallet o-- CW_Logger
+CryptnoxWallet o-- CW_Platform
+CryptnoxWallet *-- "1" CW_SecureChannel
+CryptnoxWallet ..> CW_SignRequest
+CryptnoxWallet ..> CW_SignResult
+
+CW_SecureChannel o-- CW_NfcTransport
+CW_SecureChannel o-- CW_Logger
+CW_SecureChannel o-- CW_CryptoProvider
+CW_SecureChannel o-- CW_Platform
+CW_SecureChannel ..> CW_SecureSession
+
+CW_SignRequest --> CW_SecureSession
+
+CW_CryptoProvider <|.. ESP32CryptoProvider
+CW_NfcTransport   <|.. Pn532NfcTransport
+CW_Logger         <|.. ESP32Logger
+CW_Platform       <|.. ESP32Platform
+
+CW_CryptoProvider ..> CW_Curve
+ESP32CryptoProvider ..> CW_Curve
+
+ESP32Logger ..> esp_log
+ESP32Platform ..> esp_time
+Pn532NfcTransport ..> pn532_drv
+
+ESP32CryptoProvider ..> mbedtls_aes
+ESP32CryptoProvider ..> mbedtls_sha
+ESP32CryptoProvider ..> uECC
+ESP32CryptoProvider ..> CW_Utils
+
+uECC ..> mbedtls_ecp
+uECC ..> CW_Utils
+
+CW_Utils ..> esp_random
+
+@enduml
