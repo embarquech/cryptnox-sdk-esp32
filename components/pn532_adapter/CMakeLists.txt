@@ -4,4 +4,4 @@ idf_component_register(SRCS "pn532_adapter.cpp"
 
 # Expose cryptnox-sdk-cpp headers to dependents of this component.
 target_include_directories(${COMPONENT_LIB} PUBLIC
-    "${CMAKE_SOURCE_DIR}/cryptnox-sdk-cpp")
+    "${CMAKE_CURRENT_SOURCE_DIR}/../../cryptnox-sdk-cpp")
