@@ -4,7 +4,6 @@
 #include "CW_Utils.h"
 #include "esp32_crypto_provider.h"
 #include "uECC.h"
-#include "esp_random.h"
 #include <string.h>
 #include <stdio.h>
 
@@ -292,40 +291,16 @@ public:
 };
 
 /******************************************************************
- * 5. TestCryptoProvider — ESP32CryptoProvider with the WiFi/BT
- *    entropy-readiness gate removed.
- *
- *    ESP32CryptoProvider::random() returns false when neither WiFi
- *    nor BT is active, which would cause mutuallyAuthenticate() to
- *    abort during unit tests.  This subclass calls esp_fill_random()
- *    directly so tests run without a radio.
+ * 5. Static instances shared across tests
  ******************************************************************/
 
-class TestCryptoProvider : public ESP32CryptoProvider {
-public:
-    bool random(uint8_t* dest, unsigned size) override {
-        bool result = false;
-        if ((dest != NULL) && (size > 0U)) {
-            esp_fill_random(dest, static_cast<size_t>(size));
-            result = true;
-        }
-        return result;
-    }
-    ~TestCryptoProvider() override {
-    }
-};
-
-/******************************************************************
- * 6. Static instances shared across tests
- ******************************************************************/
-
-static TestCryptoProvider         s_crypto;
+static ESP32CryptoProvider        s_crypto;
 static MockLogger                 s_logger;
 static ScriptedMockNfcTransport   s_scriptedTransport;
 static ReflectiveMockNfcTransport s_reflectiveTransport;
 
 /******************************************************************
- * 6. checkStatusWord tests
+ * 6. checkStatusWord tests  (section numbering kept for diff clarity)
  ******************************************************************/
 
 TEST_CASE("checkStatusWord: SW 0x9000 returns true", "[secure_channel]")
