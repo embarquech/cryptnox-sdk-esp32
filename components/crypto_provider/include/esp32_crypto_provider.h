@@ -34,6 +34,9 @@ public:
 
     bool random(uint8_t* dest, unsigned size) override;
 
+    bool verify(const uint8_t* pubKey64, const uint8_t* hash,
+                size_t hashSize, const uint8_t* rawSig64) override;
+
     ~ESP32CryptoProvider() override {}
 };
 
