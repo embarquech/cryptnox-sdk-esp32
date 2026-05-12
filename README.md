@@ -152,6 +152,8 @@ extern "C" void app_main(void) {
 
 The card must be initialised before calling `verifyPin`.
 
+> **Security note:** Never hard-code a PIN in firmware — read it from a secure source at runtime and wipe the buffer with `CW_Utils::secure_wipe()` immediately after use.
+
 ```cpp
 extern "C" void app_main(void) {
     ESP32Logger          logger;
@@ -166,10 +168,13 @@ extern "C" void app_main(void) {
         return;
     }
 
-    const char *pin = "12345678";
-    CW_PinResult res = wallet.verifyPin(session,
-                                        reinterpret_cast<const uint8_t *>(pin),
-                                        strlen(pin));
+    /* Read the PIN from a secure source — never hard-code it. */
+    uint8_t pin[CW_MAX_PIN_LENGTH] = { 0U };
+    uint8_t pinLength = 0U;
+    read_pin_from_secure_input(pin, &pinLength);  /* implement for your platform */
+
+    CW_PinResult res = wallet.verifyPin(session, pin, pinLength);
+    CW_Utils::secure_wipe(pin, sizeof(pin));  /* wipe PIN immediately after use */
     switch (res) {
         case CW_PIN_OK:
             ESP_LOGI(TAG, "PIN verified — card is ready for signing");
@@ -215,7 +220,8 @@ extern "C" void app_main(void) {
                        /*pinLessMode=*/false);
     req.hash         = hash;
     req.hashLength   = sizeof(hash);
-    memcpy(req.pin, "12345678", 8);
+    /* Read the PIN from a secure source — never hard-code it in the firmware. */
+    read_pin_from_secure_input(req.pin, NULL);  /* implement for your platform */
 
     CW_SignResult sig = wallet.sign(req);
     if (sig.errorCode == CW_SIGN_OK) {
@@ -230,6 +236,16 @@ extern "C" void app_main(void) {
 ```
 
 See `main/main.cpp` for a full reference that wires up the SPI bus and polls the PN532.
+
+---
+
+## Security
+
+- **Flash Encryption and Secure Boot V2** must be enabled for production deployments. Defaults are set in `sdkconfig.defaults`. eFuse programming is irreversible — practice on a development board first.
+- **Hard-coded secrets:** Never hard-code a PIN or private key in firmware. Wipe PIN buffers with `CW_Utils::secure_wipe()` immediately after use.
+- **Dependency pinning:** Use the exact ESP-IDF tag (`v5.5.0`) and pin the `cryptnox-sdk-cpp` submodule to a commit hash.
+
+---
 
 ## Documentation
 

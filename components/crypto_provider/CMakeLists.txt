@@ -4,5 +4,3 @@ idf_component_register(
                  "${CMAKE_CURRENT_SOURCE_DIR}/../../cryptnox-sdk-cpp"
     REQUIRES     mbedtls uECC cryptnox_utils esp_hw_support esp_wifi
 )
-
-idf_component_optional_requires(PRIVATE bt)

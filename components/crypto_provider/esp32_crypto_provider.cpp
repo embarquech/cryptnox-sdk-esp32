@@ -199,3 +199,11 @@ bool ESP32CryptoProvider::random(uint8_t* dest, unsigned size) {
 
     return result;
 }
+
+/** @brief Verify an ECDSA-SHA256 signature (raw r||s) against a hash on secp256r1. */
+bool ESP32CryptoProvider::verify(const uint8_t* pubKey64, const uint8_t* hash,
+                                  size_t hashSize, const uint8_t* rawSig64) {
+    int ret = uECC_verify(pubKey64, hash, static_cast<unsigned>(hashSize),
+                          rawSig64, uECC_secp256r1());
+    return (ret == UECC_SUCCESS);
+}
