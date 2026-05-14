@@ -23,6 +23,10 @@
  * ⚠️ NEVER COMMIT THIS FILE
  * Add config.h to .gitignore
  */
+
+#define CARD_PIN      "<CARD_PIN>"   /* 4-9 digit PIN, e.g. "000000000" */
+#define CARD_PIN_LEN  (9U)                /* number of digits in CARD_PIN */
+
 /* =========================
  * Ethereum Addresses
  * ========================= */
@@ -46,6 +50,6 @@
 // Gas parameters (in wei)
 #define MAX_PRIORITY_FEE  2000000000ULL  // 2 Gwei
 #define MAX_FEE           4000000000ULL  // 4 Gwei
-#define GAS_LIMIT_ERC20   60000ULL
+#define GAS_LIMIT_ERC20   100000ULL
 
 #endif /* CONFIG_H */
