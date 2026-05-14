@@ -12,9 +12,9 @@
 /* =========================
  * Ethereum / RPC
  * ========================= */
-#define RPC_HOST          "<RPC_HOST>"          // e.g., sepolia.infura.io
+#define RPC_HOST          "ethereum-sepolia-rpc.publicnode.com"          // e.g., sepolia.infura.io
 #define RPC_PORT          443                   // HTTPS port
-#define INFURA_PROJECT_ID "<INFURA_PROJECT_ID>"
+#define RPC_URL           "https://" RPC_HOST
 
 /* =========================
  * Wallet / Keys (SENSITIVE)
@@ -50,6 +50,6 @@
 // Gas parameters (in wei)
 #define MAX_PRIORITY_FEE  2000000000ULL  // 2 Gwei
 #define MAX_FEE           4000000000ULL  // 4 Gwei
-#define GAS_LIMIT_ERC20   100000ULL
+#define GAS_LIMIT_ERC20   60000ULL
 
 #endif /* CONFIG_H */
