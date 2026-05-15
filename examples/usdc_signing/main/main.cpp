@@ -282,6 +282,9 @@ extern "C" void app_main(void)
 
     /* ── WiFi + RPC ────────────────────────────────────────────── */
     eth_rpc_init(RPC_URL, "0x" ADDR_FROM);
+#if defined(RPC_PROJECT_ID) && defined(RPC_API_SECRET)
+    eth_rpc_set_auth(RPC_PROJECT_ID, RPC_API_SECRET);
+#endif
 
     if (!eth_rpc_wifi_connect(WIFI_SSID, WIFI_PASSWORD)) {
         ESP_LOGE(TAG, "WiFi connect failed — check config.h credentials");

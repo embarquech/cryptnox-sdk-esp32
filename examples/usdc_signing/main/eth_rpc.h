@@ -16,6 +16,14 @@ extern "C" {
 void eth_rpc_init(const char *rpc_url, const char *from_addr);
 
 /*
+ * Optional: set the Infura API secret for HTTP Basic Auth.
+ * Pass NULL or empty string to disable.  Must be called before any
+ * eth_rpc_* function that makes network requests.
+ * The Project ID is used as the username; api_secret is the password.
+ */
+void eth_rpc_set_auth(const char *project_id, const char *api_secret);
+
+/*
  * Connect to a WiFi network and block until an IP is obtained (up to 30 s).
  * Returns true on success.
  */

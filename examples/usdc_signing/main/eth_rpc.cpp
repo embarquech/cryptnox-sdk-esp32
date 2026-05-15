@@ -32,8 +32,10 @@ static const char *const TAG = "eth_rpc";
  * Module state
  ******************************************************************/
 
-static const char *s_rpc_url   = NULL;
-static const char *s_from_addr = NULL;
+static const char *s_rpc_url      = NULL;
+static const char *s_from_addr    = NULL;
+static const char *s_project_id   = NULL;
+static const char *s_api_secret   = NULL;
 
 static EventGroupHandle_t s_wifi_event_group;
 static int                s_retry_num = 0;
@@ -79,12 +81,20 @@ static bool do_post(const char *body, char *resp_buf, size_t resp_buf_size)
 {
     bool success = false;
 
+    bool use_auth = ((s_project_id != NULL) && (s_project_id[0] != '\0') &&
+                     (s_api_secret != NULL) && (s_api_secret[0] != '\0'));
+
     esp_http_client_config_t cfg;
     (void)memset(&cfg, 0, sizeof(cfg));
     cfg.url               = s_rpc_url;
     cfg.method            = HTTP_METHOD_POST;
     cfg.timeout_ms        = 15000;
     cfg.crt_bundle_attach = esp_crt_bundle_attach;
+    if (use_auth) {
+        cfg.username  = s_project_id;
+        cfg.password  = s_api_secret;
+        cfg.auth_type = HTTP_AUTH_TYPE_BASIC;
+    }
 
     esp_http_client_handle_t client = esp_http_client_init(&cfg);
     if (client == NULL) {
@@ -155,6 +165,12 @@ void eth_rpc_init(const char *rpc_url, const char *from_addr)
 {
     s_rpc_url   = rpc_url;
     s_from_addr = from_addr;
+}
+
+void eth_rpc_set_auth(const char *project_id, const char *api_secret)
+{
+    s_project_id = project_id;
+    s_api_secret = api_secret;
 }
 
 bool eth_rpc_wifi_connect(const char *ssid, const char *password)
