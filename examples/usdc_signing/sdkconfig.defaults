@@ -1,0 +1,11 @@
+CONFIG_IDF_TARGET="esp32s3"
+
+# Enough stack for TLS + JSON + crypto operations in app_main
+CONFIG_ESP_MAIN_TASK_STACK_SIZE=16384
+
+# mbedTLS certificate bundle for HTTPS RPC endpoints
+CONFIG_MBEDTLS_CERTIFICATE_BUNDLE=y
+CONFIG_MBEDTLS_CERTIFICATE_BUNDLE_DEFAULT_FULL=y
+
+# HTTPS support in the HTTP client
+CONFIG_ESP_HTTP_CLIENT_ENABLE_HTTPS=y

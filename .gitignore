@@ -3,3 +3,4 @@ sdkconfig
 sdkconfig.old
 .claude/
 .vscode/
+examples/usdc_signing/main/config.h
