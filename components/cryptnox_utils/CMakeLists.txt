@@ -1,4 +1,4 @@
 idf_component_register(
     SRCS        "esp32_random.cpp"
     INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/../../cryptnox-sdk-cpp"
-    REQUIRES    esp_hw_support esp_timer mbedtls)
+    REQUIRES    esp_hw_support esp_wifi bt esp_log)
