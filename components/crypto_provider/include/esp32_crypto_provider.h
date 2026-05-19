@@ -10,7 +10,7 @@
  * SHA-256 / SHA-512  — mbedTLS software (hardware-accelerated on ESP32-S3).
  * AES-CBC            — mbedTLS software (hardware-accelerated on ESP32-S3).
  * ECDH / key-gen     — uECC shim backed by mbedTLS ECP primitives.
- * Random             — ESP32 hardware True RNG via esp_fill_random().
+ * Random             — ESP32 hardware TRNG + timer jitter mixed via SHA-256 (CW_Utils::fill_secure_random).
  */
 class ESP32CryptoProvider : public CW_CryptoProvider {
 public:
