@@ -5,4 +5,14 @@
 cmake_minimum_required(VERSION 3.16)
 
 include($ENV{IDF_PATH}/tools/cmake/project.cmake)
+
+# Enforce ESP-IDF v5.5 minimum.  Older versions lack mbedTLS APIs and
+# FreeRTOS types relied on by this project (SEC-014).
+if(IDF_VERSION_MAJOR LESS 5 OR
+   (IDF_VERSION_MAJOR EQUAL 5 AND IDF_VERSION_MINOR LESS 5))
+    message(FATAL_ERROR
+        "ESP-IDF v5.5 or later is required.  Found: ${IDF_VERSION}.  "
+        "Install the correct version from https://docs.espressif.com/projects/esp-idf/en/v5.5/")
+endif()
+
 project(cryptnox-sdk-esp32)
