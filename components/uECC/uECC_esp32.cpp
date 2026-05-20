@@ -2,6 +2,7 @@
 #include "CW_Utils.h"
 #include "mbedtls/ecp.h"
 #include "mbedtls/ecdsa.h"
+#include "esp_log.h"
 #include <algorithm>
 
 /******************************************************************
@@ -9,6 +10,7 @@
  ******************************************************************/
 
 #define COORD_SIZE_BYTES       (32U)                       /* bytes per coordinate (256-bit curve) */
+static const char* const UECC_LOG_TAG = "uECC_esp32";
 #define ECC_XY_KEY_SIZE        (COORD_SIZE_BYTES * 2U)     /* X[32] || Y[32] without 0x04 prefix  */
 #define UNCOMPRESSED_PUB_SIZE  (65U)                       /* 0x04 || X[32] || Y[32]              */
 #define UNCOMPRESSED_PREFIX    (0x04U)
@@ -71,8 +73,13 @@ const uECC_Curve_t* uECC_secp256k1(void) {
 
 /** @brief No-op: ESP32 hardware RNG is used internally; no external callback needed. */
 void uECC_set_rng(uECC_RNG_Function rng_function) {
-    /* ESP32 hardware RNG is used directly through mbedTLS — no external
-     * callback is needed.  Accept the pointer to satisfy the API contract. */
+    if (rng_function != NULL) {
+        /* The caller's RNG callback is intentionally ignored: ESP32 routes all
+         * entropy through mbedTLS and the hardware TRNG directly (SEC-018).
+         * Log once so the drop is visible in debug output rather than silent. */
+        ESP_LOGW(UECC_LOG_TAG,
+                 "uECC_set_rng: callback ignored — ESP32 uses hardware RNG internally");
+    }
     (void)rng_function;
 }
 

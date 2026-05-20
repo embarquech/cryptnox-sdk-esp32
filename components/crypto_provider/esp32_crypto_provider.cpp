@@ -36,13 +36,15 @@
  ******************************************************************/
 
 /** @brief Compute SHA-256 over the input buffer, writing 32 bytes to out. */
-void ESP32CryptoProvider::sha256(const uint8_t* data, size_t len, uint8_t* out) {
-    (void)mbedtls_sha256(data, len, out, MBEDTLS_SHA256_MODE);
+bool ESP32CryptoProvider::sha256(const uint8_t* data, size_t len, uint8_t* out) {
+    int ret = mbedtls_sha256(data, len, out, MBEDTLS_SHA256_MODE);
+    return (ret == MBEDTLS_OK);
 }
 
 /** @brief Compute SHA-512 over the input buffer, writing 64 bytes to out. */
-void ESP32CryptoProvider::sha512(const uint8_t* data, size_t len, uint8_t* out) {
-    (void)mbedtls_sha512(data, len, out, MBEDTLS_SHA512_MODE);
+bool ESP32CryptoProvider::sha512(const uint8_t* data, size_t len, uint8_t* out) {
+    int ret = mbedtls_sha512(data, len, out, MBEDTLS_SHA512_MODE);
+    return (ret == MBEDTLS_OK);
 }
 
 /******************************************************************

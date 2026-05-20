@@ -14,9 +14,9 @@
  */
 class ESP32CryptoProvider : public CW_CryptoProvider {
 public:
-    void sha256(const uint8_t* data, size_t len, uint8_t* out) override;
+    bool sha256(const uint8_t* data, size_t len, uint8_t* out) override;
 
-    void sha512(const uint8_t* data, size_t len, uint8_t* out) override;
+    bool sha512(const uint8_t* data, size_t len, uint8_t* out) override;
 
     uint16_t aesCbcEncrypt(const uint8_t* in, uint16_t len, uint8_t* out,
                            const uint8_t* key, uint8_t keyLen,
