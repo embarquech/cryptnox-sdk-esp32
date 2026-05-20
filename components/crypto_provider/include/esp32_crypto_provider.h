@@ -2,6 +2,7 @@
 #define ESP32_CRYPTO_PROVIDER_H
 
 #include "CW_CryptoProvider.h"
+#include "CW_Defs.h"
 
 /**
  * @class ESP32CryptoProvider
@@ -27,15 +28,16 @@ public:
                            uint8_t* iv, bool bitPadding) override;
 
     bool ecdh(const uint8_t* pubKey, const uint8_t* privKey,
-              uint8_t* secret, const uECC_Curve_t* curve) override;
+              uint8_t* secret, CW_Curve curve) override;
 
     bool makeKey(uint8_t* pubKey, uint8_t* privKey,
-                 const uECC_Curve_t* curve) override;
+                 CW_Curve curve) override;
 
     bool random(uint8_t* dest, unsigned size) override;
 
-    bool verify(const uint8_t* pubKey64, const uint8_t* hash,
-                size_t hashSize, const uint8_t* rawSig64) override;
+    bool ecdsaVerify(const uint8_t* pubKey64, const uint8_t* hash,
+                     size_t hashLen, const uint8_t* sig,
+                     CW_Curve curve) override;
 
     ~ESP32CryptoProvider() override {}
 };

@@ -14,6 +14,7 @@
 #include "Pn532NfcTransport.h"
 #include "ESP32Logger.h"
 #include "esp32_crypto_provider.h"
+#include "ESP32Platform.h"
 
 extern "C" {
 #include "pn532.h"
@@ -106,15 +107,26 @@ static void signing_loop(CryptnoxWallet &wallet)
     build_usdc_calldata(calldata, "0x" ADDR_TO, AMOUNT_USDC);
 
     while (true) {
-        /* ── 1. Get fresh nonce ────────────────────────────────── */
+        /* ── 1. Wait for card ──────────────────────────────────── */
+        ESP_LOGI(TAG, "Hold Cryptnox card to reader to sign...");
+
+        CW_SecureSession session;
+        bool connected = wallet.connect(session);
+        if (!connected) {
+            vTaskDelay(pdMS_TO_TICKS(100U));
+            continue;
+        }
+
+        /* ── 2. Get fresh nonce (card is present — fetch now) ──── */
         uint64_t nonce = 0U;
         if (!eth_rpc_get_nonce(&nonce)) {
             ESP_LOGE(TAG, "Failed to get nonce — retrying in 5 s");
+            wallet.disconnect(session);
             vTaskDelay(pdMS_TO_TICKS(5000U));
             continue;
         }
 
-        /* ── 2. Build tx ───────────────────────────────────────── */
+        /* ── 3. Build tx ───────────────────────────────────────── */
         eth_tx_t tx;
         (void)memset(&tx, 0, sizeof(tx));
         tx.chain_id          = CHAIN_ID_SEPOLIA;
@@ -127,11 +139,12 @@ static void signing_loop(CryptnoxWallet &wallet)
         tx.calldata_len      = sizeof(calldata);
         parse_address("0x" ADDR_USDC, tx.to);
 
-        /* ── 3. Encode unsigned tx and hash it ─────────────────── */
+        /* ── 4. Encode unsigned tx and hash it ─────────────────── */
         uint8_t unsigned_tx[TX_BUF_SIZE];
         size_t  unsigned_len = eth_rlp_encode_unsigned(&tx, unsigned_tx, sizeof(unsigned_tx));
         if (unsigned_len == 0U) {
             ESP_LOGE(TAG, "RLP encode unsigned overflow");
+            wallet.disconnect(session);
             vTaskDelay(pdMS_TO_TICKS(2000U));
             continue;
         }
@@ -141,16 +154,6 @@ static void signing_loop(CryptnoxWallet &wallet)
 
         ESP_LOGI(TAG, "Hash to sign:");
         ESP_LOG_BUFFER_HEX_LEVEL(TAG, hash, CW_HASH_SIZE, ESP_LOG_INFO);
-
-        /* ── 4. Wait for card and sign ─────────────────────────── */
-        ESP_LOGI(TAG, "Hold Cryptnox card to reader to sign...");
-
-        CW_SecureSession session;
-        bool connected = wallet.connect(session);
-        if (!connected) {
-            vTaskDelay(pdMS_TO_TICKS(500U));
-            continue;
-        }
 
         /* BIP32 Ethereum derivation path: m/44'/60'/0'/0/0
          * Each level is a 4-byte big-endian uint32; hardened levels have the
@@ -193,11 +196,11 @@ static void signing_loop(CryptnoxWallet &wallet)
         ESP_LOGI(TAG, "s:");
         ESP_LOG_BUFFER_HEX_LEVEL(TAG, sig_s, CW_HASH_SIZE, ESP_LOG_INFO);
 
-        /* ── 5. Determine v parity via ecrecover ───────────────── */
+        /* ── 6. Determine v parity via ecrecover ───────────────── */
         uint8_t v = eth_rpc_ecrecover_parity(hash, sig_r, sig_s);
         ESP_LOGI(TAG, "v = %u", static_cast<unsigned int>(v));
 
-        /* ── 6. Encode signed tx ───────────────────────────────── */
+        /* ── 7. Encode signed tx ───────────────────────────────── */
         uint8_t signed_tx[TX_BUF_SIZE];
         size_t  signed_len = eth_rlp_encode_signed(&tx, v, sig_r, sig_s,
                                                    signed_tx, sizeof(signed_tx));
@@ -210,7 +213,7 @@ static void signing_loop(CryptnoxWallet &wallet)
         ESP_LOGI(TAG, "Signed tx (%u bytes):", (unsigned int)signed_len);
         ESP_LOG_BUFFER_HEX_LEVEL(TAG, signed_tx, signed_len, ESP_LOG_INFO);
 
-        /* ── 7. Broadcast ──────────────────────────────────────── */
+        /* ── 8. Broadcast ──────────────────────────────────────── */
         char tx_hash[68] = { 0 };
         if (eth_rpc_send_raw_tx(signed_tx, signed_len,
                                 tx_hash, sizeof(tx_hash))) {
@@ -271,8 +274,9 @@ extern "C" void app_main(void)
     (void)logger.begin(115200UL);
 
     ESP32CryptoProvider cryptoProvider;
+    ESP32Platform       platform;
     Pn532NfcTransport   nfcTransport(&nfc, logger);
-    CryptnoxWallet      wallet(nfcTransport, logger, cryptoProvider);
+    CryptnoxWallet      wallet(nfcTransport, logger, cryptoProvider, platform);
 
     if (!wallet.begin()) {
         ESP_LOGE(TAG, "Wallet begin (SAMConfig) failed");
