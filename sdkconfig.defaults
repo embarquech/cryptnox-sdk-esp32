@@ -1,5 +1,12 @@
 CONFIG_IDF_TARGET="esp32s3"
 
+# ── Main task stack ─────────────────────────────────────────────────────────
+# The secure channel protocol (ECDH, AES, SHA-512) together with the PN532
+# extended-frame buffer allocates >3 KB on the call stack.  8 KB gives
+# comfortable headroom for the deepest call path (pn532_send_apdu inside
+# mutuallyAuthenticate inside app_main).
+CONFIG_ESP_MAIN_TASK_STACK_SIZE=8192
+
 # ── Security hardening (SEC-003) ────────────────────────────────────────────
 # Flash Encryption and Secure Boot V2 must be enabled on production hardware.
 #

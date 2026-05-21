@@ -25,6 +25,16 @@ bool Pn532NfcTransport::inListPassiveTarget()
 bool Pn532NfcTransport::sendAPDU(const uint8_t *apdu, uint8_t apduLen,
                                   uint8_t *response, uint8_t &responseLen)
 {
+    uint16_t len = static_cast<uint16_t>(responseLen);
+    bool result = pn532_send_apdu(m_dev, apdu, apduLen, response, &len);
+    responseLen = static_cast<uint8_t>((len > static_cast<uint16_t>(UINT8_MAX))
+                                       ? static_cast<uint16_t>(UINT8_MAX) : len);
+    return result;
+}
+
+bool Pn532NfcTransport::sendAPDULarge(const uint8_t *apdu, uint8_t apduLen,
+                                       uint8_t *response, uint16_t &responseLen)
+{
     bool result = pn532_send_apdu(m_dev, apdu, apduLen, response, &responseLen);
     return result;
 }
