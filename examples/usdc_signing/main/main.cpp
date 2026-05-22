@@ -7,7 +7,6 @@
 #include "freertos/task.h"
 #include "driver/spi_master.h"
 #include "driver/gpio.h"
-#include "driver/i2c.h"   /* legacy I2C — matches the PN532 driver */
 #include "esp_log.h"
 #include "nvs_flash.h"
 
@@ -243,49 +242,6 @@ extern "C" void app_main(void)
         nvs_ret = nvs_flash_init();
     }
     ESP_ERROR_CHECK(nvs_ret);
-
-    /* ── I²C bus scan (legacy driver, 10 passes diagnostic) ───── */
-#if 0  /* disabled — probing the PN532 multiple times confuses it on soft-boot */
-    {
-        i2c_config_t scan_conf = {};
-        scan_conf.mode             = I2C_MODE_MASTER;
-        scan_conf.sda_io_num       = PN532_SDA;
-        scan_conf.scl_io_num       = PN532_SCL;
-        scan_conf.sda_pullup_en    = GPIO_PULLUP_ENABLE;
-        scan_conf.scl_pullup_en    = GPIO_PULLUP_ENABLE;
-        scan_conf.master.clk_speed = PN532_I2C_HZ;
-
-        if (i2c_param_config((i2c_port_t)PN532_I2C_PORT, &scan_conf) != ESP_OK ||
-            i2c_driver_install((i2c_port_t)PN532_I2C_PORT, I2C_MODE_MASTER, 0, 0, 0) != ESP_OK) {
-            ESP_LOGE(TAG, "I2C scan: driver install failed");
-            return;
-        }
-
-        ESP_LOGI(TAG, "I2C scan: 10 passes on SDA=%d SCL=%d", PN532_SDA, PN532_SCL);
-
-        for (uint32_t pass = 1U; pass <= 10U; pass++) {
-            uint8_t count = 0U;
-            for (uint8_t addr = 0x08U; addr < 0x78U; addr++) {
-                i2c_cmd_handle_t cmd = i2c_cmd_link_create();
-                (void)i2c_master_start(cmd);
-                (void)i2c_master_write_byte(cmd, (uint8_t)((addr << 1U) | I2C_MASTER_WRITE), true);
-                (void)i2c_master_stop(cmd);
-                if (i2c_master_cmd_begin((i2c_port_t)PN532_I2C_PORT, cmd, pdMS_TO_TICKS(50)) == ESP_OK) {
-                    ESP_LOGI(TAG, "pass %lu: device 0x%02X ACK", (unsigned long)pass, addr);
-                    count++;
-                }
-                i2c_cmd_link_delete(cmd);
-                vTaskDelay(pdMS_TO_TICKS(1));
-            }
-            if (count == 0U) ESP_LOGW(TAG, "pass %lu: no device", (unsigned long)pass);
-            vTaskDelay(pdMS_TO_TICKS(500));
-        }
-
-        /* Tear down so pn532_init re-installs the driver on the same port. */
-        (void)i2c_driver_delete((i2c_port_t)PN532_I2C_PORT);
-        vTaskDelay(pdMS_TO_TICKS(100));
-    }
-#endif  /* scan disabled */
 
     /* ── PN532 NFC reader (I²C on the CYD CN1 connector) ──────── */
     pn532_t nfc;
