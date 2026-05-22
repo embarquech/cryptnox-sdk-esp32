@@ -592,9 +592,12 @@ bool pn532_send_apdu(pn532_t *dev, const uint8_t *apdu, uint8_t apdu_len,
                 uint8_t len_field = frame[PN532_EXCHANGE_LEN_OFFSET];
                 err_byte    = frame[PN532_EXCHANGE_STATUS_OFFSET];
                 data_offset = (uint16_t)PN532_EXCHANGE_DATA_OFFSET;
-                data_len    = (len_field >= (uint8_t)PN532_EXCHANGE_LEN_BIAS)
-                            ? (uint16_t)(len_field - (uint8_t)PN532_EXCHANGE_LEN_BIAS)
-                            : 0U;
+                if (len_field >= (uint8_t)PN532_EXCHANGE_LEN_BIAS) {
+                    uint8_t raw_data_len = (uint8_t)(len_field - (uint8_t)PN532_EXCHANGE_LEN_BIAS);
+                    data_len = (uint16_t)raw_data_len;
+                } else {
+                    data_len = 0U;
+                }
             }
 
             if (err_byte == PN532_EXCHANGE_STATUS_OK) {
