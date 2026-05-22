@@ -6,7 +6,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "driver/spi_master.h"
-#include "driver/i2c_master.h"
+#include "driver/i2c.h"   /* legacy I2C — matches Arduino Wire (proven on PN532) */
 
 #ifdef __cplusplus
 extern "C" {
@@ -52,8 +52,7 @@ typedef struct {
     int                     pin_cs;
 
     /* I2C state */
-    i2c_master_bus_handle_t i2c_bus;
-    i2c_master_dev_handle_t i2c_dev;
+    i2c_port_t              i2c_port;
     int                     pin_irq;
     int                     pin_rst;
 } pn532_t;

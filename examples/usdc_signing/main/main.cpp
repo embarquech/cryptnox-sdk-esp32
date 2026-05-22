@@ -7,7 +7,6 @@
 #include "freertos/task.h"
 #include "driver/spi_master.h"
 #include "driver/gpio.h"
-#include "driver/i2c_master.h"
 #include "esp_log.h"
 #include "nvs_flash.h"
 
@@ -244,57 +243,7 @@ extern "C" void app_main(void)
     }
     ESP_ERROR_CHECK(nvs_ret);
 
-    /* ── I²C bus scan loop (hot-plug friendly diagnostic) ─────── */
-    {
-        i2c_master_bus_config_t scan_cfg = {};
-        scan_cfg.clk_source                   = I2C_CLK_SRC_DEFAULT;
-        scan_cfg.i2c_port                     = (i2c_port_num_t)PN532_I2C_PORT;
-        scan_cfg.sda_io_num                   = (gpio_num_t)PN532_SDA;
-        scan_cfg.scl_io_num                   = (gpio_num_t)PN532_SCL;
-        scan_cfg.glitch_ignore_cnt            = 7;
-        scan_cfg.flags.enable_internal_pullup = 1;
-
-        i2c_master_bus_handle_t scan_bus = NULL;
-        if (i2c_new_master_bus(&scan_cfg, &scan_bus) != ESP_OK) {
-            ESP_LOGE(TAG, "I2C scan: bus create failed");
-            return;
-        }
-
-        ESP_LOGI(TAG, "I2C scan loop on SDA=%d SCL=%d — plug/unplug devices to test",
-                 PN532_SDA, PN532_SCL);
-
-        uint32_t pass = 0U;
-        while (1) {
-            pass++;
-            char     found_list[128];
-            size_t   pos = 0U;
-            uint8_t  count = 0U;
-            found_list[0] = '\0';
-
-            for (uint8_t addr = 0x08U; addr < 0x78U; addr++) {
-                if (i2c_master_probe(scan_bus, addr, 50) == ESP_OK) {
-                    int n = snprintf(found_list + pos, sizeof(found_list) - pos,
-                                     "%s0x%02X", (count == 0U) ? "" : " ", addr);
-                    if ((n > 0) && (pos + (size_t)n < sizeof(found_list))) {
-                        pos += (size_t)n;
-                    }
-                    count++;
-                }
-                vTaskDelay(pdMS_TO_TICKS(1));  /* yield so WDT doesn't trigger */
-            }
-
-            if (count > 0U) {
-                ESP_LOGI(TAG, "pass %lu: %u device(s) — %s",
-                         (unsigned long)pass, (unsigned)count, found_list);
-            } else {
-                ESP_LOGW(TAG, "pass %lu: no device found", (unsigned long)pass);
-            }
-
-            vTaskDelay(pdMS_TO_TICKS(1000));  /* one pass per second */
-        }
-    }
-
-    /* ── PN532 NFC reader (I²C on the CYD P5 connector) ──────── */
+    /* ── PN532 NFC reader (I²C on the CYD CN1 connector) ──────── */
     pn532_t nfc;
     (void)memset(&nfc, 0, sizeof(nfc));
 
