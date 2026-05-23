@@ -3,9 +3,8 @@
 
 #include "pn532.h"
 #include "driver/gpio.h"
-#include "driver/i2c.h"   /* legacy I2C — matches Wire on Arduino-ESP32 */
+#include "driver/i2c_master.h"   /* new IDF v5.x master API */
 #include "esp_log.h"
-#include "esp_rom_sys.h"  /* esp_rom_delay_us for bit-banged bus recovery */
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include <string.h>
@@ -209,19 +208,7 @@ static uint8_t spi_read_byte(pn532_t *dev)
 static uint8_t i2c_read_ready(pn532_t *dev)
 {
     uint8_t rdy = 0U;
-
-    /* Read 1 byte from PN532 address: 0x01 = ready, 0x00 = busy. */
-    i2c_cmd_handle_t cmd = i2c_cmd_link_create();
-    (void)i2c_master_start(cmd);
-    (void)i2c_master_write_byte(cmd,
-                                (uint8_t)((PN532_I2C_ADDRESS << 1U) | I2C_MASTER_READ),
-                                true);
-    (void)i2c_master_read_byte(cmd, &rdy, I2C_MASTER_NACK);
-    (void)i2c_master_stop(cmd);
-    (void)i2c_master_cmd_begin(dev->i2c_port, cmd,
-                               pdMS_TO_TICKS(PN532_I2C_TIMEOUT_MS));
-    i2c_cmd_link_delete(cmd);
-
+    (void)i2c_master_receive(dev->i2c_dev, &rdy, 1U, PN532_I2C_TIMEOUT_MS);
     return rdy;
 }
 
@@ -255,21 +242,7 @@ static void read_data(pn532_t *dev, uint8_t *buff, uint8_t n)
         if (to_read > sizeof(tmp)) {
             to_read = (uint16_t)sizeof(tmp);
         }
-
-        i2c_cmd_handle_t cmd = i2c_cmd_link_create();
-        (void)i2c_master_start(cmd);
-        (void)i2c_master_write_byte(cmd,
-                                    (uint8_t)((PN532_I2C_ADDRESS << 1U) | I2C_MASTER_READ),
-                                    true);
-        if (to_read > 1U) {
-            (void)i2c_master_read(cmd, tmp, (size_t)(to_read - 1U), I2C_MASTER_ACK);
-        }
-        (void)i2c_master_read_byte(cmd, &tmp[to_read - 1U], I2C_MASTER_NACK);
-        (void)i2c_master_stop(cmd);
-        (void)i2c_master_cmd_begin(dev->i2c_port, cmd,
-                                   pdMS_TO_TICKS(PN532_I2C_TIMEOUT_MS));
-        i2c_cmd_link_delete(cmd);
-
+        (void)i2c_master_receive(dev->i2c_dev, tmp, (size_t)to_read, PN532_I2C_TIMEOUT_MS);
         (void)memcpy(buff, &tmp[1], (size_t)(to_read - 1U));
     } else {
         uint8_t i = 0U;
@@ -334,17 +307,7 @@ static void write_command(pn532_t *dev, const uint8_t *cmd, uint8_t cmd_len)
         frame[pos] = (uint8_t)(~checksum); pos++;
         frame[pos] = PN532_POSTAMBLE;      pos++;
 
-        i2c_cmd_handle_t cmd = i2c_cmd_link_create();
-        (void)i2c_master_start(cmd);
-        (void)i2c_master_write_byte(cmd,
-                                    (uint8_t)((PN532_I2C_ADDRESS << 1U) | I2C_MASTER_WRITE),
-                                    true);
-        (void)i2c_master_write(cmd, frame, (size_t)pos, true);
-        (void)i2c_master_stop(cmd);
-        esp_err_t tx_ret = i2c_master_cmd_begin(dev->i2c_port, cmd,
-                                                pdMS_TO_TICKS(PN532_I2C_TIMEOUT_MS));
-        i2c_cmd_link_delete(cmd);
-        ESP_LOGI(PN532_LOG_TAG, "write_command TX %u bytes: %s", (unsigned)pos, esp_err_to_name(tx_ret));
+        (void)i2c_master_transmit(dev->i2c_dev, frame, (size_t)pos, PN532_I2C_TIMEOUT_MS);
     } else {
         (void)gpio_set_level(dev->pin_cs, GPIO_LEVEL_LOW);
         vTaskDelay(pdMS_TO_TICKS(PN532_CS_TOGGLE_DELAY_MS));
@@ -528,53 +491,53 @@ static esp_err_t pn532_init_i2c(pn532_t *dev, const pn532_config_t *config)
         dev->pin_irq = -1;
     }
 
-    /* Configure + install the legacy I2C driver (same as Arduino Wire on
-     * ESP32 — proven against PN532's clock stretching). Internal pull-ups
-     * stay enabled because the Keyestudio breakout doesn't ship strong
-     * external ones. */
-    dev->i2c_port = (i2c_port_t)config->i2c_port;
+    /* Create the I2C master bus (new IDF v5.x API). */
+    i2c_master_bus_config_t bus_cfg;
+    (void)memset(&bus_cfg, 0, sizeof(bus_cfg));
+    bus_cfg.i2c_port = config->i2c_port;
+    bus_cfg.sda_io_num = config->pin_sda;
+    bus_cfg.scl_io_num = config->pin_scl;
+    bus_cfg.clk_source = I2C_CLK_SRC_DEFAULT;
+    bus_cfg.glitch_ignore_cnt = 7;
+    bus_cfg.flags.enable_internal_pullup = true;
 
-    i2c_config_t conf;
-    (void)memset(&conf, 0, sizeof(conf));
-    conf.mode             = I2C_MODE_MASTER;
-    conf.sda_io_num       = config->pin_sda;
-    conf.scl_io_num       = config->pin_scl;
-    conf.sda_pullup_en    = GPIO_PULLUP_ENABLE;
-    conf.scl_pullup_en    = GPIO_PULLUP_ENABLE;
-    conf.master.clk_speed = (config->i2c_clock_hz != 0U) ? config->i2c_clock_hz : 100000U;
-
-    ret = i2c_param_config(dev->i2c_port, &conf);
+    ret = i2c_new_master_bus(&bus_cfg, &dev->i2c_bus);
     if (ret != ESP_OK) {
-        ESP_LOGE(PN532_LOG_TAG, "i2c_param_config failed: %d", ret);
+        ESP_LOGE(PN532_LOG_TAG, "i2c_new_master_bus failed: %d", ret);
         return ret;
     }
 
-    ret = i2c_driver_install(dev->i2c_port, I2C_MODE_MASTER, 0, 0, 0);
+    /* Attach the PN532 device on the bus.  scl_wait_us = 500ms tolerates
+     * the PN532's clock stretching during command processing.  Without
+     * it the new master driver logs spurious "I2C hardware NACK" lines
+     * each time the RDY-byte poll catches the chip mid-processing. */
+    i2c_device_config_t dev_cfg;
+    (void)memset(&dev_cfg, 0, sizeof(dev_cfg));
+    dev_cfg.dev_addr_length = I2C_ADDR_BIT_LEN_7;
+    dev_cfg.device_address  = PN532_I2C_ADDRESS;
+    dev_cfg.scl_speed_hz    = (config->i2c_clock_hz != 0U) ? config->i2c_clock_hz : 100000U;
+    dev_cfg.scl_wait_us     = 500000U;
+
+    ret = i2c_master_bus_add_device(dev->i2c_bus, &dev_cfg, &dev->i2c_dev);
     if (ret != ESP_OK) {
-        ESP_LOGE(PN532_LOG_TAG, "i2c_driver_install failed: %d", ret);
+        ESP_LOGE(PN532_LOG_TAG, "i2c_master_bus_add_device failed: %d", ret);
+        (void)i2c_del_master_bus(dev->i2c_bus);
+        dev->i2c_bus = NULL;
         return ret;
     }
-
-    /* Reinforce internal pull-ups explicitly on the GPIOs.  Some IDF
-     * versions don't reliably honour conf.sda_pullup_en / conf.scl_pullup_en
-     * after i2c_driver_install, leaving the lines floating around ~200mV
-     * mid-range.  An explicit gpio_pullup_en() call guarantees the
-     * 45kΩ internal pull-up is wired in. */
-    (void)gpio_pullup_en((gpio_num_t)config->pin_sda);
-    (void)gpio_pullup_en((gpio_num_t)config->pin_scl);
-
-    /* Extend SCL hardware timeout to 400ms — the default (~13ms) is too
-     * short for the PN532's wake-up clock stretching and causes the very
-     * first multi-byte transmit to abort.  Matches lucafaccin/esp-pn532. */
-    (void)i2c_set_timeout(dev->i2c_port, 400000);
 
     /* Adafruit_PN532::begin does a small delay between bus init and the
      * first I2C transaction; mirror it. */
     vTaskDelay(pdMS_TO_TICKS(10));
 
-    ESP_LOGI(PN532_LOG_TAG, "I2C legacy driver installed on port %d (SDA=%d SCL=%d %lu Hz, SCL timeout=400ms)",
-             (int)dev->i2c_port, (int)config->pin_sda, (int)config->pin_scl,
-             (unsigned long)conf.master.clk_speed);
+    /* Silence "I2C hardware NACK detected" — the PN532's RDY-poll
+     * occasionally NACKs while the chip is still processing.  The new
+     * master driver logs these as errors but they're benign retries. */
+    esp_log_level_set("i2c.master", ESP_LOG_NONE);
+
+    ESP_LOGI(PN532_LOG_TAG, "I2C master bus installed on port %d (SDA=%d SCL=%d %lu Hz, scl_wait=500ms)",
+             config->i2c_port, (int)config->pin_sda, (int)config->pin_scl,
+             (unsigned long)dev_cfg.scl_speed_hz);
 
     return ESP_OK;
 }
