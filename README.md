@@ -241,7 +241,7 @@ See `main/main.cpp` for a full reference that wires up the SPI bus and polls the
 
 ## Security
 
-- **Flash Encryption and Secure Boot V2** must be enabled for production deployments. Defaults are set in `sdkconfig.defaults`. eFuse programming is irreversible — practice on a development board first.
+- **Flash Encryption and Secure Boot V2** must be enabled for production deployments. These settings involve one-time eFuse programming and must be configured in your application project (e.g. the POS project) — see the commented template in `sdkconfig.defaults`.
 - **Hard-coded secrets:** Never hard-code a PIN or private key in firmware. Wipe PIN buffers with `CW_Utils::secure_wipe()` immediately after use.
 - **Dependency pinning:** Use the exact ESP-IDF tag (`v5.5.0`) and pin the `cryptnox-sdk-cpp` submodule to a commit hash.
 

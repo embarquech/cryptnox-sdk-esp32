@@ -1,21 +1,15 @@
 CONFIG_IDF_TARGET="esp32s3"
 
-# ── Security hardening (SEC-003) ────────────────────────────────────────────
-# Flash Encryption and Secure Boot V2 must be enabled on production hardware.
+# ── Flash Encryption and Secure Boot V2 ─────────────────────────────────────
+# These settings involve one-time eFuse programming and are specific to each
+# production deployment.  They must be configured in the application project
+# (e.g. the POS project), not in this SDK.
 #
-# WARNING: These settings involve one-time eFuse programming.
-# Read the provisioning guide in the Security section of README.md before
-# enabling them on real hardware.  They are safe to enable here because
-# ESP-IDF only performs the actual eFuse writes during the first boot of a
-# freshly provisioned device.
+# Add the following to your application's sdkconfig.defaults and follow the
+# provisioning guide for your platform before flashing production hardware:
 #
-# Flash Encryption — encrypts all SPI flash content so a USB cable cannot
-# be used to extract firmware or hard-coded secrets.
-CONFIG_SECURE_FLASH_ENC_ENABLED=y
-CONFIG_SECURE_FLASH_ENCRYPTION_MODE_RELEASE=y
-#
-# Secure Boot V2 — verifies the bootloader and application image signature
-# on every boot, preventing reflashing of tampered firmware.
-CONFIG_SECURE_BOOT=y
-CONFIG_SECURE_BOOT_V2_ENABLED=y
-CONFIG_SECURE_BOOT_BUILD_SIGNED_BINARIES=y
+#   CONFIG_SECURE_FLASH_ENC_ENABLED=y
+#   CONFIG_SECURE_FLASH_ENCRYPTION_MODE_RELEASE=y
+#   CONFIG_SECURE_BOOT=y
+#   CONFIG_SECURE_BOOT_V2_ENABLED=y
+#   CONFIG_SECURE_BOOT_BUILD_SIGNED_BINARIES=y
