@@ -257,7 +257,7 @@ extern "C" void app_main(void)
         ESP_LOGE(TAG, "Wallet begin (SAMConfig) failed");
         return;
     }
-    (void)nfcTransport.printFirmwareVersion();
+    /* wallet.begin() already prints the PN532 firmware version internally. */
 
     /* ── WiFi + RPC ────────────────────────────────────────────── */
     eth_rpc_init(RPC_URL, "0x" ADDR_FROM);
