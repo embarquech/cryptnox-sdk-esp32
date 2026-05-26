@@ -33,7 +33,7 @@ static const char *const TAG = "usdc_signing";
 #define PN532_SCL           22         /* CN1 SCL */
 #define PN532_IRQ           (-1)       /* unused */
 #define PN532_RST           (-1)       /* unused — drain in pn532_init handles soft-reboot recovery */
-#define PN532_I2C_HZ        50000U
+#define PN532_I2C_HZ        100000U
 
 /* ── USDC ERC-20 transfer(address,uint256) selector ──────────── */
 static const uint8_t TRANSFER_SELECTOR[4] = { 0xa9U, 0x05U, 0x9cU, 0xbbU };
