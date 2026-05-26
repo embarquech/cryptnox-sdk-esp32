@@ -51,7 +51,7 @@ static const char *const PN532_LOG_TAG = "pn532";
  ******************************************************************/
 
 #define PN532_I2C_READY       (0x01U)
-#define PN532_I2C_TIMEOUT_MS  (1000)  /* matches Wire's default — PN532 clock-stretches heavily on wake-up */
+#define PN532_I2C_TIMEOUT_MS  (100)
 /* Max frame bytes the host may send to PN532 (preamble..postamble). */
 #define PN532_I2C_TX_MAX      (PN532_MAX_APDU_LEN + 16U)
 /* Max read length used anywhere (PASSIVE response is the largest at 64). */
