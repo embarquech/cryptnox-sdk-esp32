@@ -131,12 +131,30 @@ static const char *const PN532_LOG_TAG = "pn532";
 
 #define PN532_EXCHANGE_CMD_OVERHEAD   (2U)    /* cmd byte + Tg byte */
 #define PN532_EXCHANGE_TG             (0x01U)
-#define PN532_EXCHANGE_FRAME_MAX      (200U)  /* covers up to 189-byte card responses */
+/* Extended frames: up to 8-byte header + 418-byte body (415-byte DataOut) + 2-byte tail = 428; use 440 for margin. */
+#define PN532_EXCHANGE_FRAME_MAX      (440U)
 #define PN532_EXCHANGE_LEN_OFFSET     (3U)
 #define PN532_EXCHANGE_STATUS_OFFSET  (7U)
-#define PN532_EXCHANGE_DATA_OFFSET    (8U)    /* frame[8] = first DataOut byte (after D5+41+ERR) */
+#define PN532_EXCHANGE_DATA_OFFSET    (8U)    /* frame[8] = first DataOut byte for normal frames */
 #define PN532_EXCHANGE_LEN_BIAS       (3U)    /* LEN covers D5 + CMD + ERR; DataOut = LEN - 3 */
 #define PN532_EXCHANGE_STATUS_OK      (0x00U)
+
+/* PN532 normal-frame structure: 5-byte header (preamble+start1+start2+LEN+LCS)
+ * followed by LEN data bytes, then 2-byte tail (DCS+postamble). */
+#define PN532_FRAME_HDR_LEN   (5U)
+#define PN532_FRAME_TAIL_LEN  (2U)
+
+/* PN532 extended-frame indicator and structure.
+ * Triggered when frame[3]==0xFF and frame[4]==0xFF.
+ * Header is 8 bytes: preamble+start1+start2+FF+FF+LEN_H+LEN_L+LCS.
+ * ERR is at offset 10; DataOut starts at offset 11. */
+#define PN532_EXT_FRAME_INDICATOR      (0xFFU)
+#define PN532_EXT_FRAME_HDR_LEN        (8U)
+#define PN532_EXT_FRAME_LENHI_OFFSET   (5U)
+#define PN532_EXT_FRAME_LENLO_OFFSET   (6U)
+#define PN532_EXT_EXCHANGE_ERR_OFFSET  (10U)
+#define PN532_EXT_EXCHANGE_DATA_OFFSET (11U)
+
 
 /******************************************************************
  * InRelease constants
@@ -314,6 +332,63 @@ static bool send_command_check_ack(pn532_t *dev, const uint8_t *cmd,
     return result;
 }
 
+/* Read one complete PN532 response frame within a single CS-low window.
+ * Handles both normal frames (5-byte header) and extended frames (8-byte header,
+ * indicated by frame[3]==0xFF and frame[4]==0xFF).
+ * CS is released as soon as the last real frame byte is read, preventing
+ * spurious clocks from corrupting the PN532 SPI state machine. */
+static uint16_t read_data_apdu_frame(pn532_t *dev, uint8_t *buff, uint16_t max_len)
+{
+    uint16_t body_len = 0U;
+    uint16_t total_len = 0U;
+    uint16_t i = 0U;
+    bool is_extended = false;
+
+    (void)gpio_set_level(dev->pin_cs, GPIO_LEVEL_LOW);
+    vTaskDelay(pdMS_TO_TICKS(PN532_CS_TOGGLE_DELAY_MS));
+    spi_write_byte(dev, PN532_SPI_DATAREAD);
+
+    for (i = 0U; i < PN532_FRAME_HDR_LEN; i++) {
+        vTaskDelay(pdMS_TO_TICKS(PN532_BYTE_DELAY_MS));
+        buff[i] = spi_read_byte(dev);
+    }
+
+    is_extended = ((buff[PN532_EXCHANGE_LEN_OFFSET] == PN532_EXT_FRAME_INDICATOR) &&
+                   (buff[PN532_EXCHANGE_LEN_OFFSET + 1U] == PN532_EXT_FRAME_INDICATOR));
+
+    if (is_extended) {
+        /* Read the 3 additional extended-frame header bytes: LEN_H, LEN_L, LCS. */
+        for (i = PN532_FRAME_HDR_LEN; i < PN532_EXT_FRAME_HDR_LEN; i++) {
+            vTaskDelay(pdMS_TO_TICKS(PN532_BYTE_DELAY_MS));
+            buff[i] = spi_read_byte(dev);
+        }
+        body_len = ((uint16_t)buff[PN532_EXT_FRAME_LENHI_OFFSET] << 8U)
+                 | (uint16_t)buff[PN532_EXT_FRAME_LENLO_OFFSET];
+        total_len = (uint16_t)PN532_EXT_FRAME_HDR_LEN
+                  + body_len
+                  + (uint16_t)PN532_FRAME_TAIL_LEN;
+    } else {
+        body_len = (uint16_t)buff[PN532_EXCHANGE_LEN_OFFSET];
+        total_len = (uint16_t)PN532_FRAME_HDR_LEN
+                  + body_len
+                  + (uint16_t)PN532_FRAME_TAIL_LEN;
+    }
+
+    if (total_len > max_len) {
+        total_len = max_len;
+    }
+
+    i = (uint16_t)(is_extended ? PN532_EXT_FRAME_HDR_LEN : PN532_FRAME_HDR_LEN);
+    while (i < total_len) {
+        vTaskDelay(pdMS_TO_TICKS(PN532_BYTE_DELAY_MS));
+        buff[i] = spi_read_byte(dev);
+        i++;
+    }
+
+    (void)gpio_set_level(dev->pin_cs, GPIO_LEVEL_HIGH);
+    return total_len;
+}
+
 /******************************************************************
  * Public API
  ******************************************************************/
@@ -475,7 +550,7 @@ uint32_t pn532_read_passive_target_id(pn532_t *dev, uint8_t cardbaudrate)
 }
 
 bool pn532_send_apdu(pn532_t *dev, const uint8_t *apdu, uint8_t apdu_len,
-                     uint8_t *response, uint8_t *response_len)
+                     uint8_t *response, uint16_t *response_len)
 {
     uint8_t cmd[PN532_MAX_APDU_LEN + PN532_EXCHANGE_CMD_OVERHEAD];
     uint8_t frame[PN532_EXCHANGE_FRAME_MAX];
@@ -496,15 +571,48 @@ bool pn532_send_apdu(pn532_t *dev, const uint8_t *apdu, uint8_t apdu_len,
         ack_received = send_command_check_ack(dev, cmd, cmd_total_len, PN532_APDU_TIMEOUT_MS);
 
         if (ack_received) {
-            read_data(dev, frame, PN532_EXCHANGE_FRAME_MAX);
+            (void)read_data_apdu_frame(dev, frame, (uint16_t)PN532_EXCHANGE_FRAME_MAX);
 
-            if ((frame[PN532_EXCHANGE_STATUS_OFFSET] == PN532_EXCHANGE_STATUS_OK) &&
-                (frame[PN532_EXCHANGE_LEN_OFFSET] >= PN532_EXCHANGE_LEN_BIAS)) {
-                uint8_t data_len = (uint8_t)(frame[PN532_EXCHANGE_LEN_OFFSET] - PN532_EXCHANGE_LEN_BIAS);
-                (void)memcpy(response, &frame[PN532_EXCHANGE_DATA_OFFSET], data_len);
-                *response_len = data_len;
-                result = true;
+            bool is_extended = ((frame[PN532_EXCHANGE_LEN_OFFSET] == PN532_EXT_FRAME_INDICATOR) &&
+                                (frame[PN532_EXCHANGE_LEN_OFFSET + 1U] == PN532_EXT_FRAME_INDICATOR));
+
+            uint8_t err_byte = 0U;
+            uint16_t data_offset = 0U;
+            uint16_t data_len = 0U;
+
+            if (is_extended) {
+                uint16_t body_len = ((uint16_t)frame[PN532_EXT_FRAME_LENHI_OFFSET] << 8U)
+                                  | (uint16_t)frame[PN532_EXT_FRAME_LENLO_OFFSET];
+                err_byte    = frame[PN532_EXT_EXCHANGE_ERR_OFFSET];
+                data_offset = (uint16_t)PN532_EXT_EXCHANGE_DATA_OFFSET;
+                data_len    = (body_len >= (uint16_t)PN532_EXCHANGE_LEN_BIAS)
+                            ? (body_len - (uint16_t)PN532_EXCHANGE_LEN_BIAS)
+                            : 0U;
+            } else {
+                uint8_t len_field = frame[PN532_EXCHANGE_LEN_OFFSET];
+                err_byte    = frame[PN532_EXCHANGE_STATUS_OFFSET];
+                data_offset = (uint16_t)PN532_EXCHANGE_DATA_OFFSET;
+                if (len_field >= (uint8_t)PN532_EXCHANGE_LEN_BIAS) {
+                    uint8_t raw_data_len = (uint8_t)(len_field - (uint8_t)PN532_EXCHANGE_LEN_BIAS);
+                    data_len = (uint16_t)raw_data_len;
+                } else {
+                    data_len = 0U;
+                }
             }
+
+            if (err_byte == PN532_EXCHANGE_STATUS_OK) {
+                uint16_t buf_cap = *response_len;
+                uint16_t copy_len = (data_len <= buf_cap) ? data_len : buf_cap;
+
+                (void)memcpy(response, &frame[data_offset], (size_t)copy_len);
+                *response_len = copy_len;
+                result = true;
+            } else {
+                ESP_LOGE(PN532_LOG_TAG, "APDU INS=0x%02X: ERR=0x%02X",
+                         (unsigned)apdu[1], (unsigned)err_byte);
+            }
+        } else {
+            ESP_LOGE(PN532_LOG_TAG, "APDU INS=0x%02X: no ACK", (unsigned)apdu[1]);
         }
     }
 

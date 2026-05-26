@@ -6,6 +6,26 @@
 #include "mbedtls/aes.h"
 
 /******************************************************************
+ * 1b. Internal curve translator
+ ******************************************************************/
+
+static const uECC_Curve_t* toCurve(CW_Curve curve) {
+    const uECC_Curve_t* result = NULL;
+    switch (curve) {
+        case CW_CURVE_SECP256R1:
+            result = uECC_secp256r1();
+            break;
+        case CW_CURVE_SECP256K1:
+            result = uECC_secp256k1();
+            break;
+        default:
+            result = NULL;
+            break;
+    }
+    return result;
+}
+
+/******************************************************************
  * 1. Module constants
  ******************************************************************/
 
@@ -175,16 +195,26 @@ uint16_t ESP32CryptoProvider::aesCbcDecrypt(uint8_t* in, uint16_t len, uint8_t* 
 
 /** @brief Compute ECDH shared secret: X-coordinate of privKey * pubKey point. */
 bool ESP32CryptoProvider::ecdh(const uint8_t* pubKey, const uint8_t* privKey,
-                                uint8_t* secret, const uECC_Curve_t* curve) {
-    int ret = uECC_shared_secret(pubKey, privKey, secret, curve);
-    return (ret == UECC_SUCCESS);
+                                uint8_t* secret, CW_Curve curve) {
+    bool result = false;
+    const uECC_Curve_t* ueccCurve = toCurve(curve);
+    if (ueccCurve != NULL) {
+        int ret = uECC_shared_secret(pubKey, privKey, secret, ueccCurve);
+        result = (ret == UECC_SUCCESS);
+    }
+    return result;
 }
 
 /** @brief Generate an ECC key pair via mbedTLS and the ESP32 hardware RNG. */
 bool ESP32CryptoProvider::makeKey(uint8_t* pubKey, uint8_t* privKey,
-                                   const uECC_Curve_t* curve) {
-    int ret = uECC_make_key(pubKey, privKey, curve);
-    return (ret == UECC_SUCCESS);
+                                   CW_Curve curve) {
+    bool result = false;
+    const uECC_Curve_t* ueccCurve = toCurve(curve);
+    if (ueccCurve != NULL) {
+        int ret = uECC_make_key(pubKey, privKey, ueccCurve);
+        result = (ret == UECC_SUCCESS);
+    }
+    return result;
 }
 
 /******************************************************************
@@ -202,10 +232,16 @@ bool ESP32CryptoProvider::random(uint8_t* dest, unsigned size) {
     return result;
 }
 
-/** @brief Verify an ECDSA-SHA256 signature (raw r||s) against a hash on secp256r1. */
-bool ESP32CryptoProvider::verify(const uint8_t* pubKey64, const uint8_t* hash,
-                                  size_t hashSize, const uint8_t* rawSig64) {
-    int ret = uECC_verify(pubKey64, hash, static_cast<unsigned>(hashSize),
-                          rawSig64, uECC_secp256r1());
-    return (ret == UECC_SUCCESS);
+/** @brief Verify an ECDSA signature (raw r||s) against a hash on the specified curve. */
+bool ESP32CryptoProvider::ecdsaVerify(const uint8_t* pubKey64, const uint8_t* hash,
+                                       size_t hashLen, const uint8_t* sig,
+                                       CW_Curve curve) {
+    bool result = false;
+    const uECC_Curve_t* ueccCurve = toCurve(curve);
+    if (ueccCurve != NULL) {
+        int ret = uECC_verify(pubKey64, hash, static_cast<unsigned>(hashLen),
+                              sig, ueccCurve);
+        result = (ret == UECC_SUCCESS);
+    }
+    return result;
 }

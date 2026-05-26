@@ -1,6 +1,6 @@
 #include "unity.h"
 #include "esp32_crypto_provider.h"
-#include "uECC.h"
+#include "CW_Defs.h"
 #include "CW_Utils.h"
 #include <string.h>
 #include <stdio.h>
@@ -216,7 +216,7 @@ TEST_CASE("ecdh shared secret symmetry secp256r1", "[crypto_provider]")
     uint8_t secretA[TV_EC_COORD_BYTES] = { 0U };
     uint8_t secretB[TV_EC_COORD_BYTES] = { 0U };
 
-    const uECC_Curve_t* curve = uECC_secp256r1();
+    CW_Curve curve = CW_CURVE_SECP256R1;
 
     bool okA = s_provider.makeKey(pubA, privA, curve);
     bool okB = s_provider.makeKey(pubB, privB, curve);

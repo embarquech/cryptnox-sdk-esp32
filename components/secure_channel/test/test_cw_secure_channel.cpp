@@ -2,8 +2,8 @@
 #include "CW_SecureChannel.h"
 #include "CW_Defs.h"
 #include "CW_Utils.h"
+#include "CW_Platform.h"
 #include "esp32_crypto_provider.h"
-#include "uECC.h"
 #include <string.h>
 #include <stdio.h>
 
@@ -128,7 +128,19 @@ public:
 };
 
 /******************************************************************
- * 3. ScriptedMockNfcTransport — returns pre-loaded response buffers
+ * 3. MockPlatform — no-op sleep_ms for tests
+ ******************************************************************/
+
+class MockPlatform : public CW_Platform {
+public:
+    void sleep_ms(uint32_t /*ms*/) override {
+    }
+    ~MockPlatform() override {
+    }
+};
+
+/******************************************************************
+ * 4. ScriptedMockNfcTransport — returns pre-loaded response buffers
  ******************************************************************/
 
 struct MockScriptEntry {
@@ -296,6 +308,7 @@ public:
 
 static ESP32CryptoProvider        s_crypto;
 static MockLogger                 s_logger;
+static MockPlatform               s_platform;
 static ScriptedMockNfcTransport   s_scriptedTransport;
 static ReflectiveMockNfcTransport s_reflectiveTransport;
 
@@ -308,7 +321,7 @@ TEST_CASE("checkStatusWord: SW 0x9000 returns true", "[secure_channel]")
     static const uint8_t resp[] = {
         0x01U, 0x02U, 0x03U, 0x04U, 0x90U, 0x00U
     };
-    CW_SecureChannel channel(s_scriptedTransport, s_logger, s_crypto);
+    CW_SecureChannel channel(s_scriptedTransport, s_logger, s_crypto, s_platform);
 
     bool ok = channel.checkStatusWord(resp, static_cast<uint8_t>(sizeof(resp)),
                                       0x90U, 0x00U);
@@ -321,7 +334,7 @@ TEST_CASE("checkStatusWord: SW mismatch returns false", "[secure_channel]")
     static const uint8_t resp[] = {
         0x01U, 0x02U, 0x6aU, 0x82U
     };
-    CW_SecureChannel channel(s_scriptedTransport, s_logger, s_crypto);
+    CW_SecureChannel channel(s_scriptedTransport, s_logger, s_crypto, s_platform);
 
     bool ok = channel.checkStatusWord(resp, static_cast<uint8_t>(sizeof(resp)),
                                       0x90U, 0x00U);
@@ -332,7 +345,7 @@ TEST_CASE("checkStatusWord: SW mismatch returns false", "[secure_channel]")
 TEST_CASE("checkStatusWord: response shorter than 2 bytes returns false", "[secure_channel]")
 {
     static const uint8_t resp[] = { 0x90U };
-    CW_SecureChannel channel(s_scriptedTransport, s_logger, s_crypto);
+    CW_SecureChannel channel(s_scriptedTransport, s_logger, s_crypto, s_platform);
 
     bool ok = channel.checkStatusWord(resp, static_cast<uint8_t>(sizeof(resp)),
                                       0x90U, 0x00U);
@@ -366,7 +379,7 @@ TEST_CASE("extractCardEphemeralKey: extracts 64-byte key from synthetic certific
     uint8_t pubKey[SC_EC_PUBKEY_BYTES]    = { 0U };
     uint8_t fullKey65[SC_CERT_KEY65_BYTES] = { 0U };
 
-    CW_SecureChannel channel(s_scriptedTransport, s_logger, s_crypto);
+    CW_SecureChannel channel(s_scriptedTransport, s_logger, s_crypto, s_platform);
     bool ok = channel.extractCardEphemeralKey(cert, pubKey, fullKey65);
 
     TEST_ASSERT_TRUE(ok);
@@ -383,7 +396,7 @@ TEST_CASE("extractCardEphemeralKey: null cert pointer returns false", "[secure_c
 {
     uint8_t pubKey[SC_EC_PUBKEY_BYTES] = { 0U };
 
-    CW_SecureChannel channel(s_scriptedTransport, s_logger, s_crypto);
+    CW_SecureChannel channel(s_scriptedTransport, s_logger, s_crypto, s_platform);
     bool ok = channel.extractCardEphemeralKey(NULL, pubKey, NULL);
 
     TEST_ASSERT_FALSE(ok);
@@ -402,7 +415,7 @@ TEST_CASE("selectApdu: succeeds when transport returns SW 0x9000", "[secure_chan
     s_scriptedTransport.reset();
     s_scriptedTransport.addScript(resp, static_cast<uint8_t>(sizeof(resp)));
 
-    CW_SecureChannel channel(s_scriptedTransport, s_logger, s_crypto);
+    CW_SecureChannel channel(s_scriptedTransport, s_logger, s_crypto, s_platform);
     bool ok = channel.selectApdu();
 
     TEST_ASSERT_TRUE(ok);
@@ -417,7 +430,7 @@ TEST_CASE("selectApdu: fails when transport returns error SW", "[secure_channel]
     s_scriptedTransport.reset();
     s_scriptedTransport.addScript(resp, static_cast<uint8_t>(sizeof(resp)));
 
-    CW_SecureChannel channel(s_scriptedTransport, s_logger, s_crypto);
+    CW_SecureChannel channel(s_scriptedTransport, s_logger, s_crypto, s_platform);
     bool ok = channel.selectApdu();
 
     TEST_ASSERT_FALSE(ok);
@@ -442,7 +455,7 @@ TEST_CASE("getCardCertificate: extracts 146 certificate bytes from mock response
     uint8_t certBuf[SC_GET_CERT_RESP_BYTES] = { 0U };
     uint8_t certLen = 0U;
 
-    CW_SecureChannel channel(s_scriptedTransport, s_logger, s_crypto);
+    CW_SecureChannel channel(s_scriptedTransport, s_logger, s_crypto, s_platform);
     bool ok = channel.getCardCertificate(certBuf, certLen);
 
     TEST_ASSERT_TRUE(ok);
@@ -466,9 +479,9 @@ TEST_CASE("openSecureChannel: extracts 32-byte salt from mock response", "[secur
     uint8_t salt[SC_SALT_BYTES]              = { 0U };
     uint8_t clientPub[SC_EC_PUBKEY_BYTES]    = { 0U };
     uint8_t clientPriv[SC_EC_COORD_BYTES]    = { 0U };
-    const uECC_Curve_t* curve = uECC_secp256r1();
+    CW_Curve curve = CW_CURVE_SECP256R1;
 
-    CW_SecureChannel channel(s_scriptedTransport, s_logger, s_crypto);
+    CW_SecureChannel channel(s_scriptedTransport, s_logger, s_crypto, s_platform);
     bool ok = channel.openSecureChannel(salt, clientPub, clientPriv, curve);
 
     TEST_ASSERT_TRUE(ok);
@@ -508,13 +521,13 @@ TEST_CASE("mutuallyAuthenticate: sets session IV to first 16 bytes of mock respo
     uint8_t clientPub[SC_EC_PUBKEY_BYTES]  = { 0U };
     uint8_t clientPriv[SC_EC_COORD_BYTES]  = { 0U };
     const uint8_t salt[SC_SALT_BYTES]      = { 0U };
-    const uECC_Curve_t* curve              = uECC_secp256r1();
+    CW_Curve curve = CW_CURVE_SECP256R1;
 
     bool keyOk = s_crypto.makeKey(clientPub, clientPriv, curve);
     TEST_ASSERT_TRUE(keyOk);
 
     CW_SecureSession session;
-    CW_SecureChannel channel(s_scriptedTransport, s_logger, s_crypto);
+    CW_SecureChannel channel(s_scriptedTransport, s_logger, s_crypto, s_platform);
     bool ok = channel.mutuallyAuthenticate(session, salt, clientPub, clientPriv,
                                            curve, cardEphemeralPub);
 
@@ -544,7 +557,7 @@ TEST_CASE("mutuallyAuthenticate: sets session IV to first 16 bytes of mock respo
 TEST_CASE("key derivation: ECDH + SHA-512 split yields distinct Kenc and Kmac",
           "[secure_channel]")
 {
-    const uECC_Curve_t* curve = uECC_secp256r1();
+    CW_Curve curve = CW_CURVE_SECP256R1;
 
     /* Generate two ephemeral keypairs */
     uint8_t pubA[SC_EC_PUBKEY_BYTES]  = { 0U };
@@ -599,7 +612,7 @@ TEST_CASE("key derivation: ECDH + SHA-512 split yields distinct Kenc and Kmac",
                                    static_cast<uint8_t>(sizeof(mutualResp)));
 
     CW_SecureSession session;
-    CW_SecureChannel channel(s_scriptedTransport, s_logger, s_crypto);
+    CW_SecureChannel channel(s_scriptedTransport, s_logger, s_crypto, s_platform);
 
     /* publicB acts as the "card" ephemeral key; privA is the client key.
      * The ECDH inside mutuallyAuthenticate will compute secretAB. */
@@ -631,7 +644,7 @@ TEST_CASE("aesCbcEncrypt/aesCbcDecrypt: round-trip via reflective mock returns c
     s_reflectiveTransport.session = &session;
     s_reflectiveTransport.crypto  = &s_crypto;
 
-    CW_SecureChannel channel(s_reflectiveTransport, s_logger, s_crypto);
+    CW_SecureChannel channel(s_reflectiveTransport, s_logger, s_crypto, s_platform);
 
     /* Arbitrary plaintext command payload */
     static const uint8_t plaintext[]   = { 0xAAU, 0xBBU, 0xCCU };

@@ -50,6 +50,21 @@ bool PN532Adapter::sendAPDU(const uint8_t *apdu, uint8_t apduLen,
     bool result = false;
 
     if (_initialized) {
+        uint16_t len = static_cast<uint16_t>(responseLen);
+        result = pn532_send_apdu(&_dev, apdu, apduLen, response, &len);
+        responseLen = static_cast<uint8_t>((len > static_cast<uint16_t>(UINT8_MAX))
+                                           ? static_cast<uint16_t>(UINT8_MAX) : len);
+    }
+
+    return result;
+}
+
+bool PN532Adapter::sendAPDULarge(const uint8_t *apdu, uint8_t apduLen,
+                                  uint8_t *response, uint16_t &responseLen)
+{
+    bool result = false;
+
+    if (_initialized) {
         result = pn532_send_apdu(&_dev, apdu, apduLen, response, &responseLen);
     }
 

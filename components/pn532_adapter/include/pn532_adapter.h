@@ -25,6 +25,10 @@ public:
     bool inListPassiveTarget() override;
     bool sendAPDU(const uint8_t *apdu, uint8_t apduLen,
                   uint8_t *response, uint8_t &responseLen) override;
+
+    bool sendAPDULarge(const uint8_t *apdu, uint8_t apduLen,
+                       uint8_t *response, uint16_t &responseLen) override;
+
     void resetReader() override;
     bool printFirmwareVersion() override;
 
