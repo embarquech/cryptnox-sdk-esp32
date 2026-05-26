@@ -591,7 +591,7 @@ static esp_err_t pn532_init_i2c(pn532_t *dev, const pn532_config_t *config)
     dev_cfg.dev_addr_length = I2C_ADDR_BIT_LEN_7;
     dev_cfg.device_address  = PN532_I2C_ADDRESS;
     dev_cfg.scl_speed_hz    = (config->i2c_clock_hz != 0U) ? config->i2c_clock_hz : 100000U;
-    dev_cfg.scl_wait_us     = 500000U;
+    dev_cfg.scl_wait_us     = 0U;  /* 0 = use IDF default */
 
     ret = i2c_master_bus_add_device(dev->i2c_bus, &dev_cfg, &dev->i2c_dev);
     if (ret != ESP_OK) {
