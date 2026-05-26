@@ -153,12 +153,25 @@ static void signing_loop(CryptnoxWallet &wallet)
             continue;
         }
 
+        /* BIP32 Ethereum derivation path: m/44'/60'/0'/0/0
+         * Each level is a 4-byte big-endian uint32; hardened levels have the
+         * high bit set. */
+        static const uint8_t eth_path[20] = {
+            0x80U, 0x00U, 0x00U, 0x2CU,   /* 44' */
+            0x80U, 0x00U, 0x00U, 0x3CU,   /* 60' */
+            0x80U, 0x00U, 0x00U, 0x00U,   /* 0'  */
+            0x00U, 0x00U, 0x00U, 0x00U,   /* 0   */
+            0x00U, 0x00U, 0x00U, 0x00U,   /* 0   */
+        };
+
         CW_SignRequest req(session,
-                          CW_SIGN_CURR_K1,
+                          CW_SIGN_DERIVE_K1,
                           CW_SIGN_SIG_ECDSA_LOW_S,
                           CW_SIGN_WITH_PIN);
-        req.hash       = hash;
-        req.hashLength = static_cast<uint8_t>(CW_HASH_SIZE);
+        req.hash             = hash;
+        req.hashLength       = static_cast<uint8_t>(CW_HASH_SIZE);
+        req.derivePath       = eth_path;
+        req.derivePathLength = static_cast<uint8_t>(sizeof(eth_path));
         (void)memcpy(req.pin, card_pin, CW_MAX_PIN_LENGTH);
 
         CW_SignResult result = wallet.sign(req);
