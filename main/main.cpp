@@ -11,6 +11,7 @@
 #include "Pn532NfcTransport.h"
 #include "ESP32Logger.h"
 #include "esp32_crypto_provider.h"
+#include "ESP32Platform.h"
 
 static const char *const TAG = "main";
 static const size_t RND_BUF_SIZE = 16U;
@@ -166,8 +167,9 @@ extern "C" void app_main(void)
         (void)logger.begin(115200UL);
 
         ESP32CryptoProvider cryptoProvider;
+        ESP32Platform platform;
         Pn532NfcTransport nfcTransport(&nfc, logger);
-        CryptnoxWallet wallet(nfcTransport, logger, cryptoProvider);
+        CryptnoxWallet wallet(nfcTransport, logger, cryptoProvider, platform);
 
         if (wallet.begin()) {
             (void)nfcTransport.printFirmwareVersion();

@@ -1,6 +1,6 @@
 #include "unity.h"
 #include "esp32_crypto_provider.h"
-#include "uECC.h"
+#include "CW_Defs.h"
 #include "CW_Utils.h"
 #include <string.h>
 #include <stdio.h>
@@ -32,11 +32,13 @@ static ESP32CryptoProvider s_provider;
 TEST_CASE("sha256 NIST abc vector", "[crypto_provider]")
 {
     static const uint8_t input[] = { 'a', 'b', 'c' };
+    /* NIST FIPS 180-4 SHA-256("abc") = ba7816bf8f01cfea414140de5dae2ec7
+     *                                   3d380fb00bbb35e2b9f27d3c0eaed7c3 */
     static const uint8_t expected[TV_SHA256_OUT_BYTES] = {
         0xbaU, 0x78U, 0x16U, 0xbfU, 0x8fU, 0x01U, 0xcfU, 0xeaU,
-        0x41U, 0x41U, 0x40U, 0xdeU, 0x5dU, 0xaeU, 0x2eU, 0xc2U,
-        0xb0U, 0x03U, 0x61U, 0xa3U, 0x96U, 0x17U, 0x7aU, 0x9cU,
-        0xb4U, 0x10U, 0xffU, 0x61U, 0xf2U, 0x00U, 0x15U, 0xadU
+        0x41U, 0x41U, 0x40U, 0xdeU, 0x5dU, 0xaeU, 0x2eU, 0xc7U,
+        0x3dU, 0x38U, 0x0fU, 0xb0U, 0x0bU, 0xbbU, 0x35U, 0xe2U,
+        0xb9U, 0xf2U, 0x7dU, 0x3cU, 0x0eU, 0xaeU, 0xd7U, 0xc3U
     };
     uint8_t out[TV_SHA256_OUT_BYTES] = { 0U };
 
@@ -214,7 +216,7 @@ TEST_CASE("ecdh shared secret symmetry secp256r1", "[crypto_provider]")
     uint8_t secretA[TV_EC_COORD_BYTES] = { 0U };
     uint8_t secretB[TV_EC_COORD_BYTES] = { 0U };
 
-    const uECC_Curve_t* curve = uECC_secp256r1();
+    CW_Curve curve = CW_CURVE_SECP256R1;
 
     bool okA = s_provider.makeKey(pubA, privA, curve);
     bool okB = s_provider.makeKey(pubB, privB, curve);
