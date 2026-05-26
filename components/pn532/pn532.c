@@ -50,7 +50,6 @@ static const char *const PN532_LOG_TAG = "pn532";
  * I2C protocol constants
  ******************************************************************/
 
-#define PN532_I2C_READY       (0x01U)
 #define PN532_I2C_TIMEOUT_MS  (100)
 /* Max frame bytes the host may send to PN532 (preamble..postamble). */
 #define PN532_I2C_TX_MAX      (PN532_MAX_APDU_LEN + 16U)
@@ -243,7 +242,8 @@ static void read_data(pn532_t *dev, uint8_t *buff, uint8_t n)
             to_read = (uint16_t)sizeof(tmp);
         }
         (void)i2c_master_receive(dev->i2c_dev, tmp, (size_t)to_read, PN532_I2C_TIMEOUT_MS);
-        (void)memcpy(buff, &tmp[1], (size_t)(to_read - 1U));
+        size_t payload_len = (size_t)to_read - 1U;
+        (void)memcpy(buff, &tmp[1], payload_len);
     } else {
         uint8_t i = 0U;
         (void)gpio_set_level(dev->pin_cs, GPIO_LEVEL_LOW);
@@ -504,42 +504,32 @@ static esp_err_t pn532_init_i2c(pn532_t *dev, const pn532_config_t *config)
     ret = i2c_new_master_bus(&bus_cfg, &dev->i2c_bus);
     if (ret != ESP_OK) {
         ESP_LOGE(PN532_LOG_TAG, "i2c_new_master_bus failed: %d", ret);
-        return ret;
+    } else {
+        /* Attach the PN532 device on the bus. */
+        i2c_device_config_t dev_cfg;
+        (void)memset(&dev_cfg, 0, sizeof(dev_cfg));
+        dev_cfg.dev_addr_length = I2C_ADDR_BIT_LEN_7;
+        dev_cfg.device_address  = PN532_I2C_ADDRESS;
+        dev_cfg.scl_speed_hz    = (config->i2c_clock_hz != 0U) ? config->i2c_clock_hz : 100000U;
+
+        ret = i2c_master_bus_add_device(dev->i2c_bus, &dev_cfg, &dev->i2c_dev);
+        if (ret != ESP_OK) {
+            ESP_LOGE(PN532_LOG_TAG, "i2c_master_bus_add_device failed: %d", ret);
+            (void)i2c_del_master_bus(dev->i2c_bus);
+            dev->i2c_bus = NULL;
+        } else {
+            /* Adafruit_PN532::begin does a small delay between bus init
+             * and the first I2C transaction; mirror it. */
+            vTaskDelay(pdMS_TO_TICKS(10));
+
+            ESP_LOGI(PN532_LOG_TAG,
+                     "I2C master bus installed on port %d (SDA=%d SCL=%d %lu Hz)",
+                     config->i2c_port, (int)config->pin_sda, (int)config->pin_scl,
+                     (unsigned long)dev_cfg.scl_speed_hz);
+        }
     }
 
-    /* Attach the PN532 device on the bus.  scl_wait_us = 500ms tolerates
-     * the PN532's clock stretching during command processing.  Without
-     * it the new master driver logs spurious "I2C hardware NACK" lines
-     * each time the RDY-byte poll catches the chip mid-processing. */
-    i2c_device_config_t dev_cfg;
-    (void)memset(&dev_cfg, 0, sizeof(dev_cfg));
-    dev_cfg.dev_addr_length = I2C_ADDR_BIT_LEN_7;
-    dev_cfg.device_address  = PN532_I2C_ADDRESS;
-    dev_cfg.scl_speed_hz    = (config->i2c_clock_hz != 0U) ? config->i2c_clock_hz : 100000U;
-    dev_cfg.scl_wait_us     = 0U;  /* 0 = use IDF default */
-
-    ret = i2c_master_bus_add_device(dev->i2c_bus, &dev_cfg, &dev->i2c_dev);
-    if (ret != ESP_OK) {
-        ESP_LOGE(PN532_LOG_TAG, "i2c_master_bus_add_device failed: %d", ret);
-        (void)i2c_del_master_bus(dev->i2c_bus);
-        dev->i2c_bus = NULL;
-        return ret;
-    }
-
-    /* Adafruit_PN532::begin does a small delay between bus init and the
-     * first I2C transaction; mirror it. */
-    vTaskDelay(pdMS_TO_TICKS(10));
-
-    /* Silence "I2C hardware NACK detected" — the PN532's RDY-poll
-     * occasionally NACKs while the chip is still processing.  The new
-     * master driver logs these as errors but they're benign retries. */
-    esp_log_level_set("i2c.master", ESP_LOG_NONE);
-
-    ESP_LOGI(PN532_LOG_TAG, "I2C master bus installed on port %d (SDA=%d SCL=%d %lu Hz, scl_wait=500ms)",
-             config->i2c_port, (int)config->pin_sda, (int)config->pin_scl,
-             (unsigned long)dev_cfg.scl_speed_hz);
-
-    return ESP_OK;
+    return ret;
 }
 
 /******************************************************************
