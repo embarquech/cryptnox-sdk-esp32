@@ -424,6 +424,40 @@ static uint16_t read_data_apdu_frame(pn532_t *dev, uint8_t *buff, uint16_t max_l
     uint16_t i = 0U;
     bool is_extended = false;
 
+    if (dev->transport == PN532_TRANSPORT_I2C) {
+        /* PN532 I²C returns 1 RDY byte + N payload bytes in a single read.
+         * Pull the whole maximum response at once, then parse the frame
+         * header to figure out the actual length. */
+        uint8_t tmp[PN532_EXCHANGE_FRAME_MAX + 1U];
+        uint16_t to_read = max_len + 1U;
+        if (to_read > (uint16_t)sizeof(tmp)) {
+            to_read = (uint16_t)sizeof(tmp);
+        }
+        (void)i2c_master_receive(dev->i2c_dev, tmp, (size_t)to_read,
+                                  PN532_I2C_TIMEOUT_MS);
+        (void)memcpy(buff, &tmp[1], (size_t)(to_read - 1U));
+
+        is_extended = ((buff[PN532_EXCHANGE_LEN_OFFSET] == PN532_EXT_FRAME_INDICATOR) &&
+                       (buff[PN532_EXCHANGE_LEN_OFFSET + 1U] == PN532_EXT_FRAME_INDICATOR));
+        if (is_extended) {
+            body_len = ((uint16_t)buff[PN532_EXT_FRAME_LENHI_OFFSET] << 8U)
+                     | (uint16_t)buff[PN532_EXT_FRAME_LENLO_OFFSET];
+            total_len = (uint16_t)PN532_EXT_FRAME_HDR_LEN
+                      + body_len
+                      + (uint16_t)PN532_FRAME_TAIL_LEN;
+        } else {
+            body_len = (uint16_t)buff[PN532_EXCHANGE_LEN_OFFSET];
+            total_len = (uint16_t)PN532_FRAME_HDR_LEN
+                      + body_len
+                      + (uint16_t)PN532_FRAME_TAIL_LEN;
+        }
+        if (total_len > max_len) {
+            total_len = max_len;
+        }
+        return total_len;
+    }
+
+    /* SPI path: byte-by-byte over a single CS-low window. */
     (void)gpio_set_level(dev->pin_cs, GPIO_LEVEL_LOW);
     vTaskDelay(pdMS_TO_TICKS(PN532_CS_TOGGLE_DELAY_MS));
     spi_write_byte(dev, PN532_SPI_DATAREAD);
