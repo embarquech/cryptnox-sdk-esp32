@@ -421,7 +421,6 @@ static uint16_t read_data_apdu_frame(pn532_t *dev, uint8_t *buff, uint16_t max_l
 {
     uint16_t body_len = 0U;
     uint16_t total_len = 0U;
-    uint16_t i = 0U;
     bool is_extended = false;
 
     if (dev->transport == PN532_TRANSPORT_I2C) {
@@ -435,7 +434,8 @@ static uint16_t read_data_apdu_frame(pn532_t *dev, uint8_t *buff, uint16_t max_l
         }
         (void)i2c_master_receive(dev->i2c_dev, tmp, (size_t)to_read,
                                   PN532_I2C_TIMEOUT_MS);
-        (void)memcpy(buff, &tmp[1], (size_t)(to_read - 1U));
+        size_t payload_len = (size_t)to_read - (size_t)1U;
+        (void)memcpy(buff, &tmp[1], payload_len);
 
         is_extended = ((buff[PN532_EXCHANGE_LEN_OFFSET] == PN532_EXT_FRAME_INDICATOR) &&
                        (buff[PN532_EXCHANGE_LEN_OFFSET + 1U] == PN532_EXT_FRAME_INDICATOR));
@@ -454,52 +454,53 @@ static uint16_t read_data_apdu_frame(pn532_t *dev, uint8_t *buff, uint16_t max_l
         if (total_len > max_len) {
             total_len = max_len;
         }
-        return total_len;
-    }
+    } else {
+        /* SPI path: byte-by-byte over a single CS-low window. */
+        uint16_t i;
+        (void)gpio_set_level(dev->pin_cs, GPIO_LEVEL_LOW);
+        vTaskDelay(pdMS_TO_TICKS(PN532_CS_TOGGLE_DELAY_MS));
+        spi_write_byte(dev, PN532_SPI_DATAREAD);
 
-    /* SPI path: byte-by-byte over a single CS-low window. */
-    (void)gpio_set_level(dev->pin_cs, GPIO_LEVEL_LOW);
-    vTaskDelay(pdMS_TO_TICKS(PN532_CS_TOGGLE_DELAY_MS));
-    spi_write_byte(dev, PN532_SPI_DATAREAD);
-
-    for (i = 0U; i < PN532_FRAME_HDR_LEN; i++) {
-        vTaskDelay(pdMS_TO_TICKS(PN532_BYTE_DELAY_MS));
-        buff[i] = spi_read_byte(dev);
-    }
-
-    is_extended = ((buff[PN532_EXCHANGE_LEN_OFFSET] == PN532_EXT_FRAME_INDICATOR) &&
-                   (buff[PN532_EXCHANGE_LEN_OFFSET + 1U] == PN532_EXT_FRAME_INDICATOR));
-
-    if (is_extended) {
-        /* Read the 3 additional extended-frame header bytes: LEN_H, LEN_L, LCS. */
-        for (i = PN532_FRAME_HDR_LEN; i < PN532_EXT_FRAME_HDR_LEN; i++) {
+        for (i = 0U; i < PN532_FRAME_HDR_LEN; i++) {
             vTaskDelay(pdMS_TO_TICKS(PN532_BYTE_DELAY_MS));
             buff[i] = spi_read_byte(dev);
         }
-        body_len = ((uint16_t)buff[PN532_EXT_FRAME_LENHI_OFFSET] << 8U)
-                 | (uint16_t)buff[PN532_EXT_FRAME_LENLO_OFFSET];
-        total_len = (uint16_t)PN532_EXT_FRAME_HDR_LEN
-                  + body_len
-                  + (uint16_t)PN532_FRAME_TAIL_LEN;
-    } else {
-        body_len = (uint16_t)buff[PN532_EXCHANGE_LEN_OFFSET];
-        total_len = (uint16_t)PN532_FRAME_HDR_LEN
-                  + body_len
-                  + (uint16_t)PN532_FRAME_TAIL_LEN;
+
+        is_extended = ((buff[PN532_EXCHANGE_LEN_OFFSET] == PN532_EXT_FRAME_INDICATOR) &&
+                       (buff[PN532_EXCHANGE_LEN_OFFSET + 1U] == PN532_EXT_FRAME_INDICATOR));
+
+        if (is_extended) {
+            /* Read the 3 additional extended-frame header bytes: LEN_H, LEN_L, LCS. */
+            for (i = PN532_FRAME_HDR_LEN; i < PN532_EXT_FRAME_HDR_LEN; i++) {
+                vTaskDelay(pdMS_TO_TICKS(PN532_BYTE_DELAY_MS));
+                buff[i] = spi_read_byte(dev);
+            }
+            body_len = ((uint16_t)buff[PN532_EXT_FRAME_LENHI_OFFSET] << 8U)
+                     | (uint16_t)buff[PN532_EXT_FRAME_LENLO_OFFSET];
+            total_len = (uint16_t)PN532_EXT_FRAME_HDR_LEN
+                      + body_len
+                      + (uint16_t)PN532_FRAME_TAIL_LEN;
+        } else {
+            body_len = (uint16_t)buff[PN532_EXCHANGE_LEN_OFFSET];
+            total_len = (uint16_t)PN532_FRAME_HDR_LEN
+                      + body_len
+                      + (uint16_t)PN532_FRAME_TAIL_LEN;
+        }
+
+        if (total_len > max_len) {
+            total_len = max_len;
+        }
+
+        i = (uint16_t)(is_extended ? PN532_EXT_FRAME_HDR_LEN : PN532_FRAME_HDR_LEN);
+        while (i < total_len) {
+            vTaskDelay(pdMS_TO_TICKS(PN532_BYTE_DELAY_MS));
+            buff[i] = spi_read_byte(dev);
+            i++;
+        }
+
+        (void)gpio_set_level(dev->pin_cs, GPIO_LEVEL_HIGH);
     }
 
-    if (total_len > max_len) {
-        total_len = max_len;
-    }
-
-    i = (uint16_t)(is_extended ? PN532_EXT_FRAME_HDR_LEN : PN532_FRAME_HDR_LEN);
-    while (i < total_len) {
-        vTaskDelay(pdMS_TO_TICKS(PN532_BYTE_DELAY_MS));
-        buff[i] = spi_read_byte(dev);
-        i++;
-    }
-
-    (void)gpio_set_level(dev->pin_cs, GPIO_LEVEL_HIGH);
     return total_len;
 }
 
