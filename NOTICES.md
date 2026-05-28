@@ -61,7 +61,7 @@ is hereby also acknowledged.
 
 The Keccak (SHA-3) sponge construction is a public-domain algorithm
 designed by Bertoni, Daemen, Peeters and Van Assche. The file
-`examples/usdc_signing/main/keccak256.cpp` is a mechanical
+`examples/UsdcSigning/main/keccak256.cpp` is a mechanical
 implementation written for this project from the FIPS 202 specification;
 it does not derive from any specific implementation under copyright.
 The round-constant table `kRC[]` and rotation offsets are the canonical
