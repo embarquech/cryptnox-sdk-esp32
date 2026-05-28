@@ -1,0 +1,81 @@
+{
+  "name": "cryptnox-sdk-esp32",
+  "version": "1.0.0",
+  "description": "ESP32 SDK for managing Cryptnox Hardware Wallet smart cards over NFC. Provides secure channel establishment, card-info retrieval, PIN verification, and transaction signing.",
+  "keywords": [
+    "cryptnox",
+    "nfc",
+    "hardware wallet",
+    "blockchain",
+    "signing",
+    "esp32",
+    "pn532",
+    "secp256k1",
+    "ecdh"
+  ],
+  "authors": [
+    {
+      "name": "Cryptnox SA",
+      "email": "contact@cryptnox.com",
+      "url": "https://cryptnox.com",
+      "maintainer": true
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/embarquech/cryptnox-sdk-esp32"
+  },
+  "homepage": "https://github.com/embarquech/cryptnox-sdk-esp32",
+  "license": "LGPL-3.0-or-later",
+  "frameworks": ["espidf"],
+  "platforms": ["espressif32"],
+  "build": {
+    "srcFilter": [
+      "+<components/cryptnox_utils/*.cpp>",
+      "+<components/crypto_provider/*.cpp>",
+      "+<components/esp32_logger/*.cpp>",
+      "+<components/esp32_platform/*.cpp>",
+      "+<components/pn532/*.c>",
+      "+<components/pn532_adapter/*.cpp>",
+      "+<components/pn532_nfc_transport/*.cpp>",
+      "+<components/uECC/*.cpp>",
+      "+<cryptnox-sdk-cpp/CW_SecureChannel.cpp>",
+      "+<cryptnox-sdk-cpp/CW_Utils.cpp>",
+      "+<cryptnox-sdk-cpp/CryptnoxWallet.cpp>"
+    ],
+    "flags": [
+      "-Icomponents/crypto_provider/include",
+      "-Icomponents/esp32_logger/include",
+      "-Icomponents/esp32_platform/include",
+      "-Icomponents/pn532/include",
+      "-Icomponents/pn532_adapter/include",
+      "-Icomponents/pn532_nfc_transport/include",
+      "-Icomponents/uECC/include",
+      "-Icryptnox-sdk-cpp"
+    ]
+  },
+  "export": {
+    "exclude": [
+      "components/epd",
+      "examples/epaper_hello_world",
+      "main",
+      "hardware",
+      "test",
+      "fuzz",
+      "build",
+      "docs/architecture",
+      ".claude",
+      ".vscode",
+      "build_and_flash.bat",
+      "flash_only.bat",
+      "serial_capture.py",
+      "serial_read.ps1",
+      "build_log.txt",
+      "security_remaining.xlsx",
+      "changes.patch",
+      "sdkconfig",
+      "sdkconfig.old",
+      "sdkconfig.defaults"
+    ]
+  }
+}

@@ -3,4 +3,10 @@ sdkconfig
 sdkconfig.old
 .claude/
 .vscode/
-examples/usdc_signing/main/config.h
+
+# PlatformIO build artifacts
+.pio/
+.pioenvs/
+
+# UsdcSigning runtime secrets — copy config.template.h → main/config.h and fill in credentials
+examples/UsdcSigning/main/config.h
