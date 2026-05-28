@@ -60,26 +60,13 @@
   },
   "export": {
     "exclude": [
-      "components/epd",
-      "examples/epaper_hello_world",
       "main",
       "hardware",
       "test",
       "fuzz",
       "build",
       "docs/architecture",
-      ".claude",
-      ".vscode",
-      "build_and_flash.bat",
-      "flash_only.bat",
-      "serial_capture.py",
-      "serial_read.ps1",
-      "build_log.txt",
-      "security_remaining.xlsx",
-      "changes.patch",
-      "sdkconfig",
-      "sdkconfig.old",
-      "sdkconfig.defaults"
+      "sdkconfig"
     ]
   }
 }
