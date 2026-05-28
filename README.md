@@ -108,8 +108,8 @@ Wiring shown for the **ESP32-S3-DevKitC-1**.
 
 All examples assume the shared SPI bus has been initialised and the three adapters
 (`ESP32Logger`, `ESP32CryptoProvider`, `ESP32Pn532Transport`) are wired into a
-`CryptnoxWallet`. Helper macros are used for brevity; see `main/main.cpp` for the
-full ESP-IDF boilerplate.
+`CryptnoxWallet`. Helper macros are used for brevity; see `examples/UsdcSigning/`
+for the full ESP-IDF boilerplate.
 
 ### 1. Connect to a Cryptnox card
 
@@ -235,7 +235,7 @@ extern "C" void app_main(void) {
 }
 ```
 
-See `main/main.cpp` for a full reference that wires up the SPI bus and polls the PN532.
+See `examples/UsdcSigning/` for a full reference that wires up the SPI bus and polls the PN532.
 
 ---
 

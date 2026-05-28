@@ -57,32 +57,15 @@ is hereby also acknowledged.
 
 ---
 
-## components/epd/ — WeActStudio EpaperModule
-
-`components/epd/epd.c`, the EPD font tables and the public header are
-ported from WeAct Studio's e-paper module sample code (Raspberry Pi
-reference implementation). The original is published on the WeAct
-Studio GitHub organisation and Taobao/AliExpress storefronts.
-
-Upstream: https://github.com/WeActStudio/WeActStudio.EpaperModule
-
-The upstream repository does not carry an explicit `LICENSE` file at
-the time of porting; the sample code is published as a reference for
-buyers of WeAct Studio's e-paper modules. Until WeAct Studio publishes
-an explicit license, downstream commercial redistribution of these
-files should be cleared with WeAct Studio.
-
----
-
-## examples/usdc_signing/main/keccak256.{cpp,h} — Keccak-f[1600] reference algorithm
+## examples/UsdcSigning/main/keccak256.{cpp,h} — Keccak-f[1600] reference algorithm
 
 The Keccak (SHA-3) sponge construction is a public-domain algorithm
 designed by Bertoni, Daemen, Peeters and Van Assche. The file
 `examples/usdc_signing/main/keccak256.cpp` is a mechanical
 implementation written for this project from the FIPS 202 specification;
 it does not derive from any specific implementation under copyright.
-The round-constant table `kRC[]` and rotation offsets in `kROT[]` are
-the canonical constants from the Keccak specification.
+The round-constant table `kRC[]` and rotation offsets are the canonical
+constants from the Keccak specification.
 
 ---
 
