@@ -27,8 +27,12 @@
   },
   "homepage": "https://github.com/embarquech/cryptnox-sdk-esp32",
   "license": "LGPL-3.0-or-later",
-  "frameworks": ["espidf"],
-  "platforms": ["espressif32"],
+  "frameworks": [
+    "espidf"
+  ],
+  "platforms": [
+    "espressif32"
+  ],
   "build": {
     "srcFilter": [
       "+<components/cryptnox_utils/*.cpp>",
