@@ -1,3 +1,8 @@
+/*
+ * SPDX-License-Identifier: LGPL-3.0-or-later
+ * Copyright (c) 2026 Cryptnox SA
+ */
+
 #include "pn532_adapter.h"
 #include "esp_log.h"
 #include <string.h>

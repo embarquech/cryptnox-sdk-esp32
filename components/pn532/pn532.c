@@ -1,5 +1,18 @@
-// PN532 driver for ESP-IDF — supports SPI and I2C transports
-// Ported from Adafruit/Seeed PN532 Arduino library (MIT license)
+/*
+ * SPDX-License-Identifier: LGPL-3.0-or-later AND BSD-3-Clause
+ *
+ * PN532 driver for ESP-IDF — supports SPI and I²C transports.
+ *
+ * Portions of this file derive from the Adafruit_PN532 Arduino library
+ * (Copyright (c) 2012, Adafruit Industries; BSD-3-Clause). The full
+ * upstream copyright notice and license text are reproduced in
+ * NOTICES.md at the repository root.
+ *
+ * Additions on top of the upstream driver — the I²C transport via the
+ * IDF v5.x i2c_master API and the PN532 extended-frame (8-byte header)
+ * parser — are licensed under LGPL-3.0-or-later (with a commercial
+ * option, see LICENSE / COMMERCIAL.md).
+ */
 
 #include "pn532.h"
 #include "driver/gpio.h"
