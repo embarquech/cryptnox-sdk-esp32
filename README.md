@@ -1,19 +1,22 @@
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/6ce54a27-8fb6-48e6-9d1f-da144f43425a"/>
-</p>
+<div align="center">
 
-<h3 align="center">cryptnox-sdk-esp32</h3>
-<p align="center">ESP32-S3 SDK for managing Cryptnox smart card wallets</p>
+<img src="https://github.com/user-attachments/assets/6ce54a27-8fb6-48e6-9d1f-da144f43425a"/>
+
+### cryptnox-sdk-esp32
+
+ESP32 SDK for managing Cryptnox smart card wallets
+
+</div>
 
 <br/>
 <br/>
 
 [![Static analysis](https://github.com/embarquech/cryptnox-sdk-esp32/actions/workflows/misra_check.yml/badge.svg)](https://github.com/embarquech/cryptnox-sdk-esp32/actions/workflows/misra_check.yml)
-[![Platform: ESP32-S3](https://img.shields.io/badge/Platform-ESP32--S3-blue.svg)](https://www.espressif.com/en/products/socs/esp32-s3)
+[![Platform: ESP32 family](https://img.shields.io/badge/Platform-ESP32%20family-blue.svg)](https://www.espressif.com/en/products/socs)
 [![Framework: ESP-IDF v5.5](https://img.shields.io/badge/Framework-ESP--IDF%20v5.5-blue.svg)](https://docs.espressif.com/projects/esp-idf/en/v5.5/)
 [![License: GPLv3](https://img.shields.io/badge/License-LGPLv3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0)
 
-`cryptnox-sdk-esp32` is an ESP-IDF component bundle that enables the use of **Cryptnox Smart cards** on ESP32-S3 platforms.
+`cryptnox-sdk-esp32` is an ESP-IDF component bundle that enables the use of **Cryptnox Smart cards** on ESP32-family platforms.
 It provides secure communication with the card, retrieves card information, and exposes basic cryptographic operations through the shared C++ core SDK.
 
 ---
