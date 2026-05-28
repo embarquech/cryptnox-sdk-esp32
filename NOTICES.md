@@ -51,10 +51,6 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ```
 
-If the I²C path was cross-referenced against the Seeed Studio PN532
-fork (https://github.com/Seeed-Studio/PN532, MIT-licensed), that work
-is hereby also acknowledged.
-
 ---
 
 ## examples/UsdcSigning/main/keccak256.{cpp,h} — Keccak-f[1600] reference algorithm
