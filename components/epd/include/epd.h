@@ -1,5 +1,14 @@
-// WeAct Studio E-Paper driver for ESP-IDF
-// Ported from WeActStudio.EpaperModule (Raspberry Pi version)
+/*
+ * SPDX-License-Identifier: LGPL-3.0-or-later
+ *
+ * WeAct Studio E-Paper driver for ESP-IDF.
+ *
+ * Ported from the WeActStudio.EpaperModule Raspberry Pi reference
+ * implementation (see NOTICES.md at the repo root). Upstream did not
+ * carry an explicit license file at the time of porting; downstream
+ * commercial use of these EPD files should be cleared with WeAct
+ * Studio before shipping.
+ */
 
 #ifndef EPD_DRIVER_H
 #define EPD_DRIVER_H

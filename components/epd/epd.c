@@ -1,10 +1,13 @@
-/*---------------------------------------
-- WeAct Studio Official Link
-- taobao: weactstudio.taobao.com
-- aliexpress: weactstudio.aliexpress.com
-- github: github.com/WeActTC
-- Ported to ESP-IDF from Raspberry Pi version
----------------------------------------*/
+/*
+ * SPDX-License-Identifier: LGPL-3.0-or-later
+ *
+ * WeAct Studio E-Paper driver for ESP-IDF.
+ *
+ * Ported from the WeActStudio.EpaperModule Raspberry Pi reference
+ * implementation (https://github.com/WeActStudio/WeActStudio.EpaperModule).
+ * See NOTICES.md at the repository root for upstream attribution and
+ * the open commercial-redistribution caveat.
+ */
 
 #include "epd.h"
 #include "epdfont.h"
