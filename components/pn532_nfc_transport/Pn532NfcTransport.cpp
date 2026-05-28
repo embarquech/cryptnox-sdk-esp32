@@ -1,3 +1,8 @@
+/*
+ * SPDX-License-Identifier: LGPL-3.0-or-later
+ * Copyright (c) 2026 Cryptnox SA
+ */
+
 #include "Pn532NfcTransport.h"
 
 static const uint32_t PN532_FW_IC_SHIFT  = 24U;
