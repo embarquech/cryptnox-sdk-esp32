@@ -1,8 +1,9 @@
-// PN532 SPI driver for ESP-IDF
+// PN532 driver for ESP-IDF — supports SPI and I2C transports
 // Ported from Adafruit/Seeed PN532 Arduino library (MIT license)
 
 #include "pn532.h"
 #include "driver/gpio.h"
+#include "driver/i2c_master.h"   /* new IDF v5.x master API */
 #include "esp_log.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
@@ -44,6 +45,16 @@ static const char *const PN532_LOG_TAG = "pn532";
 #define PN532_SPI_NO_PIN      (-1)
 #define PN532_SPI_QUEUE_SIZE  (1U)
 #define PN532_SPI_BITS        (8U)
+
+/******************************************************************
+ * I2C protocol constants
+ ******************************************************************/
+
+#define PN532_I2C_TIMEOUT_MS  (100)
+/* Max frame bytes the host may send to PN532 (preamble..postamble). */
+#define PN532_I2C_TX_MAX      (PN532_MAX_APDU_LEN + 16U)
+/* Max read length used anywhere (PASSIVE response is the largest at 64). */
+#define PN532_I2C_RX_MAX      (200U)
 
 /******************************************************************
  * Timing constants (milliseconds)
@@ -90,7 +101,7 @@ static const char *const PN532_LOG_TAG = "pn532";
  ******************************************************************/
 
 #define PN532_FIRMWARE_CMD_LEN     (1U)
-#define PN532_FIRMWARE_RESP_LEN    (12U)
+#define PN532_FIRMWARE_RESP_LEN    (13U)  /* matches Adafruit_PN532::getFirmwareVersion */
 #define PN532_FIRMWARE_HDR_LEN     (7U)
 #define PN532_FW_IC_OFFSET         (7U)
 #define PN532_FW_VER_OFFSET        (8U)
@@ -114,22 +125,19 @@ static const char *const PN532_LOG_TAG = "pn532";
  ******************************************************************/
 
 #define PN532_PASSIVE_CMD_LEN             (3U)
-/* ISO 14443-4 responses include ATS after the UID; 64 bytes covers
- * the full frame (header 5 + D5+4B 2 + NbTg+Tg+ATQA+SAK 5 + UID 7
- * + AtsLength+Ats up to ~20 + DCS+postamble 2 = ~41 bytes max). */
 #define PN532_PASSIVE_RESP_LEN            (64U)
 #define PN532_PASSIVE_MAX_TARGETS         (1U)
 #define PN532_PASSIVE_NUM_TARGETS_OFFSET  (7U)
 #define PN532_PASSIVE_EXPECTED_TARGETS    (1U)
 #define PN532_PASSIVE_UID_LEN_OFFSET      (12U)
 #define PN532_PASSIVE_UID_DATA_OFFSET     (13U)
-#define PN532_BYTE_SHIFT_BITS             (8U)  /* bits to shift when packing/unpacking bytes */
+#define PN532_BYTE_SHIFT_BITS             (8U)
 
 /******************************************************************
  * InDataExchange constants
  ******************************************************************/
 
-#define PN532_EXCHANGE_CMD_OVERHEAD   (2U)    /* cmd byte + Tg byte */
+#define PN532_EXCHANGE_CMD_OVERHEAD   (2U)
 #define PN532_EXCHANGE_TG             (0x01U)
 /* Extended frames: up to 8-byte header + 418-byte body (415-byte DataOut) + 2-byte tail = 428; use 440 for margin. */
 #define PN532_EXCHANGE_FRAME_MAX      (440U)
@@ -210,34 +218,67 @@ static uint8_t spi_read_byte(pn532_t *dev)
     return rx;
 }
 
-static uint8_t read_spi_status(pn532_t *dev)
+/******************************************************************
+ * Low-level I2C helpers
+ ******************************************************************/
+
+static uint8_t i2c_read_ready(pn532_t *dev)
 {
-    uint8_t status = 0U;
-    (void)gpio_set_level(dev->pin_cs, GPIO_LEVEL_LOW);
-    vTaskDelay(pdMS_TO_TICKS(PN532_CS_TOGGLE_DELAY_MS));
-    spi_write_byte(dev, PN532_SPI_STATREAD);
-    status = spi_read_byte(dev);
-    (void)gpio_set_level(dev->pin_cs, GPIO_LEVEL_HIGH);
+    uint8_t rdy = 0U;
+    (void)i2c_master_receive(dev->i2c_dev, &rdy, 1U, PN532_I2C_TIMEOUT_MS);
+    return rdy;
+}
+
+/******************************************************************
+ * Transport-agnostic ready / read / write
+ ******************************************************************/
+
+static uint8_t read_ready(pn532_t *dev)
+{
+    uint8_t status;
+
+    if (dev->transport == PN532_TRANSPORT_I2C) {
+        status = i2c_read_ready(dev);
+    } else {
+        (void)gpio_set_level(dev->pin_cs, GPIO_LEVEL_LOW);
+        vTaskDelay(pdMS_TO_TICKS(PN532_CS_TOGGLE_DELAY_MS));
+        spi_write_byte(dev, PN532_SPI_STATREAD);
+        status = spi_read_byte(dev);
+        (void)gpio_set_level(dev->pin_cs, GPIO_LEVEL_HIGH);
+    }
+
     return status;
 }
 
 static void read_data(pn532_t *dev, uint8_t *buff, uint8_t n)
 {
-    uint8_t i = 0U;
-    (void)gpio_set_level(dev->pin_cs, GPIO_LEVEL_LOW);
-    vTaskDelay(pdMS_TO_TICKS(PN532_CS_TOGGLE_DELAY_MS));
-    spi_write_byte(dev, PN532_SPI_DATAREAD);
-    for (i = 0U; i < n; i++) {
-        vTaskDelay(pdMS_TO_TICKS(PN532_BYTE_DELAY_MS));
-        buff[i] = spi_read_byte(dev);
+    if (dev->transport == PN532_TRANSPORT_I2C) {
+        /* PN532 I2C returns N+1 bytes: byte[0] = RDY (0x01), byte[1..N] = payload. */
+        uint8_t tmp[PN532_I2C_RX_MAX + 1U];
+        uint16_t to_read = (uint16_t)n + 1U;
+        if (to_read > sizeof(tmp)) {
+            to_read = (uint16_t)sizeof(tmp);
+        }
+        (void)i2c_master_receive(dev->i2c_dev, tmp, (size_t)to_read, PN532_I2C_TIMEOUT_MS);
+        size_t payload_len = (size_t)to_read - 1U;
+        (void)memcpy(buff, &tmp[1], payload_len);
+    } else {
+        uint8_t i = 0U;
+        (void)gpio_set_level(dev->pin_cs, GPIO_LEVEL_LOW);
+        vTaskDelay(pdMS_TO_TICKS(PN532_CS_TOGGLE_DELAY_MS));
+        spi_write_byte(dev, PN532_SPI_DATAREAD);
+        for (i = 0U; i < n; i++) {
+            vTaskDelay(pdMS_TO_TICKS(PN532_BYTE_DELAY_MS));
+            buff[i] = spi_read_byte(dev);
+        }
+        (void)gpio_set_level(dev->pin_cs, GPIO_LEVEL_HIGH);
     }
-    (void)gpio_set_level(dev->pin_cs, GPIO_LEVEL_HIGH);
 }
 
-static bool check_spi_ack(pn532_t *dev)
+static bool check_ack(pn532_t *dev)
 {
     uint8_t ackbuff[PN532_ACK_LEN];
-    bool result = false;
+    bool result;
     (void)memset(ackbuff, 0, sizeof(ackbuff));
     read_data(dev, ackbuff, PN532_ACK_LEN);
     result = pn532_buffer_equal(ackbuff, pn532_ack, PN532_ACK_LEN);
@@ -261,30 +302,53 @@ static bool pn532_buffer_equal(const uint8_t *lhs, const uint8_t *rhs, uint8_t l
 static void write_command(pn532_t *dev, const uint8_t *cmd, uint8_t cmd_len)
 {
     uint8_t frame_len = (uint8_t)(cmd_len + PN532_FRAME_TFI_OVERHEAD);
-    uint8_t checksum = (uint8_t)(PN532_PREAMBLE + PN532_PREAMBLE + PN532_STARTCODE2);
+    uint8_t checksum  = (uint8_t)(PN532_PREAMBLE + PN532_PREAMBLE + PN532_STARTCODE2);
     uint8_t i = 0U;
 
-    (void)gpio_set_level(dev->pin_cs, GPIO_LEVEL_LOW);
-    vTaskDelay(pdMS_TO_TICKS(PN532_CS_TOGGLE_DELAY_MS));
-    spi_write_byte(dev, PN532_SPI_DATAWRITE);
+    if (dev->transport == PN532_TRANSPORT_I2C) {
+        /* Build the full frame in a buffer and send it in one I2C transaction. */
+        uint8_t frame[PN532_I2C_TX_MAX];
+        uint16_t pos = 0U;
 
-    spi_write_byte(dev, PN532_PREAMBLE);
-    spi_write_byte(dev, PN532_PREAMBLE);
-    spi_write_byte(dev, PN532_STARTCODE2);
+        frame[pos] = PN532_PREAMBLE;   pos++;
+        frame[pos] = PN532_PREAMBLE;   pos++;
+        frame[pos] = PN532_STARTCODE2; pos++;
+        frame[pos] = frame_len;        pos++;
+        frame[pos] = (uint8_t)((uint8_t)(~frame_len) + 1U); pos++;
+        frame[pos] = PN532_HOSTTOPN532; pos++;
+        checksum = (uint8_t)(checksum + PN532_HOSTTOPN532);
 
-    spi_write_byte(dev, frame_len);
-    spi_write_byte(dev, (uint8_t)((uint8_t)(~frame_len) + 1U));
+        for (i = 0U; i < cmd_len; i++) {
+            frame[pos] = cmd[i]; pos++;
+            checksum = (uint8_t)(checksum + cmd[i]);
+        }
+        frame[pos] = (uint8_t)(~checksum); pos++;
+        frame[pos] = PN532_POSTAMBLE;      pos++;
 
-    spi_write_byte(dev, PN532_HOSTTOPN532);
-    checksum = (uint8_t)(checksum + PN532_HOSTTOPN532);
+        (void)i2c_master_transmit(dev->i2c_dev, frame, (size_t)pos, PN532_I2C_TIMEOUT_MS);
+    } else {
+        (void)gpio_set_level(dev->pin_cs, GPIO_LEVEL_LOW);
+        vTaskDelay(pdMS_TO_TICKS(PN532_CS_TOGGLE_DELAY_MS));
+        spi_write_byte(dev, PN532_SPI_DATAWRITE);
 
-    for (i = 0U; i < cmd_len; i++) {
-        spi_write_byte(dev, cmd[i]);
-        checksum = (uint8_t)(checksum + cmd[i]);
+        spi_write_byte(dev, PN532_PREAMBLE);
+        spi_write_byte(dev, PN532_PREAMBLE);
+        spi_write_byte(dev, PN532_STARTCODE2);
+
+        spi_write_byte(dev, frame_len);
+        spi_write_byte(dev, (uint8_t)((uint8_t)(~frame_len) + 1U));
+
+        spi_write_byte(dev, PN532_HOSTTOPN532);
+        checksum = (uint8_t)(checksum + PN532_HOSTTOPN532);
+
+        for (i = 0U; i < cmd_len; i++) {
+            spi_write_byte(dev, cmd[i]);
+            checksum = (uint8_t)(checksum + cmd[i]);
+        }
+        spi_write_byte(dev, (uint8_t)(~checksum));
+        spi_write_byte(dev, PN532_POSTAMBLE);
+        (void)gpio_set_level(dev->pin_cs, GPIO_LEVEL_HIGH);
     }
-    spi_write_byte(dev, (uint8_t)(~checksum));
-    spi_write_byte(dev, PN532_POSTAMBLE);
-    (void)gpio_set_level(dev->pin_cs, GPIO_LEVEL_HIGH);
 }
 
 static bool send_command_check_ack(pn532_t *dev, const uint8_t *cmd,
@@ -294,10 +358,12 @@ static bool send_command_check_ack(pn532_t *dev, const uint8_t *cmd,
     bool timed_out = false;
     bool result = false;
 
+    ESP_LOGI(PN532_LOG_TAG, "═══ cmd=0x%02X cmd_len=%u ═══", cmd[0], (unsigned)cmd_len);
     write_command(dev, cmd, cmd_len);
+    ESP_LOGI(PN532_LOG_TAG, "→ polling RDY for ACK...");
 
     /* Wait until the PN532 signals it is ready to send the ACK frame. */
-    while ((!timed_out) && (read_spi_status(dev) != PN532_SPI_READY)) {
+    while ((!timed_out) && (read_ready(dev) != PN532_SPI_READY)) {
         if (timeout != 0U) {
             timer = (uint16_t)(timer + PN532_POLL_INTERVAL_MS);
             if (timer > timeout) {
@@ -309,26 +375,40 @@ static bool send_command_check_ack(pn532_t *dev, const uint8_t *cmd,
         }
     }
 
-    if (!timed_out && check_spi_ack(dev)) {
-        timer = 0U;
-        timed_out = false;
+    if (timed_out) {
+        ESP_LOGE(PN532_LOG_TAG, "→ TIMEOUT waiting RDY for ACK");
+    } else {
+        ESP_LOGI(PN532_LOG_TAG, "→ RDY after %u ms, reading ACK...", (unsigned)timer);
+        bool ack_ok = check_ack(dev);
+        ESP_LOGI(PN532_LOG_TAG, "→ ACK %s", ack_ok ? "OK" : "MISMATCH");
 
-        /* Wait until the PN532 signals it is ready to send the response. */
-        while ((!timed_out) && (read_spi_status(dev) != PN532_SPI_READY)) {
-            if (timeout != 0U) {
-                timer = (uint16_t)(timer + PN532_POLL_INTERVAL_MS);
-                if (timer > timeout) {
-                    timed_out = true;
+        if (ack_ok) {
+            timer = 0U;
+            timed_out = false;
+
+            /* Wait until the PN532 signals it is ready to send the response. */
+            while ((!timed_out) && (read_ready(dev) != PN532_SPI_READY)) {
+                if (timeout != 0U) {
+                    timer = (uint16_t)(timer + PN532_POLL_INTERVAL_MS);
+                    if (timer > timeout) {
+                        timed_out = true;
+                    }
+                }
+                if (!timed_out) {
+                    vTaskDelay(pdMS_TO_TICKS(PN532_POLL_INTERVAL_MS));
                 }
             }
-            if (!timed_out) {
-                vTaskDelay(pdMS_TO_TICKS(PN532_POLL_INTERVAL_MS));
-            }
-        }
 
-        result = !timed_out;
+            if (timed_out) {
+                ESP_LOGE(PN532_LOG_TAG, "→ TIMEOUT waiting RDY for response");
+            } else {
+                ESP_LOGI(PN532_LOG_TAG, "→ response RDY after %u ms", (unsigned)timer);
+            }
+            result = !timed_out;
+        }
     }
 
+    ESP_LOGI(PN532_LOG_TAG, "═══ result=%s ═══", result ? "OK" : "FAIL");
     return result;
 }
 
@@ -341,64 +421,99 @@ static uint16_t read_data_apdu_frame(pn532_t *dev, uint8_t *buff, uint16_t max_l
 {
     uint16_t body_len = 0U;
     uint16_t total_len = 0U;
-    uint16_t i = 0U;
     bool is_extended = false;
 
-    (void)gpio_set_level(dev->pin_cs, GPIO_LEVEL_LOW);
-    vTaskDelay(pdMS_TO_TICKS(PN532_CS_TOGGLE_DELAY_MS));
-    spi_write_byte(dev, PN532_SPI_DATAREAD);
+    if (dev->transport == PN532_TRANSPORT_I2C) {
+        /* PN532 I²C returns 1 RDY byte + N payload bytes in a single read.
+         * Pull the whole maximum response at once, then parse the frame
+         * header to figure out the actual length. */
+        uint8_t tmp[PN532_EXCHANGE_FRAME_MAX + 1U];
+        uint16_t to_read = max_len + 1U;
+        if (to_read > (uint16_t)sizeof(tmp)) {
+            to_read = (uint16_t)sizeof(tmp);
+        }
+        (void)i2c_master_receive(dev->i2c_dev, tmp, (size_t)to_read,
+                                  PN532_I2C_TIMEOUT_MS);
+        size_t payload_len = (size_t)to_read - (size_t)1U;
+        (void)memcpy(buff, &tmp[1], payload_len);
 
-    for (i = 0U; i < PN532_FRAME_HDR_LEN; i++) {
-        vTaskDelay(pdMS_TO_TICKS(PN532_BYTE_DELAY_MS));
-        buff[i] = spi_read_byte(dev);
-    }
+        is_extended = ((buff[PN532_EXCHANGE_LEN_OFFSET] == PN532_EXT_FRAME_INDICATOR) &&
+                       (buff[PN532_EXCHANGE_LEN_OFFSET + 1U] == PN532_EXT_FRAME_INDICATOR));
+        if (is_extended) {
+            body_len = ((uint16_t)buff[PN532_EXT_FRAME_LENHI_OFFSET] << 8U)
+                     | (uint16_t)buff[PN532_EXT_FRAME_LENLO_OFFSET];
+            total_len = (uint16_t)PN532_EXT_FRAME_HDR_LEN
+                      + body_len
+                      + (uint16_t)PN532_FRAME_TAIL_LEN;
+        } else {
+            body_len = (uint16_t)buff[PN532_EXCHANGE_LEN_OFFSET];
+            total_len = (uint16_t)PN532_FRAME_HDR_LEN
+                      + body_len
+                      + (uint16_t)PN532_FRAME_TAIL_LEN;
+        }
+        if (total_len > max_len) {
+            total_len = max_len;
+        }
+    } else {
+        /* SPI path: byte-by-byte over a single CS-low window. */
+        uint16_t i;
+        (void)gpio_set_level(dev->pin_cs, GPIO_LEVEL_LOW);
+        vTaskDelay(pdMS_TO_TICKS(PN532_CS_TOGGLE_DELAY_MS));
+        spi_write_byte(dev, PN532_SPI_DATAREAD);
 
-    is_extended = ((buff[PN532_EXCHANGE_LEN_OFFSET] == PN532_EXT_FRAME_INDICATOR) &&
-                   (buff[PN532_EXCHANGE_LEN_OFFSET + 1U] == PN532_EXT_FRAME_INDICATOR));
-
-    if (is_extended) {
-        /* Read the 3 additional extended-frame header bytes: LEN_H, LEN_L, LCS. */
-        for (i = PN532_FRAME_HDR_LEN; i < PN532_EXT_FRAME_HDR_LEN; i++) {
+        for (i = 0U; i < PN532_FRAME_HDR_LEN; i++) {
             vTaskDelay(pdMS_TO_TICKS(PN532_BYTE_DELAY_MS));
             buff[i] = spi_read_byte(dev);
         }
-        body_len = ((uint16_t)buff[PN532_EXT_FRAME_LENHI_OFFSET] << 8U)
-                 | (uint16_t)buff[PN532_EXT_FRAME_LENLO_OFFSET];
-        total_len = (uint16_t)PN532_EXT_FRAME_HDR_LEN
-                  + body_len
-                  + (uint16_t)PN532_FRAME_TAIL_LEN;
-    } else {
-        body_len = (uint16_t)buff[PN532_EXCHANGE_LEN_OFFSET];
-        total_len = (uint16_t)PN532_FRAME_HDR_LEN
-                  + body_len
-                  + (uint16_t)PN532_FRAME_TAIL_LEN;
+
+        is_extended = ((buff[PN532_EXCHANGE_LEN_OFFSET] == PN532_EXT_FRAME_INDICATOR) &&
+                       (buff[PN532_EXCHANGE_LEN_OFFSET + 1U] == PN532_EXT_FRAME_INDICATOR));
+
+        if (is_extended) {
+            /* Read the 3 additional extended-frame header bytes: LEN_H, LEN_L, LCS. */
+            for (i = PN532_FRAME_HDR_LEN; i < PN532_EXT_FRAME_HDR_LEN; i++) {
+                vTaskDelay(pdMS_TO_TICKS(PN532_BYTE_DELAY_MS));
+                buff[i] = spi_read_byte(dev);
+            }
+            body_len = ((uint16_t)buff[PN532_EXT_FRAME_LENHI_OFFSET] << 8U)
+                     | (uint16_t)buff[PN532_EXT_FRAME_LENLO_OFFSET];
+            total_len = (uint16_t)PN532_EXT_FRAME_HDR_LEN
+                      + body_len
+                      + (uint16_t)PN532_FRAME_TAIL_LEN;
+        } else {
+            body_len = (uint16_t)buff[PN532_EXCHANGE_LEN_OFFSET];
+            total_len = (uint16_t)PN532_FRAME_HDR_LEN
+                      + body_len
+                      + (uint16_t)PN532_FRAME_TAIL_LEN;
+        }
+
+        if (total_len > max_len) {
+            total_len = max_len;
+        }
+
+        i = (uint16_t)(is_extended ? PN532_EXT_FRAME_HDR_LEN : PN532_FRAME_HDR_LEN);
+        while (i < total_len) {
+            vTaskDelay(pdMS_TO_TICKS(PN532_BYTE_DELAY_MS));
+            buff[i] = spi_read_byte(dev);
+            i++;
+        }
+
+        (void)gpio_set_level(dev->pin_cs, GPIO_LEVEL_HIGH);
     }
 
-    if (total_len > max_len) {
-        total_len = max_len;
-    }
-
-    i = (uint16_t)(is_extended ? PN532_EXT_FRAME_HDR_LEN : PN532_FRAME_HDR_LEN);
-    while (i < total_len) {
-        vTaskDelay(pdMS_TO_TICKS(PN532_BYTE_DELAY_MS));
-        buff[i] = spi_read_byte(dev);
-        i++;
-    }
-
-    (void)gpio_set_level(dev->pin_cs, GPIO_LEVEL_HIGH);
     return total_len;
 }
 
 /******************************************************************
- * Public API
+ * Transport-specific init helpers
  ******************************************************************/
 
-esp_err_t pn532_init(pn532_t *dev, const pn532_config_t *config)
+static esp_err_t pn532_init_spi(pn532_t *dev, const pn532_config_t *config)
 {
     gpio_config_t io_conf;
     spi_bus_config_t buscfg;
     spi_device_interface_config_t devcfg;
-    esp_err_t ret = ESP_FAIL;
+    esp_err_t ret;
 
     (void)memset(&io_conf, 0, sizeof(io_conf));
     io_conf.pin_bit_mask = (GPIO_PIN_BITMASK_BASE << (uint32_t)config->pin_cs);
@@ -438,9 +553,7 @@ esp_err_t pn532_init(pn532_t *dev, const pn532_config_t *config)
     }
 
     if (ret == ESP_OK) {
-        uint8_t init_cmd[PN532_FIRMWARE_CMD_LEN];
-        (void)memset(init_cmd, 0, sizeof(init_cmd));
-
+        /* Wake-up sequence: send 0x55 0x55 + 3x preamble while CS is low. */
         (void)gpio_set_level(dev->pin_cs, GPIO_LEVEL_LOW);
         vTaskDelay(pdMS_TO_TICKS(PN532_CS_TOGGLE_DELAY_MS));
         spi_write_byte(dev, PN532_WAKEUP_BYTE);
@@ -450,13 +563,145 @@ esp_err_t pn532_init(pn532_t *dev, const pn532_config_t *config)
         spi_write_byte(dev, PN532_PREAMBLE);
         (void)gpio_set_level(dev->pin_cs, GPIO_LEVEL_HIGH);
         vTaskDelay(pdMS_TO_TICKS(PN532_WAKEUP_DELAY_MS));
+    }
 
-        init_cmd[0] = PN532_FIRMWAREVERSION;
-        (void)send_command_check_ack(dev, init_cmd,
-                                     PN532_FIRMWARE_CMD_LEN, PN532_CMD_TIMEOUT_MS);
+    return ret;
+}
+
+static esp_err_t pn532_init_i2c(pn532_t *dev, const pn532_config_t *config)
+{
+    esp_err_t ret;
+
+    /* Optional reset pulse. */
+    if (config->pin_rst >= 0) {
+        gpio_config_t rst_cfg;
+        (void)memset(&rst_cfg, 0, sizeof(rst_cfg));
+        rst_cfg.pin_bit_mask = (GPIO_PIN_BITMASK_BASE << (uint32_t)config->pin_rst);
+        rst_cfg.mode = GPIO_MODE_OUTPUT;
+        (void)gpio_config(&rst_cfg);
+        (void)gpio_set_level(config->pin_rst, GPIO_LEVEL_LOW);
+        vTaskDelay(pdMS_TO_TICKS(50));
+        (void)gpio_set_level(config->pin_rst, GPIO_LEVEL_HIGH);
+        vTaskDelay(pdMS_TO_TICKS(100));
+        dev->pin_rst = config->pin_rst;
+    } else {
+        dev->pin_rst = -1;
+    }
+
+    /* Optional IRQ input (configured but polling is used). */
+    if (config->pin_irq >= 0) {
+        gpio_config_t irq_cfg;
+        (void)memset(&irq_cfg, 0, sizeof(irq_cfg));
+        irq_cfg.pin_bit_mask = (GPIO_PIN_BITMASK_BASE << (uint32_t)config->pin_irq);
+        irq_cfg.mode = GPIO_MODE_INPUT;
+        irq_cfg.pull_up_en = GPIO_PULLUP_ENABLE;
+        (void)gpio_config(&irq_cfg);
+        dev->pin_irq = config->pin_irq;
+    } else {
+        dev->pin_irq = -1;
+    }
+
+    /* Create the I2C master bus (new IDF v5.x API). */
+    i2c_master_bus_config_t bus_cfg;
+    (void)memset(&bus_cfg, 0, sizeof(bus_cfg));
+    bus_cfg.i2c_port = config->i2c_port;
+    bus_cfg.sda_io_num = config->pin_sda;
+    bus_cfg.scl_io_num = config->pin_scl;
+    bus_cfg.clk_source = I2C_CLK_SRC_DEFAULT;
+    bus_cfg.glitch_ignore_cnt = 7;
+    bus_cfg.flags.enable_internal_pullup = true;
+
+    ret = i2c_new_master_bus(&bus_cfg, &dev->i2c_bus);
+    if (ret != ESP_OK) {
+        ESP_LOGE(PN532_LOG_TAG, "i2c_new_master_bus failed: %d", ret);
+    } else {
+        /* Attach the PN532 device on the bus. */
+        i2c_device_config_t dev_cfg;
+        (void)memset(&dev_cfg, 0, sizeof(dev_cfg));
+        dev_cfg.dev_addr_length = I2C_ADDR_BIT_LEN_7;
+        dev_cfg.device_address  = PN532_I2C_ADDRESS;
+        dev_cfg.scl_speed_hz    = (config->i2c_clock_hz != 0U) ? config->i2c_clock_hz : 100000U;
+
+        ret = i2c_master_bus_add_device(dev->i2c_bus, &dev_cfg, &dev->i2c_dev);
+        if (ret != ESP_OK) {
+            ESP_LOGE(PN532_LOG_TAG, "i2c_master_bus_add_device failed: %d", ret);
+            (void)i2c_del_master_bus(dev->i2c_bus);
+            dev->i2c_bus = NULL;
+        } else {
+            /* Adafruit_PN532::begin does a small delay between bus init
+             * and the first I2C transaction; mirror it. */
+            vTaskDelay(pdMS_TO_TICKS(10));
+
+            ESP_LOGI(PN532_LOG_TAG,
+                     "I2C master bus installed on port %d (SDA=%d SCL=%d %lu Hz)",
+                     config->i2c_port, (int)config->pin_sda, (int)config->pin_scl,
+                     (unsigned long)dev_cfg.scl_speed_hz);
+        }
+    }
+
+    return ret;
+}
+
+/******************************************************************
+ * Public API
+ ******************************************************************/
+
+esp_err_t pn532_init(pn532_t *dev, const pn532_config_t *config)
+{
+    esp_err_t ret;
+
+    (void)memset(dev, 0, sizeof(*dev));
+    dev->transport = config->transport;
+
+    if (config->transport == PN532_TRANSPORT_I2C) {
+        ret = pn532_init_i2c(dev, config);
+    } else {
+        ret = pn532_init_spi(dev, config);
+    }
+
+    if (ret == ESP_OK) {
+        /* Wake-up sequence per PN532 datasheet section 8.3.2.6 + Adafruit
+         * pattern.  When the host (ESP32) soft-reboots with the PN532 still
+         * powered, the chip is in Soft-Power-Down mode where:
+         *
+         *   1. The main I2C peripheral is OFF
+         *   2. A dedicated "wake-up watcher" circuit listens on the bus
+         *   3. Any I2C transaction matching the slave address triggers it
+         *   4. The firmware must then identify the wake-up source AND
+         *      explicitly disable the watcher AND enable the main I2C
+         *
+         * Step 4 takes time — and the first transaction that triggers the
+         * wake-up is LOST during the switch.  So we send a sacrificial
+         * "trigger" frame first, wait long enough for the firmware to enable
+         * the main I2C, then proceed with the real commands. */
+        if (config->transport == PN532_TRANSPORT_I2C) {
+            /* Trigger frame — full SAMConfig payload sent and discarded.  We
+             * ignore the result because the chip is still waking up. */
+            ESP_LOGI(PN532_LOG_TAG, "I2C wake-up trigger (sacrificial SAMConfig)");
+            (void)pn532_sam_config(dev);
+
+            /* Give the firmware plenty of time to disable the wake-up block
+             * and enable the main I2C peripheral. */
+            vTaskDelay(pdMS_TO_TICKS(500));
+
+            /* Now the real init sequence — SAMConfig again to put the chip
+             * in Normal Mode with the parameters we want. */
+            ESP_LOGI(PN532_LOG_TAG, "Real SAMConfig after wake-up");
+            (void)pn532_sam_config(dev);
+            vTaskDelay(pdMS_TO_TICKS(PN532_SYNC_DELAY_MS));
+        }
+
+        /* Use pn532_get_firmware_version (not just send_command_check_ack)
+         * because it actually READS the response payload — draining the
+         * PN532's output FIFO.  If we leave the response sitting in the
+         * FIFO, the next command's read transactions get the stale firmware
+         * bytes instead of the new ACK, leading to mysterious timeouts in
+         * the wallet's SAMConfig that follows our init. */
+        (void)pn532_get_firmware_version(dev);
         vTaskDelay(pdMS_TO_TICKS(PN532_SYNC_DELAY_MS));
 
-        ESP_LOGI(PN532_LOG_TAG, "PN532 initialized");
+        ESP_LOGI(PN532_LOG_TAG, "PN532 initialized (%s)",
+                 (config->transport == PN532_TRANSPORT_I2C) ? "I2C" : "SPI");
     }
 
     return ret;

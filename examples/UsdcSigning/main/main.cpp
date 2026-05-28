@@ -27,13 +27,28 @@ extern "C" {
 
 static const char *const TAG = "usdc_signing";
 
-/* ── Hardware pin assignments ─────────────────────────────────── */
+/* ── PN532 transport selector ─────────────────────────────────────
+ * Set to 1 for I²C (CYD CN1 wiring) or 0 for SPI (Keyestudio breakout
+ * on ESP32-S3 dev kit). Pin assignments below are gated by this flag. */
+#define PN532_USE_I2C       1
+
+#if PN532_USE_I2C
+/* ── I²C wiring — Cheap Yellow Display (ESP32) CN1 connector ───── */
+#define PN532_I2C_PORT      0          /* I2C_NUM_0 */
+#define PN532_SDA           27         /* CN1 SDA */
+#define PN532_SCL           22         /* CN1 SCL */
+#define PN532_IRQ           (-1)       /* unused */
+#define PN532_RST           (-1)       /* unused — drain in pn532_init handles soft-reboot recovery */
+#define PN532_I2C_HZ        100000U
+#else
+/* ── SPI wiring — ESP32-S3 dev kit + Keyestudio PN532 breakout ──── */
 #define SPI_MOSI            11
 #define SPI_MISO            13
 #define SPI_SCLK            12
 #define SPI_MAX_TRANSFER_SZ 4096
 #define SPI_PIN_UNUSED      (-1)
 #define NFC_CS              10
+#endif
 
 /* ── USDC ERC-20 transfer(address,uint256) selector ──────────── */
 static const uint8_t TRANSFER_SELECTOR[4] = { 0xa9U, 0x05U, 0x9cU, 0xbbU };
@@ -242,26 +257,37 @@ extern "C" void app_main(void)
     }
     ESP_ERROR_CHECK(nvs_ret);
 
-    /* ── SPI bus (shared by PN532) ─────────────────────────────── */
-    spi_bus_config_t buscfg;
-    (void)memset(&buscfg, 0, sizeof(buscfg));
-    buscfg.mosi_io_num    = SPI_MOSI;
-    buscfg.miso_io_num    = SPI_MISO;
-    buscfg.sclk_io_num    = SPI_SCLK;
-    buscfg.quadwp_io_num  = SPI_PIN_UNUSED;
-    buscfg.quadhd_io_num  = SPI_PIN_UNUSED;
-    buscfg.max_transfer_sz = SPI_MAX_TRANSFER_SZ;
-    ESP_ERROR_CHECK(spi_bus_initialize(SPI2_HOST, &buscfg, SPI_DMA_CH_AUTO));
-
-    /* ── PN532 NFC reader ──────────────────────────────────────── */
+    /* ── PN532 NFC reader (transport selected at the top of this file) ── */
     pn532_t nfc;
     (void)memset(&nfc, 0, sizeof(nfc));
 
     pn532_config_t nfc_cfg;
     (void)memset(&nfc_cfg, 0, sizeof(nfc_cfg));
-    nfc_cfg.spi_host     = SPI2_HOST;
-    nfc_cfg.pin_cs       = NFC_CS;
-    nfc_cfg.skip_bus_init = true;
+#if PN532_USE_I2C
+    nfc_cfg.transport     = PN532_TRANSPORT_I2C;
+    nfc_cfg.i2c_port      = PN532_I2C_PORT;
+    nfc_cfg.pin_sda       = PN532_SDA;
+    nfc_cfg.pin_scl       = PN532_SCL;
+    nfc_cfg.pin_irq       = PN532_IRQ;
+    nfc_cfg.pin_rst       = PN532_RST;
+    nfc_cfg.i2c_clock_hz  = PN532_I2C_HZ;
+#else
+    /* SPI: share the SPI2 bus with anything else on the board. */
+    spi_bus_config_t buscfg;
+    (void)memset(&buscfg, 0, sizeof(buscfg));
+    buscfg.mosi_io_num     = SPI_MOSI;
+    buscfg.miso_io_num     = SPI_MISO;
+    buscfg.sclk_io_num     = SPI_SCLK;
+    buscfg.quadwp_io_num   = SPI_PIN_UNUSED;
+    buscfg.quadhd_io_num   = SPI_PIN_UNUSED;
+    buscfg.max_transfer_sz = SPI_MAX_TRANSFER_SZ;
+    ESP_ERROR_CHECK(spi_bus_initialize(SPI2_HOST, &buscfg, SPI_DMA_CH_AUTO));
+
+    nfc_cfg.transport     = PN532_TRANSPORT_SPI;
+    nfc_cfg.spi_host      = SPI2_HOST;
+    nfc_cfg.pin_cs        = NFC_CS;
+    nfc_cfg.skip_bus_init  = true;
+#endif
 
     esp_err_t nfc_ret = pn532_init(&nfc, &nfc_cfg);
     if (nfc_ret != ESP_OK) {
@@ -282,7 +308,7 @@ extern "C" void app_main(void)
         ESP_LOGE(TAG, "Wallet begin (SAMConfig) failed");
         return;
     }
-    (void)nfcTransport.printFirmwareVersion();
+    /* wallet.begin() already prints the PN532 firmware version internally. */
 
     /* ── WiFi + RPC ────────────────────────────────────────────── */
     eth_rpc_init(RPC_URL, "0x" ADDR_FROM);
