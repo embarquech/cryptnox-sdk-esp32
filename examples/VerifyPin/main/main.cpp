@@ -11,16 +11,12 @@
  * Wiring & prerequisites:
  *   - PN532 NFC reader on SPI: MOSI=11, MISO=13, SCLK=12, CS=10.
  *   - A Cryptnox card initialised with a known PIN.
-<<<<<<< HEAD
  *   - @ref DEMO_PIN must match the PIN set on the card.
-=======
  *   - @c config.h filled in with @ref WIFI_SSID and @ref WIFI_PASSWORD.
->>>>>>> 9040c1f (Add Doxygen comments to all example main.cpp files)
  *
  * What the firmware does in each loop iteration:
  *   1. Connect to the card and establish the secure channel.
  *   2. Submit the PIN via @ref CryptnoxWallet::verifyPin.
-<<<<<<< HEAD
  *   3. On success print "PIN accepted"; on failure halt immediately to
  *      protect the card's retry counter.
  *
@@ -28,13 +24,6 @@
  *          wrong PIN decrements the card's retry counter; reaching 0
  *          permanently blocks the PIN and requires the PUK to unblock.
  *          Fix @ref DEMO_PIN before flashing again.
-=======
- *   3. On success print "PIN accepted"; on failure halt immediately.
- *
- * @warning On PIN rejection the firmware halts permanently to protect the
- *          card's retry counter.  Each wrong attempt decrements the counter;
- *          reaching 0 permanently blocks the PIN.
->>>>>>> 9040c1f (Add Doxygen comments to all example main.cpp files)
  */
 
 #include <string.h>
@@ -54,6 +43,14 @@
 #include "esp32_crypto_provider.h"
 #include "ESP32Platform.h"
 #include "config.h"
+
+/* ── SPI wiring — ESP32-S3 dev kit + Keyestudio PN532 breakout ──── */
+#define SPI_MOSI            11
+#define SPI_MISO            13
+#define SPI_SCLK            12
+#define SPI_MAX_TRANSFER_SZ 4096
+#define SPI_PIN_UNUSED      (-1)
+#define NFC_CS              10
 
 static const char *const TAG           = "verify_pin";
 static const uint32_t    LOOP_DELAY_MS  = 1000U;
@@ -151,13 +148,6 @@ static void wifi_start(void)
     (void)esp_event_handler_instance_unregister(WIFI_EVENT, ESP_EVENT_ANY_ID, h_any);
     vEventGroupDelete(s_wifi_event_group);
 }
-
-#define SPI_MOSI            11
-#define SPI_MISO            13
-#define SPI_SCLK            12
-#define SPI_MAX_TRANSFER_SZ 4096
-#define SPI_PIN_UNUSED      (-1)
-#define NFC_CS              10
 
 /**
  * @brief Main application loop: connect, verify PIN, and disconnect.

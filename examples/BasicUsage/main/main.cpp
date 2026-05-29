@@ -41,6 +41,34 @@
 #include "CW_Utils.h"
 #include "config.h"
 
+/* ============================================================================
+ * 1. Interface Selection
+ * --------------------------------------------------------------------------
+ * Set exactly ONE flag to 1 and the other to 0.
+ * ========================================================================= */
+#define SPI_ENABLED         1
+#define I2C_ENABLED         0
+
+/* ── SPI wiring — ESP32-S3 dev kit + Keyestudio PN532 breakout ──── */
+#if SPI_ENABLED
+#define SPI_MOSI            11
+#define SPI_MISO            13
+#define SPI_SCLK            12
+#define SPI_MAX_TRANSFER_SZ 4096
+#define SPI_PIN_UNUSED      (-1)
+#define NFC_CS              10
+#endif
+
+/* ── I²C wiring — Cheap Yellow Display (ESP32) CN1 connector ───── */
+#if I2C_ENABLED
+#define PN532_I2C_PORT      0          /* I2C_NUM_0 */
+#define PN532_SDA           27         /* CN1 SDA */
+#define PN532_SCL           22         /* CN1 SCL */
+#define PN532_IRQ           (-1)       /* unused */
+#define PN532_RST           (-1)       /* unused */
+#define PN532_I2C_HZ        100000U
+#endif
+
 static const char *const TAG           = "basic_usage";
 static const uint32_t    LOOP_DELAY_MS  = 1000U;
 static const uint32_t    WIFI_TIMEOUT_MS = 10000U;
@@ -137,34 +165,6 @@ static void wifi_start(void)
     (void)esp_event_handler_instance_unregister(WIFI_EVENT, ESP_EVENT_ANY_ID, h_any);
     vEventGroupDelete(s_wifi_event_group);
 }
-
-/* ============================================================================
- * 1. Interface Selection
- * --------------------------------------------------------------------------
- * Set exactly ONE flag to 1 and the other to 0.
- * ========================================================================= */
-#define SPI_ENABLED         1
-#define I2C_ENABLED         0
-
-/* ── SPI wiring — ESP32-S3 dev kit + Keyestudio PN532 breakout ──── */
-#if SPI_ENABLED
-#define SPI_MOSI            11
-#define SPI_MISO            13
-#define SPI_SCLK            12
-#define SPI_MAX_TRANSFER_SZ 4096
-#define SPI_PIN_UNUSED      (-1)
-#define NFC_CS              10
-#endif
-
-/* ── I²C wiring — Cheap Yellow Display (ESP32) CN1 connector ───── */
-#if I2C_ENABLED
-#define PN532_I2C_PORT      0          /* I2C_NUM_0 */
-#define PN532_SDA           27         /* CN1 SDA */
-#define PN532_SCL           22         /* CN1 SCL */
-#define PN532_IRQ           (-1)       /* unused */
-#define PN532_RST           (-1)       /* unused */
-#define PN532_I2C_HZ        100000U
-#endif
 
 /* ============================================================================
  * 2. Default PIN

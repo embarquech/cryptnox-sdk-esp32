@@ -9,34 +9,15 @@
  * @brief Cryptnox ESP32 example: build, sign, and broadcast a USDC ERC-20 transfer.
  *
  * Wiring & prerequisites:
-<<<<<<< HEAD
- *   - PN532 NFC reader — transport selected by @ref SPI_ENABLED / @ref I2C_ENABLED
- *     in @c config.h.
- *   - A Cryptnox card initialised with a seed and a known PIN.
- *   - @c config.h filled in with WiFi, RPC endpoint, and Ethereum addresses
- *     (copy from @c config.template.h).
-=======
  *   - PN532 NFC reader — transport selected by @ref PN532_USE_I2C at the top
  *     of this file.
  *   - A Cryptnox card initialised with a seed and a known PIN.
  *   - @c config.h filled in with WiFi, RPC endpoint, and Ethereum addresses
  *     (copy from @c config.template.h and fill in the values).
->>>>>>> 9040c1f (Add Doxygen comments to all example main.cpp files)
  *
  * What the firmware does in each loop iteration:
  *   1. Wait for a card tap and establish the secure channel.
  *   2. Fetch the current on-chain nonce from the RPC endpoint.
-<<<<<<< HEAD
- *   3. Build an EIP-1559 type-2 transaction for a USDC @c transfer(address,uint256) call.
- *   4. RLP-encode the unsigned transaction and Keccak-256 hash it.
- *   5. Sign the hash on the card (@ref CryptnoxWallet::sign).
- *   6. Recover the @c v parity bit via @c eth_rpc_ecrecover.
- *   7. RLP-encode the signed transaction and broadcast it.
- *
- * @note Fill in @ref WIFI_SSID, @ref WIFI_PASSWORD, @ref RPC_URL, @ref ADDR_FROM,
- *       @ref ADDR_TO, @ref ADDR_USDC, and @ref CARD_PIN in @c config.h before
- *       building.
-=======
  *   3. Build an EIP-1559 type-2 transaction for a USDC
  *      @c transfer(address,uint256) call.
  *   4. RLP-encode the unsigned transaction and Keccak-256 hash it.
@@ -47,7 +28,6 @@
  * @note Fill in @ref WIFI_SSID, @ref WIFI_PASSWORD, @ref RPC_URL,
  *       @ref ADDR_FROM, @ref ADDR_TO, @ref ADDR_USDC, and @ref CARD_PIN
  *       in @c config.h before building.
->>>>>>> 9040c1f (Add Doxygen comments to all example main.cpp files)
  */
 
 #include <stdio.h>
