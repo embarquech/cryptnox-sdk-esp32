@@ -20,10 +20,6 @@
  * @endcode
  *
  * @ingroup esp32_adapters
- *
- * @defgroup esp32_adapters ESP32 concrete adapters
- * @brief Concrete @ref CW_Logger, @ref CW_Platform, and @ref CW_CryptoProvider
- *        implementations for ESP32 / ESP-IDF.
  */
 
 #ifndef ESP32_LOGGER_H

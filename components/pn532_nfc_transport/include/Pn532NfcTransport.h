@@ -29,10 +29,22 @@
  * CryptnoxWallet       wallet(transport, logger, crypto, platform);
  * @endcode
  *
- * @ingroup esp32_nfc_transport
+ * @ingroup esp32_adapters
  *
- * @defgroup esp32_nfc_transport ESP32 NFC transport adapters
- * @brief @ref CW_NfcTransport implementations for the PN532 on ESP32.
+ * @defgroup esp32_adapters ESP32 concrete adapters
+ * @brief Concrete @ref CW_NfcTransport / @ref CW_CryptoProvider / @ref CW_Logger /
+ *        @ref CW_Platform implementations for ESP32 / ESP-IDF.
+ *
+ * Each class in this group implements one of the abstract interfaces declared
+ * in @ref adapters using the ESP-IDF peripheral drivers and mbedTLS:
+ *
+ * | Adapter                  | Interface              | Backing library / hardware             |
+ * |--------------------------|------------------------|----------------------------------------|
+ * | @ref Pn532NfcTransport   | @ref CW_NfcTransport   | ESP-IDF PN532 C driver (injected handle) |
+ * | @ref PN532Adapter        | @ref CW_NfcTransport   | ESP-IDF PN532 C driver (owned handle)  |
+ * | @ref ESP32CryptoProvider | @ref CW_CryptoProvider | mbedTLS + ESP32 hardware TRNG          |
+ * | @ref ESP32Logger         | @ref CW_Logger         | ESP32 UART0 (development builds)       |
+ * | @ref ESP32Platform       | @ref CW_Platform       | FreeRTOS @c vTaskDelay                 |
  */
 
 #pragma once

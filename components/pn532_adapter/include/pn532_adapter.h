@@ -12,7 +12,7 @@
  * the full driver lifetime internally, rather than constructing the
  * @ref pn532_t externally.
  *
- * @ingroup esp32_nfc_transport
+ * @ingroup esp32_adapters
  */
 
 #ifndef PN532_ADAPTER_H
@@ -24,7 +24,7 @@
 
 /**
  * @class PN532Adapter
- * @ingroup esp32_nfc_transport
+ * @ingroup esp32_adapters
  * @brief Self-contained @ref CW_NfcTransport that owns its @ref pn532_t instance.
  *
  * Unlike @ref Pn532NfcTransport (which takes a pre-initialised @ref pn532_t
