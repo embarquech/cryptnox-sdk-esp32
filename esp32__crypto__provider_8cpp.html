@@ -92,6 +92,9 @@ $(function(){initNavTree('esp32__crypto__provider_8cpp.html','',''); });
   <div class="headertitle"><div class="title">esp32_crypto_provider.cpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Implementation of <a class="el" href="classESP32CryptoProvider.html">ESP32CryptoProvider</a> — mbedTLS + hardware TRNG backend.  
+<a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="esp32__crypto__provider_8h_source.html">esp32_crypto_provider.h</a>&quot;</code><br />
 <code>#include &quot;CW_Utils.h&quot;</code><br />
 <code>#include &quot;<a class="el" href="uECC_8h_source.html">uECC.h</a>&quot;</code><br />
@@ -123,7 +126,12 @@ Macros</h2></td></tr>
 Functions</h2></td></tr>
 <tr class="memitem:ac9498d29ff47952ebdee9c9009408873" id="r_ac9498d29ff47952ebdee9c9009408873"><td class="memItemLeft" align="right" valign="top">static const <a class="el" href="structuECC__Curve__t.html">uECC_Curve_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac9498d29ff47952ebdee9c9009408873">toCurve</a> (CW_Curve curve)</td></tr>
 </table>
-<a name="doc-define-members" id="doc-define-members"></a><h2 id="header-doc-define-members" class="groupheader">Macro Definition Documentation</h2>
+<a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Implementation of <a class="el" href="classESP32CryptoProvider.html">ESP32CryptoProvider</a> — mbedTLS + hardware TRNG backend. </p>
+<p>Stitches together the ESP-IDF cryptographic stack behind the single platform-independent CW_CryptoProvider interface. Full API documentation lives on the declarations in <a class="el" href="esp32__crypto__provider_8h.html">esp32_crypto_provider.h</a>. </p>
+
+<p class="definition">Definition in file <a class="el" href="esp32__crypto__provider_8cpp_source.html">esp32_crypto_provider.cpp</a>.</p>
+</div><a name="doc-define-members" id="doc-define-members"></a><h2 id="header-doc-define-members" class="groupheader">Macro Definition Documentation</h2>
 <a id="a20a071c1292281c4b27a09d2cd8eac5d" name="a20a071c1292281c4b27a09d2cd8eac5d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a20a071c1292281c4b27a09d2cd8eac5d">&#9670;&#160;</a></span>AES_BLOCK_SIZE_BYTES</h2>
 
@@ -136,9 +144,9 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="esp32__crypto__provider_8cpp_source.html#l00038">38</a> of file <a class="el" href="esp32__crypto__provider_8cpp_source.html">esp32_crypto_provider.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="esp32__crypto__provider_8cpp_source.html#l00047">47</a> of file <a class="el" href="esp32__crypto__provider_8cpp_source.html">esp32_crypto_provider.cpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="esp32__crypto__provider_8cpp_source.html#l00138">ESP32CryptoProvider::aesCbcDecrypt()</a>, and <a class="el" href="esp32__crypto__provider_8cpp_source.html#l00080">ESP32CryptoProvider::aesCbcEncrypt()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="esp32__crypto__provider_8cpp_source.html#l00147">ESP32CryptoProvider::aesCbcDecrypt()</a>, and <a class="el" href="esp32__crypto__provider_8cpp_source.html#l00089">ESP32CryptoProvider::aesCbcEncrypt()</a>.</p>
 
 </div>
 </div>
@@ -154,9 +162,9 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="esp32__crypto__provider_8cpp_source.html#l00039">39</a> of file <a class="el" href="esp32__crypto__provider_8cpp_source.html">esp32_crypto_provider.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="esp32__crypto__provider_8cpp_source.html#l00048">48</a> of file <a class="el" href="esp32__crypto__provider_8cpp_source.html">esp32_crypto_provider.cpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="esp32__crypto__provider_8cpp_source.html#l00138">ESP32CryptoProvider::aesCbcDecrypt()</a>, and <a class="el" href="esp32__crypto__provider_8cpp_source.html#l00080">ESP32CryptoProvider::aesCbcEncrypt()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="esp32__crypto__provider_8cpp_source.html#l00147">ESP32CryptoProvider::aesCbcDecrypt()</a>, and <a class="el" href="esp32__crypto__provider_8cpp_source.html#l00089">ESP32CryptoProvider::aesCbcEncrypt()</a>.</p>
 
 </div>
 </div>
@@ -172,7 +180,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="esp32__crypto__provider_8cpp_source.html#l00041">41</a> of file <a class="el" href="esp32__crypto__provider_8cpp_source.html">esp32_crypto_provider.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="esp32__crypto__provider_8cpp_source.html#l00050">50</a> of file <a class="el" href="esp32__crypto__provider_8cpp_source.html">esp32_crypto_provider.cpp</a>.</p>
 
 </div>
 </div>
@@ -188,9 +196,9 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="esp32__crypto__provider_8cpp_source.html#l00043">43</a> of file <a class="el" href="esp32__crypto__provider_8cpp_source.html">esp32_crypto_provider.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="esp32__crypto__provider_8cpp_source.html#l00052">52</a> of file <a class="el" href="esp32__crypto__provider_8cpp_source.html">esp32_crypto_provider.cpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="esp32__crypto__provider_8cpp_source.html#l00080">ESP32CryptoProvider::aesCbcEncrypt()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="esp32__crypto__provider_8cpp_source.html#l00089">ESP32CryptoProvider::aesCbcEncrypt()</a>.</p>
 
 </div>
 </div>
@@ -206,9 +214,9 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="esp32__crypto__provider_8cpp_source.html#l00046">46</a> of file <a class="el" href="esp32__crypto__provider_8cpp_source.html">esp32_crypto_provider.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="esp32__crypto__provider_8cpp_source.html#l00055">55</a> of file <a class="el" href="esp32__crypto__provider_8cpp_source.html">esp32_crypto_provider.cpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="esp32__crypto__provider_8cpp_source.html#l00138">ESP32CryptoProvider::aesCbcDecrypt()</a>, and <a class="el" href="esp32__crypto__provider_8cpp_source.html#l00080">ESP32CryptoProvider::aesCbcEncrypt()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="esp32__crypto__provider_8cpp_source.html#l00147">ESP32CryptoProvider::aesCbcDecrypt()</a>, and <a class="el" href="esp32__crypto__provider_8cpp_source.html#l00089">ESP32CryptoProvider::aesCbcEncrypt()</a>.</p>
 
 </div>
 </div>
@@ -224,9 +232,9 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="esp32__crypto__provider_8cpp_source.html#l00054">54</a> of file <a class="el" href="esp32__crypto__provider_8cpp_source.html">esp32_crypto_provider.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="esp32__crypto__provider_8cpp_source.html#l00063">63</a> of file <a class="el" href="esp32__crypto__provider_8cpp_source.html">esp32_crypto_provider.cpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="esp32__crypto__provider_8cpp_source.html#l00138">ESP32CryptoProvider::aesCbcDecrypt()</a>, <a class="el" href="esp32__crypto__provider_8cpp_source.html#l00080">ESP32CryptoProvider::aesCbcEncrypt()</a>, <a class="el" href="uECC__esp32_8cpp_source.html#l00050">esp32_mbedtls_rng()</a>, <a class="el" href="esp32__crypto__provider_8cpp_source.html#l00064">ESP32CryptoProvider::sha256()</a>, <a class="el" href="esp32__crypto__provider_8cpp_source.html#l00070">ESP32CryptoProvider::sha512()</a>, <a class="el" href="uECC__esp32_8cpp_source.html#l00092">uECC_make_key()</a>, <a class="el" href="uECC__esp32_8cpp_source.html#l00144">uECC_shared_secret()</a>, and <a class="el" href="uECC__esp32_8cpp_source.html#l00210">uECC_verify()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="esp32__crypto__provider_8cpp_source.html#l00147">ESP32CryptoProvider::aesCbcDecrypt()</a>, <a class="el" href="esp32__crypto__provider_8cpp_source.html#l00089">ESP32CryptoProvider::aesCbcEncrypt()</a>, <a class="el" href="uECC__esp32_8cpp_source.html#l00050">esp32_mbedtls_rng()</a>, <a class="el" href="esp32__crypto__provider_8cpp_source.html#l00073">ESP32CryptoProvider::sha256()</a>, <a class="el" href="esp32__crypto__provider_8cpp_source.html#l00079">ESP32CryptoProvider::sha512()</a>, <a class="el" href="uECC__esp32_8cpp_source.html#l00092">uECC_make_key()</a>, <a class="el" href="uECC__esp32_8cpp_source.html#l00144">uECC_shared_secret()</a>, and <a class="el" href="uECC__esp32_8cpp_source.html#l00210">uECC_verify()</a>.</p>
 
 </div>
 </div>
@@ -242,9 +250,9 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="esp32__crypto__provider_8cpp_source.html#l00050">50</a> of file <a class="el" href="esp32__crypto__provider_8cpp_source.html">esp32_crypto_provider.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="esp32__crypto__provider_8cpp_source.html#l00059">59</a> of file <a class="el" href="esp32__crypto__provider_8cpp_source.html">esp32_crypto_provider.cpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="esp32__crypto__provider_8cpp_source.html#l00064">ESP32CryptoProvider::sha256()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="esp32__crypto__provider_8cpp_source.html#l00073">ESP32CryptoProvider::sha256()</a>.</p>
 
 </div>
 </div>
@@ -260,9 +268,9 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="esp32__crypto__provider_8cpp_source.html#l00051">51</a> of file <a class="el" href="esp32__crypto__provider_8cpp_source.html">esp32_crypto_provider.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="esp32__crypto__provider_8cpp_source.html#l00060">60</a> of file <a class="el" href="esp32__crypto__provider_8cpp_source.html">esp32_crypto_provider.cpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="esp32__crypto__provider_8cpp_source.html#l00070">ESP32CryptoProvider::sha512()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="esp32__crypto__provider_8cpp_source.html#l00079">ESP32CryptoProvider::sha512()</a>.</p>
 
 </div>
 </div>
@@ -278,9 +286,9 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="esp32__crypto__provider_8cpp_source.html#l00047">47</a> of file <a class="el" href="esp32__crypto__provider_8cpp_source.html">esp32_crypto_provider.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="esp32__crypto__provider_8cpp_source.html#l00056">56</a> of file <a class="el" href="esp32__crypto__provider_8cpp_source.html">esp32_crypto_provider.cpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="esp32__crypto__provider_8cpp_source.html#l00138">ESP32CryptoProvider::aesCbcDecrypt()</a>, and <a class="el" href="esp32__crypto__provider_8cpp_source.html#l00080">ESP32CryptoProvider::aesCbcEncrypt()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="esp32__crypto__provider_8cpp_source.html#l00147">ESP32CryptoProvider::aesCbcDecrypt()</a>, and <a class="el" href="esp32__crypto__provider_8cpp_source.html#l00089">ESP32CryptoProvider::aesCbcEncrypt()</a>.</p>
 
 </div>
 </div>
@@ -296,9 +304,9 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="esp32__crypto__provider_8cpp_source.html#l00057">57</a> of file <a class="el" href="esp32__crypto__provider_8cpp_source.html">esp32_crypto_provider.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="esp32__crypto__provider_8cpp_source.html#l00066">66</a> of file <a class="el" href="esp32__crypto__provider_8cpp_source.html">esp32_crypto_provider.cpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="esp32__crypto__provider_8cpp_source.html#l00202">ESP32CryptoProvider::ecdh()</a>, <a class="el" href="esp32__crypto__provider_8cpp_source.html#l00241">ESP32CryptoProvider::ecdsaVerify()</a>, <a class="el" href="esp32__crypto__provider_8cpp_source.html#l00214">ESP32CryptoProvider::makeKey()</a>, <a class="el" href="uECC__esp32_8cpp_source.html#l00092">uECC_make_key()</a>, <a class="el" href="uECC__esp32_8cpp_source.html#l00144">uECC_shared_secret()</a>, and <a class="el" href="uECC__esp32_8cpp_source.html#l00210">uECC_verify()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="esp32__crypto__provider_8cpp_source.html#l00211">ESP32CryptoProvider::ecdh()</a>, <a class="el" href="esp32__crypto__provider_8cpp_source.html#l00250">ESP32CryptoProvider::ecdsaVerify()</a>, <a class="el" href="esp32__crypto__provider_8cpp_source.html#l00223">ESP32CryptoProvider::makeKey()</a>, <a class="el" href="uECC__esp32_8cpp_source.html#l00092">uECC_make_key()</a>, <a class="el" href="uECC__esp32_8cpp_source.html#l00144">uECC_shared_secret()</a>, and <a class="el" href="uECC__esp32_8cpp_source.html#l00210">uECC_verify()</a>.</p>
 
 </div>
 </div>
@@ -326,11 +334,11 @@ Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="esp32__crypto__provider_8cpp_source.html#l00017">17</a> of file <a class="el" href="esp32__crypto__provider_8cpp_source.html">esp32_crypto_provider.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="esp32__crypto__provider_8cpp_source.html#l00026">26</a> of file <a class="el" href="esp32__crypto__provider_8cpp_source.html">esp32_crypto_provider.cpp</a>.</p>
 
 <p class="reference">References <a class="el" href="uECC__esp32_8cpp_source.html#l00075">uECC_secp256k1()</a>, and <a class="el" href="uECC__esp32_8cpp_source.html#l00070">uECC_secp256r1()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="esp32__crypto__provider_8cpp_source.html#l00202">ESP32CryptoProvider::ecdh()</a>, <a class="el" href="esp32__crypto__provider_8cpp_source.html#l00241">ESP32CryptoProvider::ecdsaVerify()</a>, and <a class="el" href="esp32__crypto__provider_8cpp_source.html#l00214">ESP32CryptoProvider::makeKey()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="esp32__crypto__provider_8cpp_source.html#l00211">ESP32CryptoProvider::ecdh()</a>, <a class="el" href="esp32__crypto__provider_8cpp_source.html#l00250">ESP32CryptoProvider::ecdsaVerify()</a>, and <a class="el" href="esp32__crypto__provider_8cpp_source.html#l00223">ESP32CryptoProvider::makeKey()</a>.</p>
 
 </div>
 </div>

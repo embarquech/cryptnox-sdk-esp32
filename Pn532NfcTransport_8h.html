@@ -89,9 +89,12 @@ $(function(){initNavTree('Pn532NfcTransport_8h.html','',''); });
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">Pn532NfcTransport.h File Reference</div></div>
+  <div class="headertitle"><div class="title">Pn532NfcTransport.h File Reference<div class="ingroups"><a class="el" href="group__esp32__nfc__transport.html">ESP32 NFC transport adapters</a></div></div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>CW_NfcTransport adapter wrapping the ESP-IDF <a class="el" href="group__pn532__driver.html">PN532 NFC driver</a>.  
+<a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;CW_NfcTransport.h&quot;</code><br />
 <code>#include &quot;CW_Logger.h&quot;</code><br />
 <code>#include &quot;<a class="el" href="pn532_8h_source.html">pn532.h</a>&quot;</code><br />
@@ -111,8 +114,40 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="heading"><td colspan="2"><h2 id="header-nested-classes" class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:Pn532NfcTransport" id="r_Pn532NfcTransport"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPn532NfcTransport.html">Pn532NfcTransport</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">CW_NfcTransport implementation backed by the ESP-IDF PN532 driver.  <a href="classPn532NfcTransport.html#details">More...</a><br /></td></tr>
 </table>
-</div><!-- contents -->
+<a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>CW_NfcTransport adapter wrapping the ESP-IDF <a class="el" href="group__pn532__driver.html">PN532 NFC driver</a>. </p>
+<p><a class="el" href="classPn532NfcTransport.html">Pn532NfcTransport</a> bridges the C-level <a class="el" href="group__pn532__driver.html">PN532 NFC driver</a> with the C++ CW_NfcTransport interface consumed by CW_SecureChannel and CryptnoxWallet. Callers construct the PN532 handle independently (via <a class="el" href="group__pn532__driver.html#ga21f52f38564e794861cf365433702df5">pn532_init</a>) and inject the pointer at construction time.</p>
+<dl class="section user"><dt>Typical usage</dt><dd><div class="fragment"><div class="line"><a class="code hl_struct" href="structpn532__t.html">pn532_t</a> nfc;</div>
+<div class="line"><a class="code hl_struct" href="structpn532__config__t.html">pn532_config_t</a> cfg = {};</div>
+<div class="line">cfg.<a class="code hl_variable" href="structpn532__config__t.html#a7d0daa09bd383e751df8357e9952e697">transport</a>     = <a class="code hl_enumvalue" href="group__pn532__driver.html#ggab1c7905a6c1682fc84f8413e32feb333aa86e15b407d87747f5da15a561466570">PN532_TRANSPORT_SPI</a>;</div>
+<div class="line">cfg.<a class="code hl_variable" href="structpn532__config__t.html#a5bba748f452a5b23a887d7991ff7d2b1">spi_host</a>      = SPI2_HOST;</div>
+<div class="line">cfg.<a class="code hl_variable" href="structpn532__config__t.html#aac099fe92383204ebce70911d9791bb3">pin_cs</a>        = 10;</div>
+<div class="line">cfg.<a class="code hl_variable" href="structpn532__config__t.html#adc58d2d83648e65a11f1e98d981b78ee">skip_bus_init</a> = <span class="keyword">true</span>;</div>
+<div class="line">ESP_ERROR_CHECK(<a class="code hl_function" href="group__pn532__driver.html#ga21f52f38564e794861cf365433702df5">pn532_init</a>(&amp;nfc, &amp;cfg));</div>
+<div class="line"> </div>
+<div class="line"><a class="code hl_class" href="classESP32Logger.html">ESP32Logger</a>          logger;</div>
+<div class="line"><a class="code hl_class" href="classPn532NfcTransport.html">Pn532NfcTransport</a>    transport(&amp;nfc, logger);</div>
+<div class="line"><a class="code hl_class" href="classESP32CryptoProvider.html">ESP32CryptoProvider</a>  crypto;</div>
+<div class="line"><a class="code hl_class" href="classESP32Platform.html">ESP32Platform</a>        platform;</div>
+<div class="line">CryptnoxWallet       wallet(transport, logger, crypto, platform);</div>
+<div class="ttc" id="aclassESP32CryptoProvider_html"><div class="ttname"><a href="classESP32CryptoProvider.html">ESP32CryptoProvider</a></div><div class="ttdoc">CW_CryptoProvider backed by mbedTLS and the ESP32 hardware TRNG.</div><div class="ttdef"><b>Definition</b> <a href="esp32__crypto__provider_8h_source.html#l00062">esp32_crypto_provider.h:62</a></div></div>
+<div class="ttc" id="aclassESP32Logger_html"><div class="ttname"><a href="classESP32Logger.html">ESP32Logger</a></div><div class="ttdoc">CW_Logger backed by ESP32 UART0.</div><div class="ttdef"><b>Definition</b> <a href="ESP32Logger_8h_source.html#l00052">ESP32Logger.h:52</a></div></div>
+<div class="ttc" id="aclassESP32Platform_html"><div class="ttname"><a href="classESP32Platform.html">ESP32Platform</a></div><div class="ttdoc">CW_Platform backed by FreeRTOS vTaskDelay.</div><div class="ttdef"><b>Definition</b> <a href="ESP32Platform_8h_source.html#l00038">ESP32Platform.h:38</a></div></div>
+<div class="ttc" id="aclassPn532NfcTransport_html"><div class="ttname"><a href="classPn532NfcTransport.html">Pn532NfcTransport</a></div><div class="ttdoc">CW_NfcTransport implementation backed by the ESP-IDF PN532 driver.</div><div class="ttdef"><b>Definition</b> <a href="Pn532NfcTransport_8h_source.html#l00068">Pn532NfcTransport.h:68</a></div></div>
+<div class="ttc" id="agroup__pn532__driver_html_ga21f52f38564e794861cf365433702df5"><div class="ttname"><a href="group__pn532__driver.html#ga21f52f38564e794861cf365433702df5">pn532_init</a></div><div class="ttdeci">esp_err_t pn532_init(pn532_t *dev, const pn532_config_t *config)</div><div class="ttdoc">Initialise the PN532 and bring it to a ready state.</div><div class="ttdef"><b>Definition</b> <a href="pn532_8c_source.html#l00657">pn532.c:657</a></div></div>
+<div class="ttc" id="agroup__pn532__driver_html_ggab1c7905a6c1682fc84f8413e32feb333aa86e15b407d87747f5da15a561466570"><div class="ttname"><a href="group__pn532__driver.html#ggab1c7905a6c1682fc84f8413e32feb333aa86e15b407d87747f5da15a561466570">PN532_TRANSPORT_SPI</a></div><div class="ttdeci">@ PN532_TRANSPORT_SPI</div><div class="ttdef"><b>Definition</b> <a href="pn532_8h_source.html#l00077">pn532.h:77</a></div></div>
+<div class="ttc" id="astructpn532__config__t_html"><div class="ttname"><a href="structpn532__config__t.html">pn532_config_t</a></div><div class="ttdoc">Compile-time configuration passed to pn532_init.</div><div class="ttdef"><b>Definition</b> <a href="pn532_8h_source.html#l00111">pn532.h:111</a></div></div>
+<div class="ttc" id="astructpn532__config__t_html_a5bba748f452a5b23a887d7991ff7d2b1"><div class="ttname"><a href="structpn532__config__t.html#a5bba748f452a5b23a887d7991ff7d2b1">pn532_config_t::spi_host</a></div><div class="ttdeci">spi_host_device_t spi_host</div><div class="ttdef"><b>Definition</b> <a href="pn532_8h_source.html#l00115">pn532.h:115</a></div></div>
+<div class="ttc" id="astructpn532__config__t_html_a7d0daa09bd383e751df8357e9952e697"><div class="ttname"><a href="structpn532__config__t.html#a7d0daa09bd383e751df8357e9952e697">pn532_config_t::transport</a></div><div class="ttdeci">pn532_transport_t transport</div><div class="ttdef"><b>Definition</b> <a href="pn532_8h_source.html#l00112">pn532.h:112</a></div></div>
+<div class="ttc" id="astructpn532__config__t_html_aac099fe92383204ebce70911d9791bb3"><div class="ttname"><a href="structpn532__config__t.html#aac099fe92383204ebce70911d9791bb3">pn532_config_t::pin_cs</a></div><div class="ttdeci">int pin_cs</div><div class="ttdef"><b>Definition</b> <a href="pn532_8h_source.html#l00119">pn532.h:119</a></div></div>
+<div class="ttc" id="astructpn532__config__t_html_adc58d2d83648e65a11f1e98d981b78ee"><div class="ttname"><a href="structpn532__config__t.html#adc58d2d83648e65a11f1e98d981b78ee">pn532_config_t::skip_bus_init</a></div><div class="ttdeci">bool skip_bus_init</div><div class="ttdef"><b>Definition</b> <a href="pn532_8h_source.html#l00120">pn532.h:120</a></div></div>
+<div class="ttc" id="astructpn532__t_html"><div class="ttname"><a href="structpn532__t.html">pn532_t</a></div><div class="ttdoc">Opaque-like runtime state for a single PN532 instance.</div><div class="ttdef"><b>Definition</b> <a href="pn532_8h_source.html#l00141">pn532.h:141</a></div></div>
+</div><!-- fragment --> </dd></dl>
+
+<p class="definition">Definition in file <a class="el" href="Pn532NfcTransport_8h_source.html">Pn532NfcTransport.h</a>.</p>
+</div></div><!-- contents -->
 </div><!-- doc-content -->
 <div id="page-nav" class="page-nav-panel">
 <div id="page-nav-resize-handle"></div>

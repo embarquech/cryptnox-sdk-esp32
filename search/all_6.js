@@ -12,12 +12,14 @@ var searchData=
   ['check_5fack_9',['check_ack',['../pn532_8c.html#ad36fed65db129ddef3bd167af6304bbf',1,'pn532.c']]],
   ['clamp_5fbase_10',['clamp_base',['../ESP32Logger_8cpp.html#a66f308fe7ddcf728c261282dda0d95a4',1,'ESP32Logger.cpp']]],
   ['code_11',['2. Verify the PIN code',['../index.html#autotoc_md14',1,'']]],
-  ['config_2etemplate_2eh_12',['config.template.h',['../config_8template_8h.html',1,'']]],
-  ['connect_20to_20a_20cryptnox_20card_13',['1. Connect to a Cryptnox card',['../index.html#autotoc_md13',1,'']]],
-  ['coord_5fsize_5fbytes_14',['COORD_SIZE_BYTES',['../uECC__esp32_8cpp.html#a9734cd0aa15e4fd090997d796e297aec',1,'uECC_esp32.cpp']]],
-  ['coord_5fx_5foffset_15',['COORD_X_OFFSET',['../uECC__esp32_8cpp.html#ac8421c535e42cac9ca9c6afd43b2e3a2',1,'uECC_esp32.cpp']]],
-  ['cryptnox_20card_16',['1. Connect to a Cryptnox card',['../index.html#autotoc_md13',1,'']]],
-  ['cryptnox_20hardware_20wallet_20smart_20cards_17',['Cryptnox Hardware Wallet smart cards',['../index.html#autotoc_md3',1,'']]],
-  ['cryptnox_20sdk_20esp32_18',['cryptnox sdk esp32',['../index.html',1,'cryptnox-sdk-esp32'],['../index.html#autotoc_md0',1,'cryptnox-sdk-esp32']]],
-  ['crypto_19',['crypto',['../classReflectiveMockNfcTransport.html#a3957fe52c40af54b21e0f5319c44c327',1,'ReflectiveMockNfcTransport']]]
+  ['concrete_20adapters_12',['ESP32 concrete adapters',['../group__esp32__adapters.html',1,'']]],
+  ['config_2eh_13',['config.h',['../Connect_2main_2config_8h.html',1,'(Global Namespace)'],['../Sign_2main_2config_8h.html',1,'(Global Namespace)'],['../VerifyPin_2main_2config_8h.html',1,'(Global Namespace)']]],
+  ['config_2etemplate_2eh_14',['config.template.h',['../config_8template_8h.html',1,'']]],
+  ['connect_20to_20a_20cryptnox_20card_15',['1. Connect to a Cryptnox card',['../index.html#autotoc_md13',1,'']]],
+  ['coord_5fsize_5fbytes_16',['COORD_SIZE_BYTES',['../uECC__esp32_8cpp.html#a9734cd0aa15e4fd090997d796e297aec',1,'uECC_esp32.cpp']]],
+  ['coord_5fx_5foffset_17',['COORD_X_OFFSET',['../uECC__esp32_8cpp.html#ac8421c535e42cac9ca9c6afd43b2e3a2',1,'uECC_esp32.cpp']]],
+  ['cryptnox_20card_18',['1. Connect to a Cryptnox card',['../index.html#autotoc_md13',1,'']]],
+  ['cryptnox_20hardware_20wallet_20smart_20cards_19',['Cryptnox Hardware Wallet smart cards',['../index.html#autotoc_md3',1,'']]],
+  ['cryptnox_20sdk_20esp32_20',['cryptnox sdk esp32',['../index.html',1,'cryptnox-sdk-esp32'],['../index.html#autotoc_md0',1,'cryptnox-sdk-esp32']]],
+  ['crypto_21',['crypto',['../classReflectiveMockNfcTransport.html#a3957fe52c40af54b21e0f5319c44c327',1,'ReflectiveMockNfcTransport']]]
 ];

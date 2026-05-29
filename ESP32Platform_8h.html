@@ -89,9 +89,12 @@ $(function(){initNavTree('ESP32Platform_8h.html','',''); });
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">ESP32Platform.h File Reference</div></div>
+  <div class="headertitle"><div class="title">ESP32Platform.h File Reference<div class="ingroups"><a class="el" href="group__esp32__adapters.html">ESP32 concrete adapters</a></div></div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>CW_Platform implementation for ESP32 using FreeRTOS.  
+<a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;CW_Platform.h&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for ESP32Platform.h:</div>
@@ -109,9 +112,14 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="heading"><td colspan="2"><h2 id="header-nested-classes" class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:ESP32Platform" id="r_ESP32Platform"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classESP32Platform.html">ESP32Platform</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Concrete CW_Platform implementation for ESP32 using FreeRTOS.  <a href="classESP32Platform.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">CW_Platform backed by FreeRTOS <code>vTaskDelay</code>.  <a href="classESP32Platform.html#details">More...</a><br /></td></tr>
 </table>
-</div><!-- contents -->
+<a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>CW_Platform implementation for ESP32 using FreeRTOS. </p>
+<p><a class="el" href="classESP32Platform.html">ESP32Platform</a> maps the single CW_Platform::sleep_ms abstraction to <code>vTaskDelay</code> so the platform-independent SDK core can insert timed pauses without depending on any Arduino or RTOS header directly. </p>
+
+<p class="definition">Definition in file <a class="el" href="ESP32Platform_8h_source.html">ESP32Platform.h</a>.</p>
+</div></div><!-- contents -->
 </div><!-- doc-content -->
 <div id="page-nav" class="page-nav-panel">
 <div id="page-nav-resize-handle"></div>

@@ -1,8 +1,8 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
 <area shape="rect" id="Node000000" title=" " alt="" coords="5,80,139,105"/>
-<area shape="rect" id="Node000001" href="$classPN532Adapter.html" title="Concrete CW_NfcTransport implementation for the PN532 over SPI on ESP32&#45;S3." alt="" coords="231,5,346,31"/>
+<area shape="rect" id="Node000001" href="$classPN532Adapter.html" title="Self&#45;contained CW_NfcTransport that owns its pn532_t instance." alt="" coords="231,5,346,31"/>
 <area shape="poly" id="edge4_Node000000_Node000001" title=" " alt="" coords="109,71,186,39,230,27,232,32,188,45,111,76"/>
-<area shape="rect" id="Node000002" href="$classPn532NfcTransport.html" title=" " alt="" coords="217,55,361,80"/>
+<area shape="rect" id="Node000002" href="$classPn532NfcTransport.html" title="CW_NfcTransport implementation backed by the ESP&#45;IDF PN532 driver." alt="" coords="217,55,361,80"/>
 <area shape="poly" id="edge5_Node000000_Node000002" title=" " alt="" coords="152,81,216,73,217,78,153,86"/>
 <area shape="rect" id="Node000003" href="$classReflectiveMockNfcTransport.html" title=" " alt="" coords="187,104,391,129"/>
 <area shape="poly" id="edge6_Node000000_Node000003" title=" " alt="" coords="152,99,187,103,186,108,152,104"/>

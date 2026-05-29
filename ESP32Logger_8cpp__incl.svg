@@ -11,7 +11,7 @@
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title=" ">
+<g id="a_Node000001"><a xlink:title="Implementation of ESP32Logger — ESP32 UART0 logging backend.">
 <polygon fill="#999999" stroke="#666666" points="312.5,-140 167.5,-140 167.5,-110 312.5,-110 312.5,-140"/>
 <text text-anchor="start" x="175.5" y="-128" font-family="Helvetica,sans-Serif" font-size="10.00">components/esp32_logger</text>
 <text text-anchor="middle" x="240" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">/ESP32Logger.cpp</text>
@@ -21,7 +21,7 @@
 <!-- Node2 -->
 <g id="Node000002" class="node">
 <title>Node2</title>
-<g id="a_Node000002"><a xlink:href="ESP32Logger_8h.html" target="_top" xlink:title=" ">
+<g id="a_Node000002"><a xlink:href="ESP32Logger_8h.html" target="_top" xlink:title="CW_Logger implementation that writes to ESP32 UART0 via printf.">
 <polygon fill="white" stroke="#666666" points="88,-74 0,-74 0,-55 88,-55 88,-74"/>
 <text text-anchor="middle" x="44" y="-62" font-family="Helvetica,sans-Serif" font-size="10.00">ESP32Logger.h</text>
 </a>

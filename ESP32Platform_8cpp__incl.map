@@ -1,6 +1,6 @@
 <map id="components/esp32_platform/ESP32Platform.cpp" name="components/esp32_platform/ESP32Platform.cpp">
-<area shape="rect" id="Node000001" title=" " alt="" coords="132,5,340,45"/>
-<area shape="rect" id="Node000002" href="$ESP32Platform_8h.html" title=" " alt="" coords="5,93,136,119"/>
+<area shape="rect" id="Node000001" title="Implementation of ESP32Platform — FreeRTOS sleep backend." alt="" coords="132,5,340,45"/>
+<area shape="rect" id="Node000002" href="$ESP32Platform_8h.html" title="CW_Platform implementation for ESP32 using FreeRTOS." alt="" coords="5,93,136,119"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="198,48,108,90,106,85,195,43"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="161,93,311,119"/>
 <area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="239,46,239,79,233,79,233,46"/>

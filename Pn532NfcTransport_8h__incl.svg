@@ -11,7 +11,7 @@
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title=" ">
+<g id="a_Node000001"><a xlink:title="CW_NfcTransport adapter wrapping the ESP&#45;IDF PN532 NFC driver.">
 <polygon fill="#999999" stroke="#666666" points="244.5,-151 90.5,-151 90.5,-110 244.5,-110 244.5,-151"/>
 <text text-anchor="start" x="98.5" y="-139" font-family="Helvetica,sans-Serif" font-size="10.00">components/pn532_nfc</text>
 <text text-anchor="start" x="98.5" y="-128" font-family="Helvetica,sans-Serif" font-size="10.00">_transport/include/Pn532Nfc</text>
@@ -58,7 +58,7 @@
 <!-- Node4 -->
 <g id="Node000004" class="node">
 <title>Node4</title>
-<g id="a_Node000004"><a xlink:href="pn532_8h.html" target="_top" xlink:title=" ">
+<g id="a_Node000004"><a xlink:href="pn532_8h.html" target="_top" xlink:title="Low&#45;level PN532 NFC controller driver for ESP&#45;IDF (SPI and I²C).">
 <polygon fill="white" stroke="#666666" points="281.5,-74 225.5,-74 225.5,-55 281.5,-55 281.5,-74"/>
 <text text-anchor="middle" x="253.5" y="-62" font-family="Helvetica,sans-Serif" font-size="10.00">pn532.h</text>
 </a>

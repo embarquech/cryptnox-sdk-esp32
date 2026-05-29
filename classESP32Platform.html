@@ -89,11 +89,11 @@ $(function(){initNavTree('classESP32Platform.html','','classESP32Platform-member
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">ESP32Platform Class Reference</div></div>
+  <div class="headertitle"><div class="title">ESP32Platform Class Reference<div class="ingroups"><a class="el" href="group__esp32__adapters.html">ESP32 concrete adapters</a></div></div></div>
 </div><!--header-->
 <div class="contents">
 
-<p>Concrete CW_Platform implementation for ESP32 using FreeRTOS.  
+<p>CW_Platform backed by FreeRTOS <code>vTaskDelay</code>.  
  <a href="#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="ESP32Platform_8h_source.html">ESP32Platform.h</a>&gt;</code></p>
@@ -111,14 +111,19 @@ Collaboration diagram for ESP32Platform:</div>
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:aa4b732b3e96a92a7ec346ff2701eb563" id="r_aa4b732b3e96a92a7ec346ff2701eb563"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa4b732b3e96a92a7ec346ff2701eb563">sleep_ms</a> (uint32_t ms) override</td></tr>
-<tr class="memdesc:aa4b732b3e96a92a7ec346ff2701eb563"><td class="mdescLeft">&#160;</td><td class="mdescRight">Yield to the FreeRTOS scheduler for at least <code class="param">ms</code> milliseconds.  <br /></td></tr>
+<tr class="memdesc:aa4b732b3e96a92a7ec346ff2701eb563"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sleep for at least <code class="param">ms</code> milliseconds.  <br /></td></tr>
 <tr class="memitem:a087164d1380a41160ccbea5231126f98" id="r_a087164d1380a41160ccbea5231126f98"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a087164d1380a41160ccbea5231126f98">~ESP32Platform</a> () override</td></tr>
+<tr class="memdesc:a087164d1380a41160ccbea5231126f98"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default destructor.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Concrete CW_Platform implementation for ESP32 using FreeRTOS. </p>
-<p>sleep_ms delegates to vTaskDelay(pdMS_TO_TICKS(ms)) so the calling task yields to the RTOS scheduler for at least the requested duration. </p>
+<div class="textblock"><p>CW_Platform backed by FreeRTOS <code>vTaskDelay</code>. </p>
+<p>The <a class="el" href="#aa4b732b3e96a92a7ec346ff2701eb563">sleep_ms</a> implementation delegates to <code>vTaskDelay(pdMS_TO_TICKS(ms))</code>, yielding the calling FreeRTOS task to the scheduler for at least the requested duration. The actual sleep may be slightly longer than <code class="param">ms</code> due to tick granularity.</p>
+<dl class="section note"><dt>Note</dt><dd>Instantiate once and inject into CryptnoxWallet alongside the other adapter objects.</dd></dl>
+<dl class="section see"><dt>See also</dt><dd>CW_Platform </dd>
+<dd>
+CryptnoxWallet </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ESP32Platform_8h_source.html#l00026">26</a> of file <a class="el" href="ESP32Platform_8h_source.html">ESP32Platform.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ESP32Platform_8h_source.html#l00038">38</a> of file <a class="el" href="ESP32Platform_8h_source.html">ESP32Platform.h</a>.</p>
 </div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a087164d1380a41160ccbea5231126f98" name="a087164d1380a41160ccbea5231126f98"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a087164d1380a41160ccbea5231126f98">&#9670;&#160;</a></span>~ESP32Platform()</h2>
@@ -143,7 +148,9 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ESP32Platform_8h_source.html#l00030">30</a> of file <a class="el" href="ESP32Platform_8h_source.html">ESP32Platform.h</a>.</p>
+<p>Default destructor. </p>
+
+<p class="definition">Definition at line <a class="el" href="ESP32Platform_8h_source.html#l00052">52</a> of file <a class="el" href="ESP32Platform_8h_source.html">ESP32Platform.h</a>.</p>
 
 </div>
 </div>
@@ -171,9 +178,17 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Yield to the FreeRTOS scheduler for at least <code class="param">ms</code> milliseconds. </p>
+<p>Sleep for at least <code class="param">ms</code> milliseconds. </p>
+<p>Yield to the FreeRTOS scheduler for at least <code class="param">ms</code> milliseconds.</p>
+<p>Calls <code>vTaskDelay(pdMS_TO_TICKS(ms))</code>. The calling FreeRTOS task is blocked and yields the CPU to other ready tasks for the duration.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">ms</td><td>Minimum sleep duration in milliseconds. A value of <code>0</code> yields once to the scheduler without a guaranteed delay. </td></tr>
+  </table>
+  </dd>
+</dl>
 
-<p class="definition">Definition at line <a class="el" href="ESP32Platform_8cpp_source.html#l00011">11</a> of file <a class="el" href="ESP32Platform_8cpp_source.html">ESP32Platform.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ESP32Platform_8cpp_source.html#l00020">20</a> of file <a class="el" href="ESP32Platform_8cpp_source.html">ESP32Platform.cpp</a>.</p>
 
 </div>
 </div>

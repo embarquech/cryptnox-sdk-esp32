@@ -92,6 +92,9 @@ $(function(){initNavTree('pn532__adapter_8cpp.html','',''); });
   <div class="headertitle"><div class="title">pn532_adapter.cpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Implementation of <a class="el" href="classPN532Adapter.html">PN532Adapter</a> — self-contained PN532 NFC transport.  
+<a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="pn532__adapter_8h_source.html">pn532_adapter.h</a>&quot;</code><br />
 <code>#include &quot;esp_log.h&quot;</code><br />
 <code>#include &lt;string.h&gt;</code><br />
@@ -111,7 +114,12 @@ Variables</h2></td></tr>
 <tr class="memitem:acaf71af60f436439dde95f1dbf4dd390" id="r_acaf71af60f436439dde95f1dbf4dd390"><td class="memItemLeft" align="right" valign="top">static const uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acaf71af60f436439dde95f1dbf4dd390">FW_REV_SHIFT</a> = 8U</td></tr>
 <tr class="memitem:a1b6cdd6845706fe289ee83a17b4806a5" id="r_a1b6cdd6845706fe289ee83a17b4806a5"><td class="memItemLeft" align="right" valign="top">static const uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1b6cdd6845706fe289ee83a17b4806a5">FW_BYTE_MASK</a> = 0xFFU</td></tr>
 </table>
-<a name="doc-var-members" id="doc-var-members"></a><h2 id="header-doc-var-members" class="groupheader">Variable Documentation</h2>
+<a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Implementation of <a class="el" href="classPN532Adapter.html">PN532Adapter</a> — self-contained PN532 NFC transport. </p>
+<p>Owns a <a class="el" href="structpn532__t.html">pn532_t</a> handle internally and initialises it on the first <a class="el" href="classPN532Adapter.html#ac512aa42da5b575aaa7422e6d2358351">PN532Adapter::begin</a> call. Full API documentation lives on the declarations in <a class="el" href="pn532__adapter_8h.html">pn532_adapter.h</a>. </p>
+
+<p class="definition">Definition in file <a class="el" href="pn532__adapter_8cpp_source.html">pn532_adapter.cpp</a>.</p>
+</div><a name="doc-var-members" id="doc-var-members"></a><h2 id="header-doc-var-members" class="groupheader">Variable Documentation</h2>
 <a id="a1b6cdd6845706fe289ee83a17b4806a5" name="a1b6cdd6845706fe289ee83a17b4806a5"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1b6cdd6845706fe289ee83a17b4806a5">&#9670;&#160;</a></span>FW_BYTE_MASK</h2>
 
@@ -132,9 +140,9 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532__adapter_8cpp_source.html#l00016">16</a> of file <a class="el" href="pn532__adapter_8cpp_source.html">pn532_adapter.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532__adapter_8cpp_source.html#l00025">25</a> of file <a class="el" href="pn532__adapter_8cpp_source.html">pn532_adapter.cpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532__adapter_8cpp_source.html#l00086">PN532Adapter::printFirmwareVersion()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532__adapter_8cpp_source.html#l00095">PN532Adapter::printFirmwareVersion()</a>.</p>
 
 </div>
 </div>
@@ -158,9 +166,9 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532__adapter_8cpp_source.html#l00013">13</a> of file <a class="el" href="pn532__adapter_8cpp_source.html">pn532_adapter.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532__adapter_8cpp_source.html#l00022">22</a> of file <a class="el" href="pn532__adapter_8cpp_source.html">pn532_adapter.cpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532__adapter_8cpp_source.html#l00086">PN532Adapter::printFirmwareVersion()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532__adapter_8cpp_source.html#l00095">PN532Adapter::printFirmwareVersion()</a>.</p>
 
 </div>
 </div>
@@ -184,9 +192,9 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532__adapter_8cpp_source.html#l00015">15</a> of file <a class="el" href="pn532__adapter_8cpp_source.html">pn532_adapter.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532__adapter_8cpp_source.html#l00024">24</a> of file <a class="el" href="pn532__adapter_8cpp_source.html">pn532_adapter.cpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532__adapter_8cpp_source.html#l00086">PN532Adapter::printFirmwareVersion()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532__adapter_8cpp_source.html#l00095">PN532Adapter::printFirmwareVersion()</a>.</p>
 
 </div>
 </div>
@@ -210,9 +218,9 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532__adapter_8cpp_source.html#l00014">14</a> of file <a class="el" href="pn532__adapter_8cpp_source.html">pn532_adapter.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532__adapter_8cpp_source.html#l00023">23</a> of file <a class="el" href="pn532__adapter_8cpp_source.html">pn532_adapter.cpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532__adapter_8cpp_source.html#l00086">PN532Adapter::printFirmwareVersion()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532__adapter_8cpp_source.html#l00095">PN532Adapter::printFirmwareVersion()</a>.</p>
 
 </div>
 </div>
@@ -236,7 +244,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532__adapter_8cpp_source.html#l00010">10</a> of file <a class="el" href="pn532__adapter_8cpp_source.html">pn532_adapter.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532__adapter_8cpp_source.html#l00019">19</a> of file <a class="el" href="pn532__adapter_8cpp_source.html">pn532_adapter.cpp</a>.</p>
 
 </div>
 </div>

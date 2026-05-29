@@ -11,7 +11,7 @@
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title=" ">
+<g id="a_Node000001"><a xlink:title="Self&#45;contained CW_NfcTransport adapter that owns its pn532_t handle.">
 <polygon fill="#999999" stroke="#666666" points="152,-96 0,-96 0,-66 152,-66 152,-96"/>
 <text text-anchor="start" x="8" y="-84" font-family="Helvetica,sans-Serif" font-size="10.00">components/pn532_adapter</text>
 <text text-anchor="middle" x="76" y="-73" font-family="Helvetica,sans-Serif" font-size="10.00">/include/pn532_adapter.h</text>
@@ -21,7 +21,7 @@
 <!-- Node2 -->
 <g id="Node000002" class="node">
 <title>Node2</title>
-<g id="a_Node000002"><a xlink:href="pn532__adapter_8cpp.html" target="_top" xlink:title=" ">
+<g id="a_Node000002"><a xlink:href="pn532__adapter_8cpp.html" target="_top" xlink:title="Implementation of PN532Adapter — self&#45;contained PN532 NFC transport.">
 <polygon fill="white" stroke="#666666" points="152,-30 0,-30 0,0 152,0 152,-30"/>
 <text text-anchor="start" x="8" y="-18" font-family="Helvetica,sans-Serif" font-size="10.00">components/pn532_adapter</text>
 <text text-anchor="middle" x="76" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">/pn532_adapter.cpp</text>

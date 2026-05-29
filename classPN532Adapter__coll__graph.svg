@@ -11,7 +11,7 @@
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title="Concrete CW_NfcTransport implementation for the PN532 over SPI on ESP32&#45;S3.">
+<g id="a_Node000001"><a xlink:title="Self&#45;contained CW_NfcTransport that owns its pn532_t instance.">
 <polygon fill="#999999" stroke="#666666" points="206,-19 120,-19 120,0 206,0 206,-19"/>
 <text text-anchor="middle" x="163" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">PN532Adapter</text>
 </a>
@@ -38,7 +38,7 @@
 <!-- Node3 -->
 <g id="Node000003" class="node">
 <title>Node3</title>
-<g id="a_Node000003"><a xlink:href="structpn532__config__t.html" target="_top" xlink:title=" ">
+<g id="a_Node000003"><a xlink:href="structpn532__config__t.html" target="_top" xlink:title="Compile&#45;time configuration passed to pn532_init.">
 <polygon fill="white" stroke="#666666" points="208,-91 118,-91 118,-72 208,-72 208,-91"/>
 <text text-anchor="middle" x="163" y="-79" font-family="Helvetica,sans-Serif" font-size="10.00">pn532_config_t</text>
 </a>
@@ -57,7 +57,7 @@
 <!-- Node4 -->
 <g id="Node000004" class="node">
 <title>Node4</title>
-<g id="a_Node000004"><a xlink:href="structpn532__t.html" target="_top" xlink:title=" ">
+<g id="a_Node000004"><a xlink:href="structpn532__t.html" target="_top" xlink:title="Opaque&#45;like runtime state for a single PN532 instance.">
 <polygon fill="white" stroke="#666666" points="282,-91 226,-91 226,-72 282,-72 282,-91"/>
 <text text-anchor="middle" x="254" y="-79" font-family="Helvetica,sans-Serif" font-size="10.00">pn532_t</text>
 </a>

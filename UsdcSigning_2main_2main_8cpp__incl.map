@@ -22,15 +22,15 @@
 <area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="1103,47,1070,84,1066,81,1099,44"/>
 <area shape="rect" id="Node000012" title=" " alt="" coords="1119,93,1254,119"/>
 <area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="1136,44,1169,81,1165,84,1132,47"/>
-<area shape="rect" id="Node000013" href="$Pn532NfcTransport_8h.html" title=" " alt="" coords="1421,93,1577,119"/>
+<area shape="rect" id="Node000013" href="$Pn532NfcTransport_8h.html" title="CW_NfcTransport adapter wrapping the ESP&#45;IDF PN532 NFC driver." alt="" coords="1421,93,1577,119"/>
 <area shape="poly" id="edge12_Node000001_Node000013" title=" " alt="" coords="1203,42,1430,88,1429,93,1202,47"/>
-<area shape="rect" id="Node000016" href="$pn532_8h.html" title=" " alt="" coords="1461,167,1536,192"/>
+<area shape="rect" id="Node000016" href="$pn532_8h.html" title="Low&#45;level PN532 NFC controller driver for ESP&#45;IDF (SPI and I²C)." alt="" coords="1461,167,1536,192"/>
 <area shape="poly" id="edge27_Node000001_Node000016" title=" " alt="" coords="1203,23,1308,26,1423,36,1477,45,1525,57,1564,72,1590,92,1596,102,1597,113,1586,132,1565,149,1541,163,1538,158,1562,144,1582,128,1592,112,1591,104,1586,95,1561,77,1524,62,1476,50,1422,42,1307,32,1203,29"/>
-<area shape="rect" id="Node000020" href="$ESP32Logger_8h.html" title=" " alt="" coords="1279,93,1396,119"/>
+<area shape="rect" id="Node000020" href="$ESP32Logger_8h.html" title="CW_Logger implementation that writes to ESP32 UART0 via printf." alt="" coords="1279,93,1396,119"/>
 <area shape="poly" id="edge20_Node000001_Node000020" title=" " alt="" coords="1171,43,1293,86,1291,91,1169,48"/>
-<area shape="rect" id="Node000021" href="$esp32__crypto__provider_8h.html" title=" " alt="" coords="1652,93,1833,119"/>
+<area shape="rect" id="Node000021" href="$esp32__crypto__provider_8h.html" title="CW_CryptoProvider implementation for ESP32 using mbedTLS and the hardware TRNG." alt="" coords="1652,93,1833,119"/>
 <area shape="poly" id="edge22_Node000001_Node000021" title=" " alt="" coords="1203,35,1639,89,1638,94,1203,40"/>
-<area shape="rect" id="Node000024" href="$ESP32Platform_8h.html" title=" " alt="" coords="1857,93,1988,119"/>
+<area shape="rect" id="Node000024" href="$ESP32Platform_8h.html" title="CW_Platform implementation for ESP32 using FreeRTOS." alt="" coords="1857,93,1988,119"/>
 <area shape="poly" id="edge25_Node000001_Node000024" title=" " alt="" coords="1203,30,1484,54,1844,91,1844,96,1483,59,1202,36"/>
 <area shape="rect" id="Node000026" href="$keccak256_8h.html" title=" " alt="" coords="2111,167,2214,192"/>
 <area shape="poly" id="edge28_Node000001_Node000026" title=" " alt="" coords="1203,25,1393,29,1633,40,1864,60,1959,74,2030,91,2062,104,2092,121,2141,156,2138,160,2089,125,2060,109,2029,96,1958,79,1863,65,1633,45,1393,35,1203,30"/>

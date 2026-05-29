@@ -11,7 +11,7 @@
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title=" ">
+<g id="a_Node000001"><a xlink:title="Implementation of PN532Adapter — self&#45;contained PN532 NFC transport.">
 <polygon fill="#999999" stroke="#666666" points="342.5,-195 190.5,-195 190.5,-165 342.5,-165 342.5,-195"/>
 <text text-anchor="start" x="198.5" y="-183" font-family="Helvetica,sans-Serif" font-size="10.00">components/pn532_adapter</text>
 <text text-anchor="middle" x="266.5" y="-172" font-family="Helvetica,sans-Serif" font-size="10.00">/pn532_adapter.cpp</text>
@@ -21,7 +21,7 @@
 <!-- Node2 -->
 <g id="Node000002" class="node">
 <title>Node2</title>
-<g id="a_Node000002"><a xlink:href="pn532__adapter_8h.html" target="_top" xlink:title=" ">
+<g id="a_Node000002"><a xlink:href="pn532__adapter_8h.html" target="_top" xlink:title="Self&#45;contained CW_NfcTransport adapter that owns its pn532_t handle.">
 <polygon fill="white" stroke="#666666" points="216.5,-129 118.5,-129 118.5,-110 216.5,-110 216.5,-129"/>
 <text text-anchor="middle" x="167.5" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">pn532_adapter.h</text>
 </a>
@@ -111,7 +111,7 @@
 <!-- Node5 -->
 <g id="Node000005" class="node">
 <title>Node5</title>
-<g id="a_Node000005"><a xlink:href="pn532_8h.html" target="_top" xlink:title=" ">
+<g id="a_Node000005"><a xlink:href="pn532_8h.html" target="_top" xlink:title="Low&#45;level PN532 NFC controller driver for ESP&#45;IDF (SPI and I²C).">
 <polygon fill="white" stroke="#666666" points="281.5,-74 225.5,-74 225.5,-55 281.5,-55 281.5,-74"/>
 <text text-anchor="middle" x="253.5" y="-62" font-family="Helvetica,sans-Serif" font-size="10.00">pn532.h</text>
 </a>

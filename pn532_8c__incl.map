@@ -1,6 +1,6 @@
 <map id="components/pn532/pn532.c" name="components/pn532/pn532.c">
 <area shape="rect" id="Node000001" title=" " alt="" coords="511,5,712,31"/>
-<area shape="rect" id="Node000002" href="$pn532_8h.html" title=" " alt="" coords="243,79,318,104"/>
+<area shape="rect" id="Node000002" href="$pn532_8h.html" title="Low&#45;level PN532 NFC controller driver for ESP&#45;IDF (SPI and I²C)." alt="" coords="243,79,318,104"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="559,33,332,82,331,77,558,28"/>
 <area shape="rect" id="Node000006" title=" " alt="" coords="378,152,525,177"/>
 <area shape="poly" id="edge7_Node000001_Node000006" title=" " alt="" coords="511,32,466,49,447,63,431,80,425,94,426,109,438,140,433,142,421,110,420,93,426,77,443,59,464,45,509,27"/>

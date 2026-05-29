@@ -89,9 +89,12 @@ $(function(){initNavTree('pn532__adapter_8h.html','',''); });
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">pn532_adapter.h File Reference</div></div>
+  <div class="headertitle"><div class="title">pn532_adapter.h File Reference<div class="ingroups"><a class="el" href="group__esp32__nfc__transport.html">ESP32 NFC transport adapters</a></div></div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Self-contained CW_NfcTransport adapter that owns its <a class="el" href="structpn532__t.html">pn532_t</a> handle.  
+<a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;CW_NfcTransport.h&quot;</code><br />
 <code>#include &quot;CW_Logger.h&quot;</code><br />
 <code>#include &quot;<a class="el" href="pn532_8h_source.html">pn532.h</a>&quot;</code><br />
@@ -111,9 +114,14 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="heading"><td colspan="2"><h2 id="header-nested-classes" class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:PN532Adapter" id="r_PN532Adapter"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPN532Adapter.html">PN532Adapter</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Concrete CW_NfcTransport implementation for the PN532 over SPI on ESP32-S3.  <a href="classPN532Adapter.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Self-contained CW_NfcTransport that owns its <a class="el" href="structpn532__t.html">pn532_t</a> instance.  <a href="classPN532Adapter.html#details">More...</a><br /></td></tr>
 </table>
-</div><!-- contents -->
+<a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Self-contained CW_NfcTransport adapter that owns its <a class="el" href="structpn532__t.html">pn532_t</a> handle. </p>
+<p><a class="el" href="classPN532Adapter.html">PN532Adapter</a> is an alternative to <a class="el" href="classPn532NfcTransport.html">Pn532NfcTransport</a> for callers that prefer to hand a <a class="el" href="structpn532__config__t.html">pn532_config_t</a> to the adapter and let it manage the full driver lifetime internally, rather than constructing the <a class="el" href="structpn532__t.html">pn532_t</a> externally. </p>
+
+<p class="definition">Definition in file <a class="el" href="pn532__adapter_8h_source.html">pn532_adapter.h</a>.</p>
+</div></div><!-- contents -->
 </div><!-- doc-content -->
 <div id="page-nav" class="page-nav-panel">
 <div id="page-nav-resize-handle"></div>

@@ -20,7 +20,7 @@
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:href="classPN532Adapter.html" target="_top" xlink:title="Concrete CW_NfcTransport implementation for the PN532 over SPI on ESP32&#45;S3.">
+<g id="a_Node000001"><a xlink:href="classPN532Adapter.html" target="_top" xlink:title="Self&#45;contained CW_NfcTransport that owns its pn532_t instance.">
 <polygon fill="white" stroke="#666666" points="255.5,-130 169.5,-130 169.5,-111 255.5,-111 255.5,-130"/>
 <text text-anchor="middle" x="212.5" y="-118" font-family="Helvetica,sans-Serif" font-size="10.00">PN532Adapter</text>
 </a>
@@ -38,7 +38,7 @@
 <!-- Node2 -->
 <g id="Node000002" class="node">
 <title>Node2</title>
-<g id="a_Node000002"><a xlink:href="classPn532NfcTransport.html" target="_top" xlink:title=" ">
+<g id="a_Node000002"><a xlink:href="classPn532NfcTransport.html" target="_top" xlink:title="CW_NfcTransport implementation backed by the ESP&#45;IDF PN532 driver.">
 <polygon fill="white" stroke="#666666" points="266.5,-93 158.5,-93 158.5,-74 266.5,-74 266.5,-93"/>
 <text text-anchor="middle" x="212.5" y="-81" font-family="Helvetica,sans-Serif" font-size="10.00">Pn532NfcTransport</text>
 </a>

@@ -25,26 +25,8 @@
 var NAVTREE =
 [
   [ "cryptnox-sdk-esp32", "index.html", [
+    [ "Topics", "topics.html", "topics" ],
     [ "Classes", "annotated.html", [
-      [ "Supported hardware", "index.html#autotoc_md2", [
-        [ "cryptnox-sdk-esp32", "index.html#autotoc_md0", null ],
-        [ "Cryptnox Hardware Wallet smart cards", "index.html#autotoc_md3", null ],
-        [ "NFC readers", "index.html#autotoc_md4", null ],
-        [ "Host board", "index.html#autotoc_md5", null ]
-      ] ],
-      [ "Installation", "index.html#autotoc_md7", null ],
-      [ "Hardware setup", "index.html#autotoc_md8", [
-        [ "ESP32-S3 and PN532 NFC — SPI interface", "index.html#autotoc_md9", null ],
-        [ "ESP32-S3 and PN532 NFC — I²C interface", "index.html#autotoc_md10", null ]
-      ] ],
-      [ "Quick usage examples", "index.html#autotoc_md12", [
-        [ "1. Connect to a Cryptnox card", "index.html#autotoc_md13", null ],
-        [ "2. Verify the PIN code", "index.html#autotoc_md14", null ],
-        [ "3. Sign a transaction hash", "index.html#autotoc_md15", null ]
-      ] ],
-      [ "Security", "index.html#autotoc_md17", null ],
-      [ "Documentation", "index.html#autotoc_md19", null ],
-      [ "License", "index.html#autotoc_md20", null ],
       [ "Class List", "annotated.html", "annotated_dup" ],
       [ "Class Index", "classes.html", null ],
       [ "Class Hierarchy", "hierarchy.html", "hierarchy" ],
@@ -71,9 +53,9 @@ var NAVTREE =
 
 var NAVTREEINDEX =
 [
-"Connect_2main_2main_8cpp.html",
-"eth__rlp_8cpp.html#ae4a732e230caccbfff1bb6fc8d85b5a5",
-"structpn532__t.html"
+"Connect_2main_2config_8h.html",
+"dir_b6b098de74b0f0d601875053adccf7eb.html",
+"pn532__adapter_8h.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';

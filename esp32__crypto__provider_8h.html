@@ -89,9 +89,12 @@ $(function(){initNavTree('esp32__crypto__provider_8h.html','',''); });
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">esp32_crypto_provider.h File Reference</div></div>
+  <div class="headertitle"><div class="title">esp32_crypto_provider.h File Reference<div class="ingroups"><a class="el" href="group__esp32__adapters.html">ESP32 concrete adapters</a></div></div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>CW_CryptoProvider implementation for ESP32 using mbedTLS and the hardware TRNG.  
+<a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;CW_CryptoProvider.h&quot;</code><br />
 <code>#include &quot;CW_Defs.h&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
@@ -110,9 +113,29 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="heading"><td colspan="2"><h2 id="header-nested-classes" class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:ESP32CryptoProvider" id="r_ESP32CryptoProvider"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classESP32CryptoProvider.html">ESP32CryptoProvider</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Concrete CW_CryptoProvider for ESP32 using mbedTLS and the hardware RNG.  <a href="classESP32CryptoProvider.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">CW_CryptoProvider backed by mbedTLS and the ESP32 hardware TRNG.  <a href="classESP32CryptoProvider.html#details">More...</a><br /></td></tr>
 </table>
-</div><!-- contents -->
+<a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>CW_CryptoProvider implementation for ESP32 using mbedTLS and the hardware TRNG. </p>
+<p><a class="el" href="classESP32CryptoProvider.html">ESP32CryptoProvider</a> wires the platform-independent CW_CryptoProvider interface to the ESP-IDF cryptographic stack:</p>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Operation  </th><th class="markdownTableHeadNone">Backend  </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">SHA-256 / SHA-512  </td><td class="markdownTableBodyNone">mbedTLS (hardware-accelerated on ESP32-S3)  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">AES-CBC enc / dec  </td><td class="markdownTableBodyNone">mbedTLS (hardware-accelerated on ESP32-S3)  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">ECDH / key-gen  </td><td class="markdownTableBodyNone">uECC shim backed by mbedTLS ECP primitives  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">ECDSA verify  </td><td class="markdownTableBodyNone">mbedTLS ECP verify  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">Random bytes  </td><td class="markdownTableBodyNone"><code>esp_fill_random()</code> — hardware TRNG (SEC-001)  </td></tr>
+</table>
+<dl class="section warning"><dt>Warning</dt><dd>The ESP32 hardware TRNG delivers full entropy only when Wi-Fi or Bluetooth is active. When neither radio is running the TRNG falls back to thermal noise and ring-oscillator jitter, which provides reduced (but non-zero) entropy. Enable Wi-Fi before performing key generation or signing operations in production firmware. </dd></dl>
+
+<p class="definition">Definition in file <a class="el" href="esp32__crypto__provider_8h_source.html">esp32_crypto_provider.h</a>.</p>
+</div></div><!-- contents -->
 </div><!-- doc-content -->
 <div id="page-nav" class="page-nav-panel">
 <div id="page-nav-resize-handle"></div>

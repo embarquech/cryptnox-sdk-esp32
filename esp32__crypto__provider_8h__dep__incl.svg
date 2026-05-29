@@ -11,7 +11,7 @@
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title=" ">
+<g id="a_Node000001"><a xlink:title="CW_CryptoProvider implementation for ESP32 using mbedTLS and the hardware TRNG.">
 <polygon fill="#999999" stroke="#666666" points="702.5,-107 525.5,-107 525.5,-77 702.5,-77 702.5,-107"/>
 <text text-anchor="start" x="533.5" y="-95" font-family="Helvetica,sans-Serif" font-size="10.00">components/crypto_provider</text>
 <text text-anchor="middle" x="614" y="-84" font-family="Helvetica,sans-Serif" font-size="10.00">/include/esp32_crypto_provider.h</text>
@@ -21,7 +21,7 @@
 <!-- Node2 -->
 <g id="Node000002" class="node">
 <title>Node2</title>
-<g id="a_Node000002"><a xlink:href="esp32__crypto__provider_8cpp.html" target="_top" xlink:title=" ">
+<g id="a_Node000002"><a xlink:href="esp32__crypto__provider_8cpp.html" target="_top" xlink:title="Implementation of ESP32CryptoProvider — mbedTLS + hardware TRNG backend.">
 <polygon fill="white" stroke="#666666" points="156,-35.5 0,-35.5 0,-5.5 156,-5.5 156,-35.5"/>
 <text text-anchor="start" x="8" y="-23.5" font-family="Helvetica,sans-Serif" font-size="10.00">components/crypto_provider</text>
 <text text-anchor="middle" x="78" y="-12.5" font-family="Helvetica,sans-Serif" font-size="10.00">/esp32_crypto_provider.cpp</text>

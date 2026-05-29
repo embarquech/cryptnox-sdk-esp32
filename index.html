@@ -197,7 +197,7 @@ ESP32-S3 and PN532 NFC — I²C interface</h3>
 <hr  />
 <h2 class="doxsection"><a class="anchor" id="autotoc_md12"></a>
 Quick usage examples</h2>
-<p>All examples assume the shared SPI bus has been initialised and the three adapters (<span class="tt"><a class="el" href="classESP32Logger.html">ESP32Logger</a></span>, <span class="tt"><a class="el" href="classESP32CryptoProvider.html" title="Concrete CW_CryptoProvider for ESP32 using mbedTLS and the hardware RNG.">ESP32CryptoProvider</a></span>, <span class="tt">ESP32Pn532Transport</span>) are wired into a <span class="tt">CryptnoxWallet</span>. Helper macros are used for brevity; see <span class="tt">examples/UsdcSigning/</span> for the full ESP-IDF boilerplate.</p>
+<p>All examples assume the shared SPI bus has been initialised and the three adapters (<span class="tt"><a class="el" href="classESP32Logger.html" title="CW_Logger backed by ESP32 UART0.">ESP32Logger</a></span>, <span class="tt"><a class="el" href="classESP32CryptoProvider.html" title="CW_CryptoProvider backed by mbedTLS and the ESP32 hardware TRNG.">ESP32CryptoProvider</a></span>, <span class="tt">ESP32Pn532Transport</span>) are wired into a <span class="tt">CryptnoxWallet</span>. Helper macros are used for brevity; see <span class="tt">examples/UsdcSigning/</span> for the full ESP-IDF boilerplate.</p>
 <h3 class="doxsection"><a class="anchor" id="autotoc_md13"></a>
 1. Connect to a Cryptnox card</h3>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &quot;CryptnoxWallet.h&quot;</span></div>
@@ -232,11 +232,11 @@ Quick usage examples</h2>
 <div class="line"> </div>
 <div class="line">    wallet.disconnect(session);</div>
 <div class="line">}</div>
-<div class="ttc" id="aConnect_2main_2main_8cpp_html_a630544a7f0a2cc40d8a7fefab7e2fe70"><div class="ttname"><a href="Connect_2main_2main_8cpp.html#a630544a7f0a2cc40d8a7fefab7e2fe70">app_main</a></div><div class="ttdeci">void app_main(void)</div><div class="ttdef"><b>Definition</b> <a href="Connect_2main_2main_8cpp_source.html#l00054">main.cpp:54</a></div></div>
-<div class="ttc" id="aESP32Logger_8h_html"><div class="ttname"><a href="ESP32Logger_8h.html">ESP32Logger.h</a></div></div>
-<div class="ttc" id="aclassESP32CryptoProvider_html"><div class="ttname"><a href="classESP32CryptoProvider.html">ESP32CryptoProvider</a></div><div class="ttdoc">Concrete CW_CryptoProvider for ESP32 using mbedTLS and the hardware RNG.</div><div class="ttdef"><b>Definition</b> <a href="esp32__crypto__provider_8h_source.html#l00021">esp32_crypto_provider.h:21</a></div></div>
-<div class="ttc" id="aclassESP32Logger_html"><div class="ttname"><a href="classESP32Logger.html">ESP32Logger</a></div><div class="ttdef"><b>Definition</b> <a href="ESP32Logger_8h_source.html#l00020">ESP32Logger.h:20</a></div></div>
-<div class="ttc" id="aesp32__crypto__provider_8h_html"><div class="ttname"><a href="esp32__crypto__provider_8h.html">esp32_crypto_provider.h</a></div></div>
+<div class="ttc" id="aConnect_2main_2main_8cpp_html_a630544a7f0a2cc40d8a7fefab7e2fe70"><div class="ttname"><a href="Connect_2main_2main_8cpp.html#a630544a7f0a2cc40d8a7fefab7e2fe70">app_main</a></div><div class="ttdeci">void app_main(void)</div><div class="ttdef"><b>Definition</b> <a href="Connect_2main_2main_8cpp_source.html#l00138">main.cpp:138</a></div></div>
+<div class="ttc" id="aESP32Logger_8h_html"><div class="ttname"><a href="ESP32Logger_8h.html">ESP32Logger.h</a></div><div class="ttdoc">CW_Logger implementation that writes to ESP32 UART0 via printf.</div></div>
+<div class="ttc" id="aclassESP32CryptoProvider_html"><div class="ttname"><a href="classESP32CryptoProvider.html">ESP32CryptoProvider</a></div><div class="ttdoc">CW_CryptoProvider backed by mbedTLS and the ESP32 hardware TRNG.</div><div class="ttdef"><b>Definition</b> <a href="esp32__crypto__provider_8h_source.html#l00062">esp32_crypto_provider.h:62</a></div></div>
+<div class="ttc" id="aclassESP32Logger_html"><div class="ttname"><a href="classESP32Logger.html">ESP32Logger</a></div><div class="ttdoc">CW_Logger backed by ESP32 UART0.</div><div class="ttdef"><b>Definition</b> <a href="ESP32Logger_8h_source.html#l00052">ESP32Logger.h:52</a></div></div>
+<div class="ttc" id="aesp32__crypto__provider_8h_html"><div class="ttname"><a href="esp32__crypto__provider_8h.html">esp32_crypto_provider.h</a></div><div class="ttdoc">CW_CryptoProvider implementation for ESP32 using mbedTLS and the hardware TRNG.</div></div>
 <div class="ttc" id="aesp32__random_8cpp_html_a4ef5b5f197804a60836ab1e8907d8301"><div class="ttname"><a href="esp32__random_8cpp.html#a4ef5b5f197804a60836ab1e8907d8301">TAG</a></div><div class="ttdeci">static const char *const TAG</div><div class="ttdef"><b>Definition</b> <a href="esp32__random_8cpp_source.html#l00014">esp32_random.cpp:14</a></div></div>
 </div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md14"></a>
 2. Verify the PIN code</h3>

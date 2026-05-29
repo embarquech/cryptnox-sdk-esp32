@@ -219,7 +219,7 @@
 <!-- Node13 -->
 <g id="Node000013" class="node">
 <title>Node13</title>
-<g id="a_Node000013"><a xlink:href="Pn532NfcTransport_8h.html" target="_top" xlink:title=" ">
+<g id="a_Node000013"><a xlink:href="Pn532NfcTransport_8h.html" target="_top" xlink:title="CW_NfcTransport adapter wrapping the ESP&#45;IDF PN532 NFC driver.">
 <polygon fill="white" stroke="#666666" points="1178.5,-129 1061.5,-129 1061.5,-110 1178.5,-110 1178.5,-129"/>
 <text text-anchor="middle" x="1120" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">Pn532NfcTransport.h</text>
 </a>
@@ -237,7 +237,7 @@
 <!-- Node16 -->
 <g id="Node000016" class="node">
 <title>Node16</title>
-<g id="a_Node000016"><a xlink:href="pn532_8h.html" target="_top" xlink:title=" ">
+<g id="a_Node000016"><a xlink:href="pn532_8h.html" target="_top" xlink:title="Low&#45;level PN532 NFC controller driver for ESP&#45;IDF (SPI and I²C).">
 <polygon fill="white" stroke="#666666" points="1148,-74 1092,-74 1092,-55 1148,-55 1148,-74"/>
 <text text-anchor="middle" x="1120" y="-62" font-family="Helvetica,sans-Serif" font-size="10.00">pn532.h</text>
 </a>
@@ -255,7 +255,7 @@
 <!-- Node20 -->
 <g id="Node000020" class="node">
 <title>Node20</title>
-<g id="a_Node000020"><a xlink:href="ESP32Logger_8h.html" target="_top" xlink:title=" ">
+<g id="a_Node000020"><a xlink:href="ESP32Logger_8h.html" target="_top" xlink:title="CW_Logger implementation that writes to ESP32 UART0 via printf.">
 <polygon fill="white" stroke="#666666" points="1043,-129 955,-129 955,-110 1043,-110 1043,-129"/>
 <text text-anchor="middle" x="999" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">ESP32Logger.h</text>
 </a>
@@ -273,7 +273,7 @@
 <!-- Node21 -->
 <g id="Node000021" class="node">
 <title>Node21</title>
-<g id="a_Node000021"><a xlink:href="esp32__crypto__provider_8h.html" target="_top" xlink:title=" ">
+<g id="a_Node000021"><a xlink:href="esp32__crypto__provider_8h.html" target="_top" xlink:title="CW_CryptoProvider implementation for ESP32 using mbedTLS and the hardware TRNG.">
 <polygon fill="white" stroke="#666666" points="1371,-129 1235,-129 1235,-110 1371,-110 1371,-129"/>
 <text text-anchor="middle" x="1303" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">esp32_crypto_provider.h</text>
 </a>
@@ -291,7 +291,7 @@
 <!-- Node24 -->
 <g id="Node000024" class="node">
 <title>Node24</title>
-<g id="a_Node000024"><a xlink:href="ESP32Platform_8h.html" target="_top" xlink:title=" ">
+<g id="a_Node000024"><a xlink:href="ESP32Platform_8h.html" target="_top" xlink:title="CW_Platform implementation for ESP32 using FreeRTOS.">
 <polygon fill="white" stroke="#666666" points="1487,-129 1389,-129 1389,-110 1487,-110 1487,-129"/>
 <text text-anchor="middle" x="1438" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">ESP32Platform.h</text>
 </a>

@@ -1,5 +1,5 @@
 <map id="components/pn532_adapter/include/pn532_adapter.h" name="components/pn532_adapter/include/pn532_adapter.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,208,45"/>
-<area shape="rect" id="Node000002" href="$pn532__adapter_8cpp.html" title=" " alt="" coords="5,93,208,133"/>
+<area shape="rect" id="Node000001" title="Self&#45;contained CW_NfcTransport adapter that owns its pn532_t handle." alt="" coords="5,5,208,45"/>
+<area shape="rect" id="Node000002" href="$pn532__adapter_8cpp.html" title="Implementation of PN532Adapter — self&#45;contained PN532 NFC transport." alt="" coords="5,93,208,133"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="109,59,109,93,104,93,104,59"/>
 </map>

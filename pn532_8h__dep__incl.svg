@@ -11,7 +11,7 @@
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title=" ">
+<g id="a_Node000001"><a xlink:title="Low&#45;level PN532 NFC controller driver for ESP&#45;IDF (SPI and I²C).">
 <polygon fill="#999999" stroke="#666666" points="471,-173 323,-173 323,-143 471,-143 471,-173"/>
 <text text-anchor="start" x="331" y="-161" font-family="Helvetica,sans-Serif" font-size="10.00">components/pn532/include</text>
 <text text-anchor="middle" x="397" y="-150" font-family="Helvetica,sans-Serif" font-size="10.00">/pn532.h</text>
@@ -39,7 +39,7 @@
 <!-- Node3 -->
 <g id="Node000003" class="node">
 <title>Node3</title>
-<g id="a_Node000003"><a xlink:href="pn532__adapter_8h.html" target="_top" xlink:title=" ">
+<g id="a_Node000003"><a xlink:href="pn532__adapter_8h.html" target="_top" xlink:title="Self&#45;contained CW_NfcTransport adapter that owns its pn532_t handle.">
 <polygon fill="white" stroke="#666666" points="331,-101.5 179,-101.5 179,-71.5 331,-71.5 331,-101.5"/>
 <text text-anchor="start" x="187" y="-89.5" font-family="Helvetica,sans-Serif" font-size="10.00">components/pn532_adapter</text>
 <text text-anchor="middle" x="255" y="-78.5" font-family="Helvetica,sans-Serif" font-size="10.00">/include/pn532_adapter.h</text>
@@ -58,7 +58,7 @@
 <!-- Node5 -->
 <g id="Node000005" class="node">
 <title>Node5</title>
-<g id="a_Node000005"><a xlink:href="Pn532NfcTransport_8h.html" target="_top" xlink:title=" ">
+<g id="a_Node000005"><a xlink:href="Pn532NfcTransport_8h.html" target="_top" xlink:title="CW_NfcTransport adapter wrapping the ESP&#45;IDF PN532 NFC driver.">
 <polygon fill="white" stroke="#666666" points="610,-107 456,-107 456,-66 610,-66 610,-107"/>
 <text text-anchor="start" x="464" y="-95" font-family="Helvetica,sans-Serif" font-size="10.00">components/pn532_nfc</text>
 <text text-anchor="start" x="464" y="-84" font-family="Helvetica,sans-Serif" font-size="10.00">_transport/include/Pn532Nfc</text>
@@ -154,7 +154,7 @@
 <!-- Node4 -->
 <g id="Node000004" class="node">
 <title>Node4</title>
-<g id="a_Node000004"><a xlink:href="pn532__adapter_8cpp.html" target="_top" xlink:title=" ">
+<g id="a_Node000004"><a xlink:href="pn532__adapter_8cpp.html" target="_top" xlink:title="Implementation of PN532Adapter — self&#45;contained PN532 NFC transport.">
 <polygon fill="white" stroke="#666666" points="152,-30 0,-30 0,0 152,0 152,-30"/>
 <text text-anchor="start" x="8" y="-18" font-family="Helvetica,sans-Serif" font-size="10.00">components/pn532_adapter</text>
 <text text-anchor="middle" x="76" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">/pn532_adapter.cpp</text>
@@ -173,7 +173,7 @@
 <!-- Node6 -->
 <g id="Node000006" class="node">
 <title>Node6</title>
-<g id="a_Node000006"><a xlink:href="Pn532NfcTransport_8cpp.html" target="_top" xlink:title=" ">
+<g id="a_Node000006"><a xlink:href="Pn532NfcTransport_8cpp.html" target="_top" xlink:title="Implementation of Pn532NfcTransport — ESP&#45;IDF PN532 NFC transport.">
 <polygon fill="white" stroke="#666666" points="639.5,-30 458.5,-30 458.5,0 639.5,0 639.5,-30"/>
 <text text-anchor="start" x="466.5" y="-18" font-family="Helvetica,sans-Serif" font-size="10.00">components/pn532_nfc</text>
 <text text-anchor="middle" x="549" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">_transport/Pn532NfcTransport.cpp</text>

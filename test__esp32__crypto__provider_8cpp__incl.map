@@ -2,7 +2,7 @@
 <area shape="rect" id="Node000001" title=" " alt="" coords="251,5,459,60"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="5,108,71,133"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="259,63,85,110,83,104,258,57"/>
-<area shape="rect" id="Node000003" href="$esp32__crypto__provider_8h.html" title=" " alt="" coords="95,108,277,133"/>
+<area shape="rect" id="Node000003" href="$esp32__crypto__provider_8h.html" title="CW_CryptoProvider implementation for ESP32 using mbedTLS and the hardware TRNG." alt="" coords="95,108,277,133"/>
 <area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="305,62,222,104,220,99,302,58"/>
 <area shape="rect" id="Node000005" title=" " alt="" coords="267,181,361,207"/>
 <area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="351,61,323,169,318,167,346,60"/>

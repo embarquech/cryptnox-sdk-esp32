@@ -11,7 +11,7 @@
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title=" ">
+<g id="a_Node000001"><a xlink:title="Implementation of ESP32Platform — FreeRTOS sleep backend.">
 <polygon fill="#999999" stroke="#666666" points="251,-140 95,-140 95,-110 251,-110 251,-140"/>
 <text text-anchor="start" x="103" y="-128" font-family="Helvetica,sans-Serif" font-size="10.00">components/esp32_platform</text>
 <text text-anchor="middle" x="173" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">/ESP32Platform.cpp</text>
@@ -21,7 +21,7 @@
 <!-- Node2 -->
 <g id="Node000002" class="node">
 <title>Node2</title>
-<g id="a_Node000002"><a xlink:href="ESP32Platform_8h.html" target="_top" xlink:title=" ">
+<g id="a_Node000002"><a xlink:href="ESP32Platform_8h.html" target="_top" xlink:title="CW_Platform implementation for ESP32 using FreeRTOS.">
 <polygon fill="white" stroke="#666666" points="98,-74 0,-74 0,-55 98,-55 98,-74"/>
 <text text-anchor="middle" x="49" y="-62" font-family="Helvetica,sans-Serif" font-size="10.00">ESP32Platform.h</text>
 </a>

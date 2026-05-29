@@ -89,15 +89,18 @@ $(function(){initNavTree('structpn532__t.html','','structpn532__t-members'); });
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">pn532_t Struct Reference</div></div>
+  <div class="headertitle"><div class="title">pn532_t Struct Reference<div class="ingroups"><a class="el" href="group__pn532__driver.html">PN532 NFC driver</a></div></div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Opaque-like runtime state for a single PN532 instance.  
+ <a href="#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="pn532_8h_source.html">pn532.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-attribs" class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a77270c8e30444d2f9fd3f4df8feb5ee7" id="r_a77270c8e30444d2f9fd3f4df8feb5ee7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="pn532_8h.html#ab1c7905a6c1682fc84f8413e32feb333">pn532_transport_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a77270c8e30444d2f9fd3f4df8feb5ee7">transport</a></td></tr>
+<tr class="memitem:a77270c8e30444d2f9fd3f4df8feb5ee7" id="r_a77270c8e30444d2f9fd3f4df8feb5ee7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__pn532__driver.html#gab1c7905a6c1682fc84f8413e32feb333">pn532_transport_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a77270c8e30444d2f9fd3f4df8feb5ee7">transport</a></td></tr>
 <tr class="memitem:a3921d7271fb072d4532da5b0dbba5fe8" id="r_a3921d7271fb072d4532da5b0dbba5fe8"><td class="memItemLeft" align="right" valign="top">spi_device_handle_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3921d7271fb072d4532da5b0dbba5fe8">spi</a></td></tr>
 <tr class="memitem:a73e2d4468f0b54e7f7515501f1ec5a5c" id="r_a73e2d4468f0b54e7f7515501f1ec5a5c"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a73e2d4468f0b54e7f7515501f1ec5a5c">pin_cs</a></td></tr>
 <tr class="memitem:a1342293d447c20b46f171c07186e9ecf" id="r_a1342293d447c20b46f171c07186e9ecf"><td class="memItemLeft" align="right" valign="top">i2c_master_bus_handle_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1342293d447c20b46f171c07186e9ecf">i2c_bus</a></td></tr>
@@ -106,8 +109,10 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:ad6345a13c97f1d76bd235746d4b69d2b" id="r_ad6345a13c97f1d76bd235746d4b69d2b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad6345a13c97f1d76bd235746d4b69d2b">pin_rst</a></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock">
-<p class="definition">Definition at line <a class="el" href="pn532_8h_source.html#l00052">52</a> of file <a class="el" href="pn532_8h_source.html">pn532.h</a>.</p>
+<div class="textblock"><p>Opaque-like runtime state for a single PN532 instance. </p>
+<p>Populated by <a class="el" href="group__pn532__driver.html#ga21f52f38564e794861cf365433702df5">pn532_init</a>; must remain valid for the lifetime of all subsequent driver calls. Do not read or write fields directly — treat this as an opaque handle. </p>
+
+<p class="definition">Definition at line <a class="el" href="pn532_8h_source.html#l00141">141</a> of file <a class="el" href="pn532_8h_source.html">pn532.h</a>.</p>
 </div><a name="doc-variable-members" id="doc-variable-members"></a><h2 id="header-doc-variable-members" class="groupheader">Member Data Documentation</h2>
 <a id="a1342293d447c20b46f171c07186e9ecf" name="a1342293d447c20b46f171c07186e9ecf"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1342293d447c20b46f171c07186e9ecf">&#9670;&#160;</a></span>i2c_bus</h2>
@@ -120,10 +125,11 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>I²C bus handle returned by <code>i2c_new_master_bus()</code>. </p>
 
-<p class="definition">Definition at line <a class="el" href="pn532_8h_source.html#l00060">60</a> of file <a class="el" href="pn532_8h_source.html">pn532.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8h_source.html#l00149">149</a> of file <a class="el" href="pn532_8h_source.html">pn532.h</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00584">pn532_init_i2c()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00579">pn532_init_i2c()</a>.</p>
 
 </div>
 </div>
@@ -138,10 +144,11 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>I²C device handle returned by <code>i2c_master_bus_add_device()</code>. </p>
 
-<p class="definition">Definition at line <a class="el" href="pn532_8h_source.html#l00061">61</a> of file <a class="el" href="pn532_8h_source.html">pn532.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8h_source.html#l00150">150</a> of file <a class="el" href="pn532_8h_source.html">pn532.h</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00238">i2c_read_ready()</a>, <a class="el" href="pn532_8c_source.html#l00584">pn532_init_i2c()</a>, <a class="el" href="pn532_8c_source.html#l00266">read_data()</a>, <a class="el" href="pn532_8c_source.html#l00433">read_data_apdu_frame()</a>, and <a class="el" href="pn532_8c_source.html#l00315">write_command()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00238">i2c_read_ready()</a>, <a class="el" href="pn532_8c_source.html#l00579">pn532_init_i2c()</a>, <a class="el" href="pn532_8c_source.html#l00266">read_data()</a>, <a class="el" href="pn532_8c_source.html#l00428">read_data_apdu_frame()</a>, and <a class="el" href="pn532_8c_source.html#l00315">write_command()</a>.</p>
 
 </div>
 </div>
@@ -156,10 +163,11 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Chip-select GPIO (cached from config for fast toggling). </p>
 
-<p class="definition">Definition at line <a class="el" href="pn532_8h_source.html#l00057">57</a> of file <a class="el" href="pn532_8h_source.html">pn532.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8h_source.html#l00146">146</a> of file <a class="el" href="pn532_8h_source.html">pn532.h</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00524">pn532_init_spi()</a>, <a class="el" href="pn532_8c_source.html#l00266">read_data()</a>, <a class="el" href="pn532_8c_source.html#l00433">read_data_apdu_frame()</a>, <a class="el" href="pn532_8c_source.html#l00249">read_ready()</a>, and <a class="el" href="pn532_8c_source.html#l00315">write_command()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00519">pn532_init_spi()</a>, <a class="el" href="pn532_8c_source.html#l00266">read_data()</a>, <a class="el" href="pn532_8c_source.html#l00428">read_data_apdu_frame()</a>, <a class="el" href="pn532_8c_source.html#l00249">read_ready()</a>, and <a class="el" href="pn532_8c_source.html#l00315">write_command()</a>.</p>
 
 </div>
 </div>
@@ -174,10 +182,11 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>IRQ GPIO (-1 when unused). </p>
 
-<p class="definition">Definition at line <a class="el" href="pn532_8h_source.html#l00062">62</a> of file <a class="el" href="pn532_8h_source.html">pn532.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8h_source.html#l00151">151</a> of file <a class="el" href="pn532_8h_source.html">pn532.h</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00584">pn532_init_i2c()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00579">pn532_init_i2c()</a>.</p>
 
 </div>
 </div>
@@ -192,10 +201,11 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Reset GPIO (-1 when unused). </p>
 
-<p class="definition">Definition at line <a class="el" href="pn532_8h_source.html#l00063">63</a> of file <a class="el" href="pn532_8h_source.html">pn532.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8h_source.html#l00152">152</a> of file <a class="el" href="pn532_8h_source.html">pn532.h</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00584">pn532_init_i2c()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00579">pn532_init_i2c()</a>.</p>
 
 </div>
 </div>
@@ -210,10 +220,11 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>SPI device handle returned by <code>spi_bus_add_device()</code>. </p>
 
-<p class="definition">Definition at line <a class="el" href="pn532_8h_source.html#l00056">56</a> of file <a class="el" href="pn532_8h_source.html">pn532.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8h_source.html#l00145">145</a> of file <a class="el" href="pn532_8h_source.html">pn532.h</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00524">pn532_init_spi()</a>, <a class="el" href="pn532_8c_source.html#l00220">spi_read_byte()</a>, and <a class="el" href="pn532_8c_source.html#l00211">spi_write_byte()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00519">pn532_init_spi()</a>, <a class="el" href="pn532_8c_source.html#l00220">spi_read_byte()</a>, and <a class="el" href="pn532_8c_source.html#l00211">spi_write_byte()</a>.</p>
 
 </div>
 </div>
@@ -224,14 +235,15 @@ Public Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="pn532_8h.html#ab1c7905a6c1682fc84f8413e32feb333">pn532_transport_t</a> pn532_t::transport</td>
+          <td class="memname"><a class="el" href="group__pn532__driver.html#gab1c7905a6c1682fc84f8413e32feb333">pn532_transport_t</a> pn532_t::transport</td>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Active transport (copied from <a class="el" href="structpn532__config__t.html">pn532_config_t</a>). </p>
 
-<p class="definition">Definition at line <a class="el" href="pn532_8h_source.html#l00053">53</a> of file <a class="el" href="pn532_8h_source.html">pn532.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8h_source.html#l00142">142</a> of file <a class="el" href="pn532_8h_source.html">pn532.h</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00662">pn532_init()</a>, <a class="el" href="pn532_8c_source.html#l00266">read_data()</a>, <a class="el" href="pn532_8c_source.html#l00433">read_data_apdu_frame()</a>, <a class="el" href="pn532_8c_source.html#l00249">read_ready()</a>, and <a class="el" href="pn532_8c_source.html#l00315">write_command()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00657">pn532_init()</a>, <a class="el" href="pn532_8c_source.html#l00266">read_data()</a>, <a class="el" href="pn532_8c_source.html#l00428">read_data_apdu_frame()</a>, <a class="el" href="pn532_8c_source.html#l00249">read_ready()</a>, and <a class="el" href="pn532_8c_source.html#l00315">write_command()</a>.</p>
 
 </div>
 </div>

@@ -1,6 +1,7 @@
 var searchData=
 [
-  ['wifi_5fevent_5fhandler_0',['wifi_event_handler',['../eth__rpc_8cpp.html#ac31e38637f7a5e5c8ce4d033b0955fec',1,'eth_rpc.cpp']]],
-  ['write_5fcommand_1',['write_command',['../pn532_8c.html#a4fe0501a086e0bba9bd46e307001cf93',1,'pn532.c']]],
-  ['write_5fuint_5fto_5fuart_2',['write_uint_to_uart',['../ESP32Logger_8cpp.html#ad2eb427427611a64c666135106f82f0c',1,'ESP32Logger.cpp']]]
+  ['wifi_5fevent_5fhandler_0',['wifi_event_handler',['../Connect_2main_2main_8cpp.html#ac31e38637f7a5e5c8ce4d033b0955fec',1,'wifi_event_handler(void *arg, esp_event_base_t event_base, int32_t event_id, void *event_data):&#160;main.cpp'],['../Sign_2main_2main_8cpp.html#ac31e38637f7a5e5c8ce4d033b0955fec',1,'wifi_event_handler(void *arg, esp_event_base_t event_base, int32_t event_id, void *event_data):&#160;main.cpp'],['../eth__rpc_8cpp.html#ac31e38637f7a5e5c8ce4d033b0955fec',1,'wifi_event_handler(void *arg, esp_event_base_t event_base, int32_t event_id, void *event_data):&#160;eth_rpc.cpp'],['../VerifyPin_2main_2main_8cpp.html#ac31e38637f7a5e5c8ce4d033b0955fec',1,'wifi_event_handler(void *arg, esp_event_base_t event_base, int32_t event_id, void *event_data):&#160;main.cpp']]],
+  ['wifi_5fstart_1',['wifi_start',['../Connect_2main_2main_8cpp.html#af629eac4dcd2612341863d51413aaf10',1,'wifi_start(void):&#160;main.cpp'],['../Sign_2main_2main_8cpp.html#af629eac4dcd2612341863d51413aaf10',1,'wifi_start(void):&#160;main.cpp'],['../VerifyPin_2main_2main_8cpp.html#af629eac4dcd2612341863d51413aaf10',1,'wifi_start(void):&#160;main.cpp']]],
+  ['write_5fcommand_2',['write_command',['../pn532_8c.html#a4fe0501a086e0bba9bd46e307001cf93',1,'pn532.c']]],
+  ['write_5fuint_5fto_5fuart_3',['write_uint_to_uart',['../ESP32Logger_8cpp.html#ad2eb427427611a64c666135106f82f0c',1,'ESP32Logger.cpp']]]
 ];

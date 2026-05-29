@@ -89,9 +89,12 @@ $(function(){initNavTree('classPn532NfcTransport.html','','classPn532NfcTranspor
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">Pn532NfcTransport Class Reference</div></div>
+  <div class="headertitle"><div class="title">Pn532NfcTransport Class Reference<div class="ingroups"><a class="el" href="group__esp32__nfc__transport.html">ESP32 NFC transport adapters</a></div></div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>CW_NfcTransport implementation backed by the ESP-IDF PN532 driver.  
+ <a href="#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="Pn532NfcTransport_8h_source.html">Pn532NfcTransport.h</a>&gt;</code></p>
 <div class="dynheader">
@@ -108,22 +111,41 @@ Collaboration diagram for Pn532NfcTransport:</div>
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a7fe9380633c87c6429c6453bcf503dec" id="r_a7fe9380633c87c6429c6453bcf503dec"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7fe9380633c87c6429c6453bcf503dec">Pn532NfcTransport</a> (<a class="el" href="structpn532__t.html">pn532_t</a> *dev, CW_Logger &amp;logger)</td></tr>
+<tr class="memdesc:a7fe9380633c87c6429c6453bcf503dec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct the transport adapter.  <br /></td></tr>
 <tr class="memitem:a29290c118124fe451d2d9ae71f8ccbe8" id="r_a29290c118124fe451d2d9ae71f8ccbe8"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a29290c118124fe451d2d9ae71f8ccbe8">begin</a> () override</td></tr>
+<tr class="memdesc:a29290c118124fe451d2d9ae71f8ccbe8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configure the PN532 SAM and prepare it to accept card commands.  <br /></td></tr>
 <tr class="memitem:a4bfab871b695ac0e1ae51af24d5d0b50" id="r_a4bfab871b695ac0e1ae51af24d5d0b50"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4bfab871b695ac0e1ae51af24d5d0b50">inListPassiveTarget</a> () override</td></tr>
+<tr class="memdesc:a4bfab871b695ac0e1ae51af24d5d0b50"><td class="mdescLeft">&#160;</td><td class="mdescRight">Scan for a passive ISO 14443-A card.  <br /></td></tr>
 <tr class="memitem:af07e00c6403c485b9f914d783462d150" id="r_af07e00c6403c485b9f914d783462d150"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af07e00c6403c485b9f914d783462d150">sendAPDU</a> (const uint8_t *apdu, uint8_t apduLen, uint8_t *response, uint8_t &amp;responseLen) override</td></tr>
+<tr class="memdesc:af07e00c6403c485b9f914d783462d150"><td class="mdescLeft">&#160;</td><td class="mdescRight">Exchange one ISO-DEP APDU with the selected card (short response).  <br /></td></tr>
 <tr class="memitem:a875e990dadfed0d4832d8837251fd42f" id="r_a875e990dadfed0d4832d8837251fd42f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a875e990dadfed0d4832d8837251fd42f">sendAPDULarge</a> (const uint8_t *apdu, uint8_t apduLen, uint8_t *response, uint16_t &amp;responseLen) override</td></tr>
+<tr class="memdesc:a875e990dadfed0d4832d8837251fd42f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Exchange one ISO-DEP APDU with the selected card (large response).  <br /></td></tr>
 <tr class="memitem:aa29ed2fae2c77c2af79511e0d5bed631" id="r_aa29ed2fae2c77c2af79511e0d5bed631"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa29ed2fae2c77c2af79511e0d5bed631">resetReader</a> () override</td></tr>
+<tr class="memdesc:aa29ed2fae2c77c2af79511e0d5bed631"><td class="mdescLeft">&#160;</td><td class="mdescRight">Release the currently selected NFC target.  <br /></td></tr>
 <tr class="memitem:acf24e1657c7dc60f43a912762469714c" id="r_acf24e1657c7dc60f43a912762469714c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acf24e1657c7dc60f43a912762469714c">printFirmwareVersion</a> () override</td></tr>
+<tr class="memdesc:acf24e1657c7dc60f43a912762469714c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Query and log the PN532 firmware version.  <br /></td></tr>
 <tr class="memitem:a17e9e28daa39faab0b6de4730410c224" id="r_a17e9e28daa39faab0b6de4730410c224"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a17e9e28daa39faab0b6de4730410c224">~Pn532NfcTransport</a> () override</td></tr>
+<tr class="memdesc:a17e9e28daa39faab0b6de4730410c224"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default destructor.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pri-attribs" class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
 <tr class="memitem:a7f465ad3da18e83abf5c9537a59eabbe" id="r_a7f465ad3da18e83abf5c9537a59eabbe"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structpn532__t.html">pn532_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7f465ad3da18e83abf5c9537a59eabbe">m_dev</a></td></tr>
+<tr class="memdesc:a7f465ad3da18e83abf5c9537a59eabbe"><td class="mdescLeft">&#160;</td><td class="mdescRight">PN532 device handle (not owned; must outlive this object).  <br /></td></tr>
 <tr class="memitem:ae8004936425428cf22d8f58ccf371496" id="r_ae8004936425428cf22d8f58ccf371496"><td class="memItemLeft" align="right" valign="top">CW_Logger &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae8004936425428cf22d8f58ccf371496">m_logger</a></td></tr>
+<tr class="memdesc:ae8004936425428cf22d8f58ccf371496"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logger for <a class="el" href="#acf24e1657c7dc60f43a912762469714c">printFirmwareVersion</a> output.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock">
-<p class="definition">Definition at line <a class="el" href="Pn532NfcTransport_8h_source.html#l00015">15</a> of file <a class="el" href="Pn532NfcTransport_8h_source.html">Pn532NfcTransport.h</a>.</p>
+<div class="textblock"><p>CW_NfcTransport implementation backed by the ESP-IDF PN532 driver. </p>
+<p>Delegates every NFC operation to the C-level <a class="el" href="group__pn532__driver.html">PN532 NFC driver</a> via a <a class="el" href="structpn532__t.html">pn532_t</a> handle supplied by the caller. The handle's lifetime must exceed the lifetime of this object.</p>
+<p>Both <a class="el" href="#af07e00c6403c485b9f914d783462d150">sendAPDU</a> (response ≤ 255 bytes, <code>uint8_t</code> length) and <a class="el" href="#a875e990dadfed0d4832d8837251fd42f">sendAPDULarge</a> (response ≤ 65535 bytes, <code>uint16_t</code> length) are implemented; both ultimately call <a class="el" href="group__pn532__driver.html#ga6a9b4558470ccb3397920b3703feb4de">pn532_send_apdu</a> — the difference is only in the type used to report the response length back to the caller.</p>
+<dl class="section note"><dt>Note</dt><dd>Non-copyable: the class holds a reference (<code>CW_Logger</code> &amp;) and a raw pointer (<code><a class="el" href="structpn532__t.html" title="Opaque-like runtime state for a single PN532 instance.">pn532_t</a></code> *) that cannot be transferred safely.</dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="structpn532__t.html" title="Opaque-like runtime state for a single PN532 instance.">pn532_t</a> </dd>
+<dd>
+CW_NfcTransport </dd>
+<dd>
+CryptnoxWallet </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="Pn532NfcTransport_8h_source.html#l00068">68</a> of file <a class="el" href="Pn532NfcTransport_8h_source.html">Pn532NfcTransport.h</a>.</p>
 </div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a7fe9380633c87c6429c6453bcf503dec" name="a7fe9380633c87c6429c6453bcf503dec"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7fe9380633c87c6429c6453bcf503dec">&#9670;&#160;</a></span>Pn532NfcTransport()</h2>
@@ -144,9 +166,18 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Pn532NfcTransport_8cpp_source.html#l00013">13</a> of file <a class="el" href="Pn532NfcTransport_8cpp_source.html">Pn532NfcTransport.cpp</a>.</p>
+<p>Construct the transport adapter. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">dev</td><td>Pointer to an already-initialised <a class="el" href="structpn532__t.html">pn532_t</a> handle. Must remain valid for the lifetime of this object. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">logger</td><td>Logger used by <a class="el" href="#acf24e1657c7dc60f43a912762469714c">printFirmwareVersion</a>. </td></tr>
+  </table>
+  </dd>
+</dl>
 
-<p class="reference">References <a class="el" href="Pn532NfcTransport_8h_source.html#l00036">m_dev</a>, and <a class="el" href="Pn532NfcTransport_8h_source.html#l00037">m_logger</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Pn532NfcTransport_8cpp_source.html#l00022">22</a> of file <a class="el" href="Pn532NfcTransport_8cpp_source.html">Pn532NfcTransport.cpp</a>.</p>
+
+<p class="reference">References <a class="el" href="Pn532NfcTransport_8h_source.html#l00164">m_dev</a>, and <a class="el" href="Pn532NfcTransport_8h_source.html#l00165">m_logger</a>.</p>
 
 </div>
 </div>
@@ -173,7 +204,9 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Pn532NfcTransport_8h_source.html#l00033">33</a> of file <a class="el" href="Pn532NfcTransport_8h_source.html">Pn532NfcTransport.h</a>.</p>
+<p>Default destructor. </p>
+
+<p class="definition">Definition at line <a class="el" href="Pn532NfcTransport_8h_source.html#l00161">161</a> of file <a class="el" href="Pn532NfcTransport_8h_source.html">Pn532NfcTransport.h</a>.</p>
 
 </div>
 </div>
@@ -201,9 +234,13 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Pn532NfcTransport_8cpp_source.html#l00018">18</a> of file <a class="el" href="Pn532NfcTransport_8cpp_source.html">Pn532NfcTransport.cpp</a>.</p>
+<p>Configure the PN532 SAM and prepare it to accept card commands. </p>
+<p>Calls <a class="el" href="group__pn532__driver.html#ga9fc8fd45cffeeb668a7abb0d39f75eb4">pn532_sam_config</a>. Must succeed before <a class="el" href="#a4bfab871b695ac0e1ae51af24d5d0b50">inListPassiveTarget</a> or any APDU exchange is attempted. Called automatically by <code>CryptnoxWallet::begin()</code>.</p>
+<dl class="section return"><dt>Returns</dt><dd><code>true</code> if the PN532 acknowledged SAMConfiguration, <code>false</code> otherwise. </dd></dl>
 
-<p class="reference">References <a class="el" href="Pn532NfcTransport_8h_source.html#l00036">m_dev</a>, and <a class="el" href="pn532_8c_source.html#l00757">pn532_sam_config()</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Pn532NfcTransport_8cpp_source.html#l00027">27</a> of file <a class="el" href="Pn532NfcTransport_8cpp_source.html">Pn532NfcTransport.cpp</a>.</p>
+
+<p class="reference">References <a class="el" href="Pn532NfcTransport_8h_source.html#l00164">m_dev</a>, and <a class="el" href="pn532_8c_source.html#l00752">pn532_sam_config()</a>.</p>
 
 </div>
 </div>
@@ -230,9 +267,13 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Pn532NfcTransport_8cpp_source.html#l00024">24</a> of file <a class="el" href="Pn532NfcTransport_8cpp_source.html">Pn532NfcTransport.cpp</a>.</p>
+<p>Scan for a passive ISO 14443-A card. </p>
+<p>Calls <a class="el" href="group__pn532__driver.html#ga3f057956762612b2dd167744fa6b9b64">pn532_read_passive_target_id</a> with the ISO 14443-A baud-rate selector.</p>
+<dl class="section return"><dt>Returns</dt><dd><code>true</code> if at least one card was found in the RF field, <code>false</code> if no card is present or a communication error occurred. </dd></dl>
 
-<p class="reference">References <a class="el" href="Pn532NfcTransport_8h_source.html#l00036">m_dev</a>, <a class="el" href="pn532_8h_source.html#l00021">PN532_MIFARE_ISO14443A</a>, and <a class="el" href="pn532_8c_source.html#l00780">pn532_read_passive_target_id()</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Pn532NfcTransport_8cpp_source.html#l00033">33</a> of file <a class="el" href="Pn532NfcTransport_8cpp_source.html">Pn532NfcTransport.cpp</a>.</p>
+
+<p class="reference">References <a class="el" href="Pn532NfcTransport_8h_source.html#l00164">m_dev</a>, <a class="el" href="pn532_8h_source.html#l00054">PN532_MIFARE_ISO14443A</a>, and <a class="el" href="pn532_8c_source.html#l00775">pn532_read_passive_target_id()</a>.</p>
 
 </div>
 </div>
@@ -259,11 +300,15 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Pn532NfcTransport_8cpp_source.html#l00052">52</a> of file <a class="el" href="Pn532NfcTransport_8cpp_source.html">Pn532NfcTransport.cpp</a>.</p>
+<p>Query and log the PN532 firmware version. </p>
+<p>Calls <a class="el" href="group__pn532__driver.html#ga85ff53b4eb70efa903d9eb40776093ec">pn532_get_firmware_version</a> and prints a human-readable version string (<code>"PN5xx firmware vX.Y"</code>) via the injected logger.</p>
+<dl class="section return"><dt>Returns</dt><dd><code>true</code> if the PN532 returned a non-zero version, <code>false</code> on communication failure. </dd></dl>
 
-<p class="reference">References <a class="el" href="Pn532NfcTransport_8h_source.html#l00036">m_dev</a>, <a class="el" href="Pn532NfcTransport_8h_source.html#l00037">m_logger</a>, <a class="el" href="Pn532NfcTransport_8cpp_source.html#l00011">PN532_BYTE_MASK</a>, <a class="el" href="Pn532NfcTransport_8cpp_source.html#l00008">PN532_FW_IC_SHIFT</a>, <a class="el" href="Pn532NfcTransport_8cpp_source.html#l00010">PN532_FW_REV_SHIFT</a>, <a class="el" href="Pn532NfcTransport_8cpp_source.html#l00009">PN532_FW_VER_SHIFT</a>, and <a class="el" href="pn532_8c_source.html#l00723">pn532_get_firmware_version()</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Pn532NfcTransport_8cpp_source.html#l00061">61</a> of file <a class="el" href="Pn532NfcTransport_8cpp_source.html">Pn532NfcTransport.cpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="Connect_2main_2main_8cpp_source.html#l00054">app_main()</a>.</p>
+<p class="reference">References <a class="el" href="Pn532NfcTransport_8h_source.html#l00164">m_dev</a>, <a class="el" href="Pn532NfcTransport_8h_source.html#l00165">m_logger</a>, <a class="el" href="Pn532NfcTransport_8cpp_source.html#l00020">PN532_BYTE_MASK</a>, <a class="el" href="Pn532NfcTransport_8cpp_source.html#l00017">PN532_FW_IC_SHIFT</a>, <a class="el" href="Pn532NfcTransport_8cpp_source.html#l00019">PN532_FW_REV_SHIFT</a>, <a class="el" href="Pn532NfcTransport_8cpp_source.html#l00018">PN532_FW_VER_SHIFT</a>, and <a class="el" href="pn532_8c_source.html#l00718">pn532_get_firmware_version()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="Connect_2main_2main_8cpp_source.html#l00138">app_main()</a>.</p>
 
 </div>
 </div>
@@ -290,9 +335,12 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Pn532NfcTransport_8cpp_source.html#l00047">47</a> of file <a class="el" href="Pn532NfcTransport_8cpp_source.html">Pn532NfcTransport.cpp</a>.</p>
+<p>Release the currently selected NFC target. </p>
+<p>Calls <a class="el" href="group__pn532__driver.html#gae59c20d07d628e246c7e43d4a1169bff">pn532_release_target</a> so the PN532 drops its logical link to the card and is ready for the next <a class="el" href="#a4bfab871b695ac0e1ae51af24d5d0b50">inListPassiveTarget</a> call. </p>
 
-<p class="reference">References <a class="el" href="Pn532NfcTransport_8h_source.html#l00036">m_dev</a>, and <a class="el" href="pn532_8c_source.html#l00880">pn532_release_target()</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Pn532NfcTransport_8cpp_source.html#l00056">56</a> of file <a class="el" href="Pn532NfcTransport_8cpp_source.html">Pn532NfcTransport.cpp</a>.</p>
+
+<p class="reference">References <a class="el" href="Pn532NfcTransport_8h_source.html#l00164">m_dev</a>, and <a class="el" href="pn532_8c_source.html#l00875">pn532_release_target()</a>.</p>
 
 </div>
 </div>
@@ -333,9 +381,23 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Pn532NfcTransport_8cpp_source.html#l00030">30</a> of file <a class="el" href="Pn532NfcTransport_8cpp_source.html">Pn532NfcTransport.cpp</a>.</p>
+<p>Exchange one ISO-DEP APDU with the selected card (short response). </p>
+<p>Use this overload when the card's DataOut is guaranteed to fit in a <code>uint8_t</code> (≤ 255 bytes). For larger responses — such as the manufacturer certificate — use <a class="el" href="#a875e990dadfed0d4832d8837251fd42f">sendAPDULarge</a>.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">apdu</td><td>APDU command bytes (must not be <code>NULL</code>). </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">apduLen</td><td>Length of <code class="param">apdu</code> in bytes (≤ <a class="el" href="group__pn532__driver.html#gae43302bd1c27042c417b224a83db7f41">PN532_MAX_APDU_LEN</a>). </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">response</td><td>Caller-allocated buffer for the DataOut bytes. </td></tr>
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">responseLen</td><td>In: capacity of <code class="param">response</code>. Out: number of DataOut bytes written, capped at <code>UINT8_MAX</code> on overflow. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>true</code> on a successful APDU exchange, <code>false</code> otherwise.</dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#a875e990dadfed0d4832d8837251fd42f" title="Exchange one ISO-DEP APDU with the selected card (large response).">sendAPDULarge</a> </dd></dl>
 
-<p class="reference">References <a class="el" href="Pn532NfcTransport_8h_source.html#l00036">m_dev</a>, and <a class="el" href="pn532_8c_source.html#l00810">pn532_send_apdu()</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Pn532NfcTransport_8cpp_source.html#l00039">39</a> of file <a class="el" href="Pn532NfcTransport_8cpp_source.html">Pn532NfcTransport.cpp</a>.</p>
+
+<p class="reference">References <a class="el" href="Pn532NfcTransport_8h_source.html#l00164">m_dev</a>, and <a class="el" href="pn532_8c_source.html#l00805">pn532_send_apdu()</a>.</p>
 
 </div>
 </div>
@@ -376,9 +438,23 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Pn532NfcTransport_8cpp_source.html#l00040">40</a> of file <a class="el" href="Pn532NfcTransport_8cpp_source.html">Pn532NfcTransport.cpp</a>.</p>
+<p>Exchange one ISO-DEP APDU with the selected card (large response). </p>
+<p>Identical to <a class="el" href="#af07e00c6403c485b9f914d783462d150">sendAPDU</a> but uses a <code>uint16_t</code> response length, allowing DataOut up to 65535 bytes. Used for commands whose response can exceed 255 bytes (e.g. <code>GET_MANUFACTURER_CERTIFICATE</code> whose DataOut may be ~415 bytes and requires an extended PN532 frame).</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">apdu</td><td>APDU command bytes (must not be <code>NULL</code>). </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">apduLen</td><td>Length of <code class="param">apdu</code> in bytes (≤ <a class="el" href="group__pn532__driver.html#gae43302bd1c27042c417b224a83db7f41">PN532_MAX_APDU_LEN</a>). </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">response</td><td>Caller-allocated buffer for the DataOut bytes. </td></tr>
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">responseLen</td><td>In: capacity of <code class="param">response</code> in bytes. Out: number of DataOut bytes actually written. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>true</code> on a successful APDU exchange, <code>false</code> otherwise.</dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#af07e00c6403c485b9f914d783462d150" title="Exchange one ISO-DEP APDU with the selected card (short response).">sendAPDU</a> </dd></dl>
 
-<p class="reference">References <a class="el" href="Pn532NfcTransport_8h_source.html#l00036">m_dev</a>, and <a class="el" href="pn532_8c_source.html#l00810">pn532_send_apdu()</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Pn532NfcTransport_8cpp_source.html#l00049">49</a> of file <a class="el" href="Pn532NfcTransport_8cpp_source.html">Pn532NfcTransport.cpp</a>.</p>
+
+<p class="reference">References <a class="el" href="Pn532NfcTransport_8h_source.html#l00164">m_dev</a>, and <a class="el" href="pn532_8c_source.html#l00805">pn532_send_apdu()</a>.</p>
 
 </div>
 </div>
@@ -403,9 +479,11 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Pn532NfcTransport_8h_source.html#l00036">36</a> of file <a class="el" href="Pn532NfcTransport_8h_source.html">Pn532NfcTransport.h</a>.</p>
+<p>PN532 device handle (not owned; must outlive this object). </p>
 
-<p class="reference">Referenced by <a class="el" href="Pn532NfcTransport_8cpp_source.html#l00018">begin()</a>, <a class="el" href="Pn532NfcTransport_8cpp_source.html#l00024">inListPassiveTarget()</a>, <a class="el" href="Pn532NfcTransport_8cpp_source.html#l00013">Pn532NfcTransport()</a>, <a class="el" href="Pn532NfcTransport_8cpp_source.html#l00052">printFirmwareVersion()</a>, <a class="el" href="Pn532NfcTransport_8cpp_source.html#l00047">resetReader()</a>, <a class="el" href="Pn532NfcTransport_8cpp_source.html#l00030">sendAPDU()</a>, and <a class="el" href="Pn532NfcTransport_8cpp_source.html#l00040">sendAPDULarge()</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Pn532NfcTransport_8h_source.html#l00164">164</a> of file <a class="el" href="Pn532NfcTransport_8h_source.html">Pn532NfcTransport.h</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="Pn532NfcTransport_8cpp_source.html#l00027">begin()</a>, <a class="el" href="Pn532NfcTransport_8cpp_source.html#l00033">inListPassiveTarget()</a>, <a class="el" href="Pn532NfcTransport_8cpp_source.html#l00022">Pn532NfcTransport()</a>, <a class="el" href="Pn532NfcTransport_8cpp_source.html#l00061">printFirmwareVersion()</a>, <a class="el" href="Pn532NfcTransport_8cpp_source.html#l00056">resetReader()</a>, <a class="el" href="Pn532NfcTransport_8cpp_source.html#l00039">sendAPDU()</a>, and <a class="el" href="Pn532NfcTransport_8cpp_source.html#l00049">sendAPDULarge()</a>.</p>
 
 </div>
 </div>
@@ -429,9 +507,11 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Pn532NfcTransport_8h_source.html#l00037">37</a> of file <a class="el" href="Pn532NfcTransport_8h_source.html">Pn532NfcTransport.h</a>.</p>
+<p>Logger for <a class="el" href="#acf24e1657c7dc60f43a912762469714c">printFirmwareVersion</a> output. </p>
 
-<p class="reference">Referenced by <a class="el" href="Pn532NfcTransport_8cpp_source.html#l00013">Pn532NfcTransport()</a>, and <a class="el" href="Pn532NfcTransport_8cpp_source.html#l00052">printFirmwareVersion()</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Pn532NfcTransport_8h_source.html#l00165">165</a> of file <a class="el" href="Pn532NfcTransport_8h_source.html">Pn532NfcTransport.h</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="Pn532NfcTransport_8cpp_source.html#l00022">Pn532NfcTransport()</a>, and <a class="el" href="Pn532NfcTransport_8cpp_source.html#l00061">printFirmwareVersion()</a>.</p>
 
 </div>
 </div>

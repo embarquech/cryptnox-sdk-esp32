@@ -92,6 +92,9 @@ $(function(){initNavTree('ESP32Platform_8cpp.html','',''); });
   <div class="headertitle"><div class="title">ESP32Platform.cpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Implementation of <a class="el" href="classESP32Platform.html">ESP32Platform</a> — FreeRTOS sleep backend.  
+<a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="ESP32Platform_8h_source.html">ESP32Platform.h</a>&quot;</code><br />
 <code>#include &lt;freertos/FreeRTOS.h&gt;</code><br />
 <code>#include &lt;freertos/task.h&gt;</code><br />
@@ -102,7 +105,12 @@ Include dependency graph for ESP32Platform.cpp:</div>
 </div>
 </div>
 <p><a href="ESP32Platform_8cpp_source.html">Go to the source code of this file.</a></p>
-</div><!-- contents -->
+<a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Implementation of <a class="el" href="classESP32Platform.html">ESP32Platform</a> — FreeRTOS sleep backend. </p>
+<p>Delegates CW_Platform::sleep_ms to <code>vTaskDelay</code> so the calling FreeRTOS task yields to the scheduler for the requested duration. Full API documentation lives on the declarations in <a class="el" href="ESP32Platform_8h.html">ESP32Platform.h</a>. </p>
+
+<p class="definition">Definition in file <a class="el" href="ESP32Platform_8cpp_source.html">ESP32Platform.cpp</a>.</p>
+</div></div><!-- contents -->
 </div><!-- doc-content -->
 <div id="page-nav" class="page-nav-panel">
 <div id="page-nav-resize-handle"></div>

@@ -11,7 +11,7 @@
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title=" ">
+<g id="a_Node000001"><a xlink:title="CW_Logger implementation that writes to ESP32 UART0 via printf.">
 <polygon fill="#999999" stroke="#666666" points="145,-85 0,-85 0,-55 145,-55 145,-85"/>
 <text text-anchor="start" x="8" y="-73" font-family="Helvetica,sans-Serif" font-size="10.00">components/esp32_logger</text>
 <text text-anchor="middle" x="72.5" y="-62" font-family="Helvetica,sans-Serif" font-size="10.00">/include/ESP32Logger.h</text>

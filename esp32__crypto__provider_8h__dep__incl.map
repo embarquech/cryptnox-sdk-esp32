@@ -1,6 +1,6 @@
 <map id="components/crypto_provider/include/esp32_crypto_provider.h" name="components/crypto_provider/include/esp32_crypto_provider.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="706,5,942,45"/>
-<area shape="rect" id="Node000002" href="$esp32__crypto__provider_8cpp.html" title=" " alt="" coords="5,101,213,141"/>
+<area shape="rect" id="Node000001" title="CW_CryptoProvider implementation for ESP32 using mbedTLS and the hardware TRNG." alt="" coords="706,5,942,45"/>
+<area shape="rect" id="Node000002" href="$esp32__crypto__provider_8cpp.html" title="Implementation of ESP32CryptoProvider — mbedTLS + hardware TRNG backend." alt="" coords="5,101,213,141"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="693,40,474,62,226,96,188,103,187,98,225,91,473,57,692,34"/>
 <area shape="rect" id="Node000003" href="$test__esp32__crypto__provider_8cpp.html" title=" " alt="" coords="237,93,445,148"/>
 <area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="702,50,458,96,446,98,445,93,457,91,701,45"/>

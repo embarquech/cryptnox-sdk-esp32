@@ -40,7 +40,7 @@
 <!-- Node3 -->
 <g id="Node000003" class="node">
 <title>Node3</title>
-<g id="a_Node000003"><a xlink:href="esp32__crypto__provider_8h.html" target="_top" xlink:title=" ">
+<g id="a_Node000003"><a xlink:href="esp32__crypto__provider_8h.html" target="_top" xlink:title="CW_CryptoProvider implementation for ESP32 using mbedTLS and the hardware TRNG.">
 <polygon fill="white" stroke="#666666" points="203.5,-74 67.5,-74 67.5,-55 203.5,-55 203.5,-74"/>
 <text text-anchor="middle" x="135.5" y="-62" font-family="Helvetica,sans-Serif" font-size="10.00">esp32_crypto_provider.h</text>
 </a>
