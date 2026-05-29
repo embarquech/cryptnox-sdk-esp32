@@ -668,43 +668,43 @@ esp_err_t pn532_init(pn532_t *dev, const pn532_config_t *config)
     }
 
     if (ret == ESP_OK) {
-        /* Wake-up sequence per PN532 datasheet section 8.3.2.6 + Adafruit
-         * pattern.  When the host (ESP32) soft-reboots with the PN532 still
-         * powered, the chip is in Soft-Power-Down mode where:
+        /* Transport-specific post-wakeup sequencing.
          *
-         *   1. The main I2C peripheral is OFF
-         *   2. A dedicated "wake-up watcher" circuit listens on the bus
-         *   3. Any I2C transaction matching the slave address triggers it
-         *   4. The firmware must then identify the wake-up source AND
-         *      explicitly disable the watcher AND enable the main I2C
+         * I2C — Soft-Power-Down recovery:
+         *   When the host soft-reboots with the PN532 still powered the chip
+         *   enters Soft-Power-Down.  The main I2C peripheral is OFF; a
+         *   dedicated wake-up watcher listens on the bus.  The first
+         *   transaction that matches the slave address triggers the watcher,
+         *   but the firmware must then disable the watcher and re-enable the
+         *   main I2C peripheral — a process that takes up to 500 ms and
+         *   DISCARDS the triggering frame.  We therefore send a sacrificial
+         *   SAMConfig first, wait 500 ms, then send the real SAMConfig.
          *
-         * Step 4 takes time — and the first transaction that triggers the
-         * wake-up is LOST during the switch.  So we send a sacrificial
-         * "trigger" frame first, wait long enough for the firmware to enable
-         * the main I2C, then proceed with the real commands. */
+         * SPI — post-power-on synchronisation:
+         *   The Adafruit_PN532 library always issues SAMConfig as the very
+         *   first functional command after wakeup.  On some PN532 modules the
+         *   chip's internal power-on sequencing is not complete until roughly
+         *   2 s after VCC is applied; a SAMConfig sent before that point is
+         *   silently ignored (no ACK — 1 s command timeout).  By issuing a
+         *   sacrificial SAMConfig here we absorb that 1 s stall inside
+         *   pn532_init so that the application-level SAMConfig issued by
+         *   wallet.begin() arrives after the chip is fully ready. */
         if (config->transport == PN532_TRANSPORT_I2C) {
-            /* Trigger frame — full SAMConfig payload sent and discarded.  We
-             * ignore the result because the chip is still waking up. */
             ESP_LOGI(PN532_LOG_TAG, "I2C wake-up trigger (sacrificial SAMConfig)");
             (void)pn532_sam_config(dev);
-
-            /* Give the firmware plenty of time to disable the wake-up block
-             * and enable the main I2C peripheral. */
             vTaskDelay(pdMS_TO_TICKS(500));
-
-            /* Now the real init sequence — SAMConfig again to put the chip
-             * in Normal Mode with the parameters we want. */
             ESP_LOGI(PN532_LOG_TAG, "Real SAMConfig after wake-up");
+            (void)pn532_sam_config(dev);
+            vTaskDelay(pdMS_TO_TICKS(PN532_SYNC_DELAY_MS));
+        } else {
+            ESP_LOGI(PN532_LOG_TAG, "SPI post-power-on SAMConfig (sacrificial)");
             (void)pn532_sam_config(dev);
             vTaskDelay(pdMS_TO_TICKS(PN532_SYNC_DELAY_MS));
         }
 
-        /* Use pn532_get_firmware_version (not just send_command_check_ack)
-         * because it actually READS the response payload — draining the
-         * PN532's output FIFO.  If we leave the response sitting in the
-         * FIFO, the next command's read transactions get the stale firmware
-         * bytes instead of the new ACK, leading to mysterious timeouts in
-         * the wallet's SAMConfig that follows our init. */
+        /* Read the firmware version to confirm the chip is alive and to drain
+         * any stale response bytes from the PN532's output FIFO before the
+         * application-level SAMConfig is issued. */
         (void)pn532_get_firmware_version(dev);
         vTaskDelay(pdMS_TO_TICKS(PN532_SYNC_DELAY_MS));
 

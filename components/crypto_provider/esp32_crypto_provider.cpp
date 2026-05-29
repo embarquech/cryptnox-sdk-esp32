@@ -3,6 +3,15 @@
  * Copyright (c) 2026 Cryptnox SA
  */
 
+/**
+ * @file esp32_crypto_provider.cpp
+ * @brief Implementation of @ref ESP32CryptoProvider — mbedTLS + hardware TRNG backend.
+ *
+ * Stitches together the ESP-IDF cryptographic stack behind the single
+ * platform-independent @ref CW_CryptoProvider interface.  Full API
+ * documentation lives on the declarations in @ref esp32_crypto_provider.h.
+ */
+
 #include "esp32_crypto_provider.h"
 #include "CW_Utils.h"
 #include "uECC.h"

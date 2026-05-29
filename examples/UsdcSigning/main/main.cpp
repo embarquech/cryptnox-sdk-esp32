@@ -3,6 +3,32 @@
  * Copyright (c) 2026 Cryptnox SA
  */
 
+/**
+ * @file main.cpp
+ * @example UsdcSigning/main/main.cpp
+ * @brief Cryptnox ESP32 example: build, sign, and broadcast a USDC ERC-20 transfer.
+ *
+ * Wiring & prerequisites:
+ *   - PN532 NFC reader — transport selected by @ref SPI_ENABLED / @ref I2C_ENABLED
+ *     in @c config.h.
+ *   - A Cryptnox card initialised with a seed and a known PIN.
+ *   - @c config.h filled in with WiFi, RPC endpoint, and Ethereum addresses
+ *     (copy from @c config.template.h).
+ *
+ * What the firmware does in each loop iteration:
+ *   1. Wait for a card tap and establish the secure channel.
+ *   2. Fetch the current on-chain nonce from the RPC endpoint.
+ *   3. Build an EIP-1559 type-2 transaction for a USDC @c transfer(address,uint256) call.
+ *   4. RLP-encode the unsigned transaction and Keccak-256 hash it.
+ *   5. Sign the hash on the card (@ref CryptnoxWallet::sign).
+ *   6. Recover the @c v parity bit via @c eth_rpc_ecrecover.
+ *   7. RLP-encode the signed transaction and broadcast it.
+ *
+ * @note Fill in @ref WIFI_SSID, @ref WIFI_PASSWORD, @ref RPC_URL, @ref ADDR_FROM,
+ *       @ref ADDR_TO, @ref ADDR_USDC, and @ref CARD_PIN in @c config.h before
+ *       building.
+ */
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -33,26 +59,28 @@ extern "C" {
 static const char *const TAG = "usdc_signing";
 
 /* ── PN532 transport selector ─────────────────────────────────────
- * Set to 1 for I²C (CYD CN1 wiring) or 0 for SPI (Keyestudio breakout
- * on ESP32-S3 dev kit). Pin assignments below are gated by this flag. */
-#define PN532_USE_I2C       1
+ * Enable exactly one transport by setting its flag to 1 (the other to 0). */
+#define SPI_ENABLED         1
+#define I2C_ENABLED         0
 
-#if PN532_USE_I2C
-/* ── I²C wiring — Cheap Yellow Display (ESP32) CN1 connector ───── */
-#define PN532_I2C_PORT      0          /* I2C_NUM_0 */
-#define PN532_SDA           27         /* CN1 SDA */
-#define PN532_SCL           22         /* CN1 SCL */
-#define PN532_IRQ           (-1)       /* unused */
-#define PN532_RST           (-1)       /* unused — drain in pn532_init handles soft-reboot recovery */
-#define PN532_I2C_HZ        100000U
-#else
 /* ── SPI wiring — ESP32-S3 dev kit + Keyestudio PN532 breakout ──── */
+#if SPI_ENABLED
 #define SPI_MOSI            11
 #define SPI_MISO            13
 #define SPI_SCLK            12
 #define SPI_MAX_TRANSFER_SZ 4096
 #define SPI_PIN_UNUSED      (-1)
 #define NFC_CS              10
+#endif
+
+/* ── I²C wiring — Cheap Yellow Display (ESP32) CN1 connector ───── */
+#if I2C_ENABLED
+#define PN532_I2C_PORT      0          /* I2C_NUM_0 */
+#define PN532_SDA           27         /* CN1 SDA */
+#define PN532_SCL           22         /* CN1 SCL */
+#define PN532_IRQ           (-1)       /* unused */
+#define PN532_RST           (-1)       /* unused */
+#define PN532_I2C_HZ        100000U
 #endif
 
 /* ── USDC ERC-20 transfer(address,uint256) selector ──────────── */
@@ -268,16 +296,7 @@ extern "C" void app_main(void)
 
     pn532_config_t nfc_cfg;
     (void)memset(&nfc_cfg, 0, sizeof(nfc_cfg));
-#if PN532_USE_I2C
-    nfc_cfg.transport     = PN532_TRANSPORT_I2C;
-    nfc_cfg.i2c_port      = PN532_I2C_PORT;
-    nfc_cfg.pin_sda       = PN532_SDA;
-    nfc_cfg.pin_scl       = PN532_SCL;
-    nfc_cfg.pin_irq       = PN532_IRQ;
-    nfc_cfg.pin_rst       = PN532_RST;
-    nfc_cfg.i2c_clock_hz  = PN532_I2C_HZ;
-#else
-    /* SPI: share the SPI2 bus with anything else on the board. */
+#if SPI_ENABLED
     spi_bus_config_t buscfg;
     (void)memset(&buscfg, 0, sizeof(buscfg));
     buscfg.mosi_io_num     = SPI_MOSI;
@@ -291,7 +310,17 @@ extern "C" void app_main(void)
     nfc_cfg.transport     = PN532_TRANSPORT_SPI;
     nfc_cfg.spi_host      = SPI2_HOST;
     nfc_cfg.pin_cs        = NFC_CS;
-    nfc_cfg.skip_bus_init  = true;
+    nfc_cfg.skip_bus_init = true;
+#endif
+
+#if I2C_ENABLED
+    nfc_cfg.transport     = PN532_TRANSPORT_I2C;
+    nfc_cfg.i2c_port      = PN532_I2C_PORT;
+    nfc_cfg.pin_sda       = PN532_SDA;
+    nfc_cfg.pin_scl       = PN532_SCL;
+    nfc_cfg.pin_irq       = PN532_IRQ;
+    nfc_cfg.pin_rst       = PN532_RST;
+    nfc_cfg.i2c_clock_hz  = PN532_I2C_HZ;
 #endif
 
     esp_err_t nfc_ret = pn532_init(&nfc, &nfc_cfg);

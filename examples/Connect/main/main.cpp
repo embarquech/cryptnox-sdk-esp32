@@ -3,6 +3,27 @@
  * Copyright (c) 2026 Cryptnox SA
  */
 
+/**
+ * @file main.cpp
+ * @example Connect/main/main.cpp
+ * @brief Minimal Cryptnox ESP32 example: open a secure channel and fetch card info.
+ *
+ * Wiring & prerequisites:
+ *   - PN532 NFC reader on SPI: MOSI=11, MISO=13, SCLK=12, CS=10.
+ *   - A Cryptnox card initialised (use @c cryptnox @c initialize).
+ *
+ * What the firmware does in each loop iteration:
+ *   1. Connect to the card and establish the secure channel
+ *      (@ref CryptnoxWallet::connect).
+ *   2. On success, fetch card owner info
+ *      (@ref CryptnoxWallet::getCardInfo).
+ *   3. Disconnect (@ref CryptnoxWallet::disconnect).
+ *
+ * This example never submits a PIN, so it cannot lock the card. It is the
+ * safest starting point to validate wiring and the secure channel before
+ * moving to the @c VerifyPin or @c Sign examples.
+ */
+
 #include <string.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"

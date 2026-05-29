@@ -3,6 +3,35 @@
  * Copyright (c) 2026 Cryptnox SA
  */
 
+/**
+ * @file main.cpp
+ * @example Sign/main/main.cpp
+ * @brief Minimal Cryptnox ESP32 example: sign a 32-byte hash on the secp256k1 curve.
+ *
+ * Wiring & prerequisites:
+ *   - PN532 NFC reader on SPI: MOSI=11, MISO=13, SCLK=12, CS=10.
+ *   - A Cryptnox card initialised with a known PIN and a loaded seed
+ *     (use the Cryptnox CLI: @c cryptnox @c initialize then
+ *     @c cryptnox @c seed @c generate).
+ *   - @ref DEMO_PIN must match the PIN set on the card.
+ *
+ * What the firmware does in each loop iteration:
+ *   1. Connect to the card and establish the secure channel.
+ *   2. Sign a 32-byte test hash on the secp256k1 curve (key type
+ *      @ref CW_SIGN_CURR_K1, signature type @ref CW_SIGN_SIG_ECDSA_LOW_S,
+ *      PIN included in the sign payload via @ref CW_SIGN_WITH_PIN).
+ *   3. Print the raw r‖s signature bytes, wipe sensitive buffers, disconnect.
+ *
+ * @warning On @ref CW_SIGN_PIN_INCORRECT the firmware enters an infinite
+ *          halt: every wrong PIN attempt decrements the card's retry counter
+ *          and reaching 0 permanently blocks the PIN.  Verify @ref DEMO_PIN
+ *          matches the card before flashing.
+ *
+ * @note The hash filled with 0x01 is a test pattern.  In real use replace it
+ *       with the SHA-256 (or Keccak-256 for Ethereum) digest of the
+ *       transaction you want the card to sign.
+ */
+
 #include <string.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"

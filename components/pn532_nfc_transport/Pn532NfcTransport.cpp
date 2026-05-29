@@ -3,6 +3,15 @@
  * Copyright (c) 2026 Cryptnox SA
  */
 
+/**
+ * @file Pn532NfcTransport.cpp
+ * @brief Implementation of @ref Pn532NfcTransport — ESP-IDF PN532 NFC transport.
+ *
+ * Thin delegation layer: every method forwards directly to the corresponding
+ * @ref pn532_driver function.  Full API documentation lives on the
+ * declarations in @ref Pn532NfcTransport.h.
+ */
+
 #include "Pn532NfcTransport.h"
 
 static const uint32_t PN532_FW_IC_SHIFT  = 24U;

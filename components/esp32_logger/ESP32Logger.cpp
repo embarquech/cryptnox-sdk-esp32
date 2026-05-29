@@ -3,6 +3,17 @@
  * Copyright (c) 2026 Cryptnox SA
  */
 
+/**
+ * @file ESP32Logger.cpp
+ * @brief Implementation of @ref ESP32Logger — ESP32 UART0 logging backend.
+ *
+ * Routes all @ref CW_Logger output through the ESP-IDF UART driver on UART0.
+ * Full API documentation lives on the declarations in @ref ESP32Logger.h.
+ *
+ * @warning Do not ship this logger in production firmware; it exposes APDU
+ *          traces and PIN values on the serial console (LOW-03).
+ */
+
 /******************************************************************
  * 1. Included files
  ******************************************************************/

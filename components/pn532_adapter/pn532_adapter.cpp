@@ -3,6 +3,15 @@
  * Copyright (c) 2026 Cryptnox SA
  */
 
+/**
+ * @file pn532_adapter.cpp
+ * @brief Implementation of @ref PN532Adapter — self-contained PN532 NFC transport.
+ *
+ * Owns a @ref pn532_t handle internally and initialises it on the first
+ * @ref PN532Adapter::begin call.  Full API documentation lives on the
+ * declarations in @ref pn532_adapter.h.
+ */
+
 #include "pn532_adapter.h"
 #include "esp_log.h"
 #include <string.h>

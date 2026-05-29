@@ -3,6 +3,28 @@
  * Copyright (c) 2026 Cryptnox SA
  */
 
+/**
+ * @file main.cpp
+ * @example VerifyPin/main/main.cpp
+ * @brief Minimal Cryptnox ESP32 example: verify the card PIN over a secure channel.
+ *
+ * Wiring & prerequisites:
+ *   - PN532 NFC reader on SPI: MOSI=11, MISO=13, SCLK=12, CS=10.
+ *   - A Cryptnox card initialised with a known PIN.
+ *   - @ref DEMO_PIN must match the PIN set on the card.
+ *
+ * What the firmware does in each loop iteration:
+ *   1. Connect to the card and establish the secure channel.
+ *   2. Submit the PIN via @ref CryptnoxWallet::verifyPin.
+ *   3. On success print "PIN accepted"; on failure halt immediately to
+ *      protect the card's retry counter.
+ *
+ * @warning On PIN rejection the firmware enters an infinite halt.  Each
+ *          wrong PIN decrements the card's retry counter; reaching 0
+ *          permanently blocks the PIN and requires the PUK to unblock.
+ *          Fix @ref DEMO_PIN before flashing again.
+ */
+
 #include <string.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
