@@ -371,9 +371,7 @@ static bool send_command_check_ack(pn532_t *dev, const uint8_t *cmd,
     bool timed_out = false;
     bool result = false;
 
-    ESP_LOGI(PN532_LOG_TAG, "═══ cmd=0x%02X cmd_len=%u ═══", cmd[0], (unsigned)cmd_len);
     write_command(dev, cmd, cmd_len);
-    ESP_LOGI(PN532_LOG_TAG, "→ polling RDY for ACK...");
 
     /* Wait until the PN532 signals it is ready to send the ACK frame. */
     while ((!timed_out) && (read_ready(dev) != PN532_SPI_READY)) {
@@ -389,11 +387,9 @@ static bool send_command_check_ack(pn532_t *dev, const uint8_t *cmd,
     }
 
     if (timed_out) {
-        ESP_LOGE(PN532_LOG_TAG, "→ TIMEOUT waiting RDY for ACK");
+        ESP_LOGE(PN532_LOG_TAG, "cmd=0x%02X: TIMEOUT waiting for ACK", (unsigned)cmd[0]);
     } else {
-        ESP_LOGI(PN532_LOG_TAG, "→ RDY after %u ms, reading ACK...", (unsigned)timer);
         bool ack_ok = check_ack(dev);
-        ESP_LOGI(PN532_LOG_TAG, "→ ACK %s", ack_ok ? "OK" : "MISMATCH");
 
         if (ack_ok) {
             timer = 0U;
@@ -413,15 +409,14 @@ static bool send_command_check_ack(pn532_t *dev, const uint8_t *cmd,
             }
 
             if (timed_out) {
-                ESP_LOGE(PN532_LOG_TAG, "→ TIMEOUT waiting RDY for response");
-            } else {
-                ESP_LOGI(PN532_LOG_TAG, "→ response RDY after %u ms", (unsigned)timer);
+                ESP_LOGE(PN532_LOG_TAG, "cmd=0x%02X: TIMEOUT waiting for response", (unsigned)cmd[0]);
             }
             result = !timed_out;
+        } else {
+            ESP_LOGE(PN532_LOG_TAG, "cmd=0x%02X: ACK mismatch", (unsigned)cmd[0]);
         }
     }
 
-    ESP_LOGI(PN532_LOG_TAG, "═══ result=%s ═══", result ? "OK" : "FAIL");
     return result;
 }
 

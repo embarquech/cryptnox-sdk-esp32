@@ -6,17 +6,93 @@
 #include <string.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
+#include "freertos/event_groups.h"
 #include "driver/spi_master.h"
 #include "esp_log.h"
+#include "esp_wifi.h"
+#include "esp_netif.h"
+#include "esp_event.h"
+#include "nvs_flash.h"
 #include "pn532.h"
 #include "CryptnoxWallet.h"
 #include "Pn532NfcTransport.h"
 #include "ESP32Logger.h"
 #include "esp32_crypto_provider.h"
 #include "ESP32Platform.h"
+#include "config.h"
 
-static const char *const TAG = "sign";
-static const uint32_t LOOP_DELAY_MS = 1000U;
+static const char *const TAG           = "sign";
+static const uint32_t    LOOP_DELAY_MS  = 1000U;
+static const uint32_t    WIFI_TIMEOUT_MS = 10000U;
+static const int         WIFI_MAX_RETRY  = 5;
+
+#define WIFI_CONNECTED_BIT BIT0
+#define WIFI_FAIL_BIT      BIT1
+
+static EventGroupHandle_t s_wifi_event_group;
+static int                s_retry_num = 0;
+
+static void wifi_event_handler(void *arg, esp_event_base_t event_base,
+                               int32_t event_id, void *event_data)
+{
+    (void)arg;
+    (void)event_data;
+    if ((event_base == WIFI_EVENT) && (event_id == WIFI_EVENT_STA_START)) {
+        esp_wifi_connect();
+    } else if ((event_base == WIFI_EVENT) &&
+               (event_id == WIFI_EVENT_STA_DISCONNECTED)) {
+        if (s_retry_num < WIFI_MAX_RETRY) {
+            esp_wifi_connect();
+            s_retry_num++;
+        } else {
+            xEventGroupSetBits(s_wifi_event_group, WIFI_FAIL_BIT);
+        }
+    } else if ((event_base == IP_EVENT) && (event_id == IP_EVENT_STA_GOT_IP)) {
+        s_retry_num = 0;
+        xEventGroupSetBits(s_wifi_event_group, WIFI_CONNECTED_BIT);
+    } else {
+        /* other events ignored */
+    }
+}
+
+static void wifi_start(void)
+{
+    s_wifi_event_group = xEventGroupCreate();
+    s_retry_num = 0;
+    ESP_ERROR_CHECK(esp_netif_init());
+    ESP_ERROR_CHECK(esp_event_loop_create_default());
+    (void)esp_netif_create_default_wifi_sta();
+    wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
+    ESP_ERROR_CHECK(esp_wifi_init(&cfg));
+    esp_event_handler_instance_t h_any;
+    esp_event_handler_instance_t h_ip;
+    ESP_ERROR_CHECK(esp_event_handler_instance_register(
+        WIFI_EVENT, ESP_EVENT_ANY_ID, &wifi_event_handler, NULL, &h_any));
+    ESP_ERROR_CHECK(esp_event_handler_instance_register(
+        IP_EVENT, IP_EVENT_STA_GOT_IP, &wifi_event_handler, NULL, &h_ip));
+    wifi_config_t wifi_cfg;
+    (void)memset(&wifi_cfg, 0, sizeof(wifi_cfg));
+    (void)strncpy((char *)wifi_cfg.sta.ssid,     WIFI_SSID,
+                  sizeof(wifi_cfg.sta.ssid)     - 1U);
+    (void)strncpy((char *)wifi_cfg.sta.password, WIFI_PASSWORD,
+                  sizeof(wifi_cfg.sta.password) - 1U);
+    wifi_cfg.sta.threshold.authmode = WIFI_AUTH_WPA2_PSK;
+    ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA));
+    ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_STA, &wifi_cfg));
+    ESP_ERROR_CHECK(esp_wifi_start());
+    EventBits_t bits = xEventGroupWaitBits(s_wifi_event_group,
+                                           WIFI_CONNECTED_BIT | WIFI_FAIL_BIT,
+                                           pdFALSE, pdFALSE,
+                                           pdMS_TO_TICKS(WIFI_TIMEOUT_MS));
+    if ((bits & WIFI_CONNECTED_BIT) != 0U) {
+        ESP_LOGI(TAG, "WiFi connected");
+    } else {
+        ESP_LOGW(TAG, "WiFi connect failed — TRNG entropy may be reduced");
+    }
+    (void)esp_event_handler_instance_unregister(IP_EVENT, IP_EVENT_STA_GOT_IP, h_ip);
+    (void)esp_event_handler_instance_unregister(WIFI_EVENT, ESP_EVENT_ANY_ID, h_any);
+    vEventGroupDelete(s_wifi_event_group);
+}
 
 #define SPI_MOSI            11
 #define SPI_MISO            13
@@ -92,6 +168,15 @@ static void run_sign_loop(CryptnoxWallet &wallet)
 
 extern "C" void app_main(void)
 {
+    esp_err_t nvs_ret = nvs_flash_init();
+    if ((nvs_ret == ESP_ERR_NVS_NO_FREE_PAGES) ||
+        (nvs_ret == ESP_ERR_NVS_NEW_VERSION_FOUND)) {
+        ESP_ERROR_CHECK(nvs_flash_erase());
+        nvs_ret = nvs_flash_init();
+    }
+    ESP_ERROR_CHECK(nvs_ret);
+    wifi_start();
+
     spi_bus_config_t buscfg = {
         .mosi_io_num     = SPI_MOSI,
         .miso_io_num     = SPI_MISO,
