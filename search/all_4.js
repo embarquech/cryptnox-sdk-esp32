@@ -2,7 +2,7 @@ var searchData=
 [
   ['a_20cryptnox_20card_0',['1. Connect to a Cryptnox card',['../index.html#autotoc_md13',1,'']]],
   ['a_20transaction_20hash_1',['3. Sign a transaction hash',['../index.html#autotoc_md15',1,'']]],
-  ['adapters_2',['adapters',['../group__esp32__adapters.html',1,'ESP32 concrete adapters'],['../group__esp32__nfc__transport.html',1,'ESP32 NFC transport adapters']]],
+  ['adapters_2',['ESP32 concrete adapters',['../group__esp32__adapters.html',1,'']]],
   ['addr_5ffrom_3',['ADDR_FROM',['../config_8template_8h.html#a5d8bab74920aab1e98e0b25ea1353a2b',1,'config.template.h']]],
   ['addr_5fto_4',['ADDR_TO',['../config_8template_8h.html#add6e87e7e1503d3d6117bbf1aa674e03',1,'config.template.h']]],
   ['addr_5fusdc_5',['ADDR_USDC',['../config_8template_8h.html#a0602094f118a6fc9bd4498a386352018',1,'config.template.h']]],

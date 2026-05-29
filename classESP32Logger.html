@@ -158,8 +158,10 @@ Private Attributes</h2></td></tr>
 <p>Outputs all log traffic through UART0 (the default USB-serial console on most ESP32 dev kits). The <code>__FlashStringHelper</code> overloads are accepted for Arduino source-compatibility but the pointer is treated as a plain RAM pointer — there is no Harvard-architecture flash on ESP32.</p>
 <dl class="section note"><dt>Note</dt><dd>Call <a class="el" href="#a6e68aa4b9e35384aaf32d68091715734">begin</a> once before passing this logger to CryptnoxWallet; calling any <code>print</code> / <code>println</code> method before <a class="el" href="#a6e68aa4b9e35384aaf32d68091715734">begin</a> is a no-op.</dd></dl>
 <dl class="section warning"><dt>Warning</dt><dd>In production firmware, replace this logger with a null implementation (a CW_Logger that silently discards all output). Leaving <a class="el" href="classESP32Logger.html">ESP32Logger</a> active on a production device exposes full APDU traces and PIN values on the serial console (LOW-03). </dd></dl>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="Connect_2main_2main_8cpp-example.html#_a23">Connect/main/main.cpp</a>, <a class="el" href="Sign_2main_2main_8cpp-example.html#_a23">Sign/main/main.cpp</a>, <a class="el" href="UsdcSigning_2main_2main_8cpp-example.html#_a53">UsdcSigning/main/main.cpp</a>, and <a class="el" href="VerifyPin_2main_2main_8cpp-example.html#_a23">VerifyPin/main/main.cpp</a>.</dd>
+</dl>
 
-<p class="definition">Definition at line <a class="el" href="ESP32Logger_8h_source.html#l00052">52</a> of file <a class="el" href="ESP32Logger_8h_source.html">ESP32Logger.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ESP32Logger_8h_source.html#l00048">48</a> of file <a class="el" href="ESP32Logger_8h_source.html">ESP32Logger.h</a>.</p>
 </div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="afc6ca8a4f201fb43d0bfdbfa352765d4" name="afc6ca8a4f201fb43d0bfdbfa352765d4"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#afc6ca8a4f201fb43d0bfdbfa352765d4">&#9670;&#160;</a></span>~ESP32Logger()</h2>
@@ -186,7 +188,7 @@ Private Attributes</h2></td></tr>
 
 <p>Default destructor. </p>
 
-<p class="definition">Definition at line <a class="el" href="ESP32Logger_8h_source.html#l00195">195</a> of file <a class="el" href="ESP32Logger_8h_source.html">ESP32Logger.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ESP32Logger_8h_source.html#l00191">191</a> of file <a class="el" href="ESP32Logger_8h_source.html">ESP32Logger.h</a>.</p>
 
 </div>
 </div>
@@ -222,12 +224,14 @@ Private Attributes</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><code>true</code> on success, <code>false</code> if UART driver installation fails. </dd></dl>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="Connect_2main_2main_8cpp-example.html#a24">Connect/main/main.cpp</a>, <a class="el" href="Sign_2main_2main_8cpp-example.html#a24">Sign/main/main.cpp</a>, <a class="el" href="UsdcSigning_2main_2main_8cpp-example.html#a54">UsdcSigning/main/main.cpp</a>, and <a class="el" href="VerifyPin_2main_2main_8cpp-example.html#a24">VerifyPin/main/main.cpp</a>.</dd>
+</dl>
 
 <p class="definition">Definition at line <a class="el" href="ESP32Logger_8cpp_source.html#l00095">95</a> of file <a class="el" href="ESP32Logger_8cpp_source.html">ESP32Logger.cpp</a>.</p>
 
-<p class="reference">References <a class="el" href="ESP32Logger_8h_source.html#l00198">m_initialized</a>, <a class="el" href="ESP32Logger_8cpp_source.html#l00033">UART_LOG_PORT</a>, and <a class="el" href="ESP32Logger_8cpp_source.html#l00034">UART_RX_FLOW_THRESH_NONE</a>.</p>
+<p class="reference">References <a class="el" href="ESP32Logger_8h_source.html#l00194">m_initialized</a>, <a class="el" href="ESP32Logger_8cpp_source.html#l00033">UART_LOG_PORT</a>, and <a class="el" href="ESP32Logger_8cpp_source.html#l00034">UART_RX_FLOW_THRESH_NONE</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="Connect_2main_2main_8cpp_source.html#l00138">app_main()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="Connect_2main_2main_8cpp_source.html#l00159">app_main()</a>.</p>
 
 </div>
 </div>
@@ -264,7 +268,7 @@ Private Attributes</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="ESP32Logger_8cpp_source.html#l00126">126</a> of file <a class="el" href="ESP32Logger_8cpp_source.html">ESP32Logger.cpp</a>.</p>
 
-<p class="reference">References <a class="el" href="ESP32Logger_8h_source.html#l00198">m_initialized</a>.</p>
+<p class="reference">References <a class="el" href="ESP32Logger_8h_source.html#l00194">m_initialized</a>.</p>
 
 </div>
 </div>
@@ -302,7 +306,7 @@ Private Attributes</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="ESP32Logger_8cpp_source.html#l00112">112</a> of file <a class="el" href="ESP32Logger_8cpp_source.html">ESP32Logger.cpp</a>.</p>
 
-<p class="reference">References <a class="el" href="ESP32Logger_8h_source.html#l00198">m_initialized</a>, and <a class="el" href="ESP32Logger_8cpp_source.html#l00062">uart_write_str()</a>.</p>
+<p class="reference">References <a class="el" href="ESP32Logger_8h_source.html#l00194">m_initialized</a>, and <a class="el" href="ESP32Logger_8cpp_source.html#l00062">uart_write_str()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="ESP32Logger_8cpp_source.html#l00192">println()</a>, <a class="el" href="ESP32Logger_8cpp_source.html#l00180">println()</a>, <a class="el" href="ESP32Logger_8cpp_source.html#l00186">println()</a>, <a class="el" href="ESP32Logger_8cpp_source.html#l00216">println()</a>, <a class="el" href="ESP32Logger_8cpp_source.html#l00204">println()</a>, <a class="el" href="ESP32Logger_8cpp_source.html#l00210">println()</a>, and <a class="el" href="ESP32Logger_8cpp_source.html#l00198">println()</a>.</p>
 
@@ -341,7 +345,7 @@ Private Attributes</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="ESP32Logger_8cpp_source.html#l00119">119</a> of file <a class="el" href="ESP32Logger_8cpp_source.html">ESP32Logger.cpp</a>.</p>
 
-<p class="reference">References <a class="el" href="ESP32Logger_8h_source.html#l00198">m_initialized</a>, and <a class="el" href="ESP32Logger_8cpp_source.html#l00062">uart_write_str()</a>.</p>
+<p class="reference">References <a class="el" href="ESP32Logger_8h_source.html#l00194">m_initialized</a>, and <a class="el" href="ESP32Logger_8cpp_source.html#l00062">uart_write_str()</a>.</p>
 
 </div>
 </div>
@@ -384,7 +388,7 @@ Private Attributes</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="ESP32Logger_8cpp_source.html#l00157">157</a> of file <a class="el" href="ESP32Logger_8cpp_source.html">ESP32Logger.cpp</a>.</p>
 
-<p class="reference">References <a class="el" href="ESP32Logger_8cpp_source.html#l00050">clamp_base()</a>, <a class="el" href="ESP32Logger_8h_source.html#l00198">m_initialized</a>, and <a class="el" href="ESP32Logger_8cpp_source.html#l00069">write_uint_to_uart()</a>.</p>
+<p class="reference">References <a class="el" href="ESP32Logger_8cpp_source.html#l00050">clamp_base()</a>, <a class="el" href="ESP32Logger_8h_source.html#l00194">m_initialized</a>, and <a class="el" href="ESP32Logger_8cpp_source.html#l00069">write_uint_to_uart()</a>.</p>
 
 </div>
 </div>
@@ -426,7 +430,7 @@ Private Attributes</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="ESP32Logger_8cpp_source.html#l00141">141</a> of file <a class="el" href="ESP32Logger_8cpp_source.html">ESP32Logger.cpp</a>.</p>
 
-<p class="reference">References <a class="el" href="ESP32Logger_8cpp_source.html#l00050">clamp_base()</a>, <a class="el" href="ESP32Logger_8h_source.html#l00198">m_initialized</a>, and <a class="el" href="ESP32Logger_8cpp_source.html#l00069">write_uint_to_uart()</a>.</p>
+<p class="reference">References <a class="el" href="ESP32Logger_8cpp_source.html#l00050">clamp_base()</a>, <a class="el" href="ESP32Logger_8h_source.html#l00194">m_initialized</a>, and <a class="el" href="ESP32Logger_8cpp_source.html#l00069">write_uint_to_uart()</a>.</p>
 
 </div>
 </div>
@@ -468,7 +472,7 @@ Private Attributes</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="ESP32Logger_8cpp_source.html#l00149">149</a> of file <a class="el" href="ESP32Logger_8cpp_source.html">ESP32Logger.cpp</a>.</p>
 
-<p class="reference">References <a class="el" href="ESP32Logger_8cpp_source.html#l00050">clamp_base()</a>, <a class="el" href="ESP32Logger_8h_source.html#l00198">m_initialized</a>, and <a class="el" href="ESP32Logger_8cpp_source.html#l00069">write_uint_to_uart()</a>.</p>
+<p class="reference">References <a class="el" href="ESP32Logger_8cpp_source.html#l00050">clamp_base()</a>, <a class="el" href="ESP32Logger_8h_source.html#l00194">m_initialized</a>, and <a class="el" href="ESP32Logger_8cpp_source.html#l00069">write_uint_to_uart()</a>.</p>
 
 </div>
 </div>
@@ -510,7 +514,7 @@ Private Attributes</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="ESP32Logger_8cpp_source.html#l00133">133</a> of file <a class="el" href="ESP32Logger_8cpp_source.html">ESP32Logger.cpp</a>.</p>
 
-<p class="reference">References <a class="el" href="ESP32Logger_8cpp_source.html#l00050">clamp_base()</a>, <a class="el" href="ESP32Logger_8h_source.html#l00198">m_initialized</a>, and <a class="el" href="ESP32Logger_8cpp_source.html#l00069">write_uint_to_uart()</a>.</p>
+<p class="reference">References <a class="el" href="ESP32Logger_8cpp_source.html#l00050">clamp_base()</a>, <a class="el" href="ESP32Logger_8h_source.html#l00194">m_initialized</a>, and <a class="el" href="ESP32Logger_8cpp_source.html#l00069">write_uint_to_uart()</a>.</p>
 
 </div>
 </div>
@@ -541,7 +545,7 @@ Private Attributes</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="ESP32Logger_8cpp_source.html#l00173">173</a> of file <a class="el" href="ESP32Logger_8cpp_source.html">ESP32Logger.cpp</a>.</p>
 
-<p class="reference">References <a class="el" href="ESP32Logger_8cpp_source.html#l00042">LOGGER_NEWLINE</a>, <a class="el" href="ESP32Logger_8h_source.html#l00198">m_initialized</a>, and <a class="el" href="ESP32Logger_8cpp_source.html#l00062">uart_write_str()</a>.</p>
+<p class="reference">References <a class="el" href="ESP32Logger_8cpp_source.html#l00042">LOGGER_NEWLINE</a>, <a class="el" href="ESP32Logger_8h_source.html#l00194">m_initialized</a>, and <a class="el" href="ESP32Logger_8cpp_source.html#l00062">uart_write_str()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="ESP32Logger_8cpp_source.html#l00192">println()</a>, <a class="el" href="ESP32Logger_8cpp_source.html#l00180">println()</a>, <a class="el" href="ESP32Logger_8cpp_source.html#l00186">println()</a>, <a class="el" href="ESP32Logger_8cpp_source.html#l00216">println()</a>, <a class="el" href="ESP32Logger_8cpp_source.html#l00204">println()</a>, <a class="el" href="ESP32Logger_8cpp_source.html#l00210">println()</a>, and <a class="el" href="ESP32Logger_8cpp_source.html#l00198">println()</a>.</p>
 
@@ -849,7 +853,7 @@ Private Attributes</h2></td></tr>
 
 <p><code>true</code> after a successful <a class="el" href="#a6e68aa4b9e35384aaf32d68091715734">begin</a> call. </p>
 
-<p class="definition">Definition at line <a class="el" href="ESP32Logger_8h_source.html#l00198">198</a> of file <a class="el" href="ESP32Logger_8h_source.html">ESP32Logger.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ESP32Logger_8h_source.html#l00194">194</a> of file <a class="el" href="ESP32Logger_8h_source.html">ESP32Logger.h</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="ESP32Logger_8cpp_source.html#l00095">begin()</a>, <a class="el" href="ESP32Logger_8cpp_source.html#l00126">print()</a>, <a class="el" href="ESP32Logger_8cpp_source.html#l00112">print()</a>, <a class="el" href="ESP32Logger_8cpp_source.html#l00119">print()</a>, <a class="el" href="ESP32Logger_8cpp_source.html#l00157">print()</a>, <a class="el" href="ESP32Logger_8cpp_source.html#l00141">print()</a>, <a class="el" href="ESP32Logger_8cpp_source.html#l00149">print()</a>, <a class="el" href="ESP32Logger_8cpp_source.html#l00133">print()</a>, and <a class="el" href="ESP32Logger_8cpp_source.html#l00173">println()</a>.</p>
 

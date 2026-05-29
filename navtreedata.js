@@ -47,15 +47,16 @@ var NAVTREE =
         [ "Enumerator", "globals_eval.html", null ],
         [ "Macros", "globals_defs.html", null ]
       ] ]
-    ] ]
+    ] ],
+    [ "Examples", "examples.html", "examples" ]
   ] ]
 ];
 
 var NAVTREEINDEX =
 [
 "Connect_2main_2config_8h.html",
-"dir_b6b098de74b0f0d601875053adccf7eb.html",
-"pn532__adapter_8h.html"
+"dir_8ba1d3d8f4265b52797e84d37632f7e6.html",
+"pn532__adapter_8cpp.html#a5a85b9c772bbeb480b209a3e6ea92b4c"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';

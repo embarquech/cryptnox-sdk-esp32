@@ -93,7 +93,7 @@ $(function(){initNavTree('group__esp32__adapters.html','',''); });
 </div><!--header-->
 <div class="contents">
 
-<p>Concrete CW_Logger, CW_Platform, and CW_CryptoProvider implementations for ESP32 / ESP-IDF.  
+<p>Concrete CW_NfcTransport / CW_CryptoProvider / CW_Logger / CW_Platform implementations for ESP32 / ESP-IDF.  
 <a href="#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-files" class="groupheader"><a id="files" name="files"></a>
@@ -104,6 +104,10 @@ Files</h2></td></tr>
 <tr class="memdesc:ESP32Logger_8h"><td class="mdescLeft">&#160;</td><td class="mdescRight">CW_Logger implementation that writes to ESP32 UART0 via <code>printf</code>. <br /></td></tr>
 <tr class="memitem:ESP32Platform_2Eh" id="r_ESP32Platform_2Eh"><td class="memItemLeft" align="right" valign="top">file &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ESP32Platform_8h.html">ESP32Platform.h</a></td></tr>
 <tr class="memdesc:ESP32Platform_8h"><td class="mdescLeft">&#160;</td><td class="mdescRight">CW_Platform implementation for ESP32 using FreeRTOS. <br /></td></tr>
+<tr class="memitem:pn532_5Fadapter_2Eh" id="r_pn532_5Fadapter_2Eh"><td class="memItemLeft" align="right" valign="top">file &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="pn532__adapter_8h.html">pn532_adapter.h</a></td></tr>
+<tr class="memdesc:pn532__adapter_8h"><td class="mdescLeft">&#160;</td><td class="mdescRight">Self-contained CW_NfcTransport adapter that owns its <a class="el" href="structpn532__t.html">pn532_t</a> handle. <br /></td></tr>
+<tr class="memitem:Pn532NfcTransport_2Eh" id="r_Pn532NfcTransport_2Eh"><td class="memItemLeft" align="right" valign="top">file &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="Pn532NfcTransport_8h.html">Pn532NfcTransport.h</a></td></tr>
+<tr class="memdesc:Pn532NfcTransport_8h"><td class="mdescLeft">&#160;</td><td class="mdescRight">CW_NfcTransport adapter wrapping the ESP-IDF <a class="el" href="group__pn532__driver.html">PN532 NFC driver</a>. <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-nested-classes" class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
@@ -113,9 +117,26 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">CW_Logger backed by ESP32 UART0.  <a href="classESP32Logger.html#details">More...</a><br /></td></tr>
 <tr class="memitem:ESP32Platform" id="r_ESP32Platform"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classESP32Platform.html">ESP32Platform</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">CW_Platform backed by FreeRTOS <code>vTaskDelay</code>.  <a href="classESP32Platform.html#details">More...</a><br /></td></tr>
+<tr class="memitem:PN532Adapter" id="r_PN532Adapter"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPN532Adapter.html">PN532Adapter</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Self-contained CW_NfcTransport that owns its <a class="el" href="structpn532__t.html">pn532_t</a> instance.  <a href="classPN532Adapter.html#details">More...</a><br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<p>Concrete CW_Logger, CW_Platform, and CW_CryptoProvider implementations for ESP32 / ESP-IDF. </p>
+<p>Concrete CW_NfcTransport / CW_CryptoProvider / CW_Logger / CW_Platform implementations for ESP32 / ESP-IDF. </p>
+<p>Each class in this group implements one of the abstract interfaces declared in adapters using the ESP-IDF peripheral drivers and mbedTLS:</p>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Adapter  </th><th class="markdownTableHeadNone">Interface  </th><th class="markdownTableHeadNone">Backing library / hardware  </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><a class="el" href="classPn532NfcTransport.html">Pn532NfcTransport</a>  </td><td class="markdownTableBodyNone">CW_NfcTransport  </td><td class="markdownTableBodyNone">ESP-IDF PN532 C driver (injected handle)  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><a class="el" href="classPN532Adapter.html">PN532Adapter</a>  </td><td class="markdownTableBodyNone">CW_NfcTransport  </td><td class="markdownTableBodyNone">ESP-IDF PN532 C driver (owned handle)  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><a class="el" href="classESP32CryptoProvider.html">ESP32CryptoProvider</a>  </td><td class="markdownTableBodyNone">CW_CryptoProvider  </td><td class="markdownTableBodyNone">mbedTLS + ESP32 hardware TRNG  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><a class="el" href="classESP32Logger.html">ESP32Logger</a>  </td><td class="markdownTableBodyNone">CW_Logger  </td><td class="markdownTableBodyNone">ESP32 UART0 (development builds)  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><a class="el" href="classESP32Platform.html">ESP32Platform</a>  </td><td class="markdownTableBodyNone">CW_Platform  </td><td class="markdownTableBodyNone">FreeRTOS <code>vTaskDelay</code>  </td></tr>
+</table>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <div id="page-nav" class="page-nav-panel">

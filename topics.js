@@ -19,7 +19,6 @@ var topics =
     [ "Security", "index.html#autotoc_md17", null ],
     [ "Documentation", "index.html#autotoc_md19", null ],
     [ "License", "index.html#autotoc_md20", null ],
-    [ "ESP32 concrete adapters", "group__esp32__adapters.html", "group__esp32__adapters" ],
     [ "PN532 NFC driver", "group__pn532__driver.html", "group__pn532__driver" ],
-    [ "ESP32 NFC transport adapters", "group__esp32__nfc__transport.html", "group__esp32__nfc__transport" ]
+    [ "ESP32 concrete adapters", "group__esp32__adapters.html", "group__esp32__adapters" ]
 ];
