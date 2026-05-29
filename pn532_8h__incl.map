@@ -1,0 +1,11 @@
+<map id="components/pn532/include/pn532.h" name="components/pn532/include/pn532.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="113,5,310,45"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,93,76,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="172,48,79,90,77,85,169,43"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="101,93,183,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="197,47,164,84,160,81,193,44"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="207,93,354,119"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="230,44,263,81,259,84,226,47"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="378,93,525,119"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="270,43,404,87,402,92,268,48"/>
+</map>

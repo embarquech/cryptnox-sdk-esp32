@@ -1,0 +1,5 @@
+<map id="PN532Adapter" name="PN532Adapter">
+<area shape="rect" id="Node000001" title="Concrete CW_NfcTransport implementation for the PN532 over SPI on ESP32&#45;S3." alt="" coords="15,79,129,104"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,139,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="75,44,75,79,69,79,69,44"/>
+</map>

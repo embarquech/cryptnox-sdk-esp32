@@ -1,0 +1,17 @@
+<map id="components/pn532_nfc_transport/include/Pn532NfcTransport.h" name="components/pn532_nfc_transport/include/Pn532NfcTransport.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="126,5,331,60"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,108,151,133"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="184,62,112,103,109,99,181,58"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="175,108,282,133"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="231,60,231,94,226,94,226,60"/>
+<area shape="rect" id="Node000004" href="$pn532_8h.html" title=" " alt="" coords="306,108,381,133"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="265,58,318,97,315,102,262,62"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="137,181,208,207"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="317,136,214,178,212,174,315,131"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="233,181,315,207"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="334,136,297,173,293,170,330,132"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="339,181,486,207"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="357,132,394,170,390,173,353,136"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="510,181,657,207"/>
+<area shape="poly" id="edge7_Node000004_Node000008" title=" " alt="" coords="382,130,532,175,531,180,380,136"/>
+</map>

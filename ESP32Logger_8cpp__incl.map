@@ -1,0 +1,17 @@
+<map id="components/esp32_logger/ESP32Logger.cpp" name="components/esp32_logger/ESP32Logger.cpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="229,5,422,45"/>
+<area shape="rect" id="Node000002" href="$ESP32Logger_8h.html" title=" " alt="" coords="5,93,123,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="264,48,116,92,115,87,262,43"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="146,93,217,119"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="292,48,216,89,213,84,290,43"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="241,93,316,119"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="316,47,295,83,290,80,312,44"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="340,93,407,119"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="339,44,361,80,357,83,335,47"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="431,93,502,119"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="360,43,435,84,432,89,358,48"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="526,93,629,119"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="386,43,528,87,527,92,385,48"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="11,167,117,192"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="67,119,67,153,61,153,61,119"/>
+</map>
