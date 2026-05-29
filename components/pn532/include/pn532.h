@@ -19,7 +19,7 @@ extern "C" {
 
 /* cppcheck-suppress misra-c2012-2.5 */
 #define PN532_MIFARE_ISO14443A  (0x00U)
-#define PN532_MAX_APDU_LEN      (253U)  /* max APDU bytes for pn532_send_apdu */
+#define PN532_MAX_APDU_LEN      (252U)  /* max APDU bytes: cmd_total_len=254, frame_len=255 (no uint8 overflow) */
 
 /* PN532 7-bit I2C address */
 #define PN532_I2C_ADDRESS       (0x24U)
