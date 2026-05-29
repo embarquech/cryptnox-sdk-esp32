@@ -10,3 +10,4 @@ sdkconfig.old
 
 # UsdcSigning runtime secrets — copy config.template.h → main/config.h and fill in credentials
 examples/UsdcSigning/main/config.h
+docs/html/
