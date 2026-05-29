@@ -11,6 +11,7 @@
  * Wiring & prerequisites:
  *   - PN532 NFC reader on SPI: MOSI=11, MISO=13, SCLK=12, CS=10.
  *   - A Cryptnox card initialised (use @c cryptnox @c initialize).
+ *   - @c config.h filled in with @ref WIFI_SSID and @ref WIFI_PASSWORD.
  *
  * What the firmware does in each loop iteration:
  *   1. Connect to the card and establish the secure channel
@@ -42,10 +43,18 @@
 #include "ESP32Platform.h"
 #include "config.h"
 
-static const char *const TAG = "connect";
-static const uint32_t LOOP_DELAY_MS   = 1000U;
-static const uint32_t WIFI_TIMEOUT_MS = 10000U;
-static const int      WIFI_MAX_RETRY  = 5;
+/* ── SPI wiring — ESP32-S3 dev kit + Keyestudio PN532 breakout ──── */
+#define SPI_MOSI            11
+#define SPI_MISO            13
+#define SPI_SCLK            12
+#define SPI_MAX_TRANSFER_SZ 4096
+#define SPI_PIN_UNUSED      (-1)
+#define NFC_CS              10
+
+static const char *const TAG           = "connect";
+static const uint32_t    LOOP_DELAY_MS  = 1000U;
+static const uint32_t    WIFI_TIMEOUT_MS = 10000U;
+static const int         WIFI_MAX_RETRY  = 5;
 
 #define WIFI_CONNECTED_BIT BIT0
 #define WIFI_FAIL_BIT      BIT1
@@ -53,12 +62,23 @@ static const int      WIFI_MAX_RETRY  = 5;
 static EventGroupHandle_t s_wifi_event_group;
 static int                s_retry_num = 0;
 
+/**
+ * @brief FreeRTOS event handler driving the Wi-Fi station state machine.
+ *
+ * Handles @c WIFI_EVENT_STA_START (triggers connection),
+ * @c WIFI_EVENT_STA_DISCONNECTED (retries up to @c WIFI_MAX_RETRY times),
+ * and @c IP_EVENT_STA_GOT_IP (signals success via the event group).
+ *
+ * @param[in] arg        Unused.
+ * @param[in] event_base Event base (@c WIFI_EVENT or @c IP_EVENT).
+ * @param[in] event_id   Event identifier within @p event_base.
+ * @param[in] event_data Event-specific data (unused).
+ */
 static void wifi_event_handler(void *arg, esp_event_base_t event_base,
                                int32_t event_id, void *event_data)
 {
     (void)arg;
     (void)event_data;
-
     if ((event_base == WIFI_EVENT) && (event_id == WIFI_EVENT_STA_START)) {
         esp_wifi_connect();
     } else if ((event_base == WIFI_EVENT) &&
@@ -77,25 +97,33 @@ static void wifi_event_handler(void *arg, esp_event_base_t event_base,
     }
 }
 
+/**
+ * @brief Initialise Wi-Fi station mode and block until connected or timeout.
+ *
+ * Starts the ESP Wi-Fi stack, registers @ref wifi_event_handler, configures
+ * the SSID and password from @ref WIFI_SSID / @ref WIFI_PASSWORD in
+ * @c config.h, then waits up to @c WIFI_TIMEOUT_MS for an IP address.
+ * The radio must be active before crypto operations so the hardware TRNG
+ * operates with full entropy (SEC-001).
+ *
+ * @note If the connection fails the function logs a warning and returns
+ *       normally; the firmware continues with reduced TRNG entropy.
+ */
 static void wifi_start(void)
 {
     s_wifi_event_group = xEventGroupCreate();
     s_retry_num = 0;
-
     ESP_ERROR_CHECK(esp_netif_init());
     ESP_ERROR_CHECK(esp_event_loop_create_default());
     (void)esp_netif_create_default_wifi_sta();
-
     wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
     ESP_ERROR_CHECK(esp_wifi_init(&cfg));
-
     esp_event_handler_instance_t h_any;
     esp_event_handler_instance_t h_ip;
     ESP_ERROR_CHECK(esp_event_handler_instance_register(
         WIFI_EVENT, ESP_EVENT_ANY_ID, &wifi_event_handler, NULL, &h_any));
     ESP_ERROR_CHECK(esp_event_handler_instance_register(
         IP_EVENT, IP_EVENT_STA_GOT_IP, &wifi_event_handler, NULL, &h_ip));
-
     wifi_config_t wifi_cfg;
     (void)memset(&wifi_cfg, 0, sizeof(wifi_cfg));
     (void)strncpy((char *)wifi_cfg.sta.ssid,     WIFI_SSID,
@@ -103,11 +131,9 @@ static void wifi_start(void)
     (void)strncpy((char *)wifi_cfg.sta.password, WIFI_PASSWORD,
                   sizeof(wifi_cfg.sta.password) - 1U);
     wifi_cfg.sta.threshold.authmode = WIFI_AUTH_WPA2_PSK;
-
     ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA));
     ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_STA, &wifi_cfg));
     ESP_ERROR_CHECK(esp_wifi_start());
-
     EventBits_t bits = xEventGroupWaitBits(s_wifi_event_group,
                                            WIFI_CONNECTED_BIT | WIFI_FAIL_BIT,
                                            pdFALSE, pdFALSE,
@@ -117,19 +143,20 @@ static void wifi_start(void)
     } else {
         ESP_LOGW(TAG, "WiFi connect failed — TRNG entropy may be reduced");
     }
-
     (void)esp_event_handler_instance_unregister(IP_EVENT, IP_EVENT_STA_GOT_IP, h_ip);
     (void)esp_event_handler_instance_unregister(WIFI_EVENT, ESP_EVENT_ANY_ID, h_any);
     vEventGroupDelete(s_wifi_event_group);
 }
 
-#define SPI_MOSI            11
-#define SPI_MISO            13
-#define SPI_SCLK            12
-#define SPI_MAX_TRANSFER_SZ 4096
-#define SPI_PIN_UNUSED      (-1)
-#define NFC_CS              10
-
+/**
+ * @brief Main application loop: connect, fetch card info, and disconnect.
+ *
+ * Each iteration calls @ref CryptnoxWallet::connect to establish the secure
+ * channel, retrieves owner info via @ref CryptnoxWallet::getCardInfo, then
+ * tears down the channel with @ref CryptnoxWallet::disconnect.
+ *
+ * @param[in] wallet Initialised wallet instance.
+ */
 static void run_connect_loop(CryptnoxWallet &wallet)
 {
     while (true) {
@@ -156,6 +183,12 @@ static void run_connect_loop(CryptnoxWallet &wallet)
     }
 }
 
+/**
+ * @brief ESP-IDF application entry point.
+ *
+ * Initialises NVS, starts Wi-Fi for full TRNG entropy, brings up the SPI
+ * bus and PN532 reader, then enters @ref run_connect_loop.
+ */
 extern "C" void app_main(void)
 {
     esp_err_t nvs_ret = nvs_flash_init();
@@ -165,7 +198,6 @@ extern "C" void app_main(void)
         nvs_ret = nvs_flash_init();
     }
     ESP_ERROR_CHECK(nvs_ret);
-
     wifi_start();
 
     spi_bus_config_t buscfg = {
