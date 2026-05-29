@@ -3,7 +3,7 @@ var searchData=
   ['m_5fdev_0',['m_dev',['../classPn532NfcTransport.html#a7f465ad3da18e83abf5c9537a59eabbe',1,'Pn532NfcTransport']]],
   ['m_5finitialized_1',['m_initialized',['../classESP32Logger.html#a765cb506b446d36cbf9ff62e3fab1ca5',1,'ESP32Logger']]],
   ['m_5flogger_2',['m_logger',['../classPn532NfcTransport.html#ae8004936425428cf22d8f58ccf371496',1,'Pn532NfcTransport']]],
-  ['main_2ecpp_3',['main.cpp',['../Connect_2main_2main_8cpp.html',1,'(Global Namespace)'],['../Sign_2main_2main_8cpp.html',1,'(Global Namespace)'],['../UsdcSigning_2main_2main_8cpp.html',1,'(Global Namespace)'],['../VerifyPin_2main_2main_8cpp.html',1,'(Global Namespace)']]],
+  ['main_2ecpp_3',['main.cpp',['../BasicUsage_2main_2main_8cpp.html',1,'(Global Namespace)'],['../Connect_2main_2main_8cpp.html',1,'(Global Namespace)'],['../Sign_2main_2main_8cpp.html',1,'(Global Namespace)'],['../UsdcSigning_2main_2main_8cpp.html',1,'(Global Namespace)'],['../VerifyPin_2main_2main_8cpp.html',1,'(Global Namespace)']]],
   ['makekey_4',['makeKey',['../classESP32CryptoProvider.html#a22c74f2a3f76e4d6bfad24d703de438c',1,'ESP32CryptoProvider']]],
   ['max_5ffee_5',['MAX_FEE',['../config_8template_8h.html#aa1422128431177dfd9fc34cc1694671c',1,'config.template.h']]],
   ['max_5ffee_6',['max_fee',['../structeth__tx__t.html#a2b4a9af5dfb0d78ff57afbc51c4eaa99',1,'eth_tx_t']]],

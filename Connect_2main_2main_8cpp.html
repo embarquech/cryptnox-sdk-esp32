@@ -119,21 +119,25 @@ Include dependency graph for main.cpp:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-define-members" class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:ad552e7688532cbbecd3967538ced06ac" id="r_ad552e7688532cbbecd3967538ced06ac"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad552e7688532cbbecd3967538ced06ac">WIFI_CONNECTED_BIT</a>&#160;&#160;&#160;BIT0</td></tr>
-<tr class="memitem:a7d013b55e50dfbda0904f5f933b63ec4" id="r_a7d013b55e50dfbda0904f5f933b63ec4"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7d013b55e50dfbda0904f5f933b63ec4">WIFI_FAIL_BIT</a>&#160;&#160;&#160;BIT1</td></tr>
 <tr class="memitem:a7dbebab5f7dd57885adccf6711b13592" id="r_a7dbebab5f7dd57885adccf6711b13592"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7dbebab5f7dd57885adccf6711b13592">SPI_MOSI</a>&#160;&#160;&#160;11</td></tr>
 <tr class="memitem:ab142cc77dfa97010c9d2b616d0992b64" id="r_ab142cc77dfa97010c9d2b616d0992b64"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab142cc77dfa97010c9d2b616d0992b64">SPI_MISO</a>&#160;&#160;&#160;13</td></tr>
 <tr class="memitem:aefec442ab2dbec4785b387b3e88faa66" id="r_aefec442ab2dbec4785b387b3e88faa66"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aefec442ab2dbec4785b387b3e88faa66">SPI_SCLK</a>&#160;&#160;&#160;12</td></tr>
 <tr class="memitem:a6ec274c632bf261fd0753152a14defdf" id="r_a6ec274c632bf261fd0753152a14defdf"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6ec274c632bf261fd0753152a14defdf">SPI_MAX_TRANSFER_SZ</a>&#160;&#160;&#160;4096</td></tr>
 <tr class="memitem:aa16c68a03f664d7fb7135e5f9a399310" id="r_aa16c68a03f664d7fb7135e5f9a399310"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa16c68a03f664d7fb7135e5f9a399310">SPI_PIN_UNUSED</a>&#160;&#160;&#160;(-1)</td></tr>
 <tr class="memitem:a0c6bd557f1fa31b24d41cbd2f04a2e48" id="r_a0c6bd557f1fa31b24d41cbd2f04a2e48"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0c6bd557f1fa31b24d41cbd2f04a2e48">NFC_CS</a>&#160;&#160;&#160;10</td></tr>
+<tr class="memitem:ad552e7688532cbbecd3967538ced06ac" id="r_ad552e7688532cbbecd3967538ced06ac"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad552e7688532cbbecd3967538ced06ac">WIFI_CONNECTED_BIT</a>&#160;&#160;&#160;BIT0</td></tr>
+<tr class="memitem:a7d013b55e50dfbda0904f5f933b63ec4" id="r_a7d013b55e50dfbda0904f5f933b63ec4"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7d013b55e50dfbda0904f5f933b63ec4">WIFI_FAIL_BIT</a>&#160;&#160;&#160;BIT1</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:ac31e38637f7a5e5c8ce4d033b0955fec" id="r_ac31e38637f7a5e5c8ce4d033b0955fec"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac31e38637f7a5e5c8ce4d033b0955fec">wifi_event_handler</a> (void *arg, esp_event_base_t event_base, int32_t event_id, void *event_data)</td></tr>
+<tr class="memdesc:ac31e38637f7a5e5c8ce4d033b0955fec"><td class="mdescLeft">&#160;</td><td class="mdescRight">FreeRTOS event handler driving the Wi-Fi station state machine.  <br /></td></tr>
 <tr class="memitem:af629eac4dcd2612341863d51413aaf10" id="r_af629eac4dcd2612341863d51413aaf10"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af629eac4dcd2612341863d51413aaf10">wifi_start</a> (void)</td></tr>
+<tr class="memdesc:af629eac4dcd2612341863d51413aaf10"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialise Wi-Fi station mode and block until connected or timeout.  <br /></td></tr>
 <tr class="memitem:ac30a8b9775721482b9209e358b993e83" id="r_ac30a8b9775721482b9209e358b993e83"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac30a8b9775721482b9209e358b993e83">run_connect_loop</a> (CryptnoxWallet &amp;wallet)</td></tr>
+<tr class="memdesc:ac30a8b9775721482b9209e358b993e83"><td class="mdescLeft">&#160;</td><td class="mdescRight">Main application loop: connect, fetch card info, and disconnect.  <br /></td></tr>
 <tr class="memitem:a630544a7f0a2cc40d8a7fefab7e2fe70" id="r_a630544a7f0a2cc40d8a7fefab7e2fe70"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a630544a7f0a2cc40d8a7fefab7e2fe70">app_main</a> (void)</td></tr>
+<tr class="memdesc:a630544a7f0a2cc40d8a7fefab7e2fe70"><td class="mdescLeft">&#160;</td><td class="mdescRight">ESP-IDF application entry point.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-var-members" class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
@@ -156,12 +160,8 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="Connect_2main_2main_8cpp-example.html#_a21">Connect/main/main.cpp</a>, <a class="el" href="Sign_2main_2main_8cpp-example.html#_a21">Sign/main/main.cpp</a>, <a class="el" href="UsdcSigning_2main_2main_8cpp-example.html#_a43">UsdcSigning/main/main.cpp</a>, and <a class="el" href="VerifyPin_2main_2main_8cpp-example.html#_a21">VerifyPin/main/main.cpp</a>.</dd>
-</dl>
 
-<p class="definition">Definition at line <a class="el" href="Connect_2main_2main_8cpp_source.html#l00131">131</a> of file <a class="el" href="Connect_2main_2main_8cpp_source.html">main.cpp</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="Connect_2main_2main_8cpp_source.html#l00159">app_main()</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Connect_2main_2main_8cpp_source.html#l00052">52</a> of file <a class="el" href="Connect_2main_2main_8cpp_source.html">main.cpp</a>.</p>
 
 </div>
 </div>
@@ -176,12 +176,8 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="Connect_2main_2main_8cpp-example.html#_a18">Connect/main/main.cpp</a>, <a class="el" href="Sign_2main_2main_8cpp-example.html#_a18">Sign/main/main.cpp</a>, <a class="el" href="UsdcSigning_2main_2main_8cpp-example.html#_a38">UsdcSigning/main/main.cpp</a>, and <a class="el" href="VerifyPin_2main_2main_8cpp-example.html#_a18">VerifyPin/main/main.cpp</a>.</dd>
-</dl>
 
-<p class="definition">Definition at line <a class="el" href="Connect_2main_2main_8cpp_source.html#l00129">129</a> of file <a class="el" href="Connect_2main_2main_8cpp_source.html">main.cpp</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="Connect_2main_2main_8cpp_source.html#l00159">app_main()</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Connect_2main_2main_8cpp_source.html#l00050">50</a> of file <a class="el" href="Connect_2main_2main_8cpp_source.html">main.cpp</a>.</p>
 
 </div>
 </div>
@@ -196,12 +192,8 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="Connect_2main_2main_8cpp-example.html#_a15">Connect/main/main.cpp</a>, <a class="el" href="Sign_2main_2main_8cpp-example.html#_a15">Sign/main/main.cpp</a>, <a class="el" href="UsdcSigning_2main_2main_8cpp-example.html#_a35">UsdcSigning/main/main.cpp</a>, and <a class="el" href="VerifyPin_2main_2main_8cpp-example.html#_a15">VerifyPin/main/main.cpp</a>.</dd>
-</dl>
 
-<p class="definition">Definition at line <a class="el" href="Connect_2main_2main_8cpp_source.html#l00127">127</a> of file <a class="el" href="Connect_2main_2main_8cpp_source.html">main.cpp</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="Connect_2main_2main_8cpp_source.html#l00159">app_main()</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Connect_2main_2main_8cpp_source.html#l00048">48</a> of file <a class="el" href="Connect_2main_2main_8cpp_source.html">main.cpp</a>.</p>
 
 </div>
 </div>
@@ -216,12 +208,8 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="Connect_2main_2main_8cpp-example.html#_a14">Connect/main/main.cpp</a>, <a class="el" href="Sign_2main_2main_8cpp-example.html#_a14">Sign/main/main.cpp</a>, <a class="el" href="UsdcSigning_2main_2main_8cpp-example.html#_a34">UsdcSigning/main/main.cpp</a>, and <a class="el" href="VerifyPin_2main_2main_8cpp-example.html#_a14">VerifyPin/main/main.cpp</a>.</dd>
-</dl>
 
-<p class="definition">Definition at line <a class="el" href="Connect_2main_2main_8cpp_source.html#l00126">126</a> of file <a class="el" href="Connect_2main_2main_8cpp_source.html">main.cpp</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="Connect_2main_2main_8cpp_source.html#l00159">app_main()</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Connect_2main_2main_8cpp_source.html#l00047">47</a> of file <a class="el" href="Connect_2main_2main_8cpp_source.html">main.cpp</a>.</p>
 
 </div>
 </div>
@@ -236,12 +224,8 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="Connect_2main_2main_8cpp-example.html#_a17">Connect/main/main.cpp</a>, <a class="el" href="Sign_2main_2main_8cpp-example.html#_a17">Sign/main/main.cpp</a>, <a class="el" href="UsdcSigning_2main_2main_8cpp-example.html#_a37">UsdcSigning/main/main.cpp</a>, and <a class="el" href="VerifyPin_2main_2main_8cpp-example.html#_a17">VerifyPin/main/main.cpp</a>.</dd>
-</dl>
 
-<p class="definition">Definition at line <a class="el" href="Connect_2main_2main_8cpp_source.html#l00130">130</a> of file <a class="el" href="Connect_2main_2main_8cpp_source.html">main.cpp</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="Connect_2main_2main_8cpp_source.html#l00159">app_main()</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Connect_2main_2main_8cpp_source.html#l00051">51</a> of file <a class="el" href="Connect_2main_2main_8cpp_source.html">main.cpp</a>.</p>
 
 </div>
 </div>
@@ -256,12 +240,8 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="Connect_2main_2main_8cpp-example.html#_a16">Connect/main/main.cpp</a>, <a class="el" href="Sign_2main_2main_8cpp-example.html#_a16">Sign/main/main.cpp</a>, <a class="el" href="UsdcSigning_2main_2main_8cpp-example.html#_a36">UsdcSigning/main/main.cpp</a>, and <a class="el" href="VerifyPin_2main_2main_8cpp-example.html#_a16">VerifyPin/main/main.cpp</a>.</dd>
-</dl>
 
-<p class="definition">Definition at line <a class="el" href="Connect_2main_2main_8cpp_source.html#l00128">128</a> of file <a class="el" href="Connect_2main_2main_8cpp_source.html">main.cpp</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="Connect_2main_2main_8cpp_source.html#l00159">app_main()</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Connect_2main_2main_8cpp_source.html#l00049">49</a> of file <a class="el" href="Connect_2main_2main_8cpp_source.html">main.cpp</a>.</p>
 
 </div>
 </div>
@@ -276,12 +256,8 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="Connect_2main_2main_8cpp-example.html#_a8">Connect/main/main.cpp</a>, <a class="el" href="Sign_2main_2main_8cpp-example.html#_a8">Sign/main/main.cpp</a>, and <a class="el" href="VerifyPin_2main_2main_8cpp-example.html#_a8">VerifyPin/main/main.cpp</a>.</dd>
-</dl>
 
-<p class="definition">Definition at line <a class="el" href="Connect_2main_2main_8cpp_source.html#l00050">50</a> of file <a class="el" href="Connect_2main_2main_8cpp_source.html">main.cpp</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="eth__rpc_8cpp_source.html#l00181">eth_rpc_wifi_connect()</a>, <a class="el" href="Connect_2main_2main_8cpp_source.html#l00056">wifi_event_handler()</a>, <a class="el" href="eth__rpc_8cpp_source.html#l00052">wifi_event_handler()</a>, and <a class="el" href="Connect_2main_2main_8cpp_source.html#l00080">wifi_start()</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Connect_2main_2main_8cpp_source.html#l00059">59</a> of file <a class="el" href="Connect_2main_2main_8cpp_source.html">main.cpp</a>.</p>
 
 </div>
 </div>
@@ -296,12 +272,8 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="Connect_2main_2main_8cpp-example.html#_a7">Connect/main/main.cpp</a>, <a class="el" href="Sign_2main_2main_8cpp-example.html#_a7">Sign/main/main.cpp</a>, and <a class="el" href="VerifyPin_2main_2main_8cpp-example.html#_a7">VerifyPin/main/main.cpp</a>.</dd>
-</dl>
 
-<p class="definition">Definition at line <a class="el" href="Connect_2main_2main_8cpp_source.html#l00051">51</a> of file <a class="el" href="Connect_2main_2main_8cpp_source.html">main.cpp</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="eth__rpc_8cpp_source.html#l00181">eth_rpc_wifi_connect()</a>, <a class="el" href="Connect_2main_2main_8cpp_source.html#l00056">wifi_event_handler()</a>, <a class="el" href="eth__rpc_8cpp_source.html#l00052">wifi_event_handler()</a>, and <a class="el" href="Connect_2main_2main_8cpp_source.html#l00080">wifi_start()</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Connect_2main_2main_8cpp_source.html#l00060">60</a> of file <a class="el" href="Connect_2main_2main_8cpp_source.html">main.cpp</a>.</p>
 
 </div>
 </div>
@@ -320,12 +292,13 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="Connect_2main_2main_8cpp-example.html#a13">Connect/main/main.cpp</a>, <a class="el" href="Sign_2main_2main_8cpp-example.html#a13">Sign/main/main.cpp</a>, <a class="el" href="UsdcSigning_2main_2main_8cpp-example.html#a31">UsdcSigning/main/main.cpp</a>, and <a class="el" href="VerifyPin_2main_2main_8cpp-example.html#a13">VerifyPin/main/main.cpp</a>.</dd>
-</dl>
 
-<p class="definition">Definition at line <a class="el" href="Connect_2main_2main_8cpp_source.html#l00159">159</a> of file <a class="el" href="Connect_2main_2main_8cpp_source.html">main.cpp</a>.</p>
+<p>ESP-IDF application entry point. </p>
+<p>Initialises NVS, starts Wi-Fi for full TRNG entropy, brings up the SPI bus and PN532 reader, then enters <a class="el" href="#ac30a8b9775721482b9209e358b993e83">run_connect_loop</a>. </p>
 
-<p class="reference">References <a class="el" href="ESP32Logger_8cpp_source.html#l00095">ESP32Logger::begin()</a>, <a class="el" href="Connect_2main_2main_8cpp_source.html#l00131">NFC_CS</a>, <a class="el" href="pn532_8c_source.html#l00657">pn532_init()</a>, <a class="el" href="Pn532NfcTransport_8cpp_source.html#l00061">Pn532NfcTransport::printFirmwareVersion()</a>, <a class="el" href="Connect_2main_2main_8cpp_source.html#l00133">run_connect_loop()</a>, <a class="el" href="Connect_2main_2main_8cpp_source.html#l00129">SPI_MAX_TRANSFER_SZ</a>, <a class="el" href="Connect_2main_2main_8cpp_source.html#l00127">SPI_MISO</a>, <a class="el" href="Connect_2main_2main_8cpp_source.html#l00126">SPI_MOSI</a>, <a class="el" href="Connect_2main_2main_8cpp_source.html#l00130">SPI_PIN_UNUSED</a>, <a class="el" href="Connect_2main_2main_8cpp_source.html#l00128">SPI_SCLK</a>, <a class="el" href="esp32__random_8cpp_source.html#l00014">TAG</a>, and <a class="el" href="Connect_2main_2main_8cpp_source.html#l00080">wifi_start()</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Connect_2main_2main_8cpp_source.html#l00192">192</a> of file <a class="el" href="Connect_2main_2main_8cpp_source.html">main.cpp</a>.</p>
+
+<p class="reference">References <a class="el" href="ESP32Logger_8cpp_source.html#l00095">ESP32Logger::begin()</a>, <a class="el" href="BasicUsage_2main_2main_8cpp_source.html#l00059">NFC_CS</a>, <a class="el" href="pn532_8c_source.html#l00657">pn532_init()</a>, <a class="el" href="Pn532NfcTransport_8cpp_source.html#l00061">Pn532NfcTransport::printFirmwareVersion()</a>, <a class="el" href="Connect_2main_2main_8cpp_source.html#l00160">run_connect_loop()</a>, <a class="el" href="BasicUsage_2main_2main_8cpp_source.html#l00057">SPI_MAX_TRANSFER_SZ</a>, <a class="el" href="BasicUsage_2main_2main_8cpp_source.html#l00055">SPI_MISO</a>, <a class="el" href="BasicUsage_2main_2main_8cpp_source.html#l00054">SPI_MOSI</a>, <a class="el" href="BasicUsage_2main_2main_8cpp_source.html#l00058">SPI_PIN_UNUSED</a>, <a class="el" href="BasicUsage_2main_2main_8cpp_source.html#l00056">SPI_SCLK</a>, <a class="el" href="esp32__random_8cpp_source.html#l00014">TAG</a>, and <a class="el" href="BasicUsage_2main_2main_8cpp_source.html#l00130">wifi_start()</a>.</p>
 
 </div>
 </div>
@@ -351,14 +324,23 @@ Variables</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Main application loop: connect, fetch card info, and disconnect. </p>
+<p>Each iteration calls CryptnoxWallet::connect to establish the secure channel, retrieves owner info via CryptnoxWallet::getCardInfo, then tears down the channel with CryptnoxWallet::disconnect.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">wallet</td><td>Initialised wallet instance. </td></tr>
+  </table>
+  </dd>
+</dl>
 <dl class="section examples"><dt>Examples</dt><dd><a class="el" href="Connect_2main_2main_8cpp-example.html#a12">Connect/main/main.cpp</a>.</dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="Connect_2main_2main_8cpp_source.html#l00133">133</a> of file <a class="el" href="Connect_2main_2main_8cpp_source.html">main.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Connect_2main_2main_8cpp_source.html#l00160">160</a> of file <a class="el" href="Connect_2main_2main_8cpp_source.html">main.cpp</a>.</p>
 
-<p class="reference">References <a class="el" href="Connect_2main_2main_8cpp_source.html#l00046">LOOP_DELAY_MS</a>, and <a class="el" href="esp32__random_8cpp_source.html#l00014">TAG</a>.</p>
+<p class="reference">References <a class="el" href="BasicUsage_2main_2main_8cpp_source.html#l00073">LOOP_DELAY_MS</a>, and <a class="el" href="esp32__random_8cpp_source.html#l00014">TAG</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="Connect_2main_2main_8cpp_source.html#l00159">app_main()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="Connect_2main_2main_8cpp_source.html#l00192">app_main()</a>.</p>
 
 </div>
 </div>
@@ -398,14 +380,22 @@ Variables</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="Connect_2main_2main_8cpp-example.html#a6">Connect/main/main.cpp</a>, <a class="el" href="Sign_2main_2main_8cpp-example.html#a6">Sign/main/main.cpp</a>, and <a class="el" href="VerifyPin_2main_2main_8cpp-example.html#a6">VerifyPin/main/main.cpp</a>.</dd>
+
+<p>FreeRTOS event handler driving the Wi-Fi station state machine. </p>
+<p>Handles <code>WIFI_EVENT_STA_START</code> (triggers connection), <code>WIFI_EVENT_STA_DISCONNECTED</code> (retries up to <code>WIFI_MAX_RETRY</code> times), and <code>IP_EVENT_STA_GOT_IP</code> (signals success via the event group).</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">arg</td><td>Unused. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">event_base</td><td>Event base (<code>WIFI_EVENT</code> or <code>IP_EVENT</code>). </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">event_id</td><td>Event identifier within <code class="param">event_base</code>. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">event_data</td><td>Event-specific data (unused). </td></tr>
+  </table>
+  </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="Connect_2main_2main_8cpp_source.html#l00056">56</a> of file <a class="el" href="Connect_2main_2main_8cpp_source.html">main.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Connect_2main_2main_8cpp_source.html#l00077">77</a> of file <a class="el" href="Connect_2main_2main_8cpp_source.html">main.cpp</a>.</p>
 
-<p class="reference">References <a class="el" href="Connect_2main_2main_8cpp_source.html#l00054">s_retry_num</a>, <a class="el" href="Connect_2main_2main_8cpp_source.html#l00053">s_wifi_event_group</a>, <a class="el" href="Connect_2main_2main_8cpp_source.html#l00050">WIFI_CONNECTED_BIT</a>, <a class="el" href="Connect_2main_2main_8cpp_source.html#l00051">WIFI_FAIL_BIT</a>, and <a class="el" href="eth__rpc_8cpp_source.html#l00027">WIFI_MAX_RETRY</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="eth__rpc_8cpp_source.html#l00181">eth_rpc_wifi_connect()</a>, and <a class="el" href="Connect_2main_2main_8cpp_source.html#l00080">wifi_start()</a>.</p>
+<p class="reference">References <a class="el" href="BasicUsage_2main_2main_8cpp_source.html#l00081">s_retry_num</a>, <a class="el" href="BasicUsage_2main_2main_8cpp_source.html#l00080">s_wifi_event_group</a>, <a class="el" href="BasicUsage_2main_2main_8cpp_source.html#l00077">WIFI_CONNECTED_BIT</a>, <a class="el" href="BasicUsage_2main_2main_8cpp_source.html#l00078">WIFI_FAIL_BIT</a>, and <a class="el" href="eth__rpc_8cpp_source.html#l00027">WIFI_MAX_RETRY</a>.</p>
 
 </div>
 </div>
@@ -431,14 +421,14 @@ Variables</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="Connect_2main_2main_8cpp-example.html#a9">Connect/main/main.cpp</a>, <a class="el" href="Sign_2main_2main_8cpp-example.html#a9">Sign/main/main.cpp</a>, and <a class="el" href="VerifyPin_2main_2main_8cpp-example.html#a9">VerifyPin/main/main.cpp</a>.</dd>
-</dl>
 
-<p class="definition">Definition at line <a class="el" href="Connect_2main_2main_8cpp_source.html#l00080">80</a> of file <a class="el" href="Connect_2main_2main_8cpp_source.html">main.cpp</a>.</p>
+<p>Initialise Wi-Fi station mode and block until connected or timeout. </p>
+<p>Starts the ESP Wi-Fi stack, registers <a class="el" href="BasicUsage_2main_2main_8cpp.html#ac31e38637f7a5e5c8ce4d033b0955fec">wifi_event_handler</a>, configures the SSID and password from <a class="el" href="BasicUsage_2main_2config_8h.html#a586542b79d00e4db7e1d5a667ae83a2b">WIFI_SSID</a> / <a class="el" href="BasicUsage_2main_2config_8h.html#a8685d8aff7e570048090a3a51afceb07">WIFI_PASSWORD</a> in <code>config.h</code>, then waits up to <code>WIFI_TIMEOUT_MS</code> for an IP address. The radio must be active before crypto operations so the hardware TRNG operates with full entropy (SEC-001).</p>
+<dl class="section note"><dt>Note</dt><dd>If the connection fails the function logs a warning and returns normally; the firmware continues with reduced TRNG entropy. </dd></dl>
 
-<p class="reference">References <a class="el" href="Connect_2main_2main_8cpp_source.html#l00054">s_retry_num</a>, <a class="el" href="Connect_2main_2main_8cpp_source.html#l00053">s_wifi_event_group</a>, <a class="el" href="esp32__random_8cpp_source.html#l00014">TAG</a>, <a class="el" href="Connect_2main_2main_8cpp_source.html#l00050">WIFI_CONNECTED_BIT</a>, <a class="el" href="Connect_2main_2main_8cpp_source.html#l00056">wifi_event_handler()</a>, <a class="el" href="Connect_2main_2main_8cpp_source.html#l00051">WIFI_FAIL_BIT</a>, <a class="el" href="Connect_2main_2config_8h_source.html#l00013">WIFI_PASSWORD</a>, <a class="el" href="Connect_2main_2config_8h_source.html#l00012">WIFI_SSID</a>, and <a class="el" href="eth__rpc_8cpp_source.html#l00028">WIFI_TIMEOUT_MS</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Connect_2main_2main_8cpp_source.html#l00112">112</a> of file <a class="el" href="Connect_2main_2main_8cpp_source.html">main.cpp</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="Connect_2main_2main_8cpp_source.html#l00159">app_main()</a>.</p>
+<p class="reference">References <a class="el" href="BasicUsage_2main_2main_8cpp_source.html#l00081">s_retry_num</a>, <a class="el" href="BasicUsage_2main_2main_8cpp_source.html#l00080">s_wifi_event_group</a>, <a class="el" href="esp32__random_8cpp_source.html#l00014">TAG</a>, <a class="el" href="BasicUsage_2main_2main_8cpp_source.html#l00077">WIFI_CONNECTED_BIT</a>, <a class="el" href="BasicUsage_2main_2main_8cpp_source.html#l00095">wifi_event_handler()</a>, <a class="el" href="BasicUsage_2main_2main_8cpp_source.html#l00078">WIFI_FAIL_BIT</a>, <a class="el" href="BasicUsage_2main_2config_8h_source.html#l00013">WIFI_PASSWORD</a>, <a class="el" href="BasicUsage_2main_2config_8h_source.html#l00012">WIFI_SSID</a>, and <a class="el" href="eth__rpc_8cpp_source.html#l00028">WIFI_TIMEOUT_MS</a>.</p>
 
 </div>
 </div>
@@ -462,12 +452,8 @@ Variables</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="Connect_2main_2main_8cpp-example.html#_a1">Connect/main/main.cpp</a>, <a class="el" href="Sign_2main_2main_8cpp-example.html#_a1">Sign/main/main.cpp</a>, and <a class="el" href="VerifyPin_2main_2main_8cpp-example.html#_a1">VerifyPin/main/main.cpp</a>.</dd>
-</dl>
 
-<p class="definition">Definition at line <a class="el" href="Connect_2main_2main_8cpp_source.html#l00046">46</a> of file <a class="el" href="Connect_2main_2main_8cpp_source.html">main.cpp</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="Connect_2main_2main_8cpp_source.html#l00133">run_connect_loop()</a>, <a class="el" href="Sign_2main_2main_8cpp_source.html#l00141">run_sign_loop()</a>, and <a class="el" href="VerifyPin_2main_2main_8cpp_source.html#l00134">run_verify_pin_loop()</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Connect_2main_2main_8cpp_source.html#l00055">55</a> of file <a class="el" href="Connect_2main_2main_8cpp_source.html">main.cpp</a>.</p>
 
 </div>
 </div>
@@ -490,12 +476,8 @@ Variables</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="Connect_2main_2main_8cpp-example.html#_a5">Connect/main/main.cpp</a>, <a class="el" href="Sign_2main_2main_8cpp-example.html#_a5">Sign/main/main.cpp</a>, and <a class="el" href="VerifyPin_2main_2main_8cpp-example.html#_a5">VerifyPin/main/main.cpp</a>.</dd>
-</dl>
 
-<p class="definition">Definition at line <a class="el" href="Connect_2main_2main_8cpp_source.html#l00054">54</a> of file <a class="el" href="Connect_2main_2main_8cpp_source.html">main.cpp</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="eth__rpc_8cpp_source.html#l00181">eth_rpc_wifi_connect()</a>, <a class="el" href="Connect_2main_2main_8cpp_source.html#l00056">wifi_event_handler()</a>, <a class="el" href="eth__rpc_8cpp_source.html#l00052">wifi_event_handler()</a>, and <a class="el" href="Connect_2main_2main_8cpp_source.html#l00080">wifi_start()</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Connect_2main_2main_8cpp_source.html#l00063">63</a> of file <a class="el" href="Connect_2main_2main_8cpp_source.html">main.cpp</a>.</p>
 
 </div>
 </div>
@@ -518,12 +500,8 @@ Variables</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="Connect_2main_2main_8cpp-example.html#_a4">Connect/main/main.cpp</a>, <a class="el" href="Sign_2main_2main_8cpp-example.html#_a4">Sign/main/main.cpp</a>, and <a class="el" href="VerifyPin_2main_2main_8cpp-example.html#_a4">VerifyPin/main/main.cpp</a>.</dd>
-</dl>
 
-<p class="definition">Definition at line <a class="el" href="Connect_2main_2main_8cpp_source.html#l00053">53</a> of file <a class="el" href="Connect_2main_2main_8cpp_source.html">main.cpp</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="eth__rpc_8cpp_source.html#l00181">eth_rpc_wifi_connect()</a>, <a class="el" href="Connect_2main_2main_8cpp_source.html#l00056">wifi_event_handler()</a>, <a class="el" href="eth__rpc_8cpp_source.html#l00052">wifi_event_handler()</a>, and <a class="el" href="Connect_2main_2main_8cpp_source.html#l00080">wifi_start()</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Connect_2main_2main_8cpp_source.html#l00062">62</a> of file <a class="el" href="Connect_2main_2main_8cpp_source.html">main.cpp</a>.</p>
 
 </div>
 </div>
@@ -547,7 +525,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Connect_2main_2main_8cpp_source.html#l00045">45</a> of file <a class="el" href="Connect_2main_2main_8cpp_source.html">main.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Connect_2main_2main_8cpp_source.html#l00054">54</a> of file <a class="el" href="Connect_2main_2main_8cpp_source.html">main.cpp</a>.</p>
 
 </div>
 </div>
@@ -571,7 +549,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Connect_2main_2main_8cpp_source.html#l00048">48</a> of file <a class="el" href="Connect_2main_2main_8cpp_source.html">main.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Connect_2main_2main_8cpp_source.html#l00057">57</a> of file <a class="el" href="Connect_2main_2main_8cpp_source.html">main.cpp</a>.</p>
 
 </div>
 </div>
@@ -595,7 +573,7 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Connect_2main_2main_8cpp_source.html#l00047">47</a> of file <a class="el" href="Connect_2main_2main_8cpp_source.html">main.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Connect_2main_2main_8cpp_source.html#l00056">56</a> of file <a class="el" href="Connect_2main_2main_8cpp_source.html">main.cpp</a>.</p>
 
 </div>
 </div>

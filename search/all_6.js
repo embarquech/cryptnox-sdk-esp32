@@ -13,7 +13,7 @@ var searchData=
   ['clamp_5fbase_10',['clamp_base',['../ESP32Logger_8cpp.html#a66f308fe7ddcf728c261282dda0d95a4',1,'ESP32Logger.cpp']]],
   ['code_11',['2. Verify the PIN code',['../index.html#autotoc_md14',1,'']]],
   ['concrete_20adapters_12',['ESP32 concrete adapters',['../group__esp32__adapters.html',1,'']]],
-  ['config_2eh_13',['config.h',['../Connect_2main_2config_8h.html',1,'(Global Namespace)'],['../Sign_2main_2config_8h.html',1,'(Global Namespace)'],['../VerifyPin_2main_2config_8h.html',1,'(Global Namespace)']]],
+  ['config_2eh_13',['config.h',['../BasicUsage_2main_2config_8h.html',1,'(Global Namespace)'],['../Connect_2main_2config_8h.html',1,'(Global Namespace)'],['../Sign_2main_2config_8h.html',1,'(Global Namespace)'],['../VerifyPin_2main_2config_8h.html',1,'(Global Namespace)']]],
   ['config_2etemplate_2eh_14',['config.template.h',['../config_8template_8h.html',1,'']]],
   ['connect_20to_20a_20cryptnox_20card_15',['1. Connect to a Cryptnox card',['../index.html#autotoc_md13',1,'']]],
   ['coord_5fsize_5fbytes_16',['COORD_SIZE_BYTES',['../uECC__esp32_8cpp.html#a9734cd0aa15e4fd090997d796e297aec',1,'uECC_esp32.cpp']]],

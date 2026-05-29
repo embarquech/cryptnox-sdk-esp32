@@ -208,7 +208,7 @@ Quick usage examples</h2>
 <div class="line"> </div>
 <div class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">char</span> *<a class="code hl_variable" href="esp32__random_8cpp.html#a4ef5b5f197804a60836ab1e8907d8301">TAG</a> = <span class="stringliteral">&quot;main&quot;</span>;</div>
 <div class="line"> </div>
-<div class="line"><span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> <span class="keywordtype">void</span> <a class="code hl_function" href="Connect_2main_2main_8cpp.html#a630544a7f0a2cc40d8a7fefab7e2fe70">app_main</a>(<span class="keywordtype">void</span>) {</div>
+<div class="line"><span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> <span class="keywordtype">void</span> <a class="code hl_function" href="BasicUsage_2main_2main_8cpp.html#a630544a7f0a2cc40d8a7fefab7e2fe70">app_main</a>(<span class="keywordtype">void</span>) {</div>
 <div class="line">    <a class="code hl_class" href="classESP32Logger.html">ESP32Logger</a>          logger;</div>
 <div class="line">    <a class="code hl_class" href="classESP32CryptoProvider.html">ESP32CryptoProvider</a>  crypto;</div>
 <div class="line">    ESP32Pn532Transport  transport(SPI2_HOST, <span class="comment">/*cs_gpio=*/</span>10);</div>
@@ -232,7 +232,7 @@ Quick usage examples</h2>
 <div class="line"> </div>
 <div class="line">    wallet.disconnect(session);</div>
 <div class="line">}</div>
-<div class="ttc" id="aConnect_2main_2main_8cpp_html_a630544a7f0a2cc40d8a7fefab7e2fe70"><div class="ttname"><a href="Connect_2main_2main_8cpp.html#a630544a7f0a2cc40d8a7fefab7e2fe70">app_main</a></div><div class="ttdeci">void app_main(void)</div><div class="ttdef"><b>Definition</b> <a href="Connect_2main_2main_8cpp_source.html#l00159">main.cpp:159</a></div></div>
+<div class="ttc" id="aBasicUsage_2main_2main_8cpp_html_a630544a7f0a2cc40d8a7fefab7e2fe70"><div class="ttname"><a href="BasicUsage_2main_2main_8cpp.html#a630544a7f0a2cc40d8a7fefab7e2fe70">app_main</a></div><div class="ttdeci">void app_main(void)</div><div class="ttdoc">ESP-IDF application entry point.</div><div class="ttdef"><b>Definition</b> <a href="BasicUsage_2main_2main_8cpp_source.html#l00284">main.cpp:284</a></div></div>
 <div class="ttc" id="aESP32Logger_8h_html"><div class="ttname"><a href="ESP32Logger_8h.html">ESP32Logger.h</a></div><div class="ttdoc">CW_Logger implementation that writes to ESP32 UART0 via printf.</div></div>
 <div class="ttc" id="aclassESP32CryptoProvider_html"><div class="ttname"><a href="classESP32CryptoProvider.html">ESP32CryptoProvider</a></div><div class="ttdoc">CW_CryptoProvider backed by mbedTLS and the ESP32 hardware TRNG.</div><div class="ttdef"><b>Definition</b> <a href="esp32__crypto__provider_8h_source.html#l00062">esp32_crypto_provider.h:62</a></div></div>
 <div class="ttc" id="aclassESP32Logger_html"><div class="ttname"><a href="classESP32Logger.html">ESP32Logger</a></div><div class="ttdoc">CW_Logger backed by ESP32 UART0.</div><div class="ttdef"><b>Definition</b> <a href="ESP32Logger_8h_source.html#l00048">ESP32Logger.h:48</a></div></div>
@@ -244,7 +244,7 @@ Quick usage examples</h2>
 <blockquote class="doxtable">
 <p><b>Security note:</b> Never hard-code a PIN in firmware — read it from a secure source at runtime and wipe the buffer with <span class="tt">CW_Utils::secure_wipe()</span> immediately after use. </p>
 </blockquote>
-<div class="fragment"><div class="line"><span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> <span class="keywordtype">void</span> <a class="code hl_function" href="Connect_2main_2main_8cpp.html#a630544a7f0a2cc40d8a7fefab7e2fe70">app_main</a>(<span class="keywordtype">void</span>) {</div>
+<div class="fragment"><div class="line"><span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> <span class="keywordtype">void</span> <a class="code hl_function" href="BasicUsage_2main_2main_8cpp.html#a630544a7f0a2cc40d8a7fefab7e2fe70">app_main</a>(<span class="keywordtype">void</span>) {</div>
 <div class="line">    <a class="code hl_class" href="classESP32Logger.html">ESP32Logger</a>          logger;</div>
 <div class="line">    <a class="code hl_class" href="classESP32CryptoProvider.html">ESP32CryptoProvider</a>  crypto;</div>
 <div class="line">    ESP32Pn532Transport  transport(SPI2_HOST, <span class="comment">/*cs_gpio=*/</span>10);</div>
@@ -284,7 +284,7 @@ Quick usage examples</h2>
 </div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md15"></a>
 3. Sign a transaction hash</h3>
 <p>Signs a 32-byte digest (e.g. SHA-256 of a Bitcoin or Ethereum transaction) on the secp256k1 curve.</p>
-<div class="fragment"><div class="line"><span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> <span class="keywordtype">void</span> <a class="code hl_function" href="Connect_2main_2main_8cpp.html#a630544a7f0a2cc40d8a7fefab7e2fe70">app_main</a>(<span class="keywordtype">void</span>) {</div>
+<div class="fragment"><div class="line"><span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> <span class="keywordtype">void</span> <a class="code hl_function" href="BasicUsage_2main_2main_8cpp.html#a630544a7f0a2cc40d8a7fefab7e2fe70">app_main</a>(<span class="keywordtype">void</span>) {</div>
 <div class="line">    <a class="code hl_class" href="classESP32Logger.html">ESP32Logger</a>          logger;</div>
 <div class="line">    <a class="code hl_class" href="classESP32CryptoProvider.html">ESP32CryptoProvider</a>  crypto;</div>
 <div class="line">    ESP32Pn532Transport  transport(SPI2_HOST, <span class="comment">/*cs_gpio=*/</span>10);</div>

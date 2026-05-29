@@ -97,6 +97,7 @@ $(function(){initNavTree('Sign_2main_2main_8cpp-example.html','',''); });
 <li>PN532 NFC reader on SPI: MOSI=11, MISO=13, SCLK=12, CS=10.</li>
 <li>A Cryptnox card initialised with a known PIN and a loaded seed (use the Cryptnox CLI: <code>cryptnox</code> <code>initialize</code> then <code>cryptnox</code> <code>seed</code> <code>generate</code>).</li>
 <li>DEMO_PIN must match the PIN set on the card.</li>
+<li><code>config.h</code> filled in with <a class="el" href="BasicUsage_2main_2config_8h.html#a586542b79d00e4db7e1d5a667ae83a2b">WIFI_SSID</a> and <a class="el" href="BasicUsage_2main_2config_8h.html#a8685d8aff7e570048090a3a51afceb07">WIFI_PASSWORD</a>.</li>
 </ul>
 <p>What the firmware does in each loop iteration:</p><ol type="1">
 <li>Connect to the card and establish the secure channel.</li>
@@ -129,87 +130,7 @@ $(function(){initNavTree('Sign_2main_2main_8cpp-example.html','',''); });
 <div class="line"><span class="preprocessor">#include &quot;<a class="code" href="ESP32Platform_8h.html">ESP32Platform.h</a>&quot;</span></div>
 <div class="line"><span class="preprocessor">#include &quot;config.h&quot;</span></div>
 <div class="line"> </div>
-<div class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">char</span> *<span class="keyword">const</span> <a id="_a0" name="_a0"></a><a class="code hl_variable" href="esp32__random_8cpp.html#a4ef5b5f197804a60836ab1e8907d8301">TAG</a> = <span class="stringliteral">&quot;sign&quot;</span>;</div>
-<div class="line"><span class="keyword">static</span> <span class="keyword">const</span> uint32_t <a id="_a1" name="_a1"></a><a class="code hl_variable" href="Connect_2main_2main_8cpp.html#aa84b7ea151458367e14743c83dbcb3b0">LOOP_DELAY_MS</a>   = 1000U;</div>
-<div class="line"><span class="keyword">static</span> <span class="keyword">const</span> uint32_t <a id="_a2" name="_a2"></a><a class="code hl_define" href="eth__rpc_8cpp.html#a4735ad9aef99f8584afd945f39260954">WIFI_TIMEOUT_MS</a> = 10000U;</div>
-<div class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span>      <a id="_a3" name="_a3"></a><a class="code hl_define" href="eth__rpc_8cpp.html#a9889f5062c963896a887cd62a23730bf">WIFI_MAX_RETRY</a>  = 5;</div>
-<div class="line"> </div>
-<div class="line"><span class="preprocessor">#define WIFI_CONNECTED_BIT BIT0</span></div>
-<div class="line"><span class="preprocessor">#define WIFI_FAIL_BIT      BIT1</span></div>
-<div class="line"> </div>
-<div class="line"><span class="keyword">static</span> EventGroupHandle_t <a id="_a4" name="_a4"></a><a class="code hl_variable" href="Connect_2main_2main_8cpp.html#a6aaca350cca4b3d105d88a6f399cb381">s_wifi_event_group</a>;</div>
-<div class="line"><span class="keyword">static</span> <span class="keywordtype">int</span>                <a id="_a5" name="_a5"></a><a class="code hl_variable" href="Connect_2main_2main_8cpp.html#ae4da33fdcdaa6688ed25dab508ed5592">s_retry_num</a> = 0;</div>
-<div class="line"> </div>
-<div class="line"><span class="keyword">static</span> <span class="keywordtype">void</span> <a id="a6" name="a6"></a><a class="code hl_function" href="Connect_2main_2main_8cpp.html#ac31e38637f7a5e5c8ce4d033b0955fec">wifi_event_handler</a>(<span class="keywordtype">void</span> *arg, esp_event_base_t event_base,</div>
-<div class="line">                               int32_t event_id, <span class="keywordtype">void</span> *event_data)</div>
-<div class="line">{</div>
-<div class="line">    (void)arg;</div>
-<div class="line">    (void)event_data;</div>
-<div class="line"> </div>
-<div class="line">    <span class="keywordflow">if</span> ((event_base == WIFI_EVENT) &amp;&amp; (event_id == WIFI_EVENT_STA_START)) {</div>
-<div class="line">        esp_wifi_connect();</div>
-<div class="line">    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> ((event_base == WIFI_EVENT) &amp;&amp;</div>
-<div class="line">               (event_id == WIFI_EVENT_STA_DISCONNECTED)) {</div>
-<div class="line">        <span class="keywordflow">if</span> (<a class="code hl_variable" href="Connect_2main_2main_8cpp.html#ae4da33fdcdaa6688ed25dab508ed5592">s_retry_num</a> &lt; <a class="code hl_define" href="eth__rpc_8cpp.html#a9889f5062c963896a887cd62a23730bf">WIFI_MAX_RETRY</a>) {</div>
-<div class="line">            esp_wifi_connect();</div>
-<div class="line">            <a class="code hl_variable" href="Connect_2main_2main_8cpp.html#ae4da33fdcdaa6688ed25dab508ed5592">s_retry_num</a>++;</div>
-<div class="line">        } <span class="keywordflow">else</span> {</div>
-<div class="line">            xEventGroupSetBits(<a class="code hl_variable" href="Connect_2main_2main_8cpp.html#a6aaca350cca4b3d105d88a6f399cb381">s_wifi_event_group</a>, <a id="_a7" name="_a7"></a><a class="code hl_define" href="Connect_2main_2main_8cpp.html#a7d013b55e50dfbda0904f5f933b63ec4">WIFI_FAIL_BIT</a>);</div>
-<div class="line">        }</div>
-<div class="line">    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> ((event_base == IP_EVENT) &amp;&amp; (event_id == IP_EVENT_STA_GOT_IP)) {</div>
-<div class="line">        <a class="code hl_variable" href="Connect_2main_2main_8cpp.html#ae4da33fdcdaa6688ed25dab508ed5592">s_retry_num</a> = 0;</div>
-<div class="line">        xEventGroupSetBits(<a class="code hl_variable" href="Connect_2main_2main_8cpp.html#a6aaca350cca4b3d105d88a6f399cb381">s_wifi_event_group</a>, <a id="_a8" name="_a8"></a><a class="code hl_define" href="Connect_2main_2main_8cpp.html#ad552e7688532cbbecd3967538ced06ac">WIFI_CONNECTED_BIT</a>);</div>
-<div class="line">    } <span class="keywordflow">else</span> {</div>
-<div class="line">        <span class="comment">/* other events ignored */</span></div>
-<div class="line">    }</div>
-<div class="line">}</div>
-<div class="line"> </div>
-<div class="line"><span class="keyword">static</span> <span class="keywordtype">void</span> <a id="a9" name="a9"></a><a class="code hl_function" href="Connect_2main_2main_8cpp.html#af629eac4dcd2612341863d51413aaf10">wifi_start</a>(<span class="keywordtype">void</span>)</div>
-<div class="line">{</div>
-<div class="line">    <a class="code hl_variable" href="Connect_2main_2main_8cpp.html#a6aaca350cca4b3d105d88a6f399cb381">s_wifi_event_group</a> = xEventGroupCreate();</div>
-<div class="line">    <a class="code hl_variable" href="Connect_2main_2main_8cpp.html#ae4da33fdcdaa6688ed25dab508ed5592">s_retry_num</a> = 0;</div>
-<div class="line"> </div>
-<div class="line">    ESP_ERROR_CHECK(esp_netif_init());</div>
-<div class="line">    ESP_ERROR_CHECK(esp_event_loop_create_default());</div>
-<div class="line">    (void)esp_netif_create_default_wifi_sta();</div>
-<div class="line"> </div>
-<div class="line">    wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();</div>
-<div class="line">    ESP_ERROR_CHECK(esp_wifi_init(&amp;cfg));</div>
-<div class="line"> </div>
-<div class="line">    esp_event_handler_instance_t h_any;</div>
-<div class="line">    esp_event_handler_instance_t h_ip;</div>
-<div class="line">    ESP_ERROR_CHECK(esp_event_handler_instance_register(</div>
-<div class="line">        WIFI_EVENT, ESP_EVENT_ANY_ID, &amp;<a class="code hl_function" href="Connect_2main_2main_8cpp.html#ac31e38637f7a5e5c8ce4d033b0955fec">wifi_event_handler</a>, NULL, &amp;h_any));</div>
-<div class="line">    ESP_ERROR_CHECK(esp_event_handler_instance_register(</div>
-<div class="line">        IP_EVENT, IP_EVENT_STA_GOT_IP, &amp;<a class="code hl_function" href="Connect_2main_2main_8cpp.html#ac31e38637f7a5e5c8ce4d033b0955fec">wifi_event_handler</a>, NULL, &amp;h_ip));</div>
-<div class="line"> </div>
-<div class="line">    wifi_config_t wifi_cfg;</div>
-<div class="line">    (void)memset(&amp;wifi_cfg, 0, <span class="keyword">sizeof</span>(wifi_cfg));</div>
-<div class="line">    (void)strncpy((<span class="keywordtype">char</span> *)wifi_cfg.sta.ssid,     <a id="_a10" name="_a10"></a><a class="code hl_define" href="Connect_2main_2config_8h.html#a586542b79d00e4db7e1d5a667ae83a2b">WIFI_SSID</a>,</div>
-<div class="line">                  <span class="keyword">sizeof</span>(wifi_cfg.sta.ssid)     - 1U);</div>
-<div class="line">    (void)strncpy((<span class="keywordtype">char</span> *)wifi_cfg.sta.password, <a id="_a11" name="_a11"></a><a class="code hl_define" href="Connect_2main_2config_8h.html#a8685d8aff7e570048090a3a51afceb07">WIFI_PASSWORD</a>,</div>
-<div class="line">                  <span class="keyword">sizeof</span>(wifi_cfg.sta.password) - 1U);</div>
-<div class="line">    wifi_cfg.sta.threshold.authmode = WIFI_AUTH_WPA2_PSK;</div>
-<div class="line"> </div>
-<div class="line">    ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA));</div>
-<div class="line">    ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_STA, &amp;wifi_cfg));</div>
-<div class="line">    ESP_ERROR_CHECK(esp_wifi_start());</div>
-<div class="line"> </div>
-<div class="line">    EventBits_t bits = xEventGroupWaitBits(<a class="code hl_variable" href="Connect_2main_2main_8cpp.html#a6aaca350cca4b3d105d88a6f399cb381">s_wifi_event_group</a>,</div>
-<div class="line">                                           <a class="code hl_define" href="Connect_2main_2main_8cpp.html#ad552e7688532cbbecd3967538ced06ac">WIFI_CONNECTED_BIT</a> | <a class="code hl_define" href="Connect_2main_2main_8cpp.html#a7d013b55e50dfbda0904f5f933b63ec4">WIFI_FAIL_BIT</a>,</div>
-<div class="line">                                           pdFALSE, pdFALSE,</div>
-<div class="line">                                           pdMS_TO_TICKS(<a class="code hl_define" href="eth__rpc_8cpp.html#a4735ad9aef99f8584afd945f39260954">WIFI_TIMEOUT_MS</a>));</div>
-<div class="line">    <span class="keywordflow">if</span> ((bits &amp; <a class="code hl_define" href="Connect_2main_2main_8cpp.html#ad552e7688532cbbecd3967538ced06ac">WIFI_CONNECTED_BIT</a>) != 0U) {</div>
-<div class="line">        ESP_LOGI(<a class="code hl_variable" href="esp32__random_8cpp.html#a4ef5b5f197804a60836ab1e8907d8301">TAG</a>, <span class="stringliteral">&quot;WiFi connected&quot;</span>);</div>
-<div class="line">    } <span class="keywordflow">else</span> {</div>
-<div class="line">        ESP_LOGW(<a class="code hl_variable" href="esp32__random_8cpp.html#a4ef5b5f197804a60836ab1e8907d8301">TAG</a>, <span class="stringliteral">&quot;WiFi connect failed — TRNG entropy may be reduced&quot;</span>);</div>
-<div class="line">    }</div>
-<div class="line"> </div>
-<div class="line">    (void)esp_event_handler_instance_unregister(IP_EVENT, IP_EVENT_STA_GOT_IP, h_ip);</div>
-<div class="line">    (void)esp_event_handler_instance_unregister(WIFI_EVENT, ESP_EVENT_ANY_ID, h_any);</div>
-<div class="line">    vEventGroupDelete(<a class="code hl_variable" href="Connect_2main_2main_8cpp.html#a6aaca350cca4b3d105d88a6f399cb381">s_wifi_event_group</a>);</div>
-<div class="line">}</div>
-<div class="line"> </div>
+<div class="line"><span class="comment">/* ── SPI wiring — ESP32-S3 dev kit + Keyestudio PN532 breakout ──── */</span></div>
 <div class="line"><span class="preprocessor">#define SPI_MOSI            11</span></div>
 <div class="line"><span class="preprocessor">#define SPI_MISO            13</span></div>
 <div class="line"><span class="preprocessor">#define SPI_SCLK            12</span></div>
@@ -217,6 +138,79 @@ $(function(){initNavTree('Sign_2main_2main_8cpp-example.html','',''); });
 <div class="line"><span class="preprocessor">#define SPI_PIN_UNUSED      (-1)</span></div>
 <div class="line"><span class="preprocessor">#define NFC_CS              10</span></div>
 <div class="line"> </div>
+<div class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">char</span> *<span class="keyword">const</span> <a id="_a0" name="_a0"></a><a class="code hl_variable" href="esp32__random_8cpp.html#a4ef5b5f197804a60836ab1e8907d8301">TAG</a>           = <span class="stringliteral">&quot;sign&quot;</span>;</div>
+<div class="line"><span class="keyword">static</span> <span class="keyword">const</span> uint32_t    <a id="_a1" name="_a1"></a><a class="code hl_variable" href="BasicUsage_2main_2main_8cpp.html#aa84b7ea151458367e14743c83dbcb3b0">LOOP_DELAY_MS</a>  = 1000U;</div>
+<div class="line"><span class="keyword">static</span> <span class="keyword">const</span> uint32_t    <a id="_a2" name="_a2"></a><a class="code hl_define" href="eth__rpc_8cpp.html#a4735ad9aef99f8584afd945f39260954">WIFI_TIMEOUT_MS</a> = 10000U;</div>
+<div class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span>         <a id="_a3" name="_a3"></a><a class="code hl_define" href="eth__rpc_8cpp.html#a9889f5062c963896a887cd62a23730bf">WIFI_MAX_RETRY</a>  = 5;</div>
+<div class="line"> </div>
+<div class="line"><span class="preprocessor">#define WIFI_CONNECTED_BIT BIT0</span></div>
+<div class="line"><span class="preprocessor">#define WIFI_FAIL_BIT      BIT1</span></div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">static</span> EventGroupHandle_t <a id="_a4" name="_a4"></a><a class="code hl_variable" href="BasicUsage_2main_2main_8cpp.html#a6aaca350cca4b3d105d88a6f399cb381">s_wifi_event_group</a>;</div>
+<div class="line"><span class="keyword">static</span> <span class="keywordtype">int</span>                <a id="_a5" name="_a5"></a><a class="code hl_variable" href="BasicUsage_2main_2main_8cpp.html#ae4da33fdcdaa6688ed25dab508ed5592">s_retry_num</a> = 0;</div>
+<div class="line"></div>
+<div class="line"><span class="keyword">static</span> <span class="keywordtype">void</span> <a id="a6" name="a6"></a><a class="code hl_function" href="BasicUsage_2main_2main_8cpp.html#ac31e38637f7a5e5c8ce4d033b0955fec">wifi_event_handler</a>(<span class="keywordtype">void</span> *arg, esp_event_base_t event_base,</div>
+<div class="line">                               int32_t event_id, <span class="keywordtype">void</span> *event_data)</div>
+<div class="line">{</div>
+<div class="line">    (void)arg;</div>
+<div class="line">    (void)event_data;</div>
+<div class="line">    <span class="keywordflow">if</span> ((event_base == WIFI_EVENT) &amp;&amp; (event_id == WIFI_EVENT_STA_START)) {</div>
+<div class="line">        esp_wifi_connect();</div>
+<div class="line">    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> ((event_base == WIFI_EVENT) &amp;&amp;</div>
+<div class="line">               (event_id == WIFI_EVENT_STA_DISCONNECTED)) {</div>
+<div class="line">        <span class="keywordflow">if</span> (<a class="code hl_variable" href="BasicUsage_2main_2main_8cpp.html#ae4da33fdcdaa6688ed25dab508ed5592">s_retry_num</a> &lt; <a class="code hl_define" href="eth__rpc_8cpp.html#a9889f5062c963896a887cd62a23730bf">WIFI_MAX_RETRY</a>) {</div>
+<div class="line">            esp_wifi_connect();</div>
+<div class="line">            <a class="code hl_variable" href="BasicUsage_2main_2main_8cpp.html#ae4da33fdcdaa6688ed25dab508ed5592">s_retry_num</a>++;</div>
+<div class="line">        } <span class="keywordflow">else</span> {</div>
+<div class="line">            xEventGroupSetBits(<a class="code hl_variable" href="BasicUsage_2main_2main_8cpp.html#a6aaca350cca4b3d105d88a6f399cb381">s_wifi_event_group</a>, <a id="_a7" name="_a7"></a><a class="code hl_define" href="BasicUsage_2main_2main_8cpp.html#a7d013b55e50dfbda0904f5f933b63ec4">WIFI_FAIL_BIT</a>);</div>
+<div class="line">        }</div>
+<div class="line">    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> ((event_base == IP_EVENT) &amp;&amp; (event_id == IP_EVENT_STA_GOT_IP)) {</div>
+<div class="line">        <a class="code hl_variable" href="BasicUsage_2main_2main_8cpp.html#ae4da33fdcdaa6688ed25dab508ed5592">s_retry_num</a> = 0;</div>
+<div class="line">        xEventGroupSetBits(<a class="code hl_variable" href="BasicUsage_2main_2main_8cpp.html#a6aaca350cca4b3d105d88a6f399cb381">s_wifi_event_group</a>, <a id="_a8" name="_a8"></a><a class="code hl_define" href="BasicUsage_2main_2main_8cpp.html#ad552e7688532cbbecd3967538ced06ac">WIFI_CONNECTED_BIT</a>);</div>
+<div class="line">    } <span class="keywordflow">else</span> {</div>
+<div class="line">        <span class="comment">/* other events ignored */</span></div>
+<div class="line">    }</div>
+<div class="line">}</div>
+<div class="line"></div>
+<div class="line"><span class="keyword">static</span> <span class="keywordtype">void</span> <a id="a9" name="a9"></a><a class="code hl_function" href="BasicUsage_2main_2main_8cpp.html#af629eac4dcd2612341863d51413aaf10">wifi_start</a>(<span class="keywordtype">void</span>)</div>
+<div class="line">{</div>
+<div class="line">    <a class="code hl_variable" href="BasicUsage_2main_2main_8cpp.html#a6aaca350cca4b3d105d88a6f399cb381">s_wifi_event_group</a> = xEventGroupCreate();</div>
+<div class="line">    <a class="code hl_variable" href="BasicUsage_2main_2main_8cpp.html#ae4da33fdcdaa6688ed25dab508ed5592">s_retry_num</a> = 0;</div>
+<div class="line">    ESP_ERROR_CHECK(esp_netif_init());</div>
+<div class="line">    ESP_ERROR_CHECK(esp_event_loop_create_default());</div>
+<div class="line">    (void)esp_netif_create_default_wifi_sta();</div>
+<div class="line">    wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();</div>
+<div class="line">    ESP_ERROR_CHECK(esp_wifi_init(&amp;cfg));</div>
+<div class="line">    esp_event_handler_instance_t h_any;</div>
+<div class="line">    esp_event_handler_instance_t h_ip;</div>
+<div class="line">    ESP_ERROR_CHECK(esp_event_handler_instance_register(</div>
+<div class="line">        WIFI_EVENT, ESP_EVENT_ANY_ID, &amp;<a class="code hl_function" href="BasicUsage_2main_2main_8cpp.html#ac31e38637f7a5e5c8ce4d033b0955fec">wifi_event_handler</a>, NULL, &amp;h_any));</div>
+<div class="line">    ESP_ERROR_CHECK(esp_event_handler_instance_register(</div>
+<div class="line">        IP_EVENT, IP_EVENT_STA_GOT_IP, &amp;<a class="code hl_function" href="BasicUsage_2main_2main_8cpp.html#ac31e38637f7a5e5c8ce4d033b0955fec">wifi_event_handler</a>, NULL, &amp;h_ip));</div>
+<div class="line">    wifi_config_t wifi_cfg;</div>
+<div class="line">    (void)memset(&amp;wifi_cfg, 0, <span class="keyword">sizeof</span>(wifi_cfg));</div>
+<div class="line">    (void)strncpy((<span class="keywordtype">char</span> *)wifi_cfg.sta.ssid,     <a id="_a10" name="_a10"></a><a class="code hl_define" href="BasicUsage_2main_2config_8h.html#a586542b79d00e4db7e1d5a667ae83a2b">WIFI_SSID</a>,</div>
+<div class="line">                  <span class="keyword">sizeof</span>(wifi_cfg.sta.ssid)     - 1U);</div>
+<div class="line">    (void)strncpy((<span class="keywordtype">char</span> *)wifi_cfg.sta.password, <a id="_a11" name="_a11"></a><a class="code hl_define" href="BasicUsage_2main_2config_8h.html#a8685d8aff7e570048090a3a51afceb07">WIFI_PASSWORD</a>,</div>
+<div class="line">                  <span class="keyword">sizeof</span>(wifi_cfg.sta.password) - 1U);</div>
+<div class="line">    wifi_cfg.sta.threshold.authmode = WIFI_AUTH_WPA2_PSK;</div>
+<div class="line">    ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA));</div>
+<div class="line">    ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_STA, &amp;wifi_cfg));</div>
+<div class="line">    ESP_ERROR_CHECK(esp_wifi_start());</div>
+<div class="line">    EventBits_t bits = xEventGroupWaitBits(<a class="code hl_variable" href="BasicUsage_2main_2main_8cpp.html#a6aaca350cca4b3d105d88a6f399cb381">s_wifi_event_group</a>,</div>
+<div class="line">                                           <a class="code hl_define" href="BasicUsage_2main_2main_8cpp.html#ad552e7688532cbbecd3967538ced06ac">WIFI_CONNECTED_BIT</a> | <a class="code hl_define" href="BasicUsage_2main_2main_8cpp.html#a7d013b55e50dfbda0904f5f933b63ec4">WIFI_FAIL_BIT</a>,</div>
+<div class="line">                                           pdFALSE, pdFALSE,</div>
+<div class="line">                                           pdMS_TO_TICKS(<a class="code hl_define" href="eth__rpc_8cpp.html#a4735ad9aef99f8584afd945f39260954">WIFI_TIMEOUT_MS</a>));</div>
+<div class="line">    <span class="keywordflow">if</span> ((bits &amp; <a class="code hl_define" href="BasicUsage_2main_2main_8cpp.html#ad552e7688532cbbecd3967538ced06ac">WIFI_CONNECTED_BIT</a>) != 0U) {</div>
+<div class="line">        ESP_LOGI(<a class="code hl_variable" href="esp32__random_8cpp.html#a4ef5b5f197804a60836ab1e8907d8301">TAG</a>, <span class="stringliteral">&quot;WiFi connected&quot;</span>);</div>
+<div class="line">    } <span class="keywordflow">else</span> {</div>
+<div class="line">        ESP_LOGW(<a class="code hl_variable" href="esp32__random_8cpp.html#a4ef5b5f197804a60836ab1e8907d8301">TAG</a>, <span class="stringliteral">&quot;WiFi connect failed — TRNG entropy may be reduced&quot;</span>);</div>
+<div class="line">    }</div>
+<div class="line">    (void)esp_event_handler_instance_unregister(IP_EVENT, IP_EVENT_STA_GOT_IP, h_ip);</div>
+<div class="line">    (void)esp_event_handler_instance_unregister(WIFI_EVENT, ESP_EVENT_ANY_ID, h_any);</div>
+<div class="line">    vEventGroupDelete(<a class="code hl_variable" href="BasicUsage_2main_2main_8cpp.html#a6aaca350cca4b3d105d88a6f399cb381">s_wifi_event_group</a>);</div>
+<div class="line">}</div>
+<div class="line"></div>
 <div class="line"><span class="keyword">static</span> <span class="keywordtype">void</span> <a id="a12" name="a12"></a><a class="code hl_function" href="Sign_2main_2main_8cpp.html#a641fb4f907349cbef2ce4d7d1784e4e5">run_sign_loop</a>(CryptnoxWallet &amp;wallet)</div>
 <div class="line">{</div>
 <div class="line">    <span class="comment">/* Replace with the SHA-256 (or Keccak-256) digest of the real transaction. */</span></div>
@@ -273,16 +267,16 @@ $(function(){initNavTree('Sign_2main_2main_8cpp-example.html','',''); });
 <div class="line">        wallet.disconnect(session);</div>
 <div class="line"> </div>
 <div class="line">        <span class="keywordflow">if</span> (keep_running) {</div>
-<div class="line">            vTaskDelay(pdMS_TO_TICKS(<a class="code hl_variable" href="Connect_2main_2main_8cpp.html#aa84b7ea151458367e14743c83dbcb3b0">LOOP_DELAY_MS</a>));</div>
+<div class="line">            vTaskDelay(pdMS_TO_TICKS(<a class="code hl_variable" href="BasicUsage_2main_2main_8cpp.html#aa84b7ea151458367e14743c83dbcb3b0">LOOP_DELAY_MS</a>));</div>
 <div class="line">        }</div>
 <div class="line">    }</div>
 <div class="line"> </div>
 <div class="line">    <span class="keywordflow">while</span> (<span class="keyword">true</span>) {</div>
-<div class="line">        vTaskDelay(pdMS_TO_TICKS(<a class="code hl_variable" href="Connect_2main_2main_8cpp.html#aa84b7ea151458367e14743c83dbcb3b0">LOOP_DELAY_MS</a>));</div>
+<div class="line">        vTaskDelay(pdMS_TO_TICKS(<a class="code hl_variable" href="BasicUsage_2main_2main_8cpp.html#aa84b7ea151458367e14743c83dbcb3b0">LOOP_DELAY_MS</a>));</div>
 <div class="line">    }</div>
 <div class="line">}</div>
-<div class="line"> </div>
-<div class="line"><span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> <span class="keywordtype">void</span> <a id="a13" name="a13"></a><a class="code hl_function" href="Connect_2main_2main_8cpp.html#a630544a7f0a2cc40d8a7fefab7e2fe70">app_main</a>(<span class="keywordtype">void</span>)</div>
+<div class="line"></div>
+<div class="line"><span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> <span class="keywordtype">void</span> <a id="a13" name="a13"></a><a class="code hl_function" href="BasicUsage_2main_2main_8cpp.html#a630544a7f0a2cc40d8a7fefab7e2fe70">app_main</a>(<span class="keywordtype">void</span>)</div>
 <div class="line">{</div>
 <div class="line">    esp_err_t nvs_ret = nvs_flash_init();</div>
 <div class="line">    <span class="keywordflow">if</span> ((nvs_ret == ESP_ERR_NVS_NO_FREE_PAGES) ||</div>
@@ -291,23 +285,22 @@ $(function(){initNavTree('Sign_2main_2main_8cpp-example.html','',''); });
 <div class="line">        nvs_ret = nvs_flash_init();</div>
 <div class="line">    }</div>
 <div class="line">    ESP_ERROR_CHECK(nvs_ret);</div>
-<div class="line"> </div>
-<div class="line">    <a class="code hl_function" href="Connect_2main_2main_8cpp.html#af629eac4dcd2612341863d51413aaf10">wifi_start</a>();</div>
+<div class="line">    <a class="code hl_function" href="BasicUsage_2main_2main_8cpp.html#af629eac4dcd2612341863d51413aaf10">wifi_start</a>();</div>
 <div class="line"> </div>
 <div class="line">    spi_bus_config_t buscfg = {</div>
-<div class="line">        .mosi_io_num     = <a id="_a14" name="_a14"></a><a class="code hl_define" href="Connect_2main_2main_8cpp.html#a7dbebab5f7dd57885adccf6711b13592">SPI_MOSI</a>,</div>
-<div class="line">        .miso_io_num     = <a id="_a15" name="_a15"></a><a class="code hl_define" href="Connect_2main_2main_8cpp.html#ab142cc77dfa97010c9d2b616d0992b64">SPI_MISO</a>,</div>
-<div class="line">        .sclk_io_num     = <a id="_a16" name="_a16"></a><a class="code hl_define" href="Connect_2main_2main_8cpp.html#aefec442ab2dbec4785b387b3e88faa66">SPI_SCLK</a>,</div>
-<div class="line">        .quadwp_io_num   = <a id="_a17" name="_a17"></a><a class="code hl_define" href="Connect_2main_2main_8cpp.html#aa16c68a03f664d7fb7135e5f9a399310">SPI_PIN_UNUSED</a>,</div>
-<div class="line">        .quadhd_io_num   = <a class="code hl_define" href="Connect_2main_2main_8cpp.html#aa16c68a03f664d7fb7135e5f9a399310">SPI_PIN_UNUSED</a>,</div>
-<div class="line">        .max_transfer_sz = <a id="_a18" name="_a18"></a><a class="code hl_define" href="Connect_2main_2main_8cpp.html#a6ec274c632bf261fd0753152a14defdf">SPI_MAX_TRANSFER_SZ</a>,</div>
+<div class="line">        .mosi_io_num     = <a id="_a14" name="_a14"></a><a class="code hl_define" href="BasicUsage_2main_2main_8cpp.html#a7dbebab5f7dd57885adccf6711b13592">SPI_MOSI</a>,</div>
+<div class="line">        .miso_io_num     = <a id="_a15" name="_a15"></a><a class="code hl_define" href="BasicUsage_2main_2main_8cpp.html#ab142cc77dfa97010c9d2b616d0992b64">SPI_MISO</a>,</div>
+<div class="line">        .sclk_io_num     = <a id="_a16" name="_a16"></a><a class="code hl_define" href="BasicUsage_2main_2main_8cpp.html#aefec442ab2dbec4785b387b3e88faa66">SPI_SCLK</a>,</div>
+<div class="line">        .quadwp_io_num   = <a id="_a17" name="_a17"></a><a class="code hl_define" href="BasicUsage_2main_2main_8cpp.html#aa16c68a03f664d7fb7135e5f9a399310">SPI_PIN_UNUSED</a>,</div>
+<div class="line">        .quadhd_io_num   = <a class="code hl_define" href="BasicUsage_2main_2main_8cpp.html#aa16c68a03f664d7fb7135e5f9a399310">SPI_PIN_UNUSED</a>,</div>
+<div class="line">        .max_transfer_sz = <a id="_a18" name="_a18"></a><a class="code hl_define" href="BasicUsage_2main_2main_8cpp.html#a6ec274c632bf261fd0753152a14defdf">SPI_MAX_TRANSFER_SZ</a>,</div>
 <div class="line">    };</div>
 <div class="line">    ESP_ERROR_CHECK(spi_bus_initialize(SPI2_HOST, &amp;buscfg, SPI_DMA_CH_AUTO));</div>
 <div class="line"> </div>
 <div class="line">    <a id="_a19" name="_a19"></a><a class="code hl_struct" href="structpn532__t.html">pn532_t</a> nfc = {};</div>
 <div class="line">    <a id="_a20" name="_a20"></a><a class="code hl_struct" href="structpn532__config__t.html">pn532_config_t</a> nfc_cfg = {</div>
 <div class="line">        .spi_host      = SPI2_HOST,</div>
-<div class="line">        .pin_cs        = <a id="_a21" name="_a21"></a><a class="code hl_define" href="Connect_2main_2main_8cpp.html#a0c6bd557f1fa31b24d41cbd2f04a2e48">NFC_CS</a>,</div>
+<div class="line">        .pin_cs        = <a id="_a21" name="_a21"></a><a class="code hl_define" href="BasicUsage_2main_2main_8cpp.html#a0c6bd557f1fa31b24d41cbd2f04a2e48">NFC_CS</a>,</div>
 <div class="line">        .skip_bus_init = <span class="keyword">true</span>,</div>
 <div class="line">    };</div>
 <div class="line">    esp_err_t nfc_ret = <a id="a22" name="a22"></a><a class="code hl_function" href="group__pn532__driver.html#ga21f52f38564e794861cf365433702df5">pn532_init</a>(&amp;nfc, &amp;nfc_cfg);</div>
@@ -330,26 +323,26 @@ $(function(){initNavTree('Sign_2main_2main_8cpp-example.html','',''); });
 <div class="line">        ESP_LOGE(<a class="code hl_variable" href="esp32__random_8cpp.html#a4ef5b5f197804a60836ab1e8907d8301">TAG</a>, <span class="stringliteral">&quot;PN532 init failed&quot;</span>);</div>
 <div class="line">    }</div>
 <div class="line">}</div>
-<div class="ttc" id="aConnect_2main_2config_8h_html_a586542b79d00e4db7e1d5a667ae83a2b"><div class="ttname"><a href="Connect_2main_2config_8h.html#a586542b79d00e4db7e1d5a667ae83a2b">WIFI_SSID</a></div><div class="ttdeci">#define WIFI_SSID</div><div class="ttdef"><b>Definition</b> <a href="Connect_2main_2config_8h_source.html#l00012">config.h:12</a></div></div>
-<div class="ttc" id="aConnect_2main_2config_8h_html_a8685d8aff7e570048090a3a51afceb07"><div class="ttname"><a href="Connect_2main_2config_8h.html#a8685d8aff7e570048090a3a51afceb07">WIFI_PASSWORD</a></div><div class="ttdeci">#define WIFI_PASSWORD</div><div class="ttdef"><b>Definition</b> <a href="Connect_2main_2config_8h_source.html#l00013">config.h:13</a></div></div>
-<div class="ttc" id="aConnect_2main_2main_8cpp_html_a0c6bd557f1fa31b24d41cbd2f04a2e48"><div class="ttname"><a href="Connect_2main_2main_8cpp.html#a0c6bd557f1fa31b24d41cbd2f04a2e48">NFC_CS</a></div><div class="ttdeci">#define NFC_CS</div><div class="ttdef"><b>Definition</b> <a href="Connect_2main_2main_8cpp_source.html#l00131">main.cpp:131</a></div></div>
-<div class="ttc" id="aConnect_2main_2main_8cpp_html_a630544a7f0a2cc40d8a7fefab7e2fe70"><div class="ttname"><a href="Connect_2main_2main_8cpp.html#a630544a7f0a2cc40d8a7fefab7e2fe70">app_main</a></div><div class="ttdeci">void app_main(void)</div><div class="ttdef"><b>Definition</b> <a href="Connect_2main_2main_8cpp_source.html#l00159">main.cpp:159</a></div></div>
-<div class="ttc" id="aConnect_2main_2main_8cpp_html_a6aaca350cca4b3d105d88a6f399cb381"><div class="ttname"><a href="Connect_2main_2main_8cpp.html#a6aaca350cca4b3d105d88a6f399cb381">s_wifi_event_group</a></div><div class="ttdeci">static EventGroupHandle_t s_wifi_event_group</div><div class="ttdef"><b>Definition</b> <a href="Connect_2main_2main_8cpp_source.html#l00053">main.cpp:53</a></div></div>
-<div class="ttc" id="aConnect_2main_2main_8cpp_html_a6ec274c632bf261fd0753152a14defdf"><div class="ttname"><a href="Connect_2main_2main_8cpp.html#a6ec274c632bf261fd0753152a14defdf">SPI_MAX_TRANSFER_SZ</a></div><div class="ttdeci">#define SPI_MAX_TRANSFER_SZ</div><div class="ttdef"><b>Definition</b> <a href="Connect_2main_2main_8cpp_source.html#l00129">main.cpp:129</a></div></div>
-<div class="ttc" id="aConnect_2main_2main_8cpp_html_a7d013b55e50dfbda0904f5f933b63ec4"><div class="ttname"><a href="Connect_2main_2main_8cpp.html#a7d013b55e50dfbda0904f5f933b63ec4">WIFI_FAIL_BIT</a></div><div class="ttdeci">#define WIFI_FAIL_BIT</div><div class="ttdef"><b>Definition</b> <a href="Connect_2main_2main_8cpp_source.html#l00051">main.cpp:51</a></div></div>
-<div class="ttc" id="aConnect_2main_2main_8cpp_html_a7dbebab5f7dd57885adccf6711b13592"><div class="ttname"><a href="Connect_2main_2main_8cpp.html#a7dbebab5f7dd57885adccf6711b13592">SPI_MOSI</a></div><div class="ttdeci">#define SPI_MOSI</div><div class="ttdef"><b>Definition</b> <a href="Connect_2main_2main_8cpp_source.html#l00126">main.cpp:126</a></div></div>
-<div class="ttc" id="aConnect_2main_2main_8cpp_html_aa16c68a03f664d7fb7135e5f9a399310"><div class="ttname"><a href="Connect_2main_2main_8cpp.html#aa16c68a03f664d7fb7135e5f9a399310">SPI_PIN_UNUSED</a></div><div class="ttdeci">#define SPI_PIN_UNUSED</div><div class="ttdef"><b>Definition</b> <a href="Connect_2main_2main_8cpp_source.html#l00130">main.cpp:130</a></div></div>
-<div class="ttc" id="aConnect_2main_2main_8cpp_html_aa84b7ea151458367e14743c83dbcb3b0"><div class="ttname"><a href="Connect_2main_2main_8cpp.html#aa84b7ea151458367e14743c83dbcb3b0">LOOP_DELAY_MS</a></div><div class="ttdeci">static const uint32_t LOOP_DELAY_MS</div><div class="ttdef"><b>Definition</b> <a href="Connect_2main_2main_8cpp_source.html#l00046">main.cpp:46</a></div></div>
-<div class="ttc" id="aConnect_2main_2main_8cpp_html_ab142cc77dfa97010c9d2b616d0992b64"><div class="ttname"><a href="Connect_2main_2main_8cpp.html#ab142cc77dfa97010c9d2b616d0992b64">SPI_MISO</a></div><div class="ttdeci">#define SPI_MISO</div><div class="ttdef"><b>Definition</b> <a href="Connect_2main_2main_8cpp_source.html#l00127">main.cpp:127</a></div></div>
-<div class="ttc" id="aConnect_2main_2main_8cpp_html_ac31e38637f7a5e5c8ce4d033b0955fec"><div class="ttname"><a href="Connect_2main_2main_8cpp.html#ac31e38637f7a5e5c8ce4d033b0955fec">wifi_event_handler</a></div><div class="ttdeci">static void wifi_event_handler(void *arg, esp_event_base_t event_base, int32_t event_id, void *event_data)</div><div class="ttdef"><b>Definition</b> <a href="Connect_2main_2main_8cpp_source.html#l00056">main.cpp:56</a></div></div>
-<div class="ttc" id="aConnect_2main_2main_8cpp_html_ad552e7688532cbbecd3967538ced06ac"><div class="ttname"><a href="Connect_2main_2main_8cpp.html#ad552e7688532cbbecd3967538ced06ac">WIFI_CONNECTED_BIT</a></div><div class="ttdeci">#define WIFI_CONNECTED_BIT</div><div class="ttdef"><b>Definition</b> <a href="Connect_2main_2main_8cpp_source.html#l00050">main.cpp:50</a></div></div>
-<div class="ttc" id="aConnect_2main_2main_8cpp_html_ae4da33fdcdaa6688ed25dab508ed5592"><div class="ttname"><a href="Connect_2main_2main_8cpp.html#ae4da33fdcdaa6688ed25dab508ed5592">s_retry_num</a></div><div class="ttdeci">static int s_retry_num</div><div class="ttdef"><b>Definition</b> <a href="Connect_2main_2main_8cpp_source.html#l00054">main.cpp:54</a></div></div>
-<div class="ttc" id="aConnect_2main_2main_8cpp_html_aefec442ab2dbec4785b387b3e88faa66"><div class="ttname"><a href="Connect_2main_2main_8cpp.html#aefec442ab2dbec4785b387b3e88faa66">SPI_SCLK</a></div><div class="ttdeci">#define SPI_SCLK</div><div class="ttdef"><b>Definition</b> <a href="Connect_2main_2main_8cpp_source.html#l00128">main.cpp:128</a></div></div>
-<div class="ttc" id="aConnect_2main_2main_8cpp_html_af629eac4dcd2612341863d51413aaf10"><div class="ttname"><a href="Connect_2main_2main_8cpp.html#af629eac4dcd2612341863d51413aaf10">wifi_start</a></div><div class="ttdeci">static void wifi_start(void)</div><div class="ttdef"><b>Definition</b> <a href="Connect_2main_2main_8cpp_source.html#l00080">main.cpp:80</a></div></div>
+<div class="ttc" id="aBasicUsage_2main_2config_8h_html_a586542b79d00e4db7e1d5a667ae83a2b"><div class="ttname"><a href="BasicUsage_2main_2config_8h.html#a586542b79d00e4db7e1d5a667ae83a2b">WIFI_SSID</a></div><div class="ttdeci">#define WIFI_SSID</div><div class="ttdef"><b>Definition</b> <a href="BasicUsage_2main_2config_8h_source.html#l00012">config.h:12</a></div></div>
+<div class="ttc" id="aBasicUsage_2main_2config_8h_html_a8685d8aff7e570048090a3a51afceb07"><div class="ttname"><a href="BasicUsage_2main_2config_8h.html#a8685d8aff7e570048090a3a51afceb07">WIFI_PASSWORD</a></div><div class="ttdeci">#define WIFI_PASSWORD</div><div class="ttdef"><b>Definition</b> <a href="BasicUsage_2main_2config_8h_source.html#l00013">config.h:13</a></div></div>
+<div class="ttc" id="aBasicUsage_2main_2main_8cpp_html_a0c6bd557f1fa31b24d41cbd2f04a2e48"><div class="ttname"><a href="BasicUsage_2main_2main_8cpp.html#a0c6bd557f1fa31b24d41cbd2f04a2e48">NFC_CS</a></div><div class="ttdeci">#define NFC_CS</div><div class="ttdef"><b>Definition</b> <a href="BasicUsage_2main_2main_8cpp_source.html#l00059">main.cpp:59</a></div></div>
+<div class="ttc" id="aBasicUsage_2main_2main_8cpp_html_a630544a7f0a2cc40d8a7fefab7e2fe70"><div class="ttname"><a href="BasicUsage_2main_2main_8cpp.html#a630544a7f0a2cc40d8a7fefab7e2fe70">app_main</a></div><div class="ttdeci">void app_main(void)</div><div class="ttdoc">ESP-IDF application entry point.</div><div class="ttdef"><b>Definition</b> <a href="BasicUsage_2main_2main_8cpp_source.html#l00284">main.cpp:284</a></div></div>
+<div class="ttc" id="aBasicUsage_2main_2main_8cpp_html_a6aaca350cca4b3d105d88a6f399cb381"><div class="ttname"><a href="BasicUsage_2main_2main_8cpp.html#a6aaca350cca4b3d105d88a6f399cb381">s_wifi_event_group</a></div><div class="ttdeci">static EventGroupHandle_t s_wifi_event_group</div><div class="ttdef"><b>Definition</b> <a href="BasicUsage_2main_2main_8cpp_source.html#l00080">main.cpp:80</a></div></div>
+<div class="ttc" id="aBasicUsage_2main_2main_8cpp_html_a6ec274c632bf261fd0753152a14defdf"><div class="ttname"><a href="BasicUsage_2main_2main_8cpp.html#a6ec274c632bf261fd0753152a14defdf">SPI_MAX_TRANSFER_SZ</a></div><div class="ttdeci">#define SPI_MAX_TRANSFER_SZ</div><div class="ttdef"><b>Definition</b> <a href="BasicUsage_2main_2main_8cpp_source.html#l00057">main.cpp:57</a></div></div>
+<div class="ttc" id="aBasicUsage_2main_2main_8cpp_html_a7d013b55e50dfbda0904f5f933b63ec4"><div class="ttname"><a href="BasicUsage_2main_2main_8cpp.html#a7d013b55e50dfbda0904f5f933b63ec4">WIFI_FAIL_BIT</a></div><div class="ttdeci">#define WIFI_FAIL_BIT</div><div class="ttdef"><b>Definition</b> <a href="BasicUsage_2main_2main_8cpp_source.html#l00078">main.cpp:78</a></div></div>
+<div class="ttc" id="aBasicUsage_2main_2main_8cpp_html_a7dbebab5f7dd57885adccf6711b13592"><div class="ttname"><a href="BasicUsage_2main_2main_8cpp.html#a7dbebab5f7dd57885adccf6711b13592">SPI_MOSI</a></div><div class="ttdeci">#define SPI_MOSI</div><div class="ttdef"><b>Definition</b> <a href="BasicUsage_2main_2main_8cpp_source.html#l00054">main.cpp:54</a></div></div>
+<div class="ttc" id="aBasicUsage_2main_2main_8cpp_html_aa16c68a03f664d7fb7135e5f9a399310"><div class="ttname"><a href="BasicUsage_2main_2main_8cpp.html#aa16c68a03f664d7fb7135e5f9a399310">SPI_PIN_UNUSED</a></div><div class="ttdeci">#define SPI_PIN_UNUSED</div><div class="ttdef"><b>Definition</b> <a href="BasicUsage_2main_2main_8cpp_source.html#l00058">main.cpp:58</a></div></div>
+<div class="ttc" id="aBasicUsage_2main_2main_8cpp_html_aa84b7ea151458367e14743c83dbcb3b0"><div class="ttname"><a href="BasicUsage_2main_2main_8cpp.html#aa84b7ea151458367e14743c83dbcb3b0">LOOP_DELAY_MS</a></div><div class="ttdeci">static const uint32_t LOOP_DELAY_MS</div><div class="ttdef"><b>Definition</b> <a href="BasicUsage_2main_2main_8cpp_source.html#l00073">main.cpp:73</a></div></div>
+<div class="ttc" id="aBasicUsage_2main_2main_8cpp_html_ab142cc77dfa97010c9d2b616d0992b64"><div class="ttname"><a href="BasicUsage_2main_2main_8cpp.html#ab142cc77dfa97010c9d2b616d0992b64">SPI_MISO</a></div><div class="ttdeci">#define SPI_MISO</div><div class="ttdef"><b>Definition</b> <a href="BasicUsage_2main_2main_8cpp_source.html#l00055">main.cpp:55</a></div></div>
+<div class="ttc" id="aBasicUsage_2main_2main_8cpp_html_ac31e38637f7a5e5c8ce4d033b0955fec"><div class="ttname"><a href="BasicUsage_2main_2main_8cpp.html#ac31e38637f7a5e5c8ce4d033b0955fec">wifi_event_handler</a></div><div class="ttdeci">static void wifi_event_handler(void *arg, esp_event_base_t event_base, int32_t event_id, void *event_data)</div><div class="ttdoc">FreeRTOS event handler driving the Wi-Fi station state machine.</div><div class="ttdef"><b>Definition</b> <a href="BasicUsage_2main_2main_8cpp_source.html#l00095">main.cpp:95</a></div></div>
+<div class="ttc" id="aBasicUsage_2main_2main_8cpp_html_ad552e7688532cbbecd3967538ced06ac"><div class="ttname"><a href="BasicUsage_2main_2main_8cpp.html#ad552e7688532cbbecd3967538ced06ac">WIFI_CONNECTED_BIT</a></div><div class="ttdeci">#define WIFI_CONNECTED_BIT</div><div class="ttdef"><b>Definition</b> <a href="BasicUsage_2main_2main_8cpp_source.html#l00077">main.cpp:77</a></div></div>
+<div class="ttc" id="aBasicUsage_2main_2main_8cpp_html_ae4da33fdcdaa6688ed25dab508ed5592"><div class="ttname"><a href="BasicUsage_2main_2main_8cpp.html#ae4da33fdcdaa6688ed25dab508ed5592">s_retry_num</a></div><div class="ttdeci">static int s_retry_num</div><div class="ttdef"><b>Definition</b> <a href="BasicUsage_2main_2main_8cpp_source.html#l00081">main.cpp:81</a></div></div>
+<div class="ttc" id="aBasicUsage_2main_2main_8cpp_html_aefec442ab2dbec4785b387b3e88faa66"><div class="ttname"><a href="BasicUsage_2main_2main_8cpp.html#aefec442ab2dbec4785b387b3e88faa66">SPI_SCLK</a></div><div class="ttdeci">#define SPI_SCLK</div><div class="ttdef"><b>Definition</b> <a href="BasicUsage_2main_2main_8cpp_source.html#l00056">main.cpp:56</a></div></div>
+<div class="ttc" id="aBasicUsage_2main_2main_8cpp_html_af629eac4dcd2612341863d51413aaf10"><div class="ttname"><a href="BasicUsage_2main_2main_8cpp.html#af629eac4dcd2612341863d51413aaf10">wifi_start</a></div><div class="ttdeci">static void wifi_start(void)</div><div class="ttdoc">Initialise Wi-Fi station mode and block until connected or timeout.</div><div class="ttdef"><b>Definition</b> <a href="BasicUsage_2main_2main_8cpp_source.html#l00130">main.cpp:130</a></div></div>
 <div class="ttc" id="aESP32Logger_8h_html"><div class="ttname"><a href="ESP32Logger_8h.html">ESP32Logger.h</a></div><div class="ttdoc">CW_Logger implementation that writes to ESP32 UART0 via printf.</div></div>
 <div class="ttc" id="aESP32Platform_8h_html"><div class="ttname"><a href="ESP32Platform_8h.html">ESP32Platform.h</a></div><div class="ttdoc">CW_Platform implementation for ESP32 using FreeRTOS.</div></div>
 <div class="ttc" id="aPn532NfcTransport_8h_html"><div class="ttname"><a href="Pn532NfcTransport_8h.html">Pn532NfcTransport.h</a></div><div class="ttdoc">CW_NfcTransport adapter wrapping the ESP-IDF PN532 NFC driver.</div></div>
-<div class="ttc" id="aSign_2main_2main_8cpp_html_a641fb4f907349cbef2ce4d7d1784e4e5"><div class="ttname"><a href="Sign_2main_2main_8cpp.html#a641fb4f907349cbef2ce4d7d1784e4e5">run_sign_loop</a></div><div class="ttdeci">static void run_sign_loop(CryptnoxWallet &amp;wallet)</div><div class="ttdef"><b>Definition</b> <a href="Sign_2main_2main_8cpp_source.html#l00141">main.cpp:141</a></div></div>
+<div class="ttc" id="aSign_2main_2main_8cpp_html_a641fb4f907349cbef2ce4d7d1784e4e5"><div class="ttname"><a href="Sign_2main_2main_8cpp.html#a641fb4f907349cbef2ce4d7d1784e4e5">run_sign_loop</a></div><div class="ttdeci">static void run_sign_loop(CryptnoxWallet &amp;wallet)</div><div class="ttdoc">Main application loop: connect, sign a test hash, and disconnect.</div><div class="ttdef"><b>Definition</b> <a href="Sign_2main_2main_8cpp_source.html#l00169">main.cpp:169</a></div></div>
 <div class="ttc" id="aclassESP32CryptoProvider_html"><div class="ttname"><a href="classESP32CryptoProvider.html">ESP32CryptoProvider</a></div><div class="ttdoc">CW_CryptoProvider backed by mbedTLS and the ESP32 hardware TRNG.</div><div class="ttdef"><b>Definition</b> <a href="esp32__crypto__provider_8h_source.html#l00062">esp32_crypto_provider.h:62</a></div></div>
 <div class="ttc" id="aclassESP32Logger_html"><div class="ttname"><a href="classESP32Logger.html">ESP32Logger</a></div><div class="ttdoc">CW_Logger backed by ESP32 UART0.</div><div class="ttdef"><b>Definition</b> <a href="ESP32Logger_8h_source.html#l00048">ESP32Logger.h:48</a></div></div>
 <div class="ttc" id="aclassESP32Logger_html_a6e68aa4b9e35384aaf32d68091715734"><div class="ttname"><a href="classESP32Logger.html#a6e68aa4b9e35384aaf32d68091715734">ESP32Logger::begin</a></div><div class="ttdeci">bool begin(unsigned long baudRate=115200UL) override</div><div class="ttdoc">Initialise UART0 at the given baud rate.</div><div class="ttdef"><b>Definition</b> <a href="ESP32Logger_8cpp_source.html#l00095">ESP32Logger.cpp:95</a></div></div>

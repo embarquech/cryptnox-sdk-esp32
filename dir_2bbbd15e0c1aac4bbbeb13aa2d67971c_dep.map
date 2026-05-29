@@ -1,7 +1,7 @@
 <map id="examples/Sign/main" name="examples/Sign/main">
 <area shape="rect" id="node1" href="dir_2bbbd15e0c1aac4bbbeb13aa2d67971c.html" title="main" alt="" coords="29,52,84,77"/>
 <area shape="rect" id="node2" href="dir_409f97388efe006bc3438b95e9edef48.html" title="components" alt="" coords="5,125,108,151"/>
-<area shape="poly" id="edge1" href="dir_000015_000000.html" alt="" coords="59,78,59,112,54,112,54,78"/>
-<area shape="rect" id="edge1-headlabel" href="dir_000015_000000.html" title="5" alt="" coords="60,100,70,114"/>
+<area shape="poly" id="edge1" href="dir_000017_000001.html" alt="" coords="59,78,59,112,54,112,54,78"/>
+<area shape="rect" id="edge1-headlabel" href="dir_000017_000001.html" title="5" alt="" coords="60,100,70,114"/>
 <area shape="rect" id="clust1" href="dir_2365b4822c04e78cb5bc3fb96cb35526.html" title="Sign" alt="" coords="18,16,95,88"/>
 </map>

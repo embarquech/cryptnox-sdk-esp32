@@ -94,9 +94,9 @@ $(function(){initNavTree('UsdcSigning_2main_2main_8cpp-example.html','',''); });
 <div class="contents">
 <p>Cryptnox ESP32 example: build, sign, and broadcast a USDC ERC-20 transfer.</p>
 <p>Cryptnox ESP32 example: build, sign, and broadcast a USDC ERC-20 transfer.Wiring &amp; prerequisites:</p><ul>
-<li>PN532 NFC reader — transport selected by <a class="el" href="UsdcSigning_2main_2main_8cpp.html#a5d009989e3463a02a498fa5b48cc4329">SPI_ENABLED</a> / <a class="el" href="UsdcSigning_2main_2main_8cpp.html#a8e0a26a3f44ecd56da1a232a071fee4a">I2C_ENABLED</a> in <code>config.h</code>.</li>
+<li>PN532 NFC reader — transport selected by PN532_USE_I2C at the top of this file.</li>
 <li>A Cryptnox card initialised with a seed and a known PIN.</li>
-<li><code>config.h</code> filled in with WiFi, RPC endpoint, and Ethereum addresses (copy from <code><a class="el" href="config_8template_8h.html">config.template.h</a></code>).</li>
+<li><code>config.h</code> filled in with WiFi, RPC endpoint, and Ethereum addresses (copy from <code><a class="el" href="config_8template_8h.html">config.template.h</a></code> and fill in the values).</li>
 </ul>
 <p>What the firmware does in each loop iteration:</p><ol type="1">
 <li>Wait for a card tap and establish the secure channel.</li>
@@ -104,10 +104,10 @@ $(function(){initNavTree('UsdcSigning_2main_2main_8cpp-example.html','',''); });
 <li>Build an EIP-1559 type-2 transaction for a USDC <code>transfer(address,uint256)</code> call.</li>
 <li>RLP-encode the unsigned transaction and Keccak-256 hash it.</li>
 <li>Sign the hash on the card (CryptnoxWallet::sign).</li>
-<li>Recover the <code>v</code> parity bit via <code>eth_rpc_ecrecover</code>.</li>
+<li>Recover the <code>v</code> parity bit via <code>eth_rpc_ecrecover_parity</code>.</li>
 <li>RLP-encode the signed transaction and broadcast it.</li>
 </ol>
-<dl class="section note"><dt>Note</dt><dd>Fill in <a class="el" href="Connect_2main_2config_8h.html#a586542b79d00e4db7e1d5a667ae83a2b">WIFI_SSID</a>, <a class="el" href="Connect_2main_2config_8h.html#a8685d8aff7e570048090a3a51afceb07">WIFI_PASSWORD</a>, <a class="el" href="config_8template_8h.html#a873b82bf566619e547913f95b78dc867">RPC_URL</a>, <a class="el" href="config_8template_8h.html#a5d8bab74920aab1e98e0b25ea1353a2b">ADDR_FROM</a>, <a class="el" href="config_8template_8h.html#add6e87e7e1503d3d6117bbf1aa674e03">ADDR_TO</a>, <a class="el" href="config_8template_8h.html#a0602094f118a6fc9bd4498a386352018">ADDR_USDC</a>, and <a class="el" href="config_8template_8h.html#a2de009963ca3d1582d4c3a4397ef65bc">CARD_PIN</a> in <code>config.h</code> before building.</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>Fill in <a class="el" href="BasicUsage_2main_2config_8h.html#a586542b79d00e4db7e1d5a667ae83a2b">WIFI_SSID</a>, <a class="el" href="BasicUsage_2main_2config_8h.html#a8685d8aff7e570048090a3a51afceb07">WIFI_PASSWORD</a>, <a class="el" href="config_8template_8h.html#a873b82bf566619e547913f95b78dc867">RPC_URL</a>, <a class="el" href="config_8template_8h.html#a5d8bab74920aab1e98e0b25ea1353a2b">ADDR_FROM</a>, <a class="el" href="config_8template_8h.html#add6e87e7e1503d3d6117bbf1aa674e03">ADDR_TO</a>, <a class="el" href="config_8template_8h.html#a0602094f118a6fc9bd4498a386352018">ADDR_USDC</a>, and <a class="el" href="config_8template_8h.html#a2de009963ca3d1582d4c3a4397ef65bc">CARD_PIN</a> in <code>config.h</code> before building.</dd></dl>
 <div class="fragment"><div class="line"><span class="comment">/*</span></div>
 <div class="line"><span class="comment"> * SPDX-License-Identifier: LGPL-3.0-or-later</span></div>
 <div class="line"><span class="comment"> * Copyright (c) 2026 Cryptnox SA</span></div>
@@ -177,11 +177,7 @@ $(function(){initNavTree('UsdcSigning_2main_2main_8cpp-example.html','',''); });
 <div class="line"><span class="comment">/******************************************************************</span></div>
 <div class="line"><span class="comment"> * Helpers</span></div>
 <div class="line"><span class="comment"> ******************************************************************/</span></div>
-<div class="line"> </div>
-<div class="line"><span class="comment">/*</span></div>
-<div class="line"><span class="comment"> * Parse a &quot;0x...&quot;-prefixed (or unprefixed) hex string of exactly 20 bytes</span></div>
-<div class="line"><span class="comment"> * into &#39;out&#39;.  Silently truncates/pads if the source length differs.</span></div>
-<div class="line"><span class="comment"> */</span></div>
+<div class="line"></div>
 <div class="line"><span class="keyword">static</span> <span class="keywordtype">void</span> <a id="a2" name="a2"></a><a class="code hl_function" href="UsdcSigning_2main_2main_8cpp.html#a5d8d83ca353cce2ad69ac1ff955d06b8">parse_address</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *hex, uint8_t out[20])</div>
 <div class="line">{</div>
 <div class="line">    <span class="keyword">const</span> <span class="keywordtype">char</span> *p = hex;</div>
@@ -200,11 +196,7 @@ $(function(){initNavTree('UsdcSigning_2main_2main_8cpp-example.html','',''); });
 <div class="line">        out[i] = (uint8_t)((hi &lt;&lt; 4U) | lo);</div>
 <div class="line">    }</div>
 <div class="line">}</div>
-<div class="line"> </div>
-<div class="line"><span class="comment">/*</span></div>
-<div class="line"><span class="comment"> * Build the 68-byte calldata for USDC transfer(to, amount).</span></div>
-<div class="line"><span class="comment"> * Layout: selector(4) | zeroes(12) | to(20) | zeroes(24) | amount_be(8)</span></div>
-<div class="line"><span class="comment"> */</span></div>
+<div class="line"></div>
 <div class="line"><span class="keyword">static</span> <span class="keywordtype">void</span> <a id="a3" name="a3"></a><a class="code hl_function" href="UsdcSigning_2main_2main_8cpp.html#a4b60e6b1c761ac5b545161210b271998">build_usdc_calldata</a>(uint8_t out[68], <span class="keyword">const</span> <span class="keywordtype">char</span> *to_hex, uint64_t amount)</div>
 <div class="line">{</div>
 <div class="line">    (void)memset(out, 0, 68U);</div>
@@ -227,7 +219,7 @@ $(function(){initNavTree('UsdcSigning_2main_2main_8cpp-example.html','',''); });
 <div class="line"><span class="comment">/******************************************************************</span></div>
 <div class="line"><span class="comment"> * Signing loop</span></div>
 <div class="line"><span class="comment"> ******************************************************************/</span></div>
-<div class="line"> </div>
+<div class="line"></div>
 <div class="line"><span class="keyword">static</span> <span class="keywordtype">void</span> <a id="a4" name="a4"></a><a class="code hl_function" href="UsdcSigning_2main_2main_8cpp.html#a26cad48a64eeacd2e75da51d53dd3aea">signing_loop</a>(CryptnoxWallet &amp;wallet)</div>
 <div class="line">{</div>
 <div class="line">    <span class="comment">/* CARD_PIN is a string literal (&quot;000000000&quot;); copy into the pin array. */</span></div>
@@ -363,8 +355,8 @@ $(function(){initNavTree('UsdcSigning_2main_2main_8cpp-example.html','',''); });
 <div class="line"><span class="comment">/******************************************************************</span></div>
 <div class="line"><span class="comment"> * Entry point</span></div>
 <div class="line"><span class="comment"> ******************************************************************/</span></div>
-<div class="line"> </div>
-<div class="line"><span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> <span class="keywordtype">void</span> <a id="a31" name="a31"></a><a class="code hl_function" href="Connect_2main_2main_8cpp.html#a630544a7f0a2cc40d8a7fefab7e2fe70">app_main</a>(<span class="keywordtype">void</span>)</div>
+<div class="line"></div>
+<div class="line"><span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> <span class="keywordtype">void</span> <a id="a31" name="a31"></a><a class="code hl_function" href="BasicUsage_2main_2main_8cpp.html#a630544a7f0a2cc40d8a7fefab7e2fe70">app_main</a>(<span class="keywordtype">void</span>)</div>
 <div class="line">{</div>
 <div class="line">    <span class="comment">/* ── NVS (required by WiFi driver) ────────────────────────── */</span></div>
 <div class="line">    esp_err_t nvs_ret = nvs_flash_init();</div>
@@ -384,17 +376,17 @@ $(function(){initNavTree('UsdcSigning_2main_2main_8cpp-example.html','',''); });
 <div class="line"><span class="preprocessor">#if SPI_ENABLED</span></div>
 <div class="line">    spi_bus_config_t buscfg;</div>
 <div class="line">    (void)memset(&amp;buscfg, 0, <span class="keyword">sizeof</span>(buscfg));</div>
-<div class="line">    buscfg.mosi_io_num     = <a id="_a34" name="_a34"></a><a class="code hl_define" href="Connect_2main_2main_8cpp.html#a7dbebab5f7dd57885adccf6711b13592">SPI_MOSI</a>;</div>
-<div class="line">    buscfg.miso_io_num     = <a id="_a35" name="_a35"></a><a class="code hl_define" href="Connect_2main_2main_8cpp.html#ab142cc77dfa97010c9d2b616d0992b64">SPI_MISO</a>;</div>
-<div class="line">    buscfg.sclk_io_num     = <a id="_a36" name="_a36"></a><a class="code hl_define" href="Connect_2main_2main_8cpp.html#aefec442ab2dbec4785b387b3e88faa66">SPI_SCLK</a>;</div>
-<div class="line">    buscfg.quadwp_io_num   = <a id="_a37" name="_a37"></a><a class="code hl_define" href="Connect_2main_2main_8cpp.html#aa16c68a03f664d7fb7135e5f9a399310">SPI_PIN_UNUSED</a>;</div>
-<div class="line">    buscfg.quadhd_io_num   = <a class="code hl_define" href="Connect_2main_2main_8cpp.html#aa16c68a03f664d7fb7135e5f9a399310">SPI_PIN_UNUSED</a>;</div>
-<div class="line">    buscfg.max_transfer_sz = <a id="_a38" name="_a38"></a><a class="code hl_define" href="Connect_2main_2main_8cpp.html#a6ec274c632bf261fd0753152a14defdf">SPI_MAX_TRANSFER_SZ</a>;</div>
+<div class="line">    buscfg.mosi_io_num     = <a id="_a34" name="_a34"></a><a class="code hl_define" href="BasicUsage_2main_2main_8cpp.html#a7dbebab5f7dd57885adccf6711b13592">SPI_MOSI</a>;</div>
+<div class="line">    buscfg.miso_io_num     = <a id="_a35" name="_a35"></a><a class="code hl_define" href="BasicUsage_2main_2main_8cpp.html#ab142cc77dfa97010c9d2b616d0992b64">SPI_MISO</a>;</div>
+<div class="line">    buscfg.sclk_io_num     = <a id="_a36" name="_a36"></a><a class="code hl_define" href="BasicUsage_2main_2main_8cpp.html#aefec442ab2dbec4785b387b3e88faa66">SPI_SCLK</a>;</div>
+<div class="line">    buscfg.quadwp_io_num   = <a id="_a37" name="_a37"></a><a class="code hl_define" href="BasicUsage_2main_2main_8cpp.html#aa16c68a03f664d7fb7135e5f9a399310">SPI_PIN_UNUSED</a>;</div>
+<div class="line">    buscfg.quadhd_io_num   = <a class="code hl_define" href="BasicUsage_2main_2main_8cpp.html#aa16c68a03f664d7fb7135e5f9a399310">SPI_PIN_UNUSED</a>;</div>
+<div class="line">    buscfg.max_transfer_sz = <a id="_a38" name="_a38"></a><a class="code hl_define" href="BasicUsage_2main_2main_8cpp.html#a6ec274c632bf261fd0753152a14defdf">SPI_MAX_TRANSFER_SZ</a>;</div>
 <div class="line">    ESP_ERROR_CHECK(spi_bus_initialize(SPI2_HOST, &amp;buscfg, SPI_DMA_CH_AUTO));</div>
 <div class="line"> </div>
 <div class="line">    nfc_cfg.<a id="a39" name="a39"></a><a class="code hl_variable" href="structpn532__config__t.html#a7d0daa09bd383e751df8357e9952e697">transport</a>     = <a id="_a40" name="_a40"></a><a class="code hl_enumvalue" href="group__pn532__driver.html#ggab1c7905a6c1682fc84f8413e32feb333aa86e15b407d87747f5da15a561466570">PN532_TRANSPORT_SPI</a>;</div>
 <div class="line">    nfc_cfg.<a id="a41" name="a41"></a><a class="code hl_variable" href="structpn532__config__t.html#a5bba748f452a5b23a887d7991ff7d2b1">spi_host</a>      = SPI2_HOST;</div>
-<div class="line">    nfc_cfg.<a id="a42" name="a42"></a><a class="code hl_variable" href="structpn532__config__t.html#aac099fe92383204ebce70911d9791bb3">pin_cs</a>        = <a id="_a43" name="_a43"></a><a class="code hl_define" href="Connect_2main_2main_8cpp.html#a0c6bd557f1fa31b24d41cbd2f04a2e48">NFC_CS</a>;</div>
+<div class="line">    nfc_cfg.<a id="a42" name="a42"></a><a class="code hl_variable" href="structpn532__config__t.html#aac099fe92383204ebce70911d9791bb3">pin_cs</a>        = <a id="_a43" name="_a43"></a><a class="code hl_define" href="BasicUsage_2main_2main_8cpp.html#a0c6bd557f1fa31b24d41cbd2f04a2e48">NFC_CS</a>;</div>
 <div class="line">    nfc_cfg.<a id="a44" name="a44"></a><a class="code hl_variable" href="structpn532__config__t.html#adc58d2d83648e65a11f1e98d981b78ee">skip_bus_init</a> = <span class="keyword">true</span>;</div>
 <div class="line"><span class="preprocessor">#endif</span></div>
 <div class="line"> </div>
@@ -435,7 +427,7 @@ $(function(){initNavTree('UsdcSigning_2main_2main_8cpp-example.html','',''); });
 <div class="line">    <a id="a61" name="a61"></a><a class="code hl_function" href="eth__rpc_8cpp.html#a693b336658d1f72dc3a3f233f8353dac">eth_rpc_set_auth</a>(RPC_PROJECT_ID, RPC_API_SECRET);</div>
 <div class="line"><span class="preprocessor">#endif</span></div>
 <div class="line"> </div>
-<div class="line">    <span class="keywordflow">if</span> (!<a id="a62" name="a62"></a><a class="code hl_function" href="eth__rpc_8cpp.html#a05ee7ade729df428876b61885a29a5ea">eth_rpc_wifi_connect</a>(<a id="_a63" name="_a63"></a><a class="code hl_define" href="Connect_2main_2config_8h.html#a586542b79d00e4db7e1d5a667ae83a2b">WIFI_SSID</a>, <a id="_a64" name="_a64"></a><a class="code hl_define" href="Connect_2main_2config_8h.html#a8685d8aff7e570048090a3a51afceb07">WIFI_PASSWORD</a>)) {</div>
+<div class="line">    <span class="keywordflow">if</span> (!<a id="a62" name="a62"></a><a class="code hl_function" href="eth__rpc_8cpp.html#a05ee7ade729df428876b61885a29a5ea">eth_rpc_wifi_connect</a>(<a id="_a63" name="_a63"></a><a class="code hl_define" href="BasicUsage_2main_2config_8h.html#a586542b79d00e4db7e1d5a667ae83a2b">WIFI_SSID</a>, <a id="_a64" name="_a64"></a><a class="code hl_define" href="BasicUsage_2main_2config_8h.html#a8685d8aff7e570048090a3a51afceb07">WIFI_PASSWORD</a>)) {</div>
 <div class="line">        ESP_LOGE(<a class="code hl_variable" href="esp32__random_8cpp.html#a4ef5b5f197804a60836ab1e8907d8301">TAG</a>, <span class="stringliteral">&quot;WiFi connect failed — check config.h credentials&quot;</span>);</div>
 <div class="line">        <span class="keywordflow">return</span>;</div>
 <div class="line">    }</div>
@@ -444,23 +436,23 @@ $(function(){initNavTree('UsdcSigning_2main_2main_8cpp-example.html','',''); });
 <div class="line"> </div>
 <div class="line">    <a class="code hl_function" href="UsdcSigning_2main_2main_8cpp.html#a26cad48a64eeacd2e75da51d53dd3aea">signing_loop</a>(wallet);</div>
 <div class="line">}</div>
-<div class="ttc" id="aConnect_2main_2config_8h_html_a586542b79d00e4db7e1d5a667ae83a2b"><div class="ttname"><a href="Connect_2main_2config_8h.html#a586542b79d00e4db7e1d5a667ae83a2b">WIFI_SSID</a></div><div class="ttdeci">#define WIFI_SSID</div><div class="ttdef"><b>Definition</b> <a href="Connect_2main_2config_8h_source.html#l00012">config.h:12</a></div></div>
-<div class="ttc" id="aConnect_2main_2config_8h_html_a8685d8aff7e570048090a3a51afceb07"><div class="ttname"><a href="Connect_2main_2config_8h.html#a8685d8aff7e570048090a3a51afceb07">WIFI_PASSWORD</a></div><div class="ttdeci">#define WIFI_PASSWORD</div><div class="ttdef"><b>Definition</b> <a href="Connect_2main_2config_8h_source.html#l00013">config.h:13</a></div></div>
-<div class="ttc" id="aConnect_2main_2main_8cpp_html_a0c6bd557f1fa31b24d41cbd2f04a2e48"><div class="ttname"><a href="Connect_2main_2main_8cpp.html#a0c6bd557f1fa31b24d41cbd2f04a2e48">NFC_CS</a></div><div class="ttdeci">#define NFC_CS</div><div class="ttdef"><b>Definition</b> <a href="Connect_2main_2main_8cpp_source.html#l00131">main.cpp:131</a></div></div>
-<div class="ttc" id="aConnect_2main_2main_8cpp_html_a630544a7f0a2cc40d8a7fefab7e2fe70"><div class="ttname"><a href="Connect_2main_2main_8cpp.html#a630544a7f0a2cc40d8a7fefab7e2fe70">app_main</a></div><div class="ttdeci">void app_main(void)</div><div class="ttdef"><b>Definition</b> <a href="Connect_2main_2main_8cpp_source.html#l00159">main.cpp:159</a></div></div>
-<div class="ttc" id="aConnect_2main_2main_8cpp_html_a6ec274c632bf261fd0753152a14defdf"><div class="ttname"><a href="Connect_2main_2main_8cpp.html#a6ec274c632bf261fd0753152a14defdf">SPI_MAX_TRANSFER_SZ</a></div><div class="ttdeci">#define SPI_MAX_TRANSFER_SZ</div><div class="ttdef"><b>Definition</b> <a href="Connect_2main_2main_8cpp_source.html#l00129">main.cpp:129</a></div></div>
-<div class="ttc" id="aConnect_2main_2main_8cpp_html_a7dbebab5f7dd57885adccf6711b13592"><div class="ttname"><a href="Connect_2main_2main_8cpp.html#a7dbebab5f7dd57885adccf6711b13592">SPI_MOSI</a></div><div class="ttdeci">#define SPI_MOSI</div><div class="ttdef"><b>Definition</b> <a href="Connect_2main_2main_8cpp_source.html#l00126">main.cpp:126</a></div></div>
-<div class="ttc" id="aConnect_2main_2main_8cpp_html_aa16c68a03f664d7fb7135e5f9a399310"><div class="ttname"><a href="Connect_2main_2main_8cpp.html#aa16c68a03f664d7fb7135e5f9a399310">SPI_PIN_UNUSED</a></div><div class="ttdeci">#define SPI_PIN_UNUSED</div><div class="ttdef"><b>Definition</b> <a href="Connect_2main_2main_8cpp_source.html#l00130">main.cpp:130</a></div></div>
-<div class="ttc" id="aConnect_2main_2main_8cpp_html_ab142cc77dfa97010c9d2b616d0992b64"><div class="ttname"><a href="Connect_2main_2main_8cpp.html#ab142cc77dfa97010c9d2b616d0992b64">SPI_MISO</a></div><div class="ttdeci">#define SPI_MISO</div><div class="ttdef"><b>Definition</b> <a href="Connect_2main_2main_8cpp_source.html#l00127">main.cpp:127</a></div></div>
-<div class="ttc" id="aConnect_2main_2main_8cpp_html_aefec442ab2dbec4785b387b3e88faa66"><div class="ttname"><a href="Connect_2main_2main_8cpp.html#aefec442ab2dbec4785b387b3e88faa66">SPI_SCLK</a></div><div class="ttdeci">#define SPI_SCLK</div><div class="ttdef"><b>Definition</b> <a href="Connect_2main_2main_8cpp_source.html#l00128">main.cpp:128</a></div></div>
+<div class="ttc" id="aBasicUsage_2main_2config_8h_html_a586542b79d00e4db7e1d5a667ae83a2b"><div class="ttname"><a href="BasicUsage_2main_2config_8h.html#a586542b79d00e4db7e1d5a667ae83a2b">WIFI_SSID</a></div><div class="ttdeci">#define WIFI_SSID</div><div class="ttdef"><b>Definition</b> <a href="BasicUsage_2main_2config_8h_source.html#l00012">config.h:12</a></div></div>
+<div class="ttc" id="aBasicUsage_2main_2config_8h_html_a8685d8aff7e570048090a3a51afceb07"><div class="ttname"><a href="BasicUsage_2main_2config_8h.html#a8685d8aff7e570048090a3a51afceb07">WIFI_PASSWORD</a></div><div class="ttdeci">#define WIFI_PASSWORD</div><div class="ttdef"><b>Definition</b> <a href="BasicUsage_2main_2config_8h_source.html#l00013">config.h:13</a></div></div>
+<div class="ttc" id="aBasicUsage_2main_2main_8cpp_html_a0c6bd557f1fa31b24d41cbd2f04a2e48"><div class="ttname"><a href="BasicUsage_2main_2main_8cpp.html#a0c6bd557f1fa31b24d41cbd2f04a2e48">NFC_CS</a></div><div class="ttdeci">#define NFC_CS</div><div class="ttdef"><b>Definition</b> <a href="BasicUsage_2main_2main_8cpp_source.html#l00059">main.cpp:59</a></div></div>
+<div class="ttc" id="aBasicUsage_2main_2main_8cpp_html_a630544a7f0a2cc40d8a7fefab7e2fe70"><div class="ttname"><a href="BasicUsage_2main_2main_8cpp.html#a630544a7f0a2cc40d8a7fefab7e2fe70">app_main</a></div><div class="ttdeci">void app_main(void)</div><div class="ttdoc">ESP-IDF application entry point.</div><div class="ttdef"><b>Definition</b> <a href="BasicUsage_2main_2main_8cpp_source.html#l00284">main.cpp:284</a></div></div>
+<div class="ttc" id="aBasicUsage_2main_2main_8cpp_html_a6ec274c632bf261fd0753152a14defdf"><div class="ttname"><a href="BasicUsage_2main_2main_8cpp.html#a6ec274c632bf261fd0753152a14defdf">SPI_MAX_TRANSFER_SZ</a></div><div class="ttdeci">#define SPI_MAX_TRANSFER_SZ</div><div class="ttdef"><b>Definition</b> <a href="BasicUsage_2main_2main_8cpp_source.html#l00057">main.cpp:57</a></div></div>
+<div class="ttc" id="aBasicUsage_2main_2main_8cpp_html_a7dbebab5f7dd57885adccf6711b13592"><div class="ttname"><a href="BasicUsage_2main_2main_8cpp.html#a7dbebab5f7dd57885adccf6711b13592">SPI_MOSI</a></div><div class="ttdeci">#define SPI_MOSI</div><div class="ttdef"><b>Definition</b> <a href="BasicUsage_2main_2main_8cpp_source.html#l00054">main.cpp:54</a></div></div>
+<div class="ttc" id="aBasicUsage_2main_2main_8cpp_html_aa16c68a03f664d7fb7135e5f9a399310"><div class="ttname"><a href="BasicUsage_2main_2main_8cpp.html#aa16c68a03f664d7fb7135e5f9a399310">SPI_PIN_UNUSED</a></div><div class="ttdeci">#define SPI_PIN_UNUSED</div><div class="ttdef"><b>Definition</b> <a href="BasicUsage_2main_2main_8cpp_source.html#l00058">main.cpp:58</a></div></div>
+<div class="ttc" id="aBasicUsage_2main_2main_8cpp_html_ab142cc77dfa97010c9d2b616d0992b64"><div class="ttname"><a href="BasicUsage_2main_2main_8cpp.html#ab142cc77dfa97010c9d2b616d0992b64">SPI_MISO</a></div><div class="ttdeci">#define SPI_MISO</div><div class="ttdef"><b>Definition</b> <a href="BasicUsage_2main_2main_8cpp_source.html#l00055">main.cpp:55</a></div></div>
+<div class="ttc" id="aBasicUsage_2main_2main_8cpp_html_aefec442ab2dbec4785b387b3e88faa66"><div class="ttname"><a href="BasicUsage_2main_2main_8cpp.html#aefec442ab2dbec4785b387b3e88faa66">SPI_SCLK</a></div><div class="ttdeci">#define SPI_SCLK</div><div class="ttdef"><b>Definition</b> <a href="BasicUsage_2main_2main_8cpp_source.html#l00056">main.cpp:56</a></div></div>
 <div class="ttc" id="aESP32Logger_8h_html"><div class="ttname"><a href="ESP32Logger_8h.html">ESP32Logger.h</a></div><div class="ttdoc">CW_Logger implementation that writes to ESP32 UART0 via printf.</div></div>
 <div class="ttc" id="aESP32Platform_8h_html"><div class="ttname"><a href="ESP32Platform_8h.html">ESP32Platform.h</a></div><div class="ttdoc">CW_Platform implementation for ESP32 using FreeRTOS.</div></div>
 <div class="ttc" id="aPn532NfcTransport_8h_html"><div class="ttname"><a href="Pn532NfcTransport_8h.html">Pn532NfcTransport.h</a></div><div class="ttdoc">CW_NfcTransport adapter wrapping the ESP-IDF PN532 NFC driver.</div></div>
-<div class="ttc" id="aUsdcSigning_2main_2main_8cpp_html_a0a0c78f86940abc6a3f2d706a275b98a"><div class="ttname"><a href="UsdcSigning_2main_2main_8cpp.html#a0a0c78f86940abc6a3f2d706a275b98a">TRANSFER_SELECTOR</a></div><div class="ttdeci">static const uint8_t TRANSFER_SELECTOR[4]</div><div class="ttdef"><b>Definition</b> <a href="UsdcSigning_2main_2main_8cpp_source.html#l00087">main.cpp:87</a></div></div>
-<div class="ttc" id="aUsdcSigning_2main_2main_8cpp_html_a26cad48a64eeacd2e75da51d53dd3aea"><div class="ttname"><a href="UsdcSigning_2main_2main_8cpp.html#a26cad48a64eeacd2e75da51d53dd3aea">signing_loop</a></div><div class="ttdeci">static void signing_loop(CryptnoxWallet &amp;wallet)</div><div class="ttdef"><b>Definition</b> <a href="UsdcSigning_2main_2main_8cpp_source.html#l00146">main.cpp:146</a></div></div>
-<div class="ttc" id="aUsdcSigning_2main_2main_8cpp_html_a4b60e6b1c761ac5b545161210b271998"><div class="ttname"><a href="UsdcSigning_2main_2main_8cpp.html#a4b60e6b1c761ac5b545161210b271998">build_usdc_calldata</a></div><div class="ttdeci">static void build_usdc_calldata(uint8_t out[68], const char *to_hex, uint64_t amount)</div><div class="ttdef"><b>Definition</b> <a href="UsdcSigning_2main_2main_8cpp_source.html#l00123">main.cpp:123</a></div></div>
-<div class="ttc" id="aUsdcSigning_2main_2main_8cpp_html_a5d3fb1970e1e98050006978a14b3d95e"><div class="ttname"><a href="UsdcSigning_2main_2main_8cpp.html#a5d3fb1970e1e98050006978a14b3d95e">TX_BUF_SIZE</a></div><div class="ttdeci">#define TX_BUF_SIZE</div><div class="ttdef"><b>Definition</b> <a href="UsdcSigning_2main_2main_8cpp_source.html#l00090">main.cpp:90</a></div></div>
-<div class="ttc" id="aUsdcSigning_2main_2main_8cpp_html_a5d8d83ca353cce2ad69ac1ff955d06b8"><div class="ttname"><a href="UsdcSigning_2main_2main_8cpp.html#a5d8d83ca353cce2ad69ac1ff955d06b8">parse_address</a></div><div class="ttdeci">static void parse_address(const char *hex, uint8_t out[20])</div><div class="ttdef"><b>Definition</b> <a href="UsdcSigning_2main_2main_8cpp_source.html#l00100">main.cpp:100</a></div></div>
+<div class="ttc" id="aUsdcSigning_2main_2main_8cpp_html_a0a0c78f86940abc6a3f2d706a275b98a"><div class="ttname"><a href="UsdcSigning_2main_2main_8cpp.html#a0a0c78f86940abc6a3f2d706a275b98a">TRANSFER_SELECTOR</a></div><div class="ttdeci">static const uint8_t TRANSFER_SELECTOR[4]</div><div class="ttdef"><b>Definition</b> <a href="UsdcSigning_2main_2main_8cpp_source.html#l00088">main.cpp:88</a></div></div>
+<div class="ttc" id="aUsdcSigning_2main_2main_8cpp_html_a26cad48a64eeacd2e75da51d53dd3aea"><div class="ttname"><a href="UsdcSigning_2main_2main_8cpp.html#a26cad48a64eeacd2e75da51d53dd3aea">signing_loop</a></div><div class="ttdeci">static void signing_loop(CryptnoxWallet &amp;wallet)</div><div class="ttdoc">Main application loop: sign and broadcast a USDC transfer each card tap.</div><div class="ttdef"><b>Definition</b> <a href="UsdcSigning_2main_2main_8cpp_source.html#l00172">main.cpp:172</a></div></div>
+<div class="ttc" id="aUsdcSigning_2main_2main_8cpp_html_a4b60e6b1c761ac5b545161210b271998"><div class="ttname"><a href="UsdcSigning_2main_2main_8cpp.html#a4b60e6b1c761ac5b545161210b271998">build_usdc_calldata</a></div><div class="ttdeci">static void build_usdc_calldata(uint8_t out[68], const char *to_hex, uint64_t amount)</div><div class="ttdoc">Build the 68-byte ABI-encoded calldata for a USDC transfer call.</div><div class="ttdef"><b>Definition</b> <a href="UsdcSigning_2main_2main_8cpp_source.html#l00139">main.cpp:139</a></div></div>
+<div class="ttc" id="aUsdcSigning_2main_2main_8cpp_html_a5d3fb1970e1e98050006978a14b3d95e"><div class="ttname"><a href="UsdcSigning_2main_2main_8cpp.html#a5d3fb1970e1e98050006978a14b3d95e">TX_BUF_SIZE</a></div><div class="ttdeci">#define TX_BUF_SIZE</div><div class="ttdef"><b>Definition</b> <a href="UsdcSigning_2main_2main_8cpp_source.html#l00091">main.cpp:91</a></div></div>
+<div class="ttc" id="aUsdcSigning_2main_2main_8cpp_html_a5d8d83ca353cce2ad69ac1ff955d06b8"><div class="ttname"><a href="UsdcSigning_2main_2main_8cpp.html#a5d8d83ca353cce2ad69ac1ff955d06b8">parse_address</a></div><div class="ttdeci">static void parse_address(const char *hex, uint8_t out[20])</div><div class="ttdoc">Parse a hex string into a 20-byte Ethereum address.</div><div class="ttdef"><b>Definition</b> <a href="UsdcSigning_2main_2main_8cpp_source.html#l00107">main.cpp:107</a></div></div>
 <div class="ttc" id="aclassESP32CryptoProvider_html"><div class="ttname"><a href="classESP32CryptoProvider.html">ESP32CryptoProvider</a></div><div class="ttdoc">CW_CryptoProvider backed by mbedTLS and the ESP32 hardware TRNG.</div><div class="ttdef"><b>Definition</b> <a href="esp32__crypto__provider_8h_source.html#l00062">esp32_crypto_provider.h:62</a></div></div>
 <div class="ttc" id="aclassESP32Logger_html"><div class="ttname"><a href="classESP32Logger.html">ESP32Logger</a></div><div class="ttdoc">CW_Logger backed by ESP32 UART0.</div><div class="ttdef"><b>Definition</b> <a href="ESP32Logger_8h_source.html#l00048">ESP32Logger.h:48</a></div></div>
 <div class="ttc" id="aclassESP32Logger_html_a6e68aa4b9e35384aaf32d68091715734"><div class="ttname"><a href="classESP32Logger.html#a6e68aa4b9e35384aaf32d68091715734">ESP32Logger::begin</a></div><div class="ttdeci">bool begin(unsigned long baudRate=115200UL) override</div><div class="ttdoc">Initialise UART0 at the given baud rate.</div><div class="ttdef"><b>Definition</b> <a href="ESP32Logger_8cpp_source.html#l00095">ESP32Logger.cpp:95</a></div></div>

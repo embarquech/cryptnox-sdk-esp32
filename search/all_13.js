@@ -21,7 +21,8 @@ var searchData=
   ['rpc_5fhost_18',['RPC_HOST',['../config_8template_8h.html#afa1011b5b2bd4fec9c673bb2721f7410',1,'config.template.h']]],
   ['rpc_5fport_19',['RPC_PORT',['../config_8template_8h.html#a320785b5c2c9887101e29d7594f0520f',1,'config.template.h']]],
   ['rpc_5furl_20',['RPC_URL',['../config_8template_8h.html#a873b82bf566619e547913f95b78dc867',1,'config.template.h']]],
-  ['run_5fconnect_5floop_21',['run_connect_loop',['../Connect_2main_2main_8cpp.html#ac30a8b9775721482b9209e358b993e83',1,'main.cpp']]],
-  ['run_5fsign_5floop_22',['run_sign_loop',['../Sign_2main_2main_8cpp.html#a641fb4f907349cbef2ce4d7d1784e4e5',1,'main.cpp']]],
-  ['run_5fverify_5fpin_5floop_23',['run_verify_pin_loop',['../VerifyPin_2main_2main_8cpp.html#a09e11d26bb15d32715a9e2ae037d9518',1,'main.cpp']]]
+  ['run_5fbasic_5fusage_5floop_21',['run_basic_usage_loop',['../BasicUsage_2main_2main_8cpp.html#aa1554669d5b477bffb8713117d22dc98',1,'main.cpp']]],
+  ['run_5fconnect_5floop_22',['run_connect_loop',['../Connect_2main_2main_8cpp.html#ac30a8b9775721482b9209e358b993e83',1,'main.cpp']]],
+  ['run_5fsign_5floop_23',['run_sign_loop',['../Sign_2main_2main_8cpp.html#a641fb4f907349cbef2ce4d7d1784e4e5',1,'main.cpp']]],
+  ['run_5fverify_5fpin_5floop_24',['run_verify_pin_loop',['../VerifyPin_2main_2main_8cpp.html#a09e11d26bb15d32715a9e2ae037d9518',1,'main.cpp']]]
 ];
