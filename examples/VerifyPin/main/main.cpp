@@ -11,11 +11,16 @@
  * Wiring & prerequisites:
  *   - PN532 NFC reader on SPI: MOSI=11, MISO=13, SCLK=12, CS=10.
  *   - A Cryptnox card initialised with a known PIN.
+<<<<<<< HEAD
  *   - @ref DEMO_PIN must match the PIN set on the card.
+=======
+ *   - @c config.h filled in with @ref WIFI_SSID and @ref WIFI_PASSWORD.
+>>>>>>> 9040c1f (Add Doxygen comments to all example main.cpp files)
  *
  * What the firmware does in each loop iteration:
  *   1. Connect to the card and establish the secure channel.
  *   2. Submit the PIN via @ref CryptnoxWallet::verifyPin.
+<<<<<<< HEAD
  *   3. On success print "PIN accepted"; on failure halt immediately to
  *      protect the card's retry counter.
  *
@@ -23,6 +28,13 @@
  *          wrong PIN decrements the card's retry counter; reaching 0
  *          permanently blocks the PIN and requires the PUK to unblock.
  *          Fix @ref DEMO_PIN before flashing again.
+=======
+ *   3. On success print "PIN accepted"; on failure halt immediately.
+ *
+ * @warning On PIN rejection the firmware halts permanently to protect the
+ *          card's retry counter.  Each wrong attempt decrements the counter;
+ *          reaching 0 permanently blocks the PIN.
+>>>>>>> 9040c1f (Add Doxygen comments to all example main.cpp files)
  */
 
 #include <string.h>
@@ -54,6 +66,18 @@ static const int         WIFI_MAX_RETRY  = 5;
 static EventGroupHandle_t s_wifi_event_group;
 static int                s_retry_num = 0;
 
+/**
+ * @brief FreeRTOS event handler driving the Wi-Fi station state machine.
+ *
+ * Handles @c WIFI_EVENT_STA_START (triggers connection),
+ * @c WIFI_EVENT_STA_DISCONNECTED (retries up to @c WIFI_MAX_RETRY times),
+ * and @c IP_EVENT_STA_GOT_IP (signals success via the event group).
+ *
+ * @param[in] arg        Unused.
+ * @param[in] event_base Event base (@c WIFI_EVENT or @c IP_EVENT).
+ * @param[in] event_id   Event identifier within @p event_base.
+ * @param[in] event_data Event-specific data (unused).
+ */
 static void wifi_event_handler(void *arg, esp_event_base_t event_base,
                                int32_t event_id, void *event_data)
 {
@@ -77,6 +101,18 @@ static void wifi_event_handler(void *arg, esp_event_base_t event_base,
     }
 }
 
+/**
+ * @brief Initialise Wi-Fi station mode and block until connected or timeout.
+ *
+ * Starts the ESP Wi-Fi stack, registers @ref wifi_event_handler, configures
+ * the SSID and password from @ref WIFI_SSID / @ref WIFI_PASSWORD in
+ * @c config.h, then waits up to @c WIFI_TIMEOUT_MS for an IP address.
+ * The radio must be active before crypto operations so the hardware TRNG
+ * operates with full entropy (SEC-001).
+ *
+ * @note If the connection fails the function logs a warning and returns
+ *       normally; the firmware continues with reduced TRNG entropy.
+ */
 static void wifi_start(void)
 {
     s_wifi_event_group = xEventGroupCreate();
@@ -123,6 +159,15 @@ static void wifi_start(void)
 #define SPI_PIN_UNUSED      (-1)
 #define NFC_CS              10
 
+/**
+ * @brief Main application loop: connect, verify PIN, and disconnect.
+ *
+ * Each iteration establishes the secure channel and submits the PIN via
+ * @ref CryptnoxWallet::verifyPin.  Halts permanently on rejection to
+ * protect the card's retry counter.
+ *
+ * @param[in] wallet Initialised wallet instance.
+ */
 static void run_verify_pin_loop(CryptnoxWallet &wallet)
 {
     /* Replace with the PIN set on the card (4–9 ASCII digits). */
@@ -166,6 +211,12 @@ static void run_verify_pin_loop(CryptnoxWallet &wallet)
     }
 }
 
+/**
+ * @brief ESP-IDF application entry point.
+ *
+ * Initialises NVS, starts Wi-Fi for full TRNG entropy, brings up the SPI
+ * bus and PN532 reader, then enters @ref run_verify_pin_loop.
+ */
 extern "C" void app_main(void)
 {
     esp_err_t nvs_ret = nvs_flash_init();

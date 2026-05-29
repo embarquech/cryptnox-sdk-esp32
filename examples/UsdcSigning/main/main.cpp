@@ -9,15 +9,24 @@
  * @brief Cryptnox ESP32 example: build, sign, and broadcast a USDC ERC-20 transfer.
  *
  * Wiring & prerequisites:
+<<<<<<< HEAD
  *   - PN532 NFC reader — transport selected by @ref SPI_ENABLED / @ref I2C_ENABLED
  *     in @c config.h.
  *   - A Cryptnox card initialised with a seed and a known PIN.
  *   - @c config.h filled in with WiFi, RPC endpoint, and Ethereum addresses
  *     (copy from @c config.template.h).
+=======
+ *   - PN532 NFC reader — transport selected by @ref PN532_USE_I2C at the top
+ *     of this file.
+ *   - A Cryptnox card initialised with a seed and a known PIN.
+ *   - @c config.h filled in with WiFi, RPC endpoint, and Ethereum addresses
+ *     (copy from @c config.template.h and fill in the values).
+>>>>>>> 9040c1f (Add Doxygen comments to all example main.cpp files)
  *
  * What the firmware does in each loop iteration:
  *   1. Wait for a card tap and establish the secure channel.
  *   2. Fetch the current on-chain nonce from the RPC endpoint.
+<<<<<<< HEAD
  *   3. Build an EIP-1559 type-2 transaction for a USDC @c transfer(address,uint256) call.
  *   4. RLP-encode the unsigned transaction and Keccak-256 hash it.
  *   5. Sign the hash on the card (@ref CryptnoxWallet::sign).
@@ -27,6 +36,18 @@
  * @note Fill in @ref WIFI_SSID, @ref WIFI_PASSWORD, @ref RPC_URL, @ref ADDR_FROM,
  *       @ref ADDR_TO, @ref ADDR_USDC, and @ref CARD_PIN in @c config.h before
  *       building.
+=======
+ *   3. Build an EIP-1559 type-2 transaction for a USDC
+ *      @c transfer(address,uint256) call.
+ *   4. RLP-encode the unsigned transaction and Keccak-256 hash it.
+ *   5. Sign the hash on the card (@ref CryptnoxWallet::sign).
+ *   6. Recover the @c v parity bit via @c eth_rpc_ecrecover_parity.
+ *   7. RLP-encode the signed transaction and broadcast it.
+ *
+ * @note Fill in @ref WIFI_SSID, @ref WIFI_PASSWORD, @ref RPC_URL,
+ *       @ref ADDR_FROM, @ref ADDR_TO, @ref ADDR_USDC, and @ref CARD_PIN
+ *       in @c config.h before building.
+>>>>>>> 9040c1f (Add Doxygen comments to all example main.cpp files)
  */
 
 #include <stdio.h>
@@ -93,9 +114,15 @@ static const uint8_t TRANSFER_SELECTOR[4] = { 0xa9U, 0x05U, 0x9cU, 0xbbU };
  * Helpers
  ******************************************************************/
 
-/*
- * Parse a "0x..."-prefixed (or unprefixed) hex string of exactly 20 bytes
- * into 'out'.  Silently truncates/pads if the source length differs.
+/**
+ * @brief Parse a hex string into a 20-byte Ethereum address.
+ *
+ * Accepts an optional @c 0x or @c 0X prefix.  If the source is shorter than
+ * 20 bytes the remaining output bytes are zeroed; if longer, the excess is
+ * silently discarded.
+ *
+ * @param[in]  hex Hex string (with or without @c 0x prefix).
+ * @param[out] out 20-byte output buffer for the decoded address.
  */
 static void parse_address(const char *hex, uint8_t out[20])
 {
@@ -116,9 +143,18 @@ static void parse_address(const char *hex, uint8_t out[20])
     }
 }
 
-/*
- * Build the 68-byte calldata for USDC transfer(to, amount).
- * Layout: selector(4) | zeroes(12) | to(20) | zeroes(24) | amount_be(8)
+/**
+ * @brief Build the 68-byte ABI-encoded calldata for a USDC @c transfer call.
+ *
+ * Encodes the ERC-20 @c transfer(address,uint256) selector followed by the
+ * ABI-encoded arguments:
+ * @code
+ * selector(4) | zeroes(12) | to(20) | zeroes(24) | amount_be(8)
+ * @endcode
+ *
+ * @param[out] out    68-byte output buffer for the calldata.
+ * @param[in]  to_hex Recipient address as a hex string (with or without @c 0x).
+ * @param[in]  amount Transfer amount in USDC base units (6 decimals).
  */
 static void build_usdc_calldata(uint8_t out[68], const char *to_hex, uint64_t amount)
 {
@@ -143,6 +179,16 @@ static void build_usdc_calldata(uint8_t out[68], const char *to_hex, uint64_t am
  * Signing loop
  ******************************************************************/
 
+/**
+ * @brief Main application loop: sign and broadcast a USDC transfer each card tap.
+ *
+ * Each iteration waits for a card, fetches the current nonce, builds and
+ * hashes an EIP-1559 USDC transfer transaction, signs it on the card via
+ * @ref CryptnoxWallet::sign, recovers the @c v parity, and broadcasts the
+ * signed transaction via @c eth_rpc_send_raw_tx.
+ *
+ * @param[in] wallet Initialised wallet instance.
+ */
 static void signing_loop(CryptnoxWallet &wallet)
 {
     /* CARD_PIN is a string literal ("000000000"); copy into the pin array. */
@@ -279,6 +325,12 @@ static void signing_loop(CryptnoxWallet &wallet)
  * Entry point
  ******************************************************************/
 
+/**
+ * @brief ESP-IDF application entry point.
+ *
+ * Initialises NVS, brings up the PN532 reader (I²C or SPI), connects to
+ * Wi-Fi and the Ethereum RPC endpoint, then enters @ref signing_loop.
+ */
 extern "C" void app_main(void)
 {
     /* ── NVS (required by WiFi driver) ────────────────────────── */

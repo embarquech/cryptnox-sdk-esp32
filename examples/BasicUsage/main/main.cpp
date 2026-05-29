@@ -52,6 +52,18 @@ static const int         WIFI_MAX_RETRY  = 5;
 static EventGroupHandle_t s_wifi_event_group;
 static int                s_retry_num = 0;
 
+/**
+ * @brief FreeRTOS event handler driving the Wi-Fi station state machine.
+ *
+ * Handles @c WIFI_EVENT_STA_START (triggers connection),
+ * @c WIFI_EVENT_STA_DISCONNECTED (retries up to @c WIFI_MAX_RETRY times),
+ * and @c IP_EVENT_STA_GOT_IP (signals success via the event group).
+ *
+ * @param[in] arg        Unused.
+ * @param[in] event_base Event base (@c WIFI_EVENT or @c IP_EVENT).
+ * @param[in] event_id   Event identifier within @p event_base.
+ * @param[in] event_data Event-specific data (unused).
+ */
 static void wifi_event_handler(void *arg, esp_event_base_t event_base,
                                int32_t event_id, void *event_data)
 {
@@ -75,6 +87,18 @@ static void wifi_event_handler(void *arg, esp_event_base_t event_base,
     }
 }
 
+/**
+ * @brief Initialise Wi-Fi station mode and block until connected or timeout.
+ *
+ * Starts the ESP Wi-Fi stack, registers @ref wifi_event_handler, configures
+ * the SSID and password from @ref WIFI_SSID / @ref WIFI_PASSWORD in
+ * @c config.h, then waits up to @c WIFI_TIMEOUT_MS for an IP address.
+ * The radio must be active before crypto operations so the hardware TRNG
+ * operates with full entropy (SEC-001).
+ *
+ * @note If the connection fails the function logs a warning and returns
+ *       normally; the firmware continues with reduced TRNG entropy.
+ */
 static void wifi_start(void)
 {
     s_wifi_event_group = xEventGroupCreate();
@@ -155,6 +179,16 @@ static const size_t  DEFAULT_PIN_LEN  = sizeof(DEFAULT_PIN) - 1U;
  * Main loop
  ******************************************************************/
 
+/**
+ * @brief Main application loop: connect, sign a test hash, wipe buffers, disconnect.
+ *
+ * Each iteration establishes the secure channel, signs a 32-byte test hash,
+ * prints the raw r‖s bytes, securely wipes sensitive buffers, then
+ * disconnects.  Halts permanently on @ref CW_SIGN_PIN_INCORRECT to protect
+ * the card's retry counter.
+ *
+ * @param[in] wallet Initialised wallet instance.
+ */
 static void run_basic_usage_loop(CryptnoxWallet &wallet)
 {
     bool keep_running = true;
@@ -241,6 +275,12 @@ static void run_basic_usage_loop(CryptnoxWallet &wallet)
  * Entry point
  ******************************************************************/
 
+/**
+ * @brief ESP-IDF application entry point.
+ *
+ * Initialises NVS, starts Wi-Fi for full TRNG entropy, brings up the SPI
+ * or I²C bus and PN532 reader, then enters @ref run_basic_usage_loop.
+ */
 extern "C" void app_main(void)
 {
     esp_err_t nvs_ret = nvs_flash_init();
