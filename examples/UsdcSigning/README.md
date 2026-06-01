@@ -182,7 +182,7 @@ All fields live in `main/config.h` (gitignored). Start from
 | Field | Example |
 |-------|---------|
 | `CARD_PIN` | `"000000000"` (must match `cryptnox init`) |
-| `ADDR_FROM` | `"4aadf6f331aea39e699db17c75a4b12d993956d2"` (lowercase hex, no `0x`) |
+| `ADDR_FROM` | `"<40 lowercase hex chars>"` — your card's Ethereum address (no `0x` prefix) |
 
 `ADDR_FROM` must equal the address derived from `m/44'/60'/0'/0/0`
 on the card. If they disagree, the `yParity` recovery loop cannot
