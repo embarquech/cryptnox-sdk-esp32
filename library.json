@@ -16,7 +16,7 @@
   "authors": [
     {
       "name": "Cryptnox SA",
-      "email": "contact@cryptnox.com",
+      "email": "dev@cryptnox.com",
       "url": "https://cryptnox.com",
       "maintainer": true
     }
@@ -33,6 +33,7 @@
   "platforms": [
     "espressif32"
   ],
+  "headers": "CryptnoxWallet.h",
   "build": {
     "srcFilter": [
       "+<components/cryptnox_utils/*.cpp>",
@@ -43,9 +44,7 @@
       "+<components/pn532_adapter/*.cpp>",
       "+<components/pn532_nfc_transport/*.cpp>",
       "+<components/uECC/*.cpp>",
-      "+<cryptnox-sdk-cpp/CW_SecureChannel.cpp>",
-      "+<cryptnox-sdk-cpp/CW_Utils.cpp>",
-      "+<cryptnox-sdk-cpp/CryptnoxWallet.cpp>"
+      "+<components/cryptnox_sdk_cpp/*.cpp>"
     ],
     "flags": [
       "-Icomponents/crypto_provider/include",
@@ -55,18 +54,25 @@
       "-Icomponents/pn532_adapter/include",
       "-Icomponents/pn532_nfc_transport/include",
       "-Icomponents/uECC/include",
-      "-Icryptnox-sdk-cpp"
+      "-Icomponents/cryptnox_sdk_cpp"
     ]
   },
   "export": {
     "exclude": [
+      ".github",
       "main",
       "hardware",
       "test",
       "fuzz",
       "build",
+      "docs/html",
       "docs/architecture",
-      "sdkconfig"
+      "sdkconfig",
+      "components/cryptnox_sdk_cpp/fuzz",
+      "components/cryptnox_sdk_cpp/docs",
+      "examples/*/build",
+      "examples/*/.pio",
+      "examples/*/sdkconfig"
     ]
   }
 }
