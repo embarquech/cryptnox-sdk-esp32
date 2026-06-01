@@ -196,7 +196,8 @@ static void run_sign_loop(CryptnoxWallet &wallet)
                                CW_SIGN_WITH_PIN);
             req.hash       = TEST_HASH;
             req.hashLength = static_cast<uint8_t>(CW_HASH_SIZE);
-            (void)memcpy(req.pin, DEMO_PIN, CW_MAX_PIN_LENGTH);
+            (void)CW_Utils::safe_memcpy(req.pin, sizeof(req.pin),
+                                        DEMO_PIN, CW_MAX_PIN_LENGTH);
 
             CW_SignResult result = wallet.sign(req);
 

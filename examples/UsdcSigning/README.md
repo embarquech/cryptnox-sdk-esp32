@@ -222,7 +222,7 @@ example's `eth_rlp` / `eth_rpc` / `keccak256` helpers sit around
 | Wi-Fi never connects | Wrong SSID / password, or a 5 GHz-only network | ESP32-S3 is 2.4 GHz only — verify `WIFI_SSID` / `WIFI_PASSWORD` |
 | `tx.to is not a valid 40-char hex string` | Bad hex in `ADDR_TO` | 40 hex chars, no `0x`, lowercase preferred |
 | `yParity determination failed!` | `ADDR_FROM` doesn't match the card's m/44'/60'/0'/0/0 address | Derive the address with the [Cryptnox CLI](https://github.com/cryptnox/cryptnox-cli) and copy it into `ADDR_FROM` |
-| Tx broadcast OK but `tefPAST_NONCE` on Etherscan | Stale nonce from the RPC | Wait a few seconds and re-run; the firmware fetches the nonce just before signing |
+| RPC returns `nonce too low` in the JSON `error.message` | Stale nonce from the RPC | Wait a few seconds and re-run; the firmware fetches the nonce just before signing |
 | `Wrong PIN — halting to protect retry counter` | `CARD_PIN` does not match the card | Fix `CARD_PIN` — do **not** keep retrying, every attempt burns one of the on-card tries (see [VerifyPin](../VerifyPin/README.md)) |
 | `Sign failed: 0x81` | Card has no seed | `cryptnox seed generate` |
 

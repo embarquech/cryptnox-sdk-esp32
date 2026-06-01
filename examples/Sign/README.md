@@ -63,10 +63,10 @@ Without a seed the SDK returns `CW_SIGN_NO_KEY_LOADED` (`0x81`).
 
 ```
 I (1280) sign: Card connected, secure channel established
-I (1450) sign: Signature OK
-I (1450) sign:   r = 7C1F3A925E0B8CD4920FAB7C53E1B9D81F2A4C76E9D805BC5D2EAD12C3FA47CB
-I (1450) sign:   s = 12E0BC4FA7880967DA1F0EBD83C2B791580AC4D62E16039F7B4CDDF13E2A89C5
-I (1450) sign:   errorCode = 0x0
+I (1450) sign: Sign OK - r:
+I (1450) sign: 7c 1f 3a 92 5e 0b 8c d4 92 0f ab 7c 53 e1 b9 d8 1f 2a 4c 76 e9 d8 05 bc 5d 2e ad 12 c3 fa 47 cb
+I (1450) sign: s:
+I (1450) sign: 12 e0 bc 4f a7 88 09 67 da 1f 0e bd 83 c2 b7 91 58 0a c4 d6 2e 16 03 9f 7b 4c dd f1 3e 2a 89 c5
 ```
 
 `r` and `s` together form the 64-byte raw ECDSA signature
@@ -127,9 +127,8 @@ CW_SignRequest req(session,
                    CW_SIGN_WITH_PIN);
 req.hash       = hash;
 req.hashLength = sizeof(hash);
-CW_Utils::safe_memcpy(req.pin, sizeof(req.pin),
-                      reinterpret_cast<const uint8_t*>(DEMO_PIN),
-                      strlen(DEMO_PIN));
+(void)CW_Utils::safe_memcpy(req.pin, sizeof(req.pin),
+                            DEMO_PIN, CW_MAX_PIN_LENGTH);
 ```
 
 **Sign and handle the result:**

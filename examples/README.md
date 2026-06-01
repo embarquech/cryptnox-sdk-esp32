@@ -66,9 +66,9 @@ when the firmware prompts for it.
 
 > [!NOTE]
 > All examples default to PIN `000000000` (nine zeros). If your card
-> was initialised with a different PIN, edit the `DEMO_PIN` /
-> `CARD_PIN` macro at the top of the relevant source file before
-> building.
+> was initialised with a different PIN, edit the `DEFAULT_PIN` /
+> `DEMO_PIN` / `CARD_PIN` macro at the top of the relevant source
+> file before building.
 
 ## Adding a new example
 

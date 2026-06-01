@@ -45,7 +45,8 @@ If you only need **one** of the steps, see the focused examples:
 2. **Set the PIN** to match `cryptnox init`:
 
    ```cpp
-   #define DEFAULT_PIN  "000000000"
+   static const uint8_t DEFAULT_PIN[]   = "000000000";
+   static const size_t  DEFAULT_PIN_LEN = sizeof(DEFAULT_PIN) - 1U;
    ```
 
 3. **Edit `main/config.h`** with your Wi-Fi credentials.
@@ -67,8 +68,9 @@ If you only need **one** of the steps, see the focused examples:
 I (1280) basic_usage: Card connected and secure channel established
 I (1290) basic_usage: Signing test hash...
 I (1450) basic_usage: Signature received (64 bytes raw r||s)
-I (1450) basic_usage:   R[0..7]: 7C 1F 3A 92 5E 0B 8C D4
-I (1450) basic_usage:   S[0..7]: 12 E0 BC 4F A7 88 09 67
+I (1450) basic_usage: 7c 1f 3a 92 5e 0b 8c d4
+I (1450) basic_usage: s:
+I (1450) basic_usage: 12 e0 bc 4f a7 88 09 67
 I (1450) basic_usage: Card processed successfully
 ```
 
@@ -144,9 +146,8 @@ if (wallet.connect(session)) {
                        CW_SIGN_SIG_ECDSA_LOW_S, CW_SIGN_WITH_PIN);
     req.hash       = testHash;
     req.hashLength = sizeof(testHash);
-    CW_Utils::safe_memcpy(req.pin, sizeof(req.pin),
-                          reinterpret_cast<const uint8_t*>(DEFAULT_PIN),
-                          DEFAULT_PIN_LEN);
+    (void)CW_Utils::safe_memcpy(req.pin, sizeof(req.pin),
+                                DEFAULT_PIN, DEFAULT_PIN_LEN);
 
     CW_SignResult sig = wallet.sign(req);
     // sig.signature = r[32] || s[32], sig.errorCode == CW_OK on success
