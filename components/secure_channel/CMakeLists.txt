@@ -1,10 +1,12 @@
+set(SDK_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../cryptnox-sdk-cpp")
+
 idf_component_register(
     SRCS
-        "CW_SecureChannel.cpp"
-        "CW_Utils.cpp"
-        "CryptnoxWallet.cpp"
+        "${SDK_DIR}/CW_SecureChannel.cpp"
+        "${SDK_DIR}/CW_Utils.cpp"
+        "${SDK_DIR}/CryptnoxWallet.cpp"
     INCLUDE_DIRS
-        "."
+        "${SDK_DIR}"
     REQUIRES
         uECC
 )
