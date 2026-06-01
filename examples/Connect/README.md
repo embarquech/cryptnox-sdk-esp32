@@ -49,8 +49,8 @@ I (520) wifi:wifi driver task: ...
 I (1234) connect: Wi-Fi connected, TRNG seeded
 I (1280) connect: PN532 firmware 1.6, features 0x07 (MIFARE + ISO-DEP + FeliCa)
 I (2410) connect: Card connected, secure channel established
-I (2420) connect: Owner name : Alice Cryptnox
-I (2421) connect: Owner email: alice@example.com
+I (2420) connect: Owner name : Alice
+I (2421) connect: Owner email: alice@cryptnox.com
 ```
 
 ## How it works
