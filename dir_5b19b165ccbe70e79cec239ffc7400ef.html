@@ -237,7 +237,7 @@ Wallet</h3>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><span class="tt"><a class="el" href="UsdcSigning_2config_8template_8h.html#a2de009963ca3d1582d4c3a4397ef65bc">CARD_PIN</a></span>  </td><td class="markdownTableBodyNone"><span class="tt">"000000000"</span> (must match <span class="tt">cryptnox init</span>)  </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><span class="tt"><a class="el" href="UsdcSigning_2config_8template_8h.html#a5d8bab74920aab1e98e0b25ea1353a2b">ADDR_FROM</a></span>  </td><td class="markdownTableBodyNone"><span class="tt">"4aadf6f331aea39e699db17c75a4b12d993956d2"</span> (lowercase hex, no <span class="tt">0x</span>)  </td></tr>
+<td class="markdownTableBodyNone"><span class="tt"><a class="el" href="UsdcSigning_2config_8template_8h.html#a5d8bab74920aab1e98e0b25ea1353a2b">ADDR_FROM</a></span>  </td><td class="markdownTableBodyNone"><span class="tt">"&lt;40 lowercase hex chars&gt;"</span> — your card's Ethereum address (no <span class="tt">0x</span> prefix)  </td></tr>
 </table>
 <p><span class="tt"><a class="el" href="UsdcSigning_2config_8template_8h.html#a5d8bab74920aab1e98e0b25ea1353a2b">ADDR_FROM</a></span> must equal the address derived from <span class="tt">m/44'/60'/0'/0/0</span> on the card. If they disagree, the <span class="tt">yParity</span> recovery loop cannot find a matching value and the firmware halts.</p>
 <h3 class="doxsection"><a class="anchor" id="autotoc_md50"></a>
