@@ -88,9 +88,12 @@ The SDK prints the raw `SW1 SW2` bytes on PIN failure:
 ## Step-by-step code
 
 ```cpp
-#define DEMO_PIN  "000000000"          // must match cryptnox init
+/* Replace with the PIN set on the card (4–9 ASCII digits). */
+static const uint8_t DEMO_PIN[CW_MAX_PIN_LENGTH] = {
+    '0', '0', '0', '0', '0', '0', '0', '0', '0'
+};
 
-CW_SecureSession session;
+CW_SecureSession session{};
 if (!wallet.connect(session)) {
     ESP_LOGW(TAG, "Card not detected");
     wallet.disconnect(session);
@@ -99,8 +102,8 @@ if (!wallet.connect(session)) {
 }
 
 if (!wallet.verifyPin(session,
-                      reinterpret_cast<const uint8_t*>(DEMO_PIN),
-                      (uint8_t)strlen(DEMO_PIN))) {
+                      DEMO_PIN,
+                      static_cast<uint8_t>(CW_MAX_PIN_LENGTH))) {
     ESP_LOGE(TAG, "PIN rejected — halting to protect retry counter");
     wallet.disconnect(session);
     vTaskDelay(portMAX_DELAY);          // CRITICAL: do NOT loop on failure
