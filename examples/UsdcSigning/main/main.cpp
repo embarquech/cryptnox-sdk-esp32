@@ -43,6 +43,7 @@
 #include "nvs_flash.h"
 
 #include "CryptnoxWallet.h"
+#include "CW_Utils.h"
 #include "Pn532NfcTransport.h"
 #include "ESP32Logger.h"
 #include "esp32_crypto_provider.h"
@@ -172,10 +173,12 @@ static void build_usdc_calldata(uint8_t out[68], const char *to_hex, uint64_t am
 static void signing_loop(CryptnoxWallet &wallet)
 {
     /* CARD_PIN is a string literal ("000000000"); copy into the pin array. */
-    uint8_t card_pin[CW_MAX_PIN_LENGTH];
-    (void)memset(card_pin, 0U, sizeof(card_pin));
-    (void)memcpy(card_pin, CARD_PIN,
-                 (CARD_PIN_LEN < CW_MAX_PIN_LENGTH) ? CARD_PIN_LEN : CW_MAX_PIN_LENGTH);
+    uint8_t card_pin[CW_MAX_PIN_LENGTH] = {};
+    const size_t pin_len = (CARD_PIN_LEN < CW_MAX_PIN_LENGTH) ? CARD_PIN_LEN
+                                                              : CW_MAX_PIN_LENGTH;
+    (void)CW_Utils::safe_memcpy(card_pin, sizeof(card_pin),
+                                reinterpret_cast<const uint8_t *>(CARD_PIN),
+                                pin_len);
 
     uint8_t calldata[68];
     build_usdc_calldata(calldata, "0x" ADDR_TO, AMOUNT_USDC);
@@ -201,8 +204,7 @@ static void signing_loop(CryptnoxWallet &wallet)
         }
 
         /* ── 3. Build tx ───────────────────────────────────────── */
-        eth_tx_t tx;
-        (void)memset(&tx, 0, sizeof(tx));
+        eth_tx_t tx = {};
         tx.chain_id          = CHAIN_ID_SEPOLIA;
         tx.nonce             = nonce;
         tx.max_priority_fee  = MAX_PRIORITY_FEE;
@@ -248,7 +250,8 @@ static void signing_loop(CryptnoxWallet &wallet)
         req.hashLength       = static_cast<uint8_t>(CW_HASH_SIZE);
         req.derivePath       = eth_path;
         req.derivePathLength = static_cast<uint8_t>(sizeof(eth_path));
-        (void)memcpy(req.pin, card_pin, CW_MAX_PIN_LENGTH);
+        (void)CW_Utils::safe_memcpy(req.pin, sizeof(req.pin),
+                                    card_pin, CW_MAX_PIN_LENGTH);
 
         CW_SignResult result = wallet.sign(req);
         wallet.disconnect(session);
@@ -262,8 +265,10 @@ static void signing_loop(CryptnoxWallet &wallet)
 
         uint8_t sig_r[CW_HASH_SIZE];
         uint8_t sig_s[CW_HASH_SIZE];
-        (void)memcpy(sig_r, result.signature + CW_SIG_R_OFFSET, CW_HASH_SIZE);
-        (void)memcpy(sig_s, result.signature + CW_SIG_S_OFFSET, CW_HASH_SIZE);
+        (void)CW_Utils::safe_memcpy(sig_r, sizeof(sig_r),
+                                    result.signature + CW_SIG_R_OFFSET, CW_HASH_SIZE);
+        (void)CW_Utils::safe_memcpy(sig_s, sizeof(sig_s),
+                                    result.signature + CW_SIG_S_OFFSET, CW_HASH_SIZE);
 
         ESP_LOGI(TAG, "r:");
         ESP_LOG_BUFFER_HEX_LEVEL(TAG, sig_r, CW_HASH_SIZE, ESP_LOG_INFO);
@@ -323,14 +328,10 @@ extern "C" void app_main(void)
     ESP_ERROR_CHECK(nvs_ret);
 
     /* ── PN532 NFC reader (transport selected at the top of this file) ── */
-    pn532_t nfc;
-    (void)memset(&nfc, 0, sizeof(nfc));
-
-    pn532_config_t nfc_cfg;
-    (void)memset(&nfc_cfg, 0, sizeof(nfc_cfg));
+    pn532_t nfc = {};
+    pn532_config_t nfc_cfg = {};
 #if SPI_ENABLED
-    spi_bus_config_t buscfg;
-    (void)memset(&buscfg, 0, sizeof(buscfg));
+    spi_bus_config_t buscfg = {};
     buscfg.mosi_io_num     = SPI_MOSI;
     buscfg.miso_io_num     = SPI_MISO;
     buscfg.sclk_io_num     = SPI_SCLK;
