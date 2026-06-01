@@ -246,31 +246,29 @@ $(function(){initNavTree('Connect_2main_2main_8cpp-example.html','',''); });
 <div class="line">    ESP_ERROR_CHECK(nvs_ret);</div>
 <div class="line">    <a class="code hl_function" href="BasicUsage_2main_2main_8cpp.html#af629eac4dcd2612341863d51413aaf10">wifi_start</a>();</div>
 <div class="line"> </div>
-<div class="line">    spi_bus_config_t buscfg = {</div>
-<div class="line">        .mosi_io_num     = <a id="_a14" name="_a14"></a><a class="code hl_define" href="BasicUsage_2main_2main_8cpp.html#a7dbebab5f7dd57885adccf6711b13592">SPI_MOSI</a>,</div>
-<div class="line">        .miso_io_num     = <a id="_a15" name="_a15"></a><a class="code hl_define" href="BasicUsage_2main_2main_8cpp.html#ab142cc77dfa97010c9d2b616d0992b64">SPI_MISO</a>,</div>
-<div class="line">        .sclk_io_num     = <a id="_a16" name="_a16"></a><a class="code hl_define" href="BasicUsage_2main_2main_8cpp.html#aefec442ab2dbec4785b387b3e88faa66">SPI_SCLK</a>,</div>
-<div class="line">        .quadwp_io_num   = <a id="_a17" name="_a17"></a><a class="code hl_define" href="BasicUsage_2main_2main_8cpp.html#aa16c68a03f664d7fb7135e5f9a399310">SPI_PIN_UNUSED</a>,</div>
-<div class="line">        .quadhd_io_num   = <a class="code hl_define" href="BasicUsage_2main_2main_8cpp.html#aa16c68a03f664d7fb7135e5f9a399310">SPI_PIN_UNUSED</a>,</div>
-<div class="line">        .max_transfer_sz = <a id="_a18" name="_a18"></a><a class="code hl_define" href="BasicUsage_2main_2main_8cpp.html#a6ec274c632bf261fd0753152a14defdf">SPI_MAX_TRANSFER_SZ</a>,</div>
-<div class="line">    };</div>
+<div class="line">    spi_bus_config_t buscfg = {};</div>
+<div class="line">    buscfg.mosi_io_num     = <a id="_a14" name="_a14"></a><a class="code hl_define" href="BasicUsage_2main_2main_8cpp.html#a7dbebab5f7dd57885adccf6711b13592">SPI_MOSI</a>;</div>
+<div class="line">    buscfg.miso_io_num     = <a id="_a15" name="_a15"></a><a class="code hl_define" href="BasicUsage_2main_2main_8cpp.html#ab142cc77dfa97010c9d2b616d0992b64">SPI_MISO</a>;</div>
+<div class="line">    buscfg.sclk_io_num     = <a id="_a16" name="_a16"></a><a class="code hl_define" href="BasicUsage_2main_2main_8cpp.html#aefec442ab2dbec4785b387b3e88faa66">SPI_SCLK</a>;</div>
+<div class="line">    buscfg.quadwp_io_num   = <a id="_a17" name="_a17"></a><a class="code hl_define" href="BasicUsage_2main_2main_8cpp.html#aa16c68a03f664d7fb7135e5f9a399310">SPI_PIN_UNUSED</a>;</div>
+<div class="line">    buscfg.quadhd_io_num   = <a class="code hl_define" href="BasicUsage_2main_2main_8cpp.html#aa16c68a03f664d7fb7135e5f9a399310">SPI_PIN_UNUSED</a>;</div>
+<div class="line">    buscfg.max_transfer_sz = <a id="_a18" name="_a18"></a><a class="code hl_define" href="BasicUsage_2main_2main_8cpp.html#a6ec274c632bf261fd0753152a14defdf">SPI_MAX_TRANSFER_SZ</a>;</div>
 <div class="line">    ESP_ERROR_CHECK(spi_bus_initialize(SPI2_HOST, &amp;buscfg, SPI_DMA_CH_AUTO));</div>
 <div class="line"> </div>
 <div class="line">    <a id="_a19" name="_a19"></a><a class="code hl_struct" href="structpn532__t.html">pn532_t</a> nfc = {};</div>
-<div class="line">    <a id="_a20" name="_a20"></a><a class="code hl_struct" href="structpn532__config__t.html">pn532_config_t</a> nfc_cfg = {</div>
-<div class="line">        .spi_host      = SPI2_HOST,</div>
-<div class="line">        .pin_cs        = <a id="_a21" name="_a21"></a><a class="code hl_define" href="BasicUsage_2main_2main_8cpp.html#a0c6bd557f1fa31b24d41cbd2f04a2e48">NFC_CS</a>,</div>
-<div class="line">        .skip_bus_init = <span class="keyword">true</span>,</div>
-<div class="line">    };</div>
-<div class="line">    esp_err_t nfc_ret = <a id="a22" name="a22"></a><a class="code hl_function" href="group__pn532__driver.html#ga21f52f38564e794861cf365433702df5">pn532_init</a>(&amp;nfc, &amp;nfc_cfg);</div>
+<div class="line">    <a id="_a20" name="_a20"></a><a class="code hl_struct" href="structpn532__config__t.html">pn532_config_t</a> nfc_cfg = {};</div>
+<div class="line">    nfc_cfg.<a id="a21" name="a21"></a><a class="code hl_variable" href="structpn532__config__t.html#a5bba748f452a5b23a887d7991ff7d2b1">spi_host</a>      = SPI2_HOST;</div>
+<div class="line">    nfc_cfg.<a id="a22" name="a22"></a><a class="code hl_variable" href="structpn532__config__t.html#aac099fe92383204ebce70911d9791bb3">pin_cs</a>        = <a id="_a23" name="_a23"></a><a class="code hl_define" href="BasicUsage_2main_2main_8cpp.html#a0c6bd557f1fa31b24d41cbd2f04a2e48">NFC_CS</a>;</div>
+<div class="line">    nfc_cfg.<a id="a24" name="a24"></a><a class="code hl_variable" href="structpn532__config__t.html#adc58d2d83648e65a11f1e98d981b78ee">skip_bus_init</a> = <span class="keyword">true</span>;</div>
+<div class="line">    esp_err_t nfc_ret = <a id="a25" name="a25"></a><a class="code hl_function" href="group__pn532__driver.html#ga21f52f38564e794861cf365433702df5">pn532_init</a>(&amp;nfc, &amp;nfc_cfg);</div>
 <div class="line"> </div>
 <div class="line">    <span class="keywordflow">if</span> (nfc_ret == ESP_OK) {</div>
-<div class="line">        <a id="_a23" name="_a23"></a><a class="code hl_class" href="classESP32Logger.html">ESP32Logger</a> logger;</div>
-<div class="line">        (void)logger.<a id="a24" name="a24"></a><a class="code hl_function" href="classESP32Logger.html#a6e68aa4b9e35384aaf32d68091715734">begin</a>(115200UL);</div>
+<div class="line">        <a id="_a26" name="_a26"></a><a class="code hl_class" href="classESP32Logger.html">ESP32Logger</a> logger;</div>
+<div class="line">        (void)logger.<a id="a27" name="a27"></a><a class="code hl_function" href="classESP32Logger.html#a6e68aa4b9e35384aaf32d68091715734">begin</a>(115200UL);</div>
 <div class="line"> </div>
-<div class="line">        <a id="_a25" name="_a25"></a><a class="code hl_class" href="classESP32CryptoProvider.html">ESP32CryptoProvider</a> cryptoProvider;</div>
-<div class="line">        <a id="_a26" name="_a26"></a><a class="code hl_class" href="classESP32Platform.html">ESP32Platform</a> platform;</div>
-<div class="line">        <a id="_a27" name="_a27"></a><a class="code hl_class" href="classPn532NfcTransport.html">Pn532NfcTransport</a> nfcTransport(&amp;nfc, logger);</div>
+<div class="line">        <a id="_a28" name="_a28"></a><a class="code hl_class" href="classESP32CryptoProvider.html">ESP32CryptoProvider</a> cryptoProvider;</div>
+<div class="line">        <a id="_a29" name="_a29"></a><a class="code hl_class" href="classESP32Platform.html">ESP32Platform</a> platform;</div>
+<div class="line">        <a id="_a30" name="_a30"></a><a class="code hl_class" href="classPn532NfcTransport.html">Pn532NfcTransport</a> nfcTransport(&amp;nfc, logger);</div>
 <div class="line">        CryptnoxWallet wallet(nfcTransport, logger, cryptoProvider, platform);</div>
 <div class="line"> </div>
 <div class="line">        <span class="keywordflow">if</span> (wallet.begin()) {</div>
@@ -315,6 +313,9 @@ $(function(){initNavTree('Connect_2main_2main_8cpp-example.html','',''); });
 <div class="ttc" id="agroup__pn532__driver_html_ga21f52f38564e794861cf365433702df5"><div class="ttname"><a href="group__pn532__driver.html#ga21f52f38564e794861cf365433702df5">pn532_init</a></div><div class="ttdeci">esp_err_t pn532_init(pn532_t *dev, const pn532_config_t *config)</div><div class="ttdoc">Initialise the PN532 and bring it to a ready state.</div><div class="ttdef"><b>Definition</b> <a href="pn532_8c_source.html#l00657">pn532.c:657</a></div></div>
 <div class="ttc" id="apn532_8h_html"><div class="ttname"><a href="pn532_8h.html">pn532.h</a></div><div class="ttdoc">Low-level PN532 NFC controller driver for ESP-IDF (SPI and I²C).</div></div>
 <div class="ttc" id="astructpn532__config__t_html"><div class="ttname"><a href="structpn532__config__t.html">pn532_config_t</a></div><div class="ttdoc">Compile-time configuration passed to pn532_init.</div><div class="ttdef"><b>Definition</b> <a href="pn532_8h_source.html#l00111">pn532.h:111</a></div></div>
+<div class="ttc" id="astructpn532__config__t_html_a5bba748f452a5b23a887d7991ff7d2b1"><div class="ttname"><a href="structpn532__config__t.html#a5bba748f452a5b23a887d7991ff7d2b1">pn532_config_t::spi_host</a></div><div class="ttdeci">spi_host_device_t spi_host</div><div class="ttdef"><b>Definition</b> <a href="pn532_8h_source.html#l00115">pn532.h:115</a></div></div>
+<div class="ttc" id="astructpn532__config__t_html_aac099fe92383204ebce70911d9791bb3"><div class="ttname"><a href="structpn532__config__t.html#aac099fe92383204ebce70911d9791bb3">pn532_config_t::pin_cs</a></div><div class="ttdeci">int pin_cs</div><div class="ttdef"><b>Definition</b> <a href="pn532_8h_source.html#l00119">pn532.h:119</a></div></div>
+<div class="ttc" id="astructpn532__config__t_html_adc58d2d83648e65a11f1e98d981b78ee"><div class="ttname"><a href="structpn532__config__t.html#adc58d2d83648e65a11f1e98d981b78ee">pn532_config_t::skip_bus_init</a></div><div class="ttdeci">bool skip_bus_init</div><div class="ttdef"><b>Definition</b> <a href="pn532_8h_source.html#l00120">pn532.h:120</a></div></div>
 <div class="ttc" id="astructpn532__t_html"><div class="ttname"><a href="structpn532__t.html">pn532_t</a></div><div class="ttdoc">Opaque-like runtime state for a single PN532 instance.</div><div class="ttdef"><b>Definition</b> <a href="pn532_8h_source.html#l00141">pn532.h:141</a></div></div>
 </div><!-- fragment --> </div><!-- contents -->
 </div><!-- doc-content -->

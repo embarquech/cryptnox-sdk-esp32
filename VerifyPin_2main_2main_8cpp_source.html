@@ -258,42 +258,40 @@ $(function(){initNavTree('VerifyPin_2main_2main_8cpp_source.html','',''); });
 <div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>    ESP_ERROR_CHECK(nvs_ret);</div>
 <div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>    <a class="code hl_function" href="BasicUsage_2main_2main_8cpp.html#af629eac4dcd2612341863d51413aaf10">wifi_start</a>();</div>
 <div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span> </div>
-<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>    spi_bus_config_t buscfg = {</div>
-<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>        .mosi_io_num     = <a class="code hl_define" href="BasicUsage_2main_2main_8cpp.html#a7dbebab5f7dd57885adccf6711b13592">SPI_MOSI</a>,</div>
-<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>        .miso_io_num     = <a class="code hl_define" href="BasicUsage_2main_2main_8cpp.html#ab142cc77dfa97010c9d2b616d0992b64">SPI_MISO</a>,</div>
-<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>        .sclk_io_num     = <a class="code hl_define" href="BasicUsage_2main_2main_8cpp.html#aefec442ab2dbec4785b387b3e88faa66">SPI_SCLK</a>,</div>
-<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>        .quadwp_io_num   = <a class="code hl_define" href="BasicUsage_2main_2main_8cpp.html#aa16c68a03f664d7fb7135e5f9a399310">SPI_PIN_UNUSED</a>,</div>
-<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>        .quadhd_io_num   = <a class="code hl_define" href="BasicUsage_2main_2main_8cpp.html#aa16c68a03f664d7fb7135e5f9a399310">SPI_PIN_UNUSED</a>,</div>
-<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>        .max_transfer_sz = <a class="code hl_define" href="BasicUsage_2main_2main_8cpp.html#a6ec274c632bf261fd0753152a14defdf">SPI_MAX_TRANSFER_SZ</a>,</div>
-<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>    };</div>
-<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>    ESP_ERROR_CHECK(spi_bus_initialize(SPI2_HOST, &amp;buscfg, SPI_DMA_CH_AUTO));</div>
-<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span> </div>
-<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>    <a class="code hl_struct" href="structpn532__t.html">pn532_t</a> nfc = {};</div>
-<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>    <a class="code hl_struct" href="structpn532__config__t.html">pn532_config_t</a> nfc_cfg = {</div>
-<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>        .spi_host      = SPI2_HOST,</div>
-<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>        .pin_cs        = <a class="code hl_define" href="BasicUsage_2main_2main_8cpp.html#a0c6bd557f1fa31b24d41cbd2f04a2e48">NFC_CS</a>,</div>
-<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>        .skip_bus_init = <span class="keyword">true</span>,</div>
-<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>    };</div>
-<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>    esp_err_t nfc_ret = <a class="code hl_function" href="group__pn532__driver.html#ga21f52f38564e794861cf365433702df5">pn532_init</a>(&amp;nfc, &amp;nfc_cfg);</div>
-<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span> </div>
-<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>    <span class="keywordflow">if</span> (nfc_ret == ESP_OK) {</div>
-<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>        <a class="code hl_class" href="classESP32Logger.html">ESP32Logger</a> logger;</div>
-<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>        (void)logger.<a class="code hl_function" href="classESP32Logger.html#a6e68aa4b9e35384aaf32d68091715734">begin</a>(115200UL);</div>
-<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span> </div>
-<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>        <a class="code hl_class" href="classESP32CryptoProvider.html">ESP32CryptoProvider</a> cryptoProvider;</div>
-<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>        <a class="code hl_class" href="classESP32Platform.html">ESP32Platform</a> platform;</div>
-<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>        <a class="code hl_class" href="classPn532NfcTransport.html">Pn532NfcTransport</a> nfcTransport(&amp;nfc, logger);</div>
-<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>        CryptnoxWallet wallet(nfcTransport, logger, cryptoProvider, platform);</div>
-<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span> </div>
-<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>        <span class="keywordflow">if</span> (wallet.begin()) {</div>
-<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>            <a class="code hl_function" href="VerifyPin_2main_2main_8cpp.html#a09e11d26bb15d32715a9e2ae037d9518">run_verify_pin_loop</a>(wallet);</div>
-<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>            ESP_LOGE(<a class="code hl_variable" href="esp32__random_8cpp.html#a4ef5b5f197804a60836ab1e8907d8301">TAG</a>, <span class="stringliteral">&quot;Wallet init failed&quot;</span>);</div>
-<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>        }</div>
-<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>    } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>        ESP_LOGE(<a class="code hl_variable" href="esp32__random_8cpp.html#a4ef5b5f197804a60836ab1e8907d8301">TAG</a>, <span class="stringliteral">&quot;PN532 init failed&quot;</span>);</div>
-<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>    }</div>
-<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>}</div>
+<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>    spi_bus_config_t buscfg = {};</div>
+<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>    buscfg.mosi_io_num     = <a class="code hl_define" href="BasicUsage_2main_2main_8cpp.html#a7dbebab5f7dd57885adccf6711b13592">SPI_MOSI</a>;</div>
+<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>    buscfg.miso_io_num     = <a class="code hl_define" href="BasicUsage_2main_2main_8cpp.html#ab142cc77dfa97010c9d2b616d0992b64">SPI_MISO</a>;</div>
+<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>    buscfg.sclk_io_num     = <a class="code hl_define" href="BasicUsage_2main_2main_8cpp.html#aefec442ab2dbec4785b387b3e88faa66">SPI_SCLK</a>;</div>
+<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>    buscfg.quadwp_io_num   = <a class="code hl_define" href="BasicUsage_2main_2main_8cpp.html#aa16c68a03f664d7fb7135e5f9a399310">SPI_PIN_UNUSED</a>;</div>
+<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>    buscfg.quadhd_io_num   = <a class="code hl_define" href="BasicUsage_2main_2main_8cpp.html#aa16c68a03f664d7fb7135e5f9a399310">SPI_PIN_UNUSED</a>;</div>
+<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>    buscfg.max_transfer_sz = <a class="code hl_define" href="BasicUsage_2main_2main_8cpp.html#a6ec274c632bf261fd0753152a14defdf">SPI_MAX_TRANSFER_SZ</a>;</div>
+<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>    ESP_ERROR_CHECK(spi_bus_initialize(SPI2_HOST, &amp;buscfg, SPI_DMA_CH_AUTO));</div>
+<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span> </div>
+<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>    <a class="code hl_struct" href="structpn532__t.html">pn532_t</a> nfc = {};</div>
+<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>    <a class="code hl_struct" href="structpn532__config__t.html">pn532_config_t</a> nfc_cfg = {};</div>
+<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>    nfc_cfg.<a class="code hl_variable" href="structpn532__config__t.html#a5bba748f452a5b23a887d7991ff7d2b1">spi_host</a>      = SPI2_HOST;</div>
+<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>    nfc_cfg.<a class="code hl_variable" href="structpn532__config__t.html#aac099fe92383204ebce70911d9791bb3">pin_cs</a>        = <a class="code hl_define" href="BasicUsage_2main_2main_8cpp.html#a0c6bd557f1fa31b24d41cbd2f04a2e48">NFC_CS</a>;</div>
+<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>    nfc_cfg.<a class="code hl_variable" href="structpn532__config__t.html#adc58d2d83648e65a11f1e98d981b78ee">skip_bus_init</a> = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>    esp_err_t nfc_ret = <a class="code hl_function" href="group__pn532__driver.html#ga21f52f38564e794861cf365433702df5">pn532_init</a>(&amp;nfc, &amp;nfc_cfg);</div>
+<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span> </div>
+<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>    <span class="keywordflow">if</span> (nfc_ret == ESP_OK) {</div>
+<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>        <a class="code hl_class" href="classESP32Logger.html">ESP32Logger</a> logger;</div>
+<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>        (void)logger.<a class="code hl_function" href="classESP32Logger.html#a6e68aa4b9e35384aaf32d68091715734">begin</a>(115200UL);</div>
+<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span> </div>
+<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>        <a class="code hl_class" href="classESP32CryptoProvider.html">ESP32CryptoProvider</a> cryptoProvider;</div>
+<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>        <a class="code hl_class" href="classESP32Platform.html">ESP32Platform</a> platform;</div>
+<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>        <a class="code hl_class" href="classPn532NfcTransport.html">Pn532NfcTransport</a> nfcTransport(&amp;nfc, logger);</div>
+<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>        CryptnoxWallet wallet(nfcTransport, logger, cryptoProvider, platform);</div>
+<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span> </div>
+<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>        <span class="keywordflow">if</span> (wallet.begin()) {</div>
+<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>            <a class="code hl_function" href="VerifyPin_2main_2main_8cpp.html#a09e11d26bb15d32715a9e2ae037d9518">run_verify_pin_loop</a>(wallet);</div>
+<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>            ESP_LOGE(<a class="code hl_variable" href="esp32__random_8cpp.html#a4ef5b5f197804a60836ab1e8907d8301">TAG</a>, <span class="stringliteral">&quot;Wallet init failed&quot;</span>);</div>
+<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>        }</div>
+<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>        ESP_LOGE(<a class="code hl_variable" href="esp32__random_8cpp.html#a4ef5b5f197804a60836ab1e8907d8301">TAG</a>, <span class="stringliteral">&quot;PN532 init failed&quot;</span>);</div>
+<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>    }</div>
+<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>}</div>
 </div>
 <div class="ttc" id="aBasicUsage_2main_2config_8h_html_a586542b79d00e4db7e1d5a667ae83a2b"><div class="ttname"><a href="BasicUsage_2main_2config_8h.html#a586542b79d00e4db7e1d5a667ae83a2b">WIFI_SSID</a></div><div class="ttdeci">#define WIFI_SSID</div><div class="ttdef"><b>Definition</b> <a href="BasicUsage_2main_2config_8h_source.html#l00012">config.h:12</a></div></div>
 <div class="ttc" id="aBasicUsage_2main_2config_8h_html_a8685d8aff7e570048090a3a51afceb07"><div class="ttname"><a href="BasicUsage_2main_2config_8h.html#a8685d8aff7e570048090a3a51afceb07">WIFI_PASSWORD</a></div><div class="ttdeci">#define WIFI_PASSWORD</div><div class="ttdef"><b>Definition</b> <a href="BasicUsage_2main_2config_8h_source.html#l00013">config.h:13</a></div></div>
@@ -328,6 +326,9 @@ $(function(){initNavTree('VerifyPin_2main_2main_8cpp_source.html','',''); });
 <div class="ttc" id="agroup__pn532__driver_html_ga21f52f38564e794861cf365433702df5"><div class="ttname"><a href="group__pn532__driver.html#ga21f52f38564e794861cf365433702df5">pn532_init</a></div><div class="ttdeci">esp_err_t pn532_init(pn532_t *dev, const pn532_config_t *config)</div><div class="ttdoc">Initialise the PN532 and bring it to a ready state.</div><div class="ttdef"><b>Definition</b> <a href="pn532_8c_source.html#l00657">pn532.c:657</a></div></div>
 <div class="ttc" id="apn532_8h_html"><div class="ttname"><a href="pn532_8h.html">pn532.h</a></div><div class="ttdoc">Low-level PN532 NFC controller driver for ESP-IDF (SPI and I²C).</div></div>
 <div class="ttc" id="astructpn532__config__t_html"><div class="ttname"><a href="structpn532__config__t.html">pn532_config_t</a></div><div class="ttdoc">Compile-time configuration passed to pn532_init.</div><div class="ttdef"><b>Definition</b> <a href="pn532_8h_source.html#l00111">pn532.h:111</a></div></div>
+<div class="ttc" id="astructpn532__config__t_html_a5bba748f452a5b23a887d7991ff7d2b1"><div class="ttname"><a href="structpn532__config__t.html#a5bba748f452a5b23a887d7991ff7d2b1">pn532_config_t::spi_host</a></div><div class="ttdeci">spi_host_device_t spi_host</div><div class="ttdef"><b>Definition</b> <a href="pn532_8h_source.html#l00115">pn532.h:115</a></div></div>
+<div class="ttc" id="astructpn532__config__t_html_aac099fe92383204ebce70911d9791bb3"><div class="ttname"><a href="structpn532__config__t.html#aac099fe92383204ebce70911d9791bb3">pn532_config_t::pin_cs</a></div><div class="ttdeci">int pin_cs</div><div class="ttdef"><b>Definition</b> <a href="pn532_8h_source.html#l00119">pn532.h:119</a></div></div>
+<div class="ttc" id="astructpn532__config__t_html_adc58d2d83648e65a11f1e98d981b78ee"><div class="ttname"><a href="structpn532__config__t.html#adc58d2d83648e65a11f1e98d981b78ee">pn532_config_t::skip_bus_init</a></div><div class="ttdeci">bool skip_bus_init</div><div class="ttdef"><b>Definition</b> <a href="pn532_8h_source.html#l00120">pn532.h:120</a></div></div>
 <div class="ttc" id="astructpn532__t_html"><div class="ttname"><a href="structpn532__t.html">pn532_t</a></div><div class="ttdoc">Opaque-like runtime state for a single PN532 instance.</div><div class="ttdef"><b>Definition</b> <a href="pn532_8h_source.html#l00141">pn532.h:141</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

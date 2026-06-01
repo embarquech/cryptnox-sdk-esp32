@@ -182,7 +182,7 @@ $(function(){initNavTree('ESP32Logger_8cpp_source.html','',''); });
 <div class="foldopen" id="foldopen00095" data-start="{" data-end="}">
 <div class="line"><a id="l00095" name="l00095"></a><span class="lineno"><a class="line" href="classESP32Logger.html#a6e68aa4b9e35384aaf32d68091715734">   95</a></span><span class="keywordtype">bool</span> <a class="code hl_function" href="classESP32Logger.html#a6e68aa4b9e35384aaf32d68091715734">ESP32Logger::begin</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> baudRate)</div>
 <div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>{</div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>    uart_config_t cfg = { 0 };</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>    uart_config_t cfg = {};</div>
 <div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>    cfg.baud_rate           = <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(baudRate);</div>
 <div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>    cfg.data_bits           = UART_DATA_8_BITS;</div>
 <div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>    cfg.parity              = UART_PARITY_DISABLE;</div>
