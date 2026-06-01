@@ -102,6 +102,117 @@ Directory dependency graph for Connect:</div>
 Directories</h2></td></tr>
 <tr class="memitem:main" id="r_main"><td class="memItemLeft" align="right" valign="top"><span class="iconfolder"><div class="folder-icon"></div></span>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="dir_8d2cda44be99fee4e1f07bf0791e3905.html">main</a></td></tr>
 </table>
+<a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
+<div align="center"></div><div align="center"><img src="https://github.com/user-attachments/assets/6ce54a27-8fb6-48e6-9d1f-da144f43425a" alt="" class="inline"/></div><div align="center"></div><h3 class="doxsection"><a class="anchor" id="autotoc_md10"></a>
+<div align="center">cryptnox-sdk-esp32</div></h3>
+<div align="center"></div><div align="center">ESP32 SDK for managing Cryptnox smart card wallets</div><div align="center"></div><h1 class="doxsection"><a class="anchor" id="autotoc_md11"></a>
+Connect — Secure Channel + Card Info</h1>
+<p>Open the Cryptnox Hardware Wallet secure channel from an ESP32-S3 and read back the card owner's <b>name</b> and <b>email</b>. This is the <b>safest starting point</b>: the firmware never sends a PIN, so it cannot lock the card.</p>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md12"></a>
+Requirements</h2>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Component  </th><th class="markdownTableHeadNone">Details  </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><b>Hardware Wallet</b>  </td><td class="markdownTableBodyNone">Cryptnox Hardware Wallet, initialised (<span class="tt">cryptnox init</span>)  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><b>NFC reader</b>  </td><td class="markdownTableBodyNone">PN532 over SPI — MOSI=11, MISO=13, SCLK=12, CS=10 (see <a href="../../README.md#hardware-setup">hardware setup</a>)  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><b>Board</b>  </td><td class="markdownTableBodyNone">ESP32-S3-DevKitC-1  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><b>Toolchain</b>  </td><td class="markdownTableBodyNone">ESP-IDF v5.5  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><b>Repository</b>  </td><td class="markdownTableBodyNone">Cloned with submodules (<span class="tt">git clone --recurse-submodules …</span>)  </td></tr>
+</table>
+<p>No PIN, no seed required. Wi-Fi credentials in <span class="tt">main/config.h</span> are still mandatory — the radio is started on boot so it feeds the ESP32 hardware TRNG with full entropy before any crypto runs.</p>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md13"></a>
+Quick start</h2>
+<div class="fragment"><div class="line"># from the repository root, after sourcing ESP-IDF env</div>
+<div class="line">cd examples/Connect</div>
+<div class="line">$EDITOR main/config.h                       # fill WIFI_SSID / WIFI_PASSWORD</div>
+<div class="line">idf.py set-target esp32s3                   # once</div>
+<div class="line">idf.py build flash monitor</div>
+</div><!-- fragment --><p>Exit the serial monitor with <span class="tt">Ctrl-]</span>. Place the card on the PN532 antenna once the firmware reports <span class="tt">PN532 ready</span>.</p>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md14"></a>
+Expected output</h3>
+<div class="fragment"><div class="line">I (520) wifi:wifi driver task: ...</div>
+<div class="line">I (1234) connect: Wi-Fi connected, TRNG seeded</div>
+<div class="line">I (1280) connect: PN532 firmware 1.6, features 0x07 (MIFARE + ISO-DEP + FeliCa)</div>
+<div class="line">I (2410) connect: Card connected, secure channel established</div>
+<div class="line">I (2420) connect: Owner name : Alice</div>
+<div class="line">I (2421) connect: Owner email: alice@cryptnox.com</div>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md15"></a>
+How it works</h2>
+<div class="fragment"><div class="line">wifi_init() + esp_wifi_connect()    Bring up Wi-Fi → TRNG ready</div>
+<div class="line">       │</div>
+<div class="line">spi_bus_initialize()                Configure SPI3 host</div>
+<div class="line">       │</div>
+<div class="line">wallet.begin()                      Reset the PN532, probe firmware</div>
+<div class="line">       │</div>
+<div class="line">wallet.connect(session)             SELECT + cert chain verify</div>
+<div class="line">       │                            (secp256r1) + ECDH + mutual auth</div>
+<div class="line">       │                            → session.aesKey / macKey / iv</div>
+<div class="line">       │</div>
+<div class="line">wallet.getCardInfo(session)         Secured APDU (AES-CBC + MAC)</div>
+<div class="line">       │                            Decrypt response, parse name &amp; email</div>
+<div class="line">       │</div>
+<div class="line">wallet.disconnect(session)          Zero session keys</div>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md16"></a>
+Step-by-step code</h2>
+<p><b>Wire the adapters together</b> (declared once in <span class="tt"><a class="el" href="BasicUsage_2main_2main_8cpp.html#a630544a7f0a2cc40d8a7fefab7e2fe70" title="ESP-IDF application entry point.">app_main</a></span>):</p>
+<div class="fragment"><div class="line"><a class="code hl_class" href="classESP32Logger.html">ESP32Logger</a>          logger;</div>
+<div class="line"><a class="code hl_class" href="classPn532NfcTransport.html">Pn532NfcTransport</a>    nfc(<span class="comment">/*pn532*/</span> &amp;pn532, logger);</div>
+<div class="line"><a class="code hl_class" href="classESP32CryptoProvider.html">ESP32CryptoProvider</a>  cryptoProvider;</div>
+<div class="line"><a class="code hl_class" href="classESP32Platform.html">ESP32Platform</a>        platform;</div>
+<div class="line">CryptnoxWallet       wallet(nfc, logger, cryptoProvider, platform);</div>
+<div class="ttc" id="aclassESP32CryptoProvider_html"><div class="ttname"><a href="classESP32CryptoProvider.html">ESP32CryptoProvider</a></div><div class="ttdoc">CW_CryptoProvider backed by mbedTLS and the ESP32 hardware TRNG.</div><div class="ttdef"><b>Definition</b> <a href="esp32__crypto__provider_8h_source.html#l00062">esp32_crypto_provider.h:62</a></div></div>
+<div class="ttc" id="aclassESP32Logger_html"><div class="ttname"><a href="classESP32Logger.html">ESP32Logger</a></div><div class="ttdoc">CW_Logger backed by ESP32 UART0.</div><div class="ttdef"><b>Definition</b> <a href="ESP32Logger_8h_source.html#l00048">ESP32Logger.h:48</a></div></div>
+<div class="ttc" id="aclassESP32Platform_html"><div class="ttname"><a href="classESP32Platform.html">ESP32Platform</a></div><div class="ttdoc">CW_Platform backed by FreeRTOS vTaskDelay.</div><div class="ttdef"><b>Definition</b> <a href="ESP32Platform_8h_source.html#l00038">ESP32Platform.h:38</a></div></div>
+<div class="ttc" id="aclassPn532NfcTransport_html"><div class="ttname"><a href="classPn532NfcTransport.html">Pn532NfcTransport</a></div><div class="ttdoc">CW_NfcTransport implementation backed by the ESP-IDF PN532 driver.</div><div class="ttdef"><b>Definition</b> <a href="Pn532NfcTransport_8h_source.html#l00080">Pn532NfcTransport.h:80</a></div></div>
+</div><!-- fragment --><p><b>Bring up the radio + bus + reader:</b></p>
+<div class="fragment"><div class="line">ESP_ERROR_CHECK(nvs_flash_init());</div>
+<div class="line">wifi_init();                          <span class="comment">// brings up Wi-Fi → seeds the HW TRNG</span></div>
+<div class="line">spi_bus_init();</div>
+<div class="line"><span class="keywordflow">if</span> (!wallet.begin()) {</div>
+<div class="line">    ESP_LOGE(<a class="code hl_variable" href="esp32__random_8cpp.html#a4ef5b5f197804a60836ab1e8907d8301">TAG</a>, <span class="stringliteral">&quot;PN532 init failed&quot;</span>);</div>
+<div class="line">    vTaskDelay(portMAX_DELAY);</div>
+<div class="line">}</div>
+<div class="ttc" id="aesp32__random_8cpp_html_a4ef5b5f197804a60836ab1e8907d8301"><div class="ttname"><a href="esp32__random_8cpp.html#a4ef5b5f197804a60836ab1e8907d8301">TAG</a></div><div class="ttdeci">static const char *const TAG</div><div class="ttdef"><b>Definition</b> <a href="esp32__random_8cpp_source.html#l00014">esp32_random.cpp:14</a></div></div>
+</div><!-- fragment --><p><b>Open the channel and read the card</b> in a tight loop:</p>
+<div class="fragment"><div class="line"><span class="keywordflow">while</span> (<span class="keyword">true</span>) {</div>
+<div class="line">    CW_SecureSession session;</div>
+<div class="line">    <span class="keywordflow">if</span> (wallet.connect(session)) {</div>
+<div class="line">        CW_CardInfo info;</div>
+<div class="line">        <span class="keywordflow">if</span> (wallet.getCardInfo(session, &amp;info)) {</div>
+<div class="line">            ESP_LOGI(<a class="code hl_variable" href="esp32__random_8cpp.html#a4ef5b5f197804a60836ab1e8907d8301">TAG</a>, <span class="stringliteral">&quot;Owner name : %s&quot;</span>, info.name);</div>
+<div class="line">            ESP_LOGI(<a class="code hl_variable" href="esp32__random_8cpp.html#a4ef5b5f197804a60836ab1e8907d8301">TAG</a>, <span class="stringliteral">&quot;Owner email: %s&quot;</span>, info.email);</div>
+<div class="line">        }</div>
+<div class="line">    }</div>
+<div class="line">    wallet.disconnect(session);</div>
+<div class="line">    vTaskDelay(pdMS_TO_TICKS(1000));</div>
+<div class="line">}</div>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md17"></a>
+Troubleshooting</h2>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Symptom  </th><th class="markdownTableHeadNone">Cause  </th><th class="markdownTableHeadNone">Fix  </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><span class="tt">PN532 init failed</span>  </td><td class="markdownTableBodyNone">Reader wiring / power / mode switches  </td><td class="markdownTableBodyNone">Check VCC = 3.3 V, the MOSI/MISO/SCLK/CS pinout and the PN532 SPI mode switches (<span class="tt">SW0=HIGH, SW1=LOW</span>) — see <a href="../../README.md#hardware-setup">hardware setup</a>  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">Wi-Fi never connects  </td><td class="markdownTableBodyNone">Wrong SSID / password, or 5 GHz-only network  </td><td class="markdownTableBodyNone">ESP32-S3 supports 2.4 GHz only — verify SSID, password, band in <span class="tt">main/config.h</span>  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><span class="tt">Card not detected or secure channel failed</span>  </td><td class="markdownTableBodyNone">Card off the antenna, or card not initialised  </td><td class="markdownTableBodyNone">Bring the card within ~1 cm of the antenna; run <span class="tt">cryptnox init</span> if it is a brand-new card  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><span class="tt">getCardInfo failed (channel error or parse error)</span>  </td><td class="markdownTableBodyNone">Card initialised without an owner name/email  </td><td class="markdownTableBodyNone">Re-run <span class="tt">cryptnox init</span> and fill in the owner fields  </td></tr>
+</table>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md18"></a>
+License</h2>
+<p><span class="tt">cryptnox-sdk-esp32</span> is dual-licensed:</p>
+<ul>
+<li><b>LGPL-3.0</b> for open-source projects and proprietary projects that comply with LGPL requirements</li>
+<li><b>Commercial license</b> for projects that require a proprietary license without LGPL obligations (see COMMERCIAL.md for details)</li>
+</ul>
+<p>For commercial inquiries, contact: <a href="#" onclick="location.href='mai'+'lto:'+'con'+'ta'+'ct@'+'cr'+'ypt'+'no'+'x.c'+'om'; return false;">conta<span class="obfuscator">.nosp@m.</span>ct@c<span class="obfuscator">.nosp@m.</span>ryptn<span class="obfuscator">.nosp@m.</span>ox.c<span class="obfuscator">.nosp@m.</span>om</a> </p>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <div id="page-nav" class="page-nav-panel">

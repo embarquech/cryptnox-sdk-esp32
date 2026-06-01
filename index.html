@@ -92,7 +92,7 @@ $(function(){initNavTree('index.html','',''); });
   <div class="headertitle"><div class="title">cryptnox-sdk-esp32 </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="md_README"></a> </p><div align="center"></div><div align="center"><img src="https://github.com/user-attachments/assets/6ce54a27-8fb6-48e6-9d1f-da144f43425a" alt="" class="inline"/></div><div align="center"></div><h3 class="doxsection"><a class="anchor" id="autotoc_md0"></a>
+<div class="textblock"><p><a class="anchor" id="md_README"></a> </p><div align="center"></div><div align="center"><img src="https://github.com/user-attachments/assets/6ce54a27-8fb6-48e6-9d1f-da144f43425a" alt="" class="inline"/></div><div align="center"></div><h3 class="doxsection"><a class="anchor" id="autotoc_md64"></a>
 <div align="center">cryptnox-sdk-esp32</div></h3>
 <div align="center"></div><div align="center">ESP32 SDK for managing Cryptnox smart card wallets</div><div align="center"></div><p><br  />
  <br  />
@@ -100,9 +100,9 @@ $(function(){initNavTree('index.html','',''); });
 <p><a href="https://github.com/embarquech/cryptnox-sdk-esp32/actions/workflows/misra_check.yml"><img src="https://github.com/embarquech/cryptnox-sdk-esp32/actions/workflows/misra_check.yml/badge.svg" alt="Static analysis" style="pointer-events: none;" class="inline"/></a> <a href="https://www.espressif.com/en/products/socs"><img src="https://img.shields.io/badge/Platform-ESP32%20family-blue.svg" alt="Platform: ESP32 family" style="pointer-events: none;" class="inline"/></a> <a href="https://docs.espressif.com/projects/esp-idf/en/v5.5/"><img src="https://img.shields.io/badge/Framework-ESP--IDF%20v5.5-blue.svg" alt="Framework: ESP-IDF v5.5" style="pointer-events: none;" class="inline"/></a> <a href="https://www.gnu.org/licenses/lgpl-3.0"><img src="https://img.shields.io/badge/License-LGPLv3-blue.svg" alt="License: GPLv3" style="pointer-events: none;" class="inline"/></a></p>
 <p><span class="tt">cryptnox-sdk-esp32</span> is an ESP-IDF component bundle that enables the use of <b>Cryptnox Smart cards</b> on ESP32-family platforms. It provides secure communication with the card, retrieves card information, and exposes basic cryptographic operations through the shared C++ core SDK.</p>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md2"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md66"></a>
 Supported hardware</h2>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md3"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md67"></a>
 Cryptnox Hardware Wallet smart cards</h3>
 <p>Works with Cryptnox Hardware Wallet smart cards running firmware v1.6.0 or later.</p>
 <table class="markdownTable">
@@ -111,7 +111,7 @@ Cryptnox Hardware Wallet smart cards</h3>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><a href="https://shop.cryptnox.com/product/hardware-wallet-smartcard-dual/">Crypto Hardware Wallet – Dual Card Set</a>  </td><td class="markdownTableBodyNone">v1.6.1  </td></tr>
 </table>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md4"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md68"></a>
 NFC readers</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -119,7 +119,7 @@ NFC readers</h3>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><a href="https://www.nxp.com/products/PN532">PN532 NFC Module</a>  </td><td class="markdownTableBodyNone">Contactless (NFC/ISO 14443)  </td><td class="markdownTableBodyNone">SPI or I²C  </td></tr>
 </table>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md5"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md69"></a>
 Host board</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -128,7 +128,7 @@ Host board</h3>
 <td class="markdownTableBodyNone"><a href="https://docs.espressif.com/projects/esp-idf/en/latest/esp32s3/hw-reference/esp32s3/user-guide-devkitc-1.html">ESP32-S3-DevKitC-1</a>  </td><td class="markdownTableBodyNone">ESP32-S3-WROOM-1  </td><td class="markdownTableBodyNone">Official Espressif dev kit — wire PN532 with jumpers to the 2×22-pin headers  </td></tr>
 </table>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md7"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md71"></a>
 Installation</h2>
 <ol type="1">
 <li>Install <b>ESP-IDF v5.5</b> following the <a href="https://docs.espressif.com/projects/esp-idf/en/v5.5/esp32s3/get-started/index.html">official guide</a>.</li>
@@ -138,11 +138,11 @@ Installation</h2>
 <div class="line">idf.py build flash monitor</div>
 </div><!-- fragment --></li>
 </ol>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md8"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md72"></a>
 Hardware setup</h2>
 <dl class="section attention"><dt>Attention</dt><dd>Always double-check the wiring before powering the board to prevent damage.</dd></dl>
 <p>Wiring shown for the <b>ESP32-S3-DevKitC-1</b>.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md9"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md73"></a>
 ESP32-S3 and PN532 NFC — SPI interface</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -168,7 +168,7 @@ ESP32-S3 and PN532 NFC — SPI interface</h3>
 </ul>
 </dd></dl>
 <p><img src="hardware/schematics/esp32_s3_pn532_spi_bb.png" alt="esp32_s3_pn532_spi" width="800" class="inline"/></p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md10"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md74"></a>
 ESP32-S3 and PN532 NFC — I²C interface</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -195,10 +195,10 @@ ESP32-S3 and PN532 NFC — I²C interface</h3>
 </dd></dl>
 <p><img src="hardware/schematics/esp32_s3_pn532_i2c_bb.png" alt="esp32_s3_pn532_i2c" width="800" class="inline"/></p>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md12"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md76"></a>
 Quick usage examples</h2>
 <p>All examples assume the shared SPI bus has been initialised and the three adapters (<span class="tt"><a class="el" href="classESP32Logger.html" title="CW_Logger backed by ESP32 UART0.">ESP32Logger</a></span>, <span class="tt"><a class="el" href="classESP32CryptoProvider.html" title="CW_CryptoProvider backed by mbedTLS and the ESP32 hardware TRNG.">ESP32CryptoProvider</a></span>, <span class="tt">ESP32Pn532Transport</span>) are wired into a <span class="tt">CryptnoxWallet</span>. Helper macros are used for brevity; see <span class="tt">examples/UsdcSigning/</span> for the full ESP-IDF boilerplate.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md13"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md77"></a>
 1. Connect to a Cryptnox card</h3>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &quot;CryptnoxWallet.h&quot;</span></div>
 <div class="line"><span class="preprocessor">#include &quot;<a class="code" href="ESP32Logger_8h.html">ESP32Logger.h</a>&quot;</span></div>
@@ -238,7 +238,7 @@ Quick usage examples</h2>
 <div class="ttc" id="aclassESP32Logger_html"><div class="ttname"><a href="classESP32Logger.html">ESP32Logger</a></div><div class="ttdoc">CW_Logger backed by ESP32 UART0.</div><div class="ttdef"><b>Definition</b> <a href="ESP32Logger_8h_source.html#l00048">ESP32Logger.h:48</a></div></div>
 <div class="ttc" id="aesp32__crypto__provider_8h_html"><div class="ttname"><a href="esp32__crypto__provider_8h.html">esp32_crypto_provider.h</a></div><div class="ttdoc">CW_CryptoProvider implementation for ESP32 using mbedTLS and the hardware TRNG.</div></div>
 <div class="ttc" id="aesp32__random_8cpp_html_a4ef5b5f197804a60836ab1e8907d8301"><div class="ttname"><a href="esp32__random_8cpp.html#a4ef5b5f197804a60836ab1e8907d8301">TAG</a></div><div class="ttdeci">static const char *const TAG</div><div class="ttdef"><b>Definition</b> <a href="esp32__random_8cpp_source.html#l00014">esp32_random.cpp:14</a></div></div>
-</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md14"></a>
+</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md78"></a>
 2. Verify the PIN code</h3>
 <p>The card must be initialised before calling <span class="tt">verifyPin</span>.</p>
 <blockquote class="doxtable">
@@ -281,7 +281,7 @@ Quick usage examples</h2>
 <div class="line"> </div>
 <div class="line">    wallet.disconnect(session);</div>
 <div class="line">}</div>
-</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md15"></a>
+</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md79"></a>
 3. Sign a transaction hash</h3>
 <p>Signs a 32-byte digest (e.g. SHA-256 of a Bitcoin or Ethereum transaction) on the secp256k1 curve.</p>
 <div class="fragment"><div class="line"><span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> <span class="keywordtype">void</span> <a class="code hl_function" href="BasicUsage_2main_2main_8cpp.html#a630544a7f0a2cc40d8a7fefab7e2fe70">app_main</a>(<span class="keywordtype">void</span>) {</div>
@@ -319,7 +319,7 @@ Quick usage examples</h2>
 <div class="line">}</div>
 </div><!-- fragment --><p>See <span class="tt">examples/UsdcSigning/</span> for a full reference that wires up the SPI bus and polls the PN532.</p>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md17"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md81"></a>
 Security</h2>
 <ul>
 <li><b>Flash Encryption and Secure Boot V2</b> must be enabled for production deployments. Defaults are set in <span class="tt">sdkconfig.defaults</span>. eFuse programming is irreversible — practice on a development board first.</li>
@@ -327,10 +327,10 @@ Security</h2>
 <li><b>Dependency pinning:</b> Use the exact ESP-IDF tag (<span class="tt">v5.5.0</span>) and pin the <span class="tt">cryptnox-sdk-cpp</span> submodule to a commit hash.</li>
 </ul>
 <hr  />
-<h2 class="doxsection"><a class="anchor" id="autotoc_md19"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md83"></a>
 Documentation</h2>
 <p>The generated documentation for this project is available <a href="https://embarquech.github.io/cryptnox-sdk-esp32/">here</a>.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md20"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md84"></a>
 License</h2>
 <p><span class="tt">cryptnox-sdk-esp32</span> is dual-licensed:</p>
 <ul>

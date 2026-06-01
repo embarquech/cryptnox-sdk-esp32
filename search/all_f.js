@@ -12,10 +12,11 @@ var searchData=
   ['mbedtls_5fok_9',['MBEDTLS_OK',['../esp32__crypto__provider_8cpp.html#a65262e3cc336c6e35ba60f5bb7c90339',1,'MBEDTLS_OK:&#160;esp32_crypto_provider.cpp'],['../uECC__esp32_8cpp.html#a65262e3cc336c6e35ba60f5bb7c90339',1,'MBEDTLS_OK:&#160;uECC_esp32.cpp']]],
   ['mbedtls_5fsha256_5fmode_10',['MBEDTLS_SHA256_MODE',['../esp32__crypto__provider_8cpp.html#a3aebe348f030d5a9330b57d3fb5ca64b',1,'esp32_crypto_provider.cpp']]],
   ['mbedtls_5fsha512_5fmode_11',['MBEDTLS_SHA512_MODE',['../esp32__crypto__provider_8cpp.html#ad3dc87480da94f42d6f1d25a95e08b55',1,'esp32_crypto_provider.cpp']]],
-  ['mock_5fmax_5fresp_5fbytes_12',['MOCK_MAX_RESP_BYTES',['../test__cw__secure__channel_8cpp.html#ad6e775b9610b5dc89faef2b023556147',1,'test_cw_secure_channel.cpp']]],
-  ['mock_5fmax_5fscripts_13',['MOCK_MAX_SCRIPTS',['../test__cw__secure__channel_8cpp.html#ad65901ff5f7cc5982a7cfcfc773b27fa',1,'test_cw_secure_channel.cpp']]],
-  ['mock_5fuart_5fbaud_5frate_14',['MOCK_UART_BAUD_RATE',['../test__cw__secure__channel_8cpp.html#a67816a916a201c866de4d8a790861841',1,'test_cw_secure_channel.cpp']]],
-  ['mocklogger_15',['MockLogger',['../classMockLogger.html',1,'']]],
-  ['mockplatform_16',['MockPlatform',['../classMockPlatform.html',1,'']]],
-  ['mockscriptentry_17',['MockScriptEntry',['../structMockScriptEntry.html',1,'']]]
+  ['memory_20footprint_12',['Memory footprint',['../dir_5b19b165ccbe70e79cec239ffc7400ef.html#autotoc_md51',1,'']]],
+  ['mock_5fmax_5fresp_5fbytes_13',['MOCK_MAX_RESP_BYTES',['../test__cw__secure__channel_8cpp.html#ad6e775b9610b5dc89faef2b023556147',1,'test_cw_secure_channel.cpp']]],
+  ['mock_5fmax_5fscripts_14',['MOCK_MAX_SCRIPTS',['../test__cw__secure__channel_8cpp.html#ad65901ff5f7cc5982a7cfcfc773b27fa',1,'test_cw_secure_channel.cpp']]],
+  ['mock_5fuart_5fbaud_5frate_15',['MOCK_UART_BAUD_RATE',['../test__cw__secure__channel_8cpp.html#a67816a916a201c866de4d8a790861841',1,'test_cw_secure_channel.cpp']]],
+  ['mocklogger_16',['MockLogger',['../classMockLogger.html',1,'']]],
+  ['mockplatform_17',['MockPlatform',['../classMockPlatform.html',1,'']]],
+  ['mockscriptentry_18',['MockScriptEntry',['../structMockScriptEntry.html',1,'']]]
 ];

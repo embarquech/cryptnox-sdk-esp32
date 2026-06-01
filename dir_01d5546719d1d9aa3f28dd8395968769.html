@@ -102,6 +102,164 @@ Directory dependency graph for BasicUsage:</div>
 Directories</h2></td></tr>
 <tr class="memitem:main" id="r_main"><td class="memItemLeft" align="right" valign="top"><span class="iconfolder"><div class="folder-icon"></div></span>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="dir_312a079c3b217c4901110f6d7117034a.html">main</a></td></tr>
 </table>
+<a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
+<div align="center"></div><div align="center"><img src="https://github.com/user-attachments/assets/6ce54a27-8fb6-48e6-9d1f-da144f43425a" alt="" class="inline"/></div><div align="center"></div><h3 class="doxsection"><a class="anchor" id="autotoc_md0"></a>
+<div align="center">cryptnox-sdk-esp32</div></h3>
+<div align="center"></div><div align="center">ESP32 SDK for managing Cryptnox smart card wallets</div><div align="center"></div><h1 class="doxsection"><a class="anchor" id="autotoc_md1"></a>
+BasicUsage — End-to-End Walkthrough (SPI or I²C)</h1>
+<p>A single self-contained ESP-IDF project that exercises the <b>full Cryptnox flow</b> on ESP32: pick SPI or I²C at build time, open the secure channel, sign a 32-byte hash, wipe the secrets, disconnect. Reads as a checklist of every step a production firmware will perform.</p>
+<p>If you only need <b>one</b> of the steps, see the focused examples:</p>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">You want…  </th><th class="markdownTableHeadNone">See  </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">The secure channel + card identity  </td><td class="markdownTableBodyNone"><a class="el" href="dir_61c733bd969c2471ac02d97f3b0ee95b.html">Connect</a>  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">A PIN verification flow  </td><td class="markdownTableBodyNone"><a class="el" href="dir_cc81cf6f1c823b08adf4153a5960c30a.html">VerifyPin</a>  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">A signature without the rest  </td><td class="markdownTableBodyNone"><a class="el" href="dir_2365b4822c04e78cb5bc3fb96cb35526.html">Sign</a>  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">A real Ethereum tx broadcast  </td><td class="markdownTableBodyNone"><a class="el" href="dir_5b19b165ccbe70e79cec239ffc7400ef.html">UsdcSigning</a>  </td></tr>
+</table>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md2"></a>
+Requirements</h2>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Component  </th><th class="markdownTableHeadNone">Details  </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><b>Hardware Wallet</b>  </td><td class="markdownTableBodyNone">Cryptnox Hardware Wallet, initialised <b>and</b> seeded  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><b>NFC reader</b>  </td><td class="markdownTableBodyNone">PN532 wired on <b>SPI</b> (default) or <b>I²C</b> — see <a href="../../README.md#hardware-setup">hardware setup</a>  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><b>Board</b>  </td><td class="markdownTableBodyNone">ESP32-S3-DevKitC-1  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><b>Toolchain</b>  </td><td class="markdownTableBodyNone">ESP-IDF v5.5  </td></tr>
+</table>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md3"></a>
+Quick start</h2>
+<ol type="1">
+<li><p class="startli"><b>Pick the bus</b> at the top of <span class="tt">main/main.cpp</span> — set exactly one of:</p>
+<div class="fragment"><div class="line"><span class="preprocessor">#define SPI_ENABLED  1     </span><span class="comment">// MOSI=11, MISO=13, SCLK=12, CS=10</span></div>
+<div class="line"><span class="preprocessor">#define I2C_ENABLED  0     </span><span class="comment">// (set to 1 for I²C; mutually exclusive)</span></div>
+</div><!-- fragment --></li>
+<li><p class="startli"><b>Set the PIN</b> to match <span class="tt">cryptnox init</span>:</p>
+<div class="fragment"><div class="line"><span class="keyword">static</span> <span class="keyword">const</span> uint8_t <a class="code hl_variable" href="BasicUsage_2main_2main_8cpp.html#ab42cd1e61da75327d37d39a75b2d7ff3">DEFAULT_PIN</a>[]   = <span class="stringliteral">&quot;000000000&quot;</span>;</div>
+<div class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">size_t</span>  <a class="code hl_variable" href="BasicUsage_2main_2main_8cpp.html#a0d6d5a31061b5468003f29ef7d8db464">DEFAULT_PIN_LEN</a> = <span class="keyword">sizeof</span>(<a class="code hl_variable" href="BasicUsage_2main_2main_8cpp.html#ab42cd1e61da75327d37d39a75b2d7ff3">DEFAULT_PIN</a>) - 1U;</div>
+<div class="ttc" id="aBasicUsage_2main_2main_8cpp_html_a0d6d5a31061b5468003f29ef7d8db464"><div class="ttname"><a href="BasicUsage_2main_2main_8cpp.html#a0d6d5a31061b5468003f29ef7d8db464">DEFAULT_PIN_LEN</a></div><div class="ttdeci">static const size_t DEFAULT_PIN_LEN</div><div class="ttdef"><b>Definition</b> <a href="BasicUsage_2main_2main_8cpp_source.html#l00176">main.cpp:176</a></div></div>
+<div class="ttc" id="aBasicUsage_2main_2main_8cpp_html_ab42cd1e61da75327d37d39a75b2d7ff3"><div class="ttname"><a href="BasicUsage_2main_2main_8cpp.html#ab42cd1e61da75327d37d39a75b2d7ff3">DEFAULT_PIN</a></div><div class="ttdeci">static const uint8_t DEFAULT_PIN[]</div><div class="ttdoc">Demo PIN — replace with the PIN used during card initialisation.</div><div class="ttdef"><b>Definition</b> <a href="BasicUsage_2main_2main_8cpp_source.html#l00175">main.cpp:175</a></div></div>
+</div><!-- fragment --></li>
+<li><b>Edit <span class="tt">main/config.h</span></b> with your Wi-Fi credentials.</li>
+<li><p class="startli">Build, flash and monitor:</p>
+<div class="fragment"><div class="line">cd examples/BasicUsage</div>
+<div class="line">idf.py set-target esp32s3                # once</div>
+<div class="line">idf.py build flash monitor</div>
+</div><!-- fragment --></li>
+<li>Exit the monitor with <span class="tt">Ctrl-]</span>. Place the card on the PN532 antenna.</li>
+</ol>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md4"></a>
+Expected output</h3>
+<div class="fragment"><div class="line">I (1280) basic_usage: Card connected and secure channel established</div>
+<div class="line">I (1290) basic_usage: Signing test hash...</div>
+<div class="line">I (1450) basic_usage: Signature received (64 bytes raw r||s)</div>
+<div class="line">I (1450) basic_usage: 7c 1f 3a 92 5e 0b 8c d4</div>
+<div class="line">I (1450) basic_usage: s:</div>
+<div class="line">I (1450) basic_usage: 12 e0 bc 4f a7 88 09 67</div>
+<div class="line">I (1450) basic_usage: Card processed successfully</div>
+</div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>The SDK uses the PN532 extended-frame transport internally so manufacturer-certificate pages up to ~411 bytes deliver correctly on both SPI and I²C.</dd></dl>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md5"></a>
+How it works</h2>
+<div class="fragment"><div class="line">app_main():</div>
+<div class="line">  nvs_flash_init()</div>
+<div class="line">  wifi_init() + esp_wifi_connect()        Wi-Fi → seeds the HW TRNG</div>
+<div class="line">  spi_bus_init()  /  i2c_bus_init()       Depending on SPI_ENABLED / I2C_ENABLED</div>
+<div class="line">  wallet.begin()                          PN532 reset + firmware probe</div>
+<div class="line"> </div>
+<div class="line">loop():</div>
+<div class="line">  wallet.connect(session)                 SELECT + cert verify + ECDH</div>
+<div class="line">                                          + mutual authentication</div>
+<div class="line">  Build CW_SignRequest:</div>
+<div class="line">    keyType        = CW_SIGN_CURR_K1</div>
+<div class="line">    signatureType  = CW_SIGN_SIG_ECDSA_LOW_S</div>
+<div class="line">    pinLessMode    = CW_SIGN_WITH_PIN</div>
+<div class="line">    hash[32]       = 0x01 × 32            (test pattern)</div>
+<div class="line">    pin[]          = DEFAULT_PIN</div>
+<div class="line">  wallet.sign(req)                        SIGN APDU under the channel</div>
+<div class="line">  secure_wipe(hash, signature)            Zero local copies</div>
+<div class="line">  wallet.disconnect(session)              Zero session keys</div>
+<div class="line">  vTaskDelay(pdMS_TO_TICKS(1000))</div>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md6"></a>
+Step-by-step code</h2>
+<p><b>1. Interface selection</b> — exactly one of:</p>
+<div class="fragment"><div class="line"><span class="preprocessor">#define SPI_ENABLED  1</span></div>
+<div class="line"><span class="preprocessor">#define I2C_ENABLED  0</span></div>
+</div><!-- fragment --><p>On <span class="tt"><a class="el" href="BasicUsage_2main_2main_8cpp.html#a5d009989e3463a02a498fa5b48cc4329">SPI_ENABLED</a> == 1</span> the firmware brings up the SPI3 host with MOSI=11, MISO=13, SCLK=12, CS=10. On <span class="tt"><a class="el" href="BasicUsage_2main_2main_8cpp.html#a8e0a26a3f44ecd56da1a232a071fee4a">I2C_ENABLED</a> == 1</span> it brings up <span class="tt">I2C_NUM_0</span> with the pin map documented at the top of <span class="tt">main.cpp</span>.</p>
+<p><b>2. Bring up the radio, bus, and reader:</b></p>
+<div class="fragment"><div class="line">ESP_ERROR_CHECK(nvs_flash_init());</div>
+<div class="line">wifi_init();                                <span class="comment">// brings Wi-Fi up → seeds TRNG</span></div>
+<div class="line"> </div>
+<div class="line"><span class="preprocessor">#if SPI_ENABLED</span></div>
+<div class="line">    spi_bus_init();</div>
+<div class="line"><span class="preprocessor">#elif I2C_ENABLED</span></div>
+<div class="line">    i2c_bus_init();</div>
+<div class="line"><span class="preprocessor">#endif</span></div>
+<div class="line"> </div>
+<div class="line"><span class="keywordflow">if</span> (!wallet.begin()) {</div>
+<div class="line">    ESP_LOGE(<a class="code hl_variable" href="esp32__random_8cpp.html#a4ef5b5f197804a60836ab1e8907d8301">TAG</a>, <span class="stringliteral">&quot;PN532 init failed&quot;</span>);</div>
+<div class="line">    vTaskDelay(portMAX_DELAY);</div>
+<div class="line">}</div>
+<div class="ttc" id="aesp32__random_8cpp_html_a4ef5b5f197804a60836ab1e8907d8301"><div class="ttname"><a href="esp32__random_8cpp.html#a4ef5b5f197804a60836ab1e8907d8301">TAG</a></div><div class="ttdeci">static const char *const TAG</div><div class="ttdef"><b>Definition</b> <a href="esp32__random_8cpp_source.html#l00014">esp32_random.cpp:14</a></div></div>
+</div><!-- fragment --><p><b>3. Open the channel, sign, and wipe:</b></p>
+<div class="fragment"><div class="line">CW_SecureSession session;</div>
+<div class="line"><span class="keywordflow">if</span> (wallet.connect(session)) {</div>
+<div class="line">    uint8_t testHash[CW_HASH_SIZE];</div>
+<div class="line">    memset(testHash, 0x01, <span class="keyword">sizeof</span>(testHash));   <span class="comment">// replace with SHA-256(tx)</span></div>
+<div class="line"> </div>
+<div class="line">    CW_SignRequest req(session, CW_SIGN_CURR_K1,</div>
+<div class="line">                       CW_SIGN_SIG_ECDSA_LOW_S, CW_SIGN_WITH_PIN);</div>
+<div class="line">    req.hash       = testHash;</div>
+<div class="line">    req.hashLength = <span class="keyword">sizeof</span>(testHash);</div>
+<div class="line">    (void)CW_Utils::safe_memcpy(req.pin, <span class="keyword">sizeof</span>(req.pin),</div>
+<div class="line">                                <a class="code hl_variable" href="BasicUsage_2main_2main_8cpp.html#ab42cd1e61da75327d37d39a75b2d7ff3">DEFAULT_PIN</a>, <a class="code hl_variable" href="BasicUsage_2main_2main_8cpp.html#a0d6d5a31061b5468003f29ef7d8db464">DEFAULT_PIN_LEN</a>);</div>
+<div class="line"> </div>
+<div class="line">    CW_SignResult sig = wallet.sign(req);</div>
+<div class="line">    <span class="comment">// sig.signature = r[32] || s[32], sig.errorCode == CW_OK on success</span></div>
+<div class="line"> </div>
+<div class="line">    CW_Utils::secure_wipe(testHash, <span class="keyword">sizeof</span>(testHash));</div>
+<div class="line">    CW_Utils::secure_wipe(sig.signature, <span class="keyword">sizeof</span>(sig.signature));</div>
+<div class="line">}</div>
+<div class="line">wallet.disconnect(session);</div>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md7"></a>
+Hardening for production</h2>
+<p>This example is a demo. Before shipping firmware to end-users:</p>
+<ul>
+<li><b>Silence the SDK logs.</b> The <span class="tt"><a class="el" href="classESP32Logger.html" title="CW_Logger backed by ESP32 UART0.">ESP32Logger</a></span> writes through <span class="tt">ESP_LOG*</span>. Set <span class="tt">CONFIG_LOG_DEFAULT_LEVEL_NONE=y</span> (or <span class="tt">esp_log_level_set("*", ESP_LOG_NONE)</span> at boot) to stop the SDK from emitting APDU and key material on UART0 in shipping firmware.</li>
+<li><b>Move the PIN off flash.</b> A hardcoded <span class="tt"><a class="el" href="BasicUsage_2main_2main_8cpp.html#ab42cd1e61da75327d37d39a75b2d7ff3" title="Demo PIN — replace with the PIN used during card initialisation.">DEFAULT_PIN</a></span> lives in <span class="tt">.rodata</span> and is recoverable via JTAG / firmware dump. In production read the PIN at runtime (capacitive keypad, BLE prompt, secure element) and call <span class="tt">CW_Utils::secure_wipe</span> on the buffer after <span class="tt">wallet.sign()</span>.</li>
+<li><b>Guard the PIN retry counter.</b> Apply the halt-on-wrong-PIN pattern from <a class="el" href="dir_cc81cf6f1c823b08adf4153a5960c30a.html">VerifyPin</a> / <a class="el" href="dir_2365b4822c04e78cb5bc3fb96cb35526.html">Sign</a> so the loop cannot exhaust the on-card counter.</li>
+</ul>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md8"></a>
+Troubleshooting</h2>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Symptom  </th><th class="markdownTableHeadNone">Cause  </th><th class="markdownTableHeadNone">Fix  </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><span class="tt">Please enable exactly one of <a class="el" href="BasicUsage_2main_2main_8cpp.html#a5d009989e3463a02a498fa5b48cc4329">SPI_ENABLED</a> / <a class="el" href="BasicUsage_2main_2main_8cpp.html#a8e0a26a3f44ecd56da1a232a071fee4a">I2C_ENABLED</a></span> (build error)  </td><td class="markdownTableBodyNone">Both macros are 0 or both are 1  </td><td class="markdownTableBodyNone">Set exactly one to 1  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><span class="tt">PN532 init failed</span>  </td><td class="markdownTableBodyNone">Reader wiring / bus mode switches  </td><td class="markdownTableBodyNone">Check VCC = 3.3 V, the switches and the configured pins — see <a href="../../README.md#hardware-setup">hardware setup</a>  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">Wi-Fi never connects  </td><td class="markdownTableBodyNone">Wrong SSID / password, or 5 GHz-only network  </td><td class="markdownTableBodyNone">ESP32-S3 is 2.4 GHz only — verify <span class="tt">main/config.h</span>  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><span class="tt">Sign failed, errorCode: 0x81</span>  </td><td class="markdownTableBodyNone">No seed on the card  </td><td class="markdownTableBodyNone"><span class="tt">cryptnox seed generate</span>  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><span class="tt">Sign failed, errorCode: 0x82</span>  </td><td class="markdownTableBodyNone">Wrong PIN  </td><td class="markdownTableBodyNone">Edit <span class="tt"><a class="el" href="BasicUsage_2main_2main_8cpp.html#ab42cd1e61da75327d37d39a75b2d7ff3" title="Demo PIN — replace with the PIN used during card initialisation.">DEFAULT_PIN</a></span>, re-flash — see <a class="el" href="dir_cc81cf6f1c823b08adf4153a5960c30a.html">VerifyPin</a>  </td></tr>
+</table>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md9"></a>
+License</h2>
+<p><span class="tt">cryptnox-sdk-esp32</span> is dual-licensed:</p>
+<ul>
+<li><b>LGPL-3.0</b> for open-source projects and proprietary projects that comply with LGPL requirements</li>
+<li><b>Commercial license</b> for projects that require a proprietary license without LGPL obligations (see COMMERCIAL.md for details)</li>
+</ul>
+<p>For commercial inquiries, contact: <a href="#" onclick="location.href='mai'+'lto:'+'con'+'ta'+'ct@'+'cr'+'ypt'+'no'+'x.c'+'om'; return false;">conta<span class="obfuscator">.nosp@m.</span>ct@c<span class="obfuscator">.nosp@m.</span>ryptn<span class="obfuscator">.nosp@m.</span>ox.c<span class="obfuscator">.nosp@m.</span>om</a> </p>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <div id="page-nav" class="page-nav-panel">

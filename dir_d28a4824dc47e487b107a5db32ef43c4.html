@@ -106,6 +106,78 @@ Directories</h2></td></tr>
 <tr class="memitem:UsdcSigning" id="r_UsdcSigning"><td class="memItemLeft" align="right" valign="top"><span class="iconfolder"><div class="folder-icon"></div></span>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="dir_5b19b165ccbe70e79cec239ffc7400ef.html">UsdcSigning</a></td></tr>
 <tr class="memitem:VerifyPin" id="r_VerifyPin"><td class="memItemLeft" align="right" valign="top"><span class="iconfolder"><div class="folder-icon"></div></span>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="dir_cc81cf6f1c823b08adf4153a5960c30a.html">VerifyPin</a></td></tr>
 </table>
+<a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
+<div align="center"></div><div align="center"><img src="https://github.com/user-attachments/assets/6ce54a27-8fb6-48e6-9d1f-da144f43425a" alt="" class="inline"/></div><div align="center"></div><h3 class="doxsection"><a class="anchor" id="autotoc_md19"></a>
+<div align="center">cryptnox-sdk-esp32</div></h3>
+<div align="center"></div><div align="center">ESP32 SDK for managing Cryptnox smart card wallets</div><div align="center"></div><h1 class="doxsection"><a class="anchor" id="autotoc_md20"></a>
+Examples</h1>
+<p>Standalone ESP-IDF projects that exercise the Cryptnox Hardware Wallet over NFC (PN532). Each project ships with its own focused README so a reader landing on a single example gets everything needed end-to-end.</p>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md21"></a>
+Prerequisites</h2>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Component  </th><th class="markdownTableHeadNone">Details  </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><b>Hardware Wallet</b>  </td><td class="markdownTableBodyNone">Cryptnox Hardware Wallet (firmware ≥ v1.6.0), initialised with a PIN — and a seed loaded for the signing examples  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><b>NFC reader</b>  </td><td class="markdownTableBodyNone"><a href="https://www.nxp.com/products/PN532">PN532 NFC module</a> wired over <b>SPI</b> (default) or <b>I²C</b> — see <a href="../README.md#hardware-setup">hardware setup</a>  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><b>Board</b>  </td><td class="markdownTableBodyNone"><a href="https://docs.espressif.com/projects/esp-idf/en/latest/esp32s3/hw-reference/esp32s3/user-guide-devkitc-1.html">ESP32-S3-DevKitC-1</a> (Espressif reference dev kit)  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><b>Toolchain</b>  </td><td class="markdownTableBodyNone"><a href="https://docs.espressif.com/projects/esp-idf/en/v5.5/esp32s3/get-started/index.html">ESP-IDF v5.5</a> installed and sourced (<span class="tt">. $IDF_PATH/export.sh</span>)  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><b>Repository</b>  </td><td class="markdownTableBodyNone">This repository <b>cloned with submodules</b> (<span class="tt">git clone --recurse-submodules …</span>)  </td></tr>
+</table>
+<p>Provision a card from a host with a PC/SC reader and the <a href="https://github.com/cryptnox/cryptnox-cli">Cryptnox CLI</a>:</p>
+<div class="fragment"><div class="line">cryptnox init           # sets the PIN + PUK</div>
+<div class="line">cryptnox seed generate        # generates a BIP39 seed (required for signing)</div>
+</div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>Every example starts Wi-Fi on boot so the radio feeds the ESP32 hardware TRNG with full entropy. Even the non-networked examples (<span class="tt">Connect</span>, <span class="tt">VerifyPin</span>, <span class="tt">Sign</span>, <span class="tt">BasicUsage</span>) need a valid <span class="tt"><a class="el" href="BasicUsage_2main_2config_8h.html#a586542b79d00e4db7e1d5a667ae83a2b">WIFI_SSID</a></span> / <span class="tt"><a class="el" href="BasicUsage_2main_2config_8h.html#a8685d8aff7e570048090a3a51afceb07">WIFI_PASSWORD</a></span> in their <span class="tt">main/config.h</span>.</dd></dl>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md22"></a>
+Available examples</h2>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Example  </th><th class="markdownTableHeadNone">What it does  </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><a class="el" href="dir_61c733bd969c2471ac02d97f3b0ee95b.html">Connect</a>  </td><td class="markdownTableBodyNone">Opens the secure channel and reads back the card owner's name &amp; email. <b>Safest first example</b> — no PIN, no signing, can't lock the card.  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><a class="el" href="dir_cc81cf6f1c823b08adf4153a5960c30a.html">VerifyPin</a>  </td><td class="markdownTableBodyNone">Opens the secure channel and submits a PIN. Halts on a wrong PIN to protect the on-card retry counter.  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><a class="el" href="dir_2365b4822c04e78cb5bc3fb96cb35526.html">Sign</a>  </td><td class="markdownTableBodyNone">Signs a 32-byte hash with the card's secp256k1 key. Returns the raw <span class="tt">r ‖ s</span> signature ready to broadcast.  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><a class="el" href="dir_01d5546719d1d9aa3f28dd8395968769.html">BasicUsage</a>  </td><td class="markdownTableBodyNone">End-to-end walkthrough in one project: pick SPI <b>or</b> I²C, open the channel, sign a hash. Good reference for production wiring.  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><a class="el" href="dir_5b19b165ccbe70e79cec239ffc7400ef.html">UsdcSigning</a>  </td><td class="markdownTableBodyNone">Real-world flow: build an EIP-1559 USDC transfer, sign it on the card, broadcast it on Sepolia.  </td></tr>
+</table>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md23"></a>
+How to build and run an example</h2>
+<p>From the project root (where <span class="tt">idf.py</span>'s parent <span class="tt">CMakeLists.txt</span> lives):</p>
+<div class="fragment"><div class="line">. $IDF_PATH/export.sh                       # source ESP-IDF env (once per shell)</div>
+<div class="line">cd examples/&lt;ExampleName&gt;</div>
+<div class="line">cp main/config.h main/config.h.bak          # if you want to keep the template</div>
+<div class="line">$EDITOR main/config.h                       # fill WIFI_SSID / WIFI_PASSWORD (+ extras for UsdcSigning)</div>
+<div class="line">idf.py set-target esp32s3                   # once, writes sdkconfig</div>
+<div class="line">idf.py build flash monitor                  # build, flash, open serial @ 115200 baud</div>
+</div><!-- fragment --><p>Exit the monitor with <span class="tt">Ctrl-]</span>. Place the card on the PN532 antenna when the firmware prompts for it.</p>
+<dl class="section note"><dt>Note</dt><dd>All examples default to PIN <span class="tt">000000000</span> (nine zeros). If your card was initialised with a different PIN, edit the <span class="tt"><a class="el" href="BasicUsage_2main_2main_8cpp.html#ab42cd1e61da75327d37d39a75b2d7ff3" title="Demo PIN — replace with the PIN used during card initialisation.">DEFAULT_PIN</a></span> / <span class="tt">DEMO_PIN</span> / <span class="tt"><a class="el" href="config_8template_8h.html#a2de009963ca3d1582d4c3a4397ef65bc">CARD_PIN</a></span> macro at the top of the relevant source file before building.</dd></dl>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md24"></a>
+Adding a new example</h2>
+<p>Follow the conventions used by the existing projects:</p>
+<ul>
+<li>Place each project in its own subdirectory under <span class="tt">examples/</span>, named in <b>PascalCase</b>.</li>
+<li>Lay it out as an ESP-IDF project: <span class="tt">CMakeLists.txt</span> at the project root, a <span class="tt">main/</span> subdirectory with <span class="tt">main/CMakeLists.txt</span> + sources, and a <span class="tt">sdkconfig.defaults</span> capturing the project's build options.</li>
+<li>Start every source file with the SPDX + copyright header used by the rest of the repository.</li>
+<li>Add Doxygen tags (<span class="tt">@file</span>, <span class="tt">@example</span>, <span class="tt">@brief</span>) so the project surfaces correctly in the generated docs.</li>
+<li>If the project needs external secrets (Wi-Fi credentials, RPC keys, recipient addresses), ship a <span class="tt"><a class="el" href="config_8template_8h.html">config.template.h</a></span> next to it and add the runtime <span class="tt">config.h</span> to <span class="tt">.gitignore</span>. Never commit credentials.</li>
+<li>Ship a <span class="tt">README.md</span> next to the project and register it in the Available examples table above.</li>
+</ul>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md25"></a>
+License</h2>
+<p><span class="tt">cryptnox-sdk-esp32</span> is dual-licensed:</p>
+<ul>
+<li><b>LGPL-3.0</b> for open-source projects and proprietary projects that comply with LGPL requirements</li>
+<li><b>Commercial license</b> for projects that require a proprietary license without LGPL obligations (see COMMERCIAL.md for details)</li>
+</ul>
+<p>For commercial inquiries, contact: <a href="#" onclick="location.href='mai'+'lto:'+'con'+'ta'+'ct@'+'cr'+'ypt'+'no'+'x.c'+'om'; return false;">conta<span class="obfuscator">.nosp@m.</span>ct@c<span class="obfuscator">.nosp@m.</span>ryptn<span class="obfuscator">.nosp@m.</span>ox.c<span class="obfuscator">.nosp@m.</span>om</a> </p>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <div id="page-nav" class="page-nav-panel">

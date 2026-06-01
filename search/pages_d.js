@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['quick_20usage_20examples_0',['Quick usage examples',['../index.html#autotoc_md12',1,'']]]
+  ['memory_20footprint_0',['Memory footprint',['../dir_5b19b165ccbe70e79cec239ffc7400ef.html#autotoc_md51',1,'']]]
 ];

@@ -102,6 +102,121 @@ Directory dependency graph for VerifyPin:</div>
 Directories</h2></td></tr>
 <tr class="memitem:main" id="r_main"><td class="memItemLeft" align="right" valign="top"><span class="iconfolder"><div class="folder-icon"></div></span>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="dir_6893b8f95a33e9001d0c02f36d47b030.html">main</a></td></tr>
 </table>
+<a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
+<div align="center"></div><div align="center"><img src="https://github.com/user-attachments/assets/6ce54a27-8fb6-48e6-9d1f-da144f43425a" alt="" class="inline"/></div><div align="center"></div><h3 class="doxsection"><a class="anchor" id="autotoc_md54"></a>
+<div align="center">cryptnox-sdk-esp32</div></h3>
+<div align="center"></div><div align="center">ESP32 SDK for managing Cryptnox smart card wallets</div><div align="center"></div><h1 class="doxsection"><a class="anchor" id="autotoc_md55"></a>
+VerifyPin — PIN Verification Over the Secure Channel</h1>
+<p>Open the Cryptnox Hardware Wallet secure channel and submit a PIN. The firmware prints <span class="tt">PIN accepted</span> on success and <b>halts</b> the loop on a wrong PIN so it cannot exhaust the on-card retry counter.</p>
+<dl class="section warning"><dt>Warning</dt><dd><b>Read this before flashing.</b> Every wrong PIN attempt decrements an on-card retry counter (typically 3–5 tries). At zero the PIN is permanently blocked; recovery then requires the PUK via <span class="tt">cryptnox unblock_pin</span>. This example halts on a wrong PIN — do not remove the <span class="tt">vTaskDelay(portMAX_DELAY)</span> guard, and verify <span class="tt">DEMO_PIN</span> matches the value used during <span class="tt">cryptnox init</span> <b>before</b> flashing.</dd></dl>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md56"></a>
+Requirements</h2>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Component  </th><th class="markdownTableHeadNone">Details  </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><b>Hardware Wallet</b>  </td><td class="markdownTableBodyNone">Cryptnox Hardware Wallet, initialised with a known PIN  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><b>NFC reader</b>  </td><td class="markdownTableBodyNone">PN532 over SPI — MOSI=11, MISO=13, SCLK=12, CS=10 (see <a href="../../README.md#hardware-setup">hardware setup</a>)  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><b>Board</b>  </td><td class="markdownTableBodyNone">ESP32-S3-DevKitC-1  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><b>Toolchain</b>  </td><td class="markdownTableBodyNone">ESP-IDF v5.5  </td></tr>
+</table>
+<p><span class="tt">main/config.h</span> must contain valid <span class="tt"><a class="el" href="BasicUsage_2main_2config_8h.html#a586542b79d00e4db7e1d5a667ae83a2b">WIFI_SSID</a></span> / <span class="tt"><a class="el" href="BasicUsage_2main_2config_8h.html#a8685d8aff7e570048090a3a51afceb07">WIFI_PASSWORD</a></span> — the radio is started on boot to seed the hardware TRNG before any crypto runs.</p>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md57"></a>
+Quick start</h2>
+<ol type="1">
+<li><b>Edit <span class="tt">DEMO_PIN</span></b> in <span class="tt">main/main.cpp</span> to match your card's PIN.</li>
+<li><b>Edit <span class="tt">main/config.h</span></b> with your Wi-Fi credentials.</li>
+<li><p class="startli">Build, flash and monitor:</p>
+<div class="fragment"><div class="line">cd examples/VerifyPin</div>
+<div class="line">idf.py set-target esp32s3                # once</div>
+<div class="line">idf.py build flash monitor</div>
+</div><!-- fragment --></li>
+<li>Exit the monitor with <span class="tt">Ctrl-]</span>. Place the card on the PN532 antenna.</li>
+</ol>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md58"></a>
+Expected output</h3>
+<p><b>Happy path</b> (every second):</p>
+<div class="fragment"><div class="line">I (1280) verify_pin: Card connected, secure channel established</div>
+<div class="line">I (1305) verify_pin: PIN accepted</div>
+</div><!-- fragment --><p><b>Wrong PIN</b> (firmware then halts):</p>
+<div class="fragment"><div class="line">E (1280) verify_pin: Secured APDU: bad SW 0x63C2</div>
+<div class="line">E (1281) verify_pin: PIN rejected — halting to protect retry counter</div>
+</div><!-- fragment --><p>The SDK prints the raw <span class="tt">SW1 SW2</span> bytes on PIN failure:</p>
+<ul>
+<li><span class="tt">0x63CN</span> — wrong PIN, <b>N</b> retries remaining</li>
+<li><span class="tt">0x6983</span> — PIN already blocked (0 retries)</li>
+</ul>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md59"></a>
+How it works</h2>
+<div class="fragment"><div class="line">wallet.connect(session)            SELECT + cert verify + ECDH + mutual auth</div>
+<div class="line">       │</div>
+<div class="line">wallet.verifyPin(session, ...)     Secured APDU (AES-CBC + MAC) carrying</div>
+<div class="line">       │                           the PIN. Card checks it locally and</div>
+<div class="line">       │                           replies with SW 0x9000 on success or</div>
+<div class="line">       │                           0x63CN on wrong PIN with N retries left.</div>
+<div class="line">       │</div>
+<div class="line">wallet.disconnect(session)         Zero session keys</div>
+</div><!-- fragment --><p><span class="tt">verifyPin</span> returns <span class="tt">true</span> <b>only</b> when the card replies <span class="tt">0x9000</span>.</p>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md60"></a>
+Step-by-step code</h2>
+<div class="fragment"><div class="line"><span class="comment">/* Replace with the PIN set on the card (4–9 ASCII digits). */</span></div>
+<div class="line"><span class="keyword">static</span> <span class="keyword">const</span> uint8_t DEMO_PIN[CW_MAX_PIN_LENGTH] = {</div>
+<div class="line">    <span class="charliteral">&#39;0&#39;</span>, <span class="charliteral">&#39;0&#39;</span>, <span class="charliteral">&#39;0&#39;</span>, <span class="charliteral">&#39;0&#39;</span>, <span class="charliteral">&#39;0&#39;</span>, <span class="charliteral">&#39;0&#39;</span>, <span class="charliteral">&#39;0&#39;</span>, <span class="charliteral">&#39;0&#39;</span>, <span class="charliteral">&#39;0&#39;</span></div>
+<div class="line">};</div>
+<div class="line"> </div>
+<div class="line">CW_SecureSession session{};</div>
+<div class="line"><span class="keywordflow">if</span> (!wallet.connect(session)) {</div>
+<div class="line">    ESP_LOGW(<a class="code hl_variable" href="esp32__random_8cpp.html#a4ef5b5f197804a60836ab1e8907d8301">TAG</a>, <span class="stringliteral">&quot;Card not detected&quot;</span>);</div>
+<div class="line">    wallet.disconnect(session);</div>
+<div class="line">    vTaskDelay(pdMS_TO_TICKS(1000));</div>
+<div class="line">    <span class="keywordflow">continue</span>;</div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line"><span class="keywordflow">if</span> (!wallet.verifyPin(session,</div>
+<div class="line">                      DEMO_PIN,</div>
+<div class="line">                      <span class="keyword">static_cast&lt;</span>uint8_t<span class="keyword">&gt;</span>(CW_MAX_PIN_LENGTH))) {</div>
+<div class="line">    ESP_LOGE(<a class="code hl_variable" href="esp32__random_8cpp.html#a4ef5b5f197804a60836ab1e8907d8301">TAG</a>, <span class="stringliteral">&quot;PIN rejected — halting to protect retry counter&quot;</span>);</div>
+<div class="line">    wallet.disconnect(session);</div>
+<div class="line">    vTaskDelay(portMAX_DELAY);          <span class="comment">// CRITICAL: do NOT loop on failure</span></div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line">ESP_LOGI(<a class="code hl_variable" href="esp32__random_8cpp.html#a4ef5b5f197804a60836ab1e8907d8301">TAG</a>, <span class="stringliteral">&quot;PIN accepted&quot;</span>);</div>
+<div class="line">wallet.disconnect(session);</div>
+<div class="ttc" id="aesp32__random_8cpp_html_a4ef5b5f197804a60836ab1e8907d8301"><div class="ttname"><a href="esp32__random_8cpp.html#a4ef5b5f197804a60836ab1e8907d8301">TAG</a></div><div class="ttdeci">static const char *const TAG</div><div class="ttdef"><b>Definition</b> <a href="esp32__random_8cpp_source.html#l00014">esp32_random.cpp:14</a></div></div>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md61"></a>
+Recovering a blocked PIN</h2>
+<p>If the PIN counter has reached zero, run the <a href="https://github.com/cryptnox/cryptnox-cli">Cryptnox CLI</a> on a host with a PC/SC reader:</p>
+<div class="fragment"><div class="line">cryptnox unblock_pin</div>
+</div><!-- fragment --><p>The CLI prompts for the <b>PUK</b> (set during <span class="tt">cryptnox init</span>). Without the PUK the PIN cannot be reset and the on-card signing key material is unrecoverable.</p>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md62"></a>
+Troubleshooting</h2>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Symptom  </th><th class="markdownTableHeadNone">Cause  </th><th class="markdownTableHeadNone">Fix  </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><span class="tt">PN532 init failed</span>  </td><td class="markdownTableBodyNone">Reader wiring / SPI mode switches  </td><td class="markdownTableBodyNone">See <a href="../../README.md#hardware-setup">hardware setup</a>  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">Wi-Fi never connects  </td><td class="markdownTableBodyNone">Wrong SSID / password, or 5 GHz-only network  </td><td class="markdownTableBodyNone">ESP32-S3 is 2.4 GHz only — verify <span class="tt"><a class="el" href="BasicUsage_2main_2config_8h.html#a586542b79d00e4db7e1d5a667ae83a2b">WIFI_SSID</a></span> / <span class="tt"><a class="el" href="BasicUsage_2main_2config_8h.html#a8685d8aff7e570048090a3a51afceb07">WIFI_PASSWORD</a></span> in <span class="tt">main/config.h</span>  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><span class="tt">Card not detected</span>  </td><td class="markdownTableBodyNone">Card not on the antenna  </td><td class="markdownTableBodyNone">Bring the card within ~1 cm of the antenna  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><span class="tt">bad SW 0x63CN</span>  </td><td class="markdownTableBodyNone">Wrong PIN, N retries remaining  </td><td class="markdownTableBodyNone">Fix <span class="tt">DEMO_PIN</span>, re-flash  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><span class="tt">bad SW 0x6983</span>  </td><td class="markdownTableBodyNone">PIN blocked (0 retries)  </td><td class="markdownTableBodyNone">Run <span class="tt">cryptnox unblock_pin</span> with the PUK  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><span class="tt">mutuallyAuthenticate failed</span>  </td><td class="markdownTableBodyNone">Non-Cryptnox card or seed mismatch  </td><td class="markdownTableBodyNone">Verify the card was set up with <span class="tt">cryptnox init</span>  </td></tr>
+</table>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md63"></a>
+License</h2>
+<p><span class="tt">cryptnox-sdk-esp32</span> is dual-licensed:</p>
+<ul>
+<li><b>LGPL-3.0</b> for open-source projects and proprietary projects that comply with LGPL requirements</li>
+<li><b>Commercial license</b> for projects that require a proprietary license without LGPL obligations (see COMMERCIAL.md for details)</li>
+</ul>
+<p>For commercial inquiries, contact: <a href="#" onclick="location.href='mai'+'lto:'+'con'+'ta'+'ct@'+'cr'+'ypt'+'no'+'x.c'+'om'; return false;">conta<span class="obfuscator">.nosp@m.</span>ct@c<span class="obfuscator">.nosp@m.</span>ryptn<span class="obfuscator">.nosp@m.</span>ox.c<span class="obfuscator">.nosp@m.</span>om</a> </p>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <div id="page-nav" class="page-nav-panel">

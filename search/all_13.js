@@ -1,28 +1,5 @@
 var searchData=
 [
-  ['random_0',['random',['../classESP32CryptoProvider.html#a5eee84979570f230e9dfcceadcd816d1',1,'ESP32CryptoProvider']]],
-  ['raw_5fsig_5fr_5foffset_1',['RAW_SIG_R_OFFSET',['../uECC__esp32_8cpp.html#a2f76d6fd52b8ce7b58b01bfac8d56000',1,'uECC_esp32.cpp']]],
-  ['raw_5fsig_5fs_5foffset_2',['RAW_SIG_S_OFFSET',['../uECC__esp32_8cpp.html#a0a51a98b2763261d3b33bb6a6b490ce7',1,'uECC_esp32.cpp']]],
-  ['read_5fdata_3',['read_data',['../pn532_8c.html#a3037b5d79269323602fe950e20d4a822',1,'pn532.c']]],
-  ['read_5fdata_5fapdu_5fframe_4',['read_data_apdu_frame',['../pn532_8c.html#a68e8f97a3757de0ae720c556325069f5',1,'pn532.c']]],
-  ['read_5fready_5',['read_ready',['../pn532_8c.html#a5d9d5a0ef3eda8e8cf6f46ab46c4f2b1',1,'pn532.c']]],
-  ['readers_6',['NFC readers',['../index.html#autotoc_md4',1,'']]],
-  ['readme_2emd_7',['README.md',['../README_8md.html',1,'']]],
-  ['reflectivemocknfctransport_8',['ReflectiveMockNfcTransport',['../classReflectiveMockNfcTransport.html',1,'']]],
-  ['reset_9',['reset',['../classScriptedMockNfcTransport.html#a0bf9be9356ed43d3d47da4468e02ce7f',1,'ScriptedMockNfcTransport']]],
-  ['resetreader_10',['resetReader',['../classPN532Adapter.html#a0aa02e9f1cb109f9faa7826e11b50b7c',1,'PN532Adapter::resetReader()'],['../classPn532NfcTransport.html#aa29ed2fae2c77c2af79511e0d5bed631',1,'Pn532NfcTransport::resetReader()'],['../classScriptedMockNfcTransport.html#a18d2cfda8cf0fcf7ab1e21efaafbc530',1,'ScriptedMockNfcTransport::resetReader()'],['../classReflectiveMockNfcTransport.html#a5667044a922e78da0ef57d901c9eba84',1,'ReflectiveMockNfcTransport::resetReader()']]],
-  ['resp_5fbuf_5fsize_11',['RESP_BUF_SIZE',['../eth__rpc_8cpp.html#aa071fca063bfc73fb09e7a10de50a788',1,'eth_rpc.cpp']]],
-  ['rlp_5fbytes_12',['rlp_bytes',['../eth__rlp_8cpp.html#a2012d2dc4ef066957cfcb3e85edeca02',1,'eth_rlp.cpp']]],
-  ['rlp_5fint256_13',['rlp_int256',['../eth__rlp_8cpp.html#a94a2133e6d553b90cb4462a08a4b177c',1,'eth_rlp.cpp']]],
-  ['rlp_5flist_5fheader_14',['rlp_list_header',['../eth__rlp_8cpp.html#a29e7b0194c7047e4942dc2b39809bc67',1,'eth_rlp.cpp']]],
-  ['rlp_5fuint64_15',['rlp_uint64',['../eth__rlp_8cpp.html#ae4a732e230caccbfff1bb6fc8d85b5a5',1,'eth_rlp.cpp']]],
-  ['rng_5ferror_16',['RNG_ERROR',['../uECC__esp32_8cpp.html#a4c7396ac9b5fbcb2cc60c9d9b1bd51ba',1,'uECC_esp32.cpp']]],
-  ['rot64_17',['rot64',['../keccak256_8cpp.html#a9085e44058b50bc6a267c71ec4c1e59c',1,'keccak256.cpp']]],
-  ['rpc_5fhost_18',['RPC_HOST',['../config_8template_8h.html#afa1011b5b2bd4fec9c673bb2721f7410',1,'config.template.h']]],
-  ['rpc_5fport_19',['RPC_PORT',['../config_8template_8h.html#a320785b5c2c9887101e29d7594f0520f',1,'config.template.h']]],
-  ['rpc_5furl_20',['RPC_URL',['../config_8template_8h.html#a873b82bf566619e547913f95b78dc867',1,'config.template.h']]],
-  ['run_5fbasic_5fusage_5floop_21',['run_basic_usage_loop',['../BasicUsage_2main_2main_8cpp.html#aa1554669d5b477bffb8713117d22dc98',1,'main.cpp']]],
-  ['run_5fconnect_5floop_22',['run_connect_loop',['../Connect_2main_2main_8cpp.html#ac30a8b9775721482b9209e358b993e83',1,'main.cpp']]],
-  ['run_5fsign_5floop_23',['run_sign_loop',['../Sign_2main_2main_8cpp.html#a641fb4f907349cbef2ce4d7d1784e4e5',1,'main.cpp']]],
-  ['run_5fverify_5fpin_5floop_24',['run_verify_pin_loop',['../VerifyPin_2main_2main_8cpp.html#a09e11d26bb15d32715a9e2ae037d9518',1,'main.cpp']]]
+  ['quick_20start_0',['Quick start',['../dir_01d5546719d1d9aa3f28dd8395968769.html#autotoc_md3',1,'Quick start'],['../dir_61c733bd969c2471ac02d97f3b0ee95b.html#autotoc_md13',1,'Quick start'],['../dir_2365b4822c04e78cb5bc3fb96cb35526.html#autotoc_md29',1,'Quick start'],['../dir_5b19b165ccbe70e79cec239ffc7400ef.html#autotoc_md41',1,'Quick start'],['../dir_cc81cf6f1c823b08adf4153a5960c30a.html#autotoc_md57',1,'Quick start']]],
+  ['quick_20usage_20examples_1',['Quick usage examples',['../index.html#autotoc_md76',1,'']]]
 ];

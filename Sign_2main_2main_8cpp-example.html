@@ -241,7 +241,8 @@ $(function(){initNavTree('Sign_2main_2main_8cpp-example.html','',''); });
 <div class="line">                               CW_SIGN_WITH_PIN);</div>
 <div class="line">            req.hash       = TEST_HASH;</div>
 <div class="line">            req.hashLength = <span class="keyword">static_cast&lt;</span>uint8_t<span class="keyword">&gt;</span>(CW_HASH_SIZE);</div>
-<div class="line">            (void)memcpy(req.pin, DEMO_PIN, CW_MAX_PIN_LENGTH);</div>
+<div class="line">            (void)CW_Utils::safe_memcpy(req.pin, <span class="keyword">sizeof</span>(req.pin),</div>
+<div class="line">                                        DEMO_PIN, CW_MAX_PIN_LENGTH);</div>
 <div class="line"> </div>
 <div class="line">            CW_SignResult result = wallet.sign(req);</div>
 <div class="line"> </div>

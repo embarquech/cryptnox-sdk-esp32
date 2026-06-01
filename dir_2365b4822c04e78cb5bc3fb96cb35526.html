@@ -102,6 +102,149 @@ Directory dependency graph for Sign:</div>
 Directories</h2></td></tr>
 <tr class="memitem:main" id="r_main"><td class="memItemLeft" align="right" valign="top"><span class="iconfolder"><div class="folder-icon"></div></span>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="dir_2bbbd15e0c1aac4bbbeb13aa2d67971c.html">main</a></td></tr>
 </table>
+<a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
+<div align="center"></div><div align="center"><img src="https://github.com/user-attachments/assets/6ce54a27-8fb6-48e6-9d1f-da144f43425a" alt="" class="inline"/></div><div align="center"></div><h3 class="doxsection"><a class="anchor" id="autotoc_md26"></a>
+<div align="center">cryptnox-sdk-esp32</div></h3>
+<div align="center"></div><div align="center">ESP32 SDK for managing Cryptnox smart card wallets</div><div align="center"></div><h1 class="doxsection"><a class="anchor" id="autotoc_md27"></a>
+Sign — ECDSA secp256k1 on a 32-Byte Hash</h1>
+<p>Sign an arbitrary 32-byte digest on the Cryptnox Hardware Wallet using the <b>secp256k1</b> curve (Bitcoin, Ethereum, BSC, Polygon, …). The private key never leaves the card; the ESP32 only ever sees the hash and the resulting <span class="tt">(r, s)</span>.</p>
+<dl class="section warning"><dt>Warning</dt><dd>Every wrong PIN attempt decrements an on-card retry counter (typically 3–5 tries). At zero the PIN is permanently blocked. The firmware halts on <span class="tt">CW_SIGN_PIN_INCORRECT</span> (<span class="tt">0x82</span>) — do not remove the <span class="tt">vTaskDelay(portMAX_DELAY)</span> guard, and verify <span class="tt">DEMO_PIN</span> before flashing.</dd></dl>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md28"></a>
+Requirements</h2>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Component  </th><th class="markdownTableHeadNone">Details  </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><b>Hardware Wallet</b>  </td><td class="markdownTableBodyNone">Cryptnox Hardware Wallet, initialised <b>and</b> seeded  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><b>NFC reader</b>  </td><td class="markdownTableBodyNone">PN532 over SPI — MOSI=11, MISO=13, SCLK=12, CS=10 (see <a href="../../README.md#hardware-setup">hardware setup</a>)  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><b>Board</b>  </td><td class="markdownTableBodyNone">ESP32-S3-DevKitC-1  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><b>Toolchain</b>  </td><td class="markdownTableBodyNone">ESP-IDF v5.5  </td></tr>
+</table>
+<p><span class="tt">main/config.h</span> must contain valid <span class="tt"><a class="el" href="BasicUsage_2main_2config_8h.html#a586542b79d00e4db7e1d5a667ae83a2b">WIFI_SSID</a></span> / <span class="tt"><a class="el" href="BasicUsage_2main_2config_8h.html#a8685d8aff7e570048090a3a51afceb07">WIFI_PASSWORD</a></span> — the radio is started on boot to seed the hardware TRNG before any crypto runs.</p>
+<p>Provision the card from a host with a PC/SC reader and the <a href="https://github.com/cryptnox/cryptnox-cli">Cryptnox CLI</a>:</p>
+<div class="fragment"><div class="line">cryptnox init                 # sets the PIN + PUK</div>
+<div class="line">cryptnox seed generate        # generates a BIP39 seed</div>
+</div><!-- fragment --><p>Without a seed the SDK returns <span class="tt">CW_SIGN_NO_KEY_LOADED</span> (<span class="tt">0x81</span>).</p>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md29"></a>
+Quick start</h2>
+<ol type="1">
+<li><b>Edit <span class="tt">DEMO_PIN</span></b> in <span class="tt">main/main.cpp</span> to match your card's PIN.</li>
+<li><b>Edit <span class="tt">main/config.h</span></b> with your Wi-Fi credentials.</li>
+<li><p class="startli">Build, flash and monitor:</p>
+<div class="fragment"><div class="line">cd examples/Sign</div>
+<div class="line">idf.py set-target esp32s3                # once</div>
+<div class="line">idf.py build flash monitor</div>
+</div><!-- fragment --></li>
+<li>Exit the monitor with <span class="tt">Ctrl-]</span>. Place the card on the PN532 antenna.</li>
+</ol>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md30"></a>
+Expected output</h3>
+<div class="fragment"><div class="line">I (1280) sign: Card connected, secure channel established</div>
+<div class="line">I (1450) sign: Sign OK - r:</div>
+<div class="line">I (1450) sign: 7c 1f 3a 92 5e 0b 8c d4 92 0f ab 7c 53 e1 b9 d8 1f 2a 4c 76 e9 d8 05 bc 5d 2e ad 12 c3 fa 47 cb</div>
+<div class="line">I (1450) sign: s:</div>
+<div class="line">I (1450) sign: 12 e0 bc 4f a7 88 09 67 da 1f 0e bd 83 c2 b7 91 58 0a c4 d6 2e 16 03 9f 7b 4c dd f1 3e 2a 89 c5</div>
+</div><!-- fragment --><p><span class="tt">r</span> and <span class="tt">s</span> together form the 64-byte raw ECDSA signature (<span class="tt">signature[0..31]</span> = r, <span class="tt">signature[32..63]</span> = s). The card returns a <b>canonical low-S</b> signature (S ≤ n/2), so the output is directly forwardable to any chain that enforces BIP-62.</p>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md31"></a>
+How it works</h2>
+<div class="fragment"><div class="line">wallet.connect(session)        SELECT + cert verify + ECDH + mutual auth</div>
+<div class="line">       │</div>
+<div class="line">Build CW_SignRequest:</div>
+<div class="line">  keyType        = CW_SIGN_CURR_K1         (secp256k1, current key)</div>
+<div class="line">  signatureType  = CW_SIGN_SIG_ECDSA_LOW_S (canonical low-S, BIP-62)</div>
+<div class="line">  pinLessMode    = CW_SIGN_WITH_PIN        (PIN included in the payload)</div>
+<div class="line">  hash[32]       = your digest             (here a test pattern 0x01 × 32)</div>
+<div class="line">  pin[]          = DEMO_PIN</div>
+<div class="line">       │</div>
+<div class="line">wallet.sign(req)               Secured SIGN APDU. The card checks the</div>
+<div class="line">       │                       PIN, signs the hash with its secp256k1</div>
+<div class="line">       │                       private key, and replies with r ‖ s.</div>
+<div class="line">       │</div>
+<div class="line">secure_wipe(hash, signature)   Zero local copies</div>
+<div class="line">       │</div>
+<div class="line">wallet.disconnect(session)     Zero session keys</div>
+</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md32"></a>
+Choosing the key path</h3>
+<p><span class="tt">CW_SIGN_CURR_K1</span> signs with the card's <b>current</b> secp256k1 key (usually <span class="tt">m/</span>). To derive a BIP-44 sub-key first, set <span class="tt">derivePath</span> / <span class="tt">derivePathLength</span> on the request and use <span class="tt">CW_SIGN_DERIVE_K1</span> — see <a class="el" href="dir_5b19b165ccbe70e79cec239ffc7400ef.html">UsdcSigning</a> for a worked example (<span class="tt">m/44'/60'/0'/0/0</span> for Ethereum).</p>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md33"></a>
+PIN: in payload vs pre-verified</h3>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Mode  </th><th class="markdownTableHeadRight">Round-trips  </th><th class="markdownTableHeadNone">Notes  </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><span class="tt">CW_SIGN_WITH_PIN</span> (this example)  </td><td class="markdownTableBodyRight">1  </td><td class="markdownTableBodyNone">PIN included inside the SIGN APDU; one shot  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><span class="tt">CW_SIGN_PINLESS</span> after <span class="tt">verifyPin()</span>  </td><td class="markdownTableBodyRight">2  </td><td class="markdownTableBodyNone">One PIN verification covers many subsequent signatures  </td></tr>
+</table>
+<p>Pre-verifying is preferable when you sign more than one hash per session.</p>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md34"></a>
+Step-by-step code</h2>
+<p><b>Build the sign request:</b></p>
+<div class="fragment"><div class="line">uint8_t hash[CW_HASH_SIZE];</div>
+<div class="line">memset(hash, 0x01, <span class="keyword">sizeof</span>(hash));        <span class="comment">// replace with SHA-256 of your tx</span></div>
+<div class="line"> </div>
+<div class="line">CW_SignRequest req(session,</div>
+<div class="line">                   CW_SIGN_CURR_K1,</div>
+<div class="line">                   CW_SIGN_SIG_ECDSA_LOW_S,</div>
+<div class="line">                   CW_SIGN_WITH_PIN);</div>
+<div class="line">req.hash       = hash;</div>
+<div class="line">req.hashLength = <span class="keyword">sizeof</span>(hash);</div>
+<div class="line">(void)CW_Utils::safe_memcpy(req.pin, <span class="keyword">sizeof</span>(req.pin),</div>
+<div class="line">                            DEMO_PIN, CW_MAX_PIN_LENGTH);</div>
+</div><!-- fragment --><p><b>Sign and handle the result:</b></p>
+<div class="fragment"><div class="line">CW_SignResult sig = wallet.sign(req);</div>
+<div class="line"><span class="keywordflow">if</span> (sig.errorCode == CW_OK) {</div>
+<div class="line">    <span class="comment">// sig.signature = r[32] || s[32] — raw, ready to forward / DER-encode</span></div>
+<div class="line">} <span class="keywordflow">else</span> <span class="keywordflow">if</span> (sig.errorCode == CW_SIGN_PIN_INCORRECT) {</div>
+<div class="line">    CW_Utils::secure_wipe(hash, <span class="keyword">sizeof</span>(hash));</div>
+<div class="line">    CW_Utils::secure_wipe(sig.signature, <span class="keyword">sizeof</span>(sig.signature));</div>
+<div class="line">    wallet.disconnect(session);</div>
+<div class="line">    vTaskDelay(portMAX_DELAY);            <span class="comment">// protect the retry counter</span></div>
+<div class="line">}</div>
+</div><!-- fragment --><p><b>Wipe secrets</b> before the next iteration:</p>
+<div class="fragment"><div class="line">CW_Utils::secure_wipe(hash, <span class="keyword">sizeof</span>(hash));</div>
+<div class="line">CW_Utils::secure_wipe(sig.signature, <span class="keyword">sizeof</span>(sig.signature));</div>
+<div class="line">wallet.disconnect(session);</div>
+</div><!-- fragment --><p><span class="tt">CW_Utils::secure_wipe</span> is a <span class="tt">volatile</span>-pointer memset that the compiler cannot elide — required to keep secrets from lingering in RAM.</p>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md35"></a>
+Error codes</h2>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone"><span class="tt">errorCode</span>  </th><th class="markdownTableHeadNone">Meaning  </th><th class="markdownTableHeadNone">Action  </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><span class="tt">CW_OK</span> (<span class="tt">0x00</span>)  </td><td class="markdownTableBodyNone">Signature OK  </td><td class="markdownTableBodyNone">Use <span class="tt">sig.signature</span>  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><span class="tt">CW_SIGN_NO_KEY_LOADED</span> (<span class="tt">0x81</span>)  </td><td class="markdownTableBodyNone">Card has no seed  </td><td class="markdownTableBodyNone"><span class="tt">cryptnox seed generate</span>  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><span class="tt">CW_SIGN_PIN_INCORRECT</span> (<span class="tt">0x82</span>)  </td><td class="markdownTableBodyNone">Wrong PIN  </td><td class="markdownTableBodyNone">Halt — fix <span class="tt">DEMO_PIN</span> before re-running  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">other  </td><td class="markdownTableBodyNone">Channel error / unexpected SW  </td><td class="markdownTableBodyNone">Check the raw status word printed by the SDK  </td></tr>
+</table>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md36"></a>
+Troubleshooting</h2>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Symptom  </th><th class="markdownTableHeadNone">Cause  </th><th class="markdownTableHeadNone">Fix  </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><span class="tt">Sign failed: 0x81</span>  </td><td class="markdownTableBodyNone">No seed on card  </td><td class="markdownTableBodyNone"><span class="tt">cryptnox seed generate</span>  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><span class="tt">Sign failed: 0x82</span>  </td><td class="markdownTableBodyNone">Wrong PIN  </td><td class="markdownTableBodyNone">Edit <span class="tt">DEMO_PIN</span>, re-flash — do <b>not</b> keep retrying  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><span class="tt">APDU exchange failed!</span>  </td><td class="markdownTableBodyNone">NFC link dropped mid-exchange  </td><td class="markdownTableBodyNone">Hold the card steady through the LED pulse  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><span class="tt">Card not detected</span>  </td><td class="markdownTableBodyNone">Card not on the antenna  </td><td class="markdownTableBodyNone">Bring the card within ~1 cm of the antenna  </td></tr>
+</table>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md37"></a>
+License</h2>
+<p><span class="tt">cryptnox-sdk-esp32</span> is dual-licensed:</p>
+<ul>
+<li><b>LGPL-3.0</b> for open-source projects and proprietary projects that comply with LGPL requirements</li>
+<li><b>Commercial license</b> for projects that require a proprietary license without LGPL obligations (see COMMERCIAL.md for details)</li>
+</ul>
+<p>For commercial inquiries, contact: <a href="#" onclick="location.href='mai'+'lto:'+'con'+'ta'+'ct@'+'cr'+'ypt'+'no'+'x.c'+'om'; return false;">conta<span class="obfuscator">.nosp@m.</span>ct@c<span class="obfuscator">.nosp@m.</span>ryptn<span class="obfuscator">.nosp@m.</span>ox.c<span class="obfuscator">.nosp@m.</span>om</a> </p>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <div id="page-nav" class="page-nav-panel">
