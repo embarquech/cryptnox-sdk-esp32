@@ -94,7 +94,7 @@ static void write_uint_to_uart(uint32_t value, uint32_t base)
 
 bool ESP32Logger::begin(unsigned long baudRate)
 {
-    uart_config_t cfg = { 0 };
+    uart_config_t cfg = {};
     cfg.baud_rate           = static_cast<int>(baudRate);
     cfg.data_bits           = UART_DATA_8_BITS;
     cfg.parity              = UART_PARITY_DISABLE;
