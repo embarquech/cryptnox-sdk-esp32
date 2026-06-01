@@ -38,7 +38,14 @@ crypto runs.
 ## Quick start
 
 1. **Edit `DEMO_PIN`** in `main/main.cpp` to match your card's PIN.
-2. **Edit `main/config.h`** with your Wi-Fi credentials.
+2. **Create your runtime config from the template** (kept out of git so
+   credentials never get committed) and fill in Wi-Fi:
+
+   ```bash
+   cp config.template.h main/config.h
+   # then edit main/config.h: set WIFI_SSID / WIFI_PASSWORD
+   ```
+
 3. Build, flash and monitor:
 
    ```bash

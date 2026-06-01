@@ -34,6 +34,7 @@ hardware TRNG with full entropy before any crypto runs.
 ```bash
 # from the repository root, after sourcing ESP-IDF env
 cd examples/Connect
+cp config.template.h main/config.h          # create your runtime config (gitignored)
 $EDITOR main/config.h                       # fill WIFI_SSID / WIFI_PASSWORD
 idf.py set-target esp32s3                   # once
 idf.py build flash monitor
