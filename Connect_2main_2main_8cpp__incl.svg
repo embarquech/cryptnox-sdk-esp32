@@ -309,8 +309,8 @@
 <!-- Node26 -->
 <g id="Node000026" class="node">
 <title>Node26</title>
-<g id="a_Node000026"><a xlink:href="Connect_2main_2config_8h.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#666666" points="1660,-129 1605,-129 1605,-110 1660,-110 1660,-129"/>
+<g id="a_Node000026"><a xlink:title=" ">
+<polygon fill="#e0e0e0" stroke="#999999" points="1660,-129 1605,-129 1605,-110 1660,-110 1660,-129"/>
 <text text-anchor="middle" x="1632.5" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">config.h</text>
 </a>
 </g>

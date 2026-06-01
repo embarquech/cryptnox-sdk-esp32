@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.15.0"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>cryptnox-sdk-esp32: examples/VerifyPin/main/config.h Source File</title>
+<title>cryptnox-sdk-esp32: examples/Connect/config.template.h File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -63,7 +63,7 @@ $(function() {
   </div>
 </div>
 <script type="text/javascript">
-$(function(){initNavTree('VerifyPin_2main_2config_8h_source.html','',''); });
+$(function(){initNavTree('Connect_2config_8template_8h.html','',''); });
 </script>
 <div id="container">
 <div id="doc-content">
@@ -89,31 +89,64 @@ $(function(){initNavTree('VerifyPin_2main_2config_8h_source.html','',''); });
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">config.h</div></div>
+  <div class="headertitle"><div class="title">config.template.h File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<a href="VerifyPin_2main_2config_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/*</span></div>
-<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment"> * SPDX-License-Identifier: LGPL-3.0-or-later</span></div>
-<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment"> * Copyright (c) 2026 Cryptnox SA</span></div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment"> */</span></div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span> </div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#ifndef CONFIG_H</span></div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#define CONFIG_H</span></div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="comment">/* ── WiFi credentials ───────────────────────────────────────────────</span></div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="comment"> * WiFi is started on boot so the radio feeds the hardware TRNG with</span></div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="comment"> * full entropy.  Fill in the SSID and password for your network. */</span></div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno"><a class="line" href="VerifyPin_2main_2config_8h.html#a586542b79d00e4db7e1d5a667ae83a2b">   12</a></span><span class="preprocessor">#define WIFI_SSID       &quot;&lt;YOUR_SSID&gt;&quot;</span></div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno"><a class="line" href="VerifyPin_2main_2config_8h.html#a8685d8aff7e570048090a3a51afceb07">   13</a></span><span class="preprocessor">#define WIFI_PASSWORD   &quot;&lt;YOUR_PASSWORD&gt;&quot;</span></div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#endif </span><span class="comment">/* CONFIG_H */</span><span class="preprocessor"></span></div>
-</div><!-- fragment --></div><!-- contents -->
+
+<p><a href="Connect_2config_8template_8h_source.html">Go to the source code of this file.</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-define-members" class="groupheader"><a id="define-members" name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:a586542b79d00e4db7e1d5a667ae83a2b" id="r_a586542b79d00e4db7e1d5a667ae83a2b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a586542b79d00e4db7e1d5a667ae83a2b">WIFI_SSID</a>&#160;&#160;&#160;&quot;&lt;YOUR_SSID&gt;&quot;</td></tr>
+<tr class="memitem:a8685d8aff7e570048090a3a51afceb07" id="r_a8685d8aff7e570048090a3a51afceb07"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8685d8aff7e570048090a3a51afceb07">WIFI_PASSWORD</a>&#160;&#160;&#160;&quot;&lt;YOUR_PASSWORD&gt;&quot;</td></tr>
+</table>
+<a name="doc-define-members" id="doc-define-members"></a><h2 id="header-doc-define-members" class="groupheader">Macro Definition Documentation</h2>
+<a id="a8685d8aff7e570048090a3a51afceb07" name="a8685d8aff7e570048090a3a51afceb07"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8685d8aff7e570048090a3a51afceb07">&#9670;&#160;</a></span>WIFI_PASSWORD</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define WIFI_PASSWORD&#160;&#160;&#160;&quot;&lt;YOUR_PASSWORD&gt;&quot;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Connect_2config_8template_8h_source.html#l00013">13</a> of file <a class="el" href="Connect_2config_8template_8h_source.html">config.template.h</a>.</p>
+
+</div>
+</div>
+<a id="a586542b79d00e4db7e1d5a667ae83a2b" name="a586542b79d00e4db7e1d5a667ae83a2b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a586542b79d00e4db7e1d5a667ae83a2b">&#9670;&#160;</a></span>WIFI_SSID</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define WIFI_SSID&#160;&#160;&#160;&quot;&lt;YOUR_SSID&gt;&quot;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Connect_2config_8template_8h_source.html#l00012">12</a> of file <a class="el" href="Connect_2config_8template_8h_source.html">config.template.h</a>.</p>
+
+</div>
+</div>
+</div><!-- contents -->
 </div><!-- doc-content -->
+<div id="page-nav" class="page-nav-panel">
+<div id="page-nav-resize-handle"></div>
+<div id="page-nav-tree">
+<div id="page-nav-contents">
+</div><!-- page-nav-contents -->
+</div><!-- page-nav-tree -->
+</div><!-- page-nav -->
 </div><!-- container -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a href="dir_d28a4824dc47e487b107a5db32ef43c4.html">examples</a></li><li class="navelem"><a href="dir_cc81cf6f1c823b08adf4153a5960c30a.html">VerifyPin</a></li><li class="navelem"><a href="dir_6893b8f95a33e9001d0c02f36d47b030.html">main</a></li><li class="navelem"><a href="VerifyPin_2main_2config_8h.html">config.h</a></li>
+    <li class="navelem"><a href="dir_d28a4824dc47e487b107a5db32ef43c4.html">examples</a></li><li class="navelem"><a href="dir_61c733bd969c2471ac02d97f3b0ee95b.html">Connect</a></li><li class="navelem"><a href="Connect_2config_8template_8h.html">config.template.h</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.15.0 </li>
   </ul>
 </div>

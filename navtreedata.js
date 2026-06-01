@@ -54,8 +54,8 @@ var NAVTREE =
 
 var NAVTREEINDEX =
 [
-"BasicUsage_2main_2config_8h.html",
-"config_8template_8h.html#a586542b79d00e4db7e1d5a667ae83a2b",
+"BasicUsage_2config_8template_8h.html",
+"classScriptedMockNfcTransport.html#a0bf9be9356ed43d3d47da4468e02ce7f",
 "pn532_8c.html#a87f87ce8c465f27011258c3be90d5fd9"
 ];
 

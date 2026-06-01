@@ -131,7 +131,7 @@ Prerequisites</h2>
 <p>Provision a card from a host with a PC/SC reader and the <a href="https://github.com/cryptnox/cryptnox-cli">Cryptnox CLI</a>:</p>
 <div class="fragment"><div class="line">cryptnox init           # sets the PIN + PUK</div>
 <div class="line">cryptnox seed generate        # generates a BIP39 seed (required for signing)</div>
-</div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>Every example starts Wi-Fi on boot so the radio feeds the ESP32 hardware TRNG with full entropy. Even the non-networked examples (<span class="tt">Connect</span>, <span class="tt">VerifyPin</span>, <span class="tt">Sign</span>, <span class="tt">BasicUsage</span>) need a valid <span class="tt"><a class="el" href="BasicUsage_2main_2config_8h.html#a586542b79d00e4db7e1d5a667ae83a2b">WIFI_SSID</a></span> / <span class="tt"><a class="el" href="BasicUsage_2main_2config_8h.html#a8685d8aff7e570048090a3a51afceb07">WIFI_PASSWORD</a></span> in their <span class="tt">main/config.h</span>.</dd></dl>
+</div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>Every example starts Wi-Fi on boot so the radio feeds the ESP32 hardware TRNG with full entropy. Even the non-networked examples (<span class="tt">Connect</span>, <span class="tt">VerifyPin</span>, <span class="tt">Sign</span>, <span class="tt">BasicUsage</span>) need a valid <span class="tt"><a class="el" href="BasicUsage_2config_8template_8h.html#a586542b79d00e4db7e1d5a667ae83a2b">WIFI_SSID</a></span> / <span class="tt"><a class="el" href="BasicUsage_2config_8template_8h.html#a8685d8aff7e570048090a3a51afceb07">WIFI_PASSWORD</a></span> in their <span class="tt">main/config.h</span>.</dd></dl>
 <h2 class="doxsection"><a class="anchor" id="autotoc_md22"></a>
 Available examples</h2>
 <table class="markdownTable">
@@ -158,7 +158,7 @@ How to build and run an example</h2>
 <div class="line">idf.py set-target esp32s3                   # once, writes sdkconfig</div>
 <div class="line">idf.py build flash monitor                  # build, flash, open serial @ 115200 baud</div>
 </div><!-- fragment --><p>Exit the monitor with <span class="tt">Ctrl-]</span>. Place the card on the PN532 antenna when the firmware prompts for it.</p>
-<dl class="section note"><dt>Note</dt><dd>All examples default to PIN <span class="tt">000000000</span> (nine zeros). If your card was initialised with a different PIN, edit the <span class="tt"><a class="el" href="BasicUsage_2main_2main_8cpp.html#ab42cd1e61da75327d37d39a75b2d7ff3" title="Demo PIN — replace with the PIN used during card initialisation.">DEFAULT_PIN</a></span> / <span class="tt">DEMO_PIN</span> / <span class="tt"><a class="el" href="config_8template_8h.html#a2de009963ca3d1582d4c3a4397ef65bc">CARD_PIN</a></span> macro at the top of the relevant source file before building.</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>All examples default to PIN <span class="tt">000000000</span> (nine zeros). If your card was initialised with a different PIN, edit the <span class="tt"><a class="el" href="BasicUsage_2main_2main_8cpp.html#ab42cd1e61da75327d37d39a75b2d7ff3" title="Demo PIN — replace with the PIN used during card initialisation.">DEFAULT_PIN</a></span> / <span class="tt">DEMO_PIN</span> / <span class="tt"><a class="el" href="UsdcSigning_2config_8template_8h.html#a2de009963ca3d1582d4c3a4397ef65bc">CARD_PIN</a></span> macro at the top of the relevant source file before building.</dd></dl>
 <h2 class="doxsection"><a class="anchor" id="autotoc_md24"></a>
 Adding a new example</h2>
 <p>Follow the conventions used by the existing projects:</p>
@@ -167,7 +167,7 @@ Adding a new example</h2>
 <li>Lay it out as an ESP-IDF project: <span class="tt">CMakeLists.txt</span> at the project root, a <span class="tt">main/</span> subdirectory with <span class="tt">main/CMakeLists.txt</span> + sources, and a <span class="tt">sdkconfig.defaults</span> capturing the project's build options.</li>
 <li>Start every source file with the SPDX + copyright header used by the rest of the repository.</li>
 <li>Add Doxygen tags (<span class="tt">@file</span>, <span class="tt">@example</span>, <span class="tt">@brief</span>) so the project surfaces correctly in the generated docs.</li>
-<li>If the project needs external secrets (Wi-Fi credentials, RPC keys, recipient addresses), ship a <span class="tt"><a class="el" href="config_8template_8h.html">config.template.h</a></span> next to it and add the runtime <span class="tt">config.h</span> to <span class="tt">.gitignore</span>. Never commit credentials.</li>
+<li>If the project needs external secrets (Wi-Fi credentials, RPC keys, recipient addresses), ship a <span class="tt">config.template.h</span> next to it and add the runtime <span class="tt">config.h</span> to <span class="tt">.gitignore</span>. Never commit credentials.</li>
 <li>Ship a <span class="tt">README.md</span> next to the project and register it in the Available examples table above.</li>
 </ul>
 <h2 class="doxsection"><a class="anchor" id="autotoc_md25"></a>

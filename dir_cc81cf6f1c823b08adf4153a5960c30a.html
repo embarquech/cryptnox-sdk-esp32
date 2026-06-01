@@ -101,6 +101,10 @@ Directory dependency graph for VerifyPin:</div>
 <tr class="heading"><td colspan="2"><h2 id="header-subdirs" class="groupheader"><a id="subdirs" name="subdirs"></a>
 Directories</h2></td></tr>
 <tr class="memitem:main" id="r_main"><td class="memItemLeft" align="right" valign="top"><span class="iconfolder"><div class="folder-icon"></div></span>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="dir_6893b8f95a33e9001d0c02f36d47b030.html">main</a></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-files" class="groupheader"><a id="files" name="files"></a>
+Files</h2></td></tr>
+<tr class="memitem:config_2Etemplate_2Eh" id="r_config_2Etemplate_2Eh"><td class="memItemLeft" align="right" valign="top"><a href="VerifyPin_2config_8template_8h_source.html"><span class="icondoc"><div class="doc-icon"></div></span></a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="VerifyPin_2config_8template_8h.html">config.template.h</a></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div align="center"></div><div align="center"><img src="https://github.com/user-attachments/assets/6ce54a27-8fb6-48e6-9d1f-da144f43425a" alt="" class="inline"/></div><div align="center"></div><h3 class="doxsection"><a class="anchor" id="autotoc_md54"></a>
@@ -123,12 +127,15 @@ Requirements</h2>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><b>Toolchain</b>  </td><td class="markdownTableBodyNone">ESP-IDF v5.5  </td></tr>
 </table>
-<p><span class="tt">main/config.h</span> must contain valid <span class="tt"><a class="el" href="BasicUsage_2main_2config_8h.html#a586542b79d00e4db7e1d5a667ae83a2b">WIFI_SSID</a></span> / <span class="tt"><a class="el" href="BasicUsage_2main_2config_8h.html#a8685d8aff7e570048090a3a51afceb07">WIFI_PASSWORD</a></span> — the radio is started on boot to seed the hardware TRNG before any crypto runs.</p>
+<p><span class="tt">main/config.h</span> must contain valid <span class="tt"><a class="el" href="BasicUsage_2config_8template_8h.html#a586542b79d00e4db7e1d5a667ae83a2b">WIFI_SSID</a></span> / <span class="tt"><a class="el" href="BasicUsage_2config_8template_8h.html#a8685d8aff7e570048090a3a51afceb07">WIFI_PASSWORD</a></span> — the radio is started on boot to seed the hardware TRNG before any crypto runs.</p>
 <h2 class="doxsection"><a class="anchor" id="autotoc_md57"></a>
 Quick start</h2>
 <ol type="1">
 <li><b>Edit <span class="tt">DEMO_PIN</span></b> in <span class="tt">main/main.cpp</span> to match your card's PIN.</li>
-<li><b>Edit <span class="tt">main/config.h</span></b> with your Wi-Fi credentials.</li>
+<li><p class="startli"><b>Create your runtime config from the template</b> (kept out of git so credentials never get committed) and fill in Wi-Fi:</p>
+<div class="fragment"><div class="line">cp config.template.h main/config.h</div>
+<div class="line"># then edit main/config.h: set WIFI_SSID / WIFI_PASSWORD</div>
+</div><!-- fragment --></li>
 <li><p class="startli">Build, flash and monitor:</p>
 <div class="fragment"><div class="line">cd examples/VerifyPin</div>
 <div class="line">idf.py set-target esp32s3                # once</div>
@@ -199,7 +206,7 @@ Troubleshooting</h2>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><span class="tt">PN532 init failed</span>  </td><td class="markdownTableBodyNone">Reader wiring / SPI mode switches  </td><td class="markdownTableBodyNone">See <a href="../../README.md#hardware-setup">hardware setup</a>  </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone">Wi-Fi never connects  </td><td class="markdownTableBodyNone">Wrong SSID / password, or 5 GHz-only network  </td><td class="markdownTableBodyNone">ESP32-S3 is 2.4 GHz only — verify <span class="tt"><a class="el" href="BasicUsage_2main_2config_8h.html#a586542b79d00e4db7e1d5a667ae83a2b">WIFI_SSID</a></span> / <span class="tt"><a class="el" href="BasicUsage_2main_2config_8h.html#a8685d8aff7e570048090a3a51afceb07">WIFI_PASSWORD</a></span> in <span class="tt">main/config.h</span>  </td></tr>
+<td class="markdownTableBodyNone">Wi-Fi never connects  </td><td class="markdownTableBodyNone">Wrong SSID / password, or 5 GHz-only network  </td><td class="markdownTableBodyNone">ESP32-S3 is 2.4 GHz only — verify <span class="tt"><a class="el" href="BasicUsage_2config_8template_8h.html#a586542b79d00e4db7e1d5a667ae83a2b">WIFI_SSID</a></span> / <span class="tt"><a class="el" href="BasicUsage_2config_8template_8h.html#a8685d8aff7e570048090a3a51afceb07">WIFI_PASSWORD</a></span> in <span class="tt">main/config.h</span>  </td></tr>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><span class="tt">Card not detected</span>  </td><td class="markdownTableBodyNone">Card not on the antenna  </td><td class="markdownTableBodyNone">Bring the card within ~1 cm of the antenna  </td></tr>
 <tr class="markdownTableRowEven">

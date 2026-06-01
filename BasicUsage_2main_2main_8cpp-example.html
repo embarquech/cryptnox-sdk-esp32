@@ -205,9 +205,9 @@ $(function(){initNavTree('BasicUsage_2main_2main_8cpp-example.html','',''); });
 <div class="line">        IP_EVENT, IP_EVENT_STA_GOT_IP, &amp;<a class="code hl_function" href="BasicUsage_2main_2main_8cpp.html#ac31e38637f7a5e5c8ce4d033b0955fec">wifi_event_handler</a>, NULL, &amp;h_ip));</div>
 <div class="line">    wifi_config_t wifi_cfg;</div>
 <div class="line">    (void)memset(&amp;wifi_cfg, 0, <span class="keyword">sizeof</span>(wifi_cfg));</div>
-<div class="line">    (void)strncpy((<span class="keywordtype">char</span> *)wifi_cfg.sta.ssid,     <a id="_a10" name="_a10"></a><a class="code hl_define" href="BasicUsage_2main_2config_8h.html#a586542b79d00e4db7e1d5a667ae83a2b">WIFI_SSID</a>,</div>
+<div class="line">    (void)strncpy((<span class="keywordtype">char</span> *)wifi_cfg.sta.ssid,     <a id="_a10" name="_a10"></a><a class="code hl_define" href="BasicUsage_2config_8template_8h.html#a586542b79d00e4db7e1d5a667ae83a2b">WIFI_SSID</a>,</div>
 <div class="line">                  <span class="keyword">sizeof</span>(wifi_cfg.sta.ssid)     - 1U);</div>
-<div class="line">    (void)strncpy((<span class="keywordtype">char</span> *)wifi_cfg.sta.password, <a id="_a11" name="_a11"></a><a class="code hl_define" href="BasicUsage_2main_2config_8h.html#a8685d8aff7e570048090a3a51afceb07">WIFI_PASSWORD</a>,</div>
+<div class="line">    (void)strncpy((<span class="keywordtype">char</span> *)wifi_cfg.sta.password, <a id="_a11" name="_a11"></a><a class="code hl_define" href="BasicUsage_2config_8template_8h.html#a8685d8aff7e570048090a3a51afceb07">WIFI_PASSWORD</a>,</div>
 <div class="line">                  <span class="keyword">sizeof</span>(wifi_cfg.sta.password) - 1U);</div>
 <div class="line">    wifi_cfg.sta.threshold.authmode = WIFI_AUTH_WPA2_PSK;</div>
 <div class="line">    ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA));</div>
@@ -336,15 +336,11 @@ $(function(){initNavTree('BasicUsage_2main_2main_8cpp-example.html','',''); });
 <div class="line">    ESP_ERROR_CHECK(nvs_ret);</div>
 <div class="line">    <a class="code hl_function" href="BasicUsage_2main_2main_8cpp.html#af629eac4dcd2612341863d51413aaf10">wifi_start</a>();</div>
 <div class="line"> </div>
-<div class="line">    <a id="_a16" name="_a16"></a><a class="code hl_struct" href="structpn532__t.html">pn532_t</a>        nfc;</div>
-<div class="line">    <a id="_a17" name="_a17"></a><a class="code hl_struct" href="structpn532__config__t.html">pn532_config_t</a> nfc_cfg;</div>
-<div class="line"> </div>
-<div class="line">    (void)memset(&amp;nfc,     0, <span class="keyword">sizeof</span>(nfc));</div>
-<div class="line">    (void)memset(&amp;nfc_cfg, 0, <span class="keyword">sizeof</span>(nfc_cfg));</div>
+<div class="line">    <a id="_a16" name="_a16"></a><a class="code hl_struct" href="structpn532__t.html">pn532_t</a>        nfc     = {};</div>
+<div class="line">    <a id="_a17" name="_a17"></a><a class="code hl_struct" href="structpn532__config__t.html">pn532_config_t</a> nfc_cfg = {};</div>
 <div class="line"> </div>
 <div class="line"><span class="preprocessor">#if SPI_ENABLED</span></div>
-<div class="line">    spi_bus_config_t buscfg;</div>
-<div class="line">    (void)memset(&amp;buscfg, 0, <span class="keyword">sizeof</span>(buscfg));</div>
+<div class="line">    spi_bus_config_t buscfg = {};</div>
 <div class="line">    buscfg.mosi_io_num     = <a id="_a18" name="_a18"></a><a class="code hl_define" href="BasicUsage_2main_2main_8cpp.html#a7dbebab5f7dd57885adccf6711b13592">SPI_MOSI</a>;</div>
 <div class="line">    buscfg.miso_io_num     = <a id="_a19" name="_a19"></a><a class="code hl_define" href="BasicUsage_2main_2main_8cpp.html#ab142cc77dfa97010c9d2b616d0992b64">SPI_MISO</a>;</div>
 <div class="line">    buscfg.sclk_io_num     = <a id="_a20" name="_a20"></a><a class="code hl_define" href="BasicUsage_2main_2main_8cpp.html#aefec442ab2dbec4785b387b3e88faa66">SPI_SCLK</a>;</div>
@@ -395,8 +391,8 @@ $(function(){initNavTree('BasicUsage_2main_2main_8cpp-example.html','',''); });
 <div class="line"> </div>
 <div class="line">    <a class="code hl_function" href="BasicUsage_2main_2main_8cpp.html#aa1554669d5b477bffb8713117d22dc98">run_basic_usage_loop</a>(wallet);</div>
 <div class="line">}</div>
-<div class="ttc" id="aBasicUsage_2main_2config_8h_html_a586542b79d00e4db7e1d5a667ae83a2b"><div class="ttname"><a href="BasicUsage_2main_2config_8h.html#a586542b79d00e4db7e1d5a667ae83a2b">WIFI_SSID</a></div><div class="ttdeci">#define WIFI_SSID</div><div class="ttdef"><b>Definition</b> <a href="BasicUsage_2main_2config_8h_source.html#l00012">config.h:12</a></div></div>
-<div class="ttc" id="aBasicUsage_2main_2config_8h_html_a8685d8aff7e570048090a3a51afceb07"><div class="ttname"><a href="BasicUsage_2main_2config_8h.html#a8685d8aff7e570048090a3a51afceb07">WIFI_PASSWORD</a></div><div class="ttdeci">#define WIFI_PASSWORD</div><div class="ttdef"><b>Definition</b> <a href="BasicUsage_2main_2config_8h_source.html#l00013">config.h:13</a></div></div>
+<div class="ttc" id="aBasicUsage_2config_8template_8h_html_a586542b79d00e4db7e1d5a667ae83a2b"><div class="ttname"><a href="BasicUsage_2config_8template_8h.html#a586542b79d00e4db7e1d5a667ae83a2b">WIFI_SSID</a></div><div class="ttdeci">#define WIFI_SSID</div><div class="ttdef"><b>Definition</b> <a href="BasicUsage_2config_8template_8h_source.html#l00012">config.template.h:12</a></div></div>
+<div class="ttc" id="aBasicUsage_2config_8template_8h_html_a8685d8aff7e570048090a3a51afceb07"><div class="ttname"><a href="BasicUsage_2config_8template_8h.html#a8685d8aff7e570048090a3a51afceb07">WIFI_PASSWORD</a></div><div class="ttdeci">#define WIFI_PASSWORD</div><div class="ttdef"><b>Definition</b> <a href="BasicUsage_2config_8template_8h_source.html#l00013">config.template.h:13</a></div></div>
 <div class="ttc" id="aBasicUsage_2main_2main_8cpp_html_a0c6bd557f1fa31b24d41cbd2f04a2e48"><div class="ttname"><a href="BasicUsage_2main_2main_8cpp.html#a0c6bd557f1fa31b24d41cbd2f04a2e48">NFC_CS</a></div><div class="ttdeci">#define NFC_CS</div><div class="ttdef"><b>Definition</b> <a href="BasicUsage_2main_2main_8cpp_source.html#l00059">main.cpp:59</a></div></div>
 <div class="ttc" id="aBasicUsage_2main_2main_8cpp_html_a0d6d5a31061b5468003f29ef7d8db464"><div class="ttname"><a href="BasicUsage_2main_2main_8cpp.html#a0d6d5a31061b5468003f29ef7d8db464">DEFAULT_PIN_LEN</a></div><div class="ttdeci">static const size_t DEFAULT_PIN_LEN</div><div class="ttdef"><b>Definition</b> <a href="BasicUsage_2main_2main_8cpp_source.html#l00176">main.cpp:176</a></div></div>
 <div class="ttc" id="aBasicUsage_2main_2main_8cpp_html_a630544a7f0a2cc40d8a7fefab7e2fe70"><div class="ttname"><a href="BasicUsage_2main_2main_8cpp.html#a630544a7f0a2cc40d8a7fefab7e2fe70">app_main</a></div><div class="ttdeci">void app_main(void)</div><div class="ttdoc">ESP-IDF application entry point.</div><div class="ttdef"><b>Definition</b> <a href="BasicUsage_2main_2main_8cpp_source.html#l00284">main.cpp:284</a></div></div>

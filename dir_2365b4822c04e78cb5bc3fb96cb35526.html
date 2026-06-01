@@ -101,6 +101,10 @@ Directory dependency graph for Sign:</div>
 <tr class="heading"><td colspan="2"><h2 id="header-subdirs" class="groupheader"><a id="subdirs" name="subdirs"></a>
 Directories</h2></td></tr>
 <tr class="memitem:main" id="r_main"><td class="memItemLeft" align="right" valign="top"><span class="iconfolder"><div class="folder-icon"></div></span>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="dir_2bbbd15e0c1aac4bbbeb13aa2d67971c.html">main</a></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-files" class="groupheader"><a id="files" name="files"></a>
+Files</h2></td></tr>
+<tr class="memitem:config_2Etemplate_2Eh" id="r_config_2Etemplate_2Eh"><td class="memItemLeft" align="right" valign="top"><a href="Sign_2config_8template_8h_source.html"><span class="icondoc"><div class="doc-icon"></div></span></a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="Sign_2config_8template_8h.html">config.template.h</a></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div align="center"></div><div align="center"><img src="https://github.com/user-attachments/assets/6ce54a27-8fb6-48e6-9d1f-da144f43425a" alt="" class="inline"/></div><div align="center"></div><h3 class="doxsection"><a class="anchor" id="autotoc_md26"></a>
@@ -123,7 +127,7 @@ Requirements</h2>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><b>Toolchain</b>  </td><td class="markdownTableBodyNone">ESP-IDF v5.5  </td></tr>
 </table>
-<p><span class="tt">main/config.h</span> must contain valid <span class="tt"><a class="el" href="BasicUsage_2main_2config_8h.html#a586542b79d00e4db7e1d5a667ae83a2b">WIFI_SSID</a></span> / <span class="tt"><a class="el" href="BasicUsage_2main_2config_8h.html#a8685d8aff7e570048090a3a51afceb07">WIFI_PASSWORD</a></span> — the radio is started on boot to seed the hardware TRNG before any crypto runs.</p>
+<p><span class="tt">main/config.h</span> must contain valid <span class="tt"><a class="el" href="BasicUsage_2config_8template_8h.html#a586542b79d00e4db7e1d5a667ae83a2b">WIFI_SSID</a></span> / <span class="tt"><a class="el" href="BasicUsage_2config_8template_8h.html#a8685d8aff7e570048090a3a51afceb07">WIFI_PASSWORD</a></span> — the radio is started on boot to seed the hardware TRNG before any crypto runs.</p>
 <p>Provision the card from a host with a PC/SC reader and the <a href="https://github.com/cryptnox/cryptnox-cli">Cryptnox CLI</a>:</p>
 <div class="fragment"><div class="line">cryptnox init                 # sets the PIN + PUK</div>
 <div class="line">cryptnox seed generate        # generates a BIP39 seed</div>
@@ -132,7 +136,10 @@ Requirements</h2>
 Quick start</h2>
 <ol type="1">
 <li><b>Edit <span class="tt">DEMO_PIN</span></b> in <span class="tt">main/main.cpp</span> to match your card's PIN.</li>
-<li><b>Edit <span class="tt">main/config.h</span></b> with your Wi-Fi credentials.</li>
+<li><p class="startli"><b>Create your runtime config from the template</b> (kept out of git so credentials never get committed) and fill in Wi-Fi:</p>
+<div class="fragment"><div class="line">cp config.template.h main/config.h</div>
+<div class="line"># then edit main/config.h: set WIFI_SSID / WIFI_PASSWORD</div>
+</div><!-- fragment --></li>
 <li><p class="startli">Build, flash and monitor:</p>
 <div class="fragment"><div class="line">cd examples/Sign</div>
 <div class="line">idf.py set-target esp32s3                # once</div>

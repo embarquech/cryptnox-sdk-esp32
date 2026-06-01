@@ -101,6 +101,10 @@ Directory dependency graph for Connect:</div>
 <tr class="heading"><td colspan="2"><h2 id="header-subdirs" class="groupheader"><a id="subdirs" name="subdirs"></a>
 Directories</h2></td></tr>
 <tr class="memitem:main" id="r_main"><td class="memItemLeft" align="right" valign="top"><span class="iconfolder"><div class="folder-icon"></div></span>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="dir_8d2cda44be99fee4e1f07bf0791e3905.html">main</a></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-files" class="groupheader"><a id="files" name="files"></a>
+Files</h2></td></tr>
+<tr class="memitem:config_2Etemplate_2Eh" id="r_config_2Etemplate_2Eh"><td class="memItemLeft" align="right" valign="top"><a href="Connect_2config_8template_8h_source.html"><span class="icondoc"><div class="doc-icon"></div></span></a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="Connect_2config_8template_8h.html">config.template.h</a></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div align="center"></div><div align="center"><img src="https://github.com/user-attachments/assets/6ce54a27-8fb6-48e6-9d1f-da144f43425a" alt="" class="inline"/></div><div align="center"></div><h3 class="doxsection"><a class="anchor" id="autotoc_md10"></a>
@@ -129,6 +133,7 @@ Requirements</h2>
 Quick start</h2>
 <div class="fragment"><div class="line"># from the repository root, after sourcing ESP-IDF env</div>
 <div class="line">cd examples/Connect</div>
+<div class="line">cp config.template.h main/config.h          # create your runtime config (gitignored)</div>
 <div class="line">$EDITOR main/config.h                       # fill WIFI_SSID / WIFI_PASSWORD</div>
 <div class="line">idf.py set-target esp32s3                   # once</div>
 <div class="line">idf.py build flash monitor</div>

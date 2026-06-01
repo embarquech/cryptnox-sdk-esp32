@@ -97,7 +97,7 @@ $(function(){initNavTree('Sign_2main_2main_8cpp-example.html','',''); });
 <li>PN532 NFC reader on SPI: MOSI=11, MISO=13, SCLK=12, CS=10.</li>
 <li>A Cryptnox card initialised with a known PIN and a loaded seed (use the Cryptnox CLI: <code>cryptnox</code> <code>initialize</code> then <code>cryptnox</code> <code>seed</code> <code>generate</code>).</li>
 <li>DEMO_PIN must match the PIN set on the card.</li>
-<li><code>config.h</code> filled in with <a class="el" href="BasicUsage_2main_2config_8h.html#a586542b79d00e4db7e1d5a667ae83a2b">WIFI_SSID</a> and <a class="el" href="BasicUsage_2main_2config_8h.html#a8685d8aff7e570048090a3a51afceb07">WIFI_PASSWORD</a>.</li>
+<li><code>config.h</code> filled in with <a class="el" href="BasicUsage_2config_8template_8h.html#a586542b79d00e4db7e1d5a667ae83a2b">WIFI_SSID</a> and <a class="el" href="BasicUsage_2config_8template_8h.html#a8685d8aff7e570048090a3a51afceb07">WIFI_PASSWORD</a>.</li>
 </ul>
 <p>What the firmware does in each loop iteration:</p><ol type="1">
 <li>Connect to the card and establish the secure channel.</li>
@@ -189,9 +189,9 @@ $(function(){initNavTree('Sign_2main_2main_8cpp-example.html','',''); });
 <div class="line">        IP_EVENT, IP_EVENT_STA_GOT_IP, &amp;<a class="code hl_function" href="BasicUsage_2main_2main_8cpp.html#ac31e38637f7a5e5c8ce4d033b0955fec">wifi_event_handler</a>, NULL, &amp;h_ip));</div>
 <div class="line">    wifi_config_t wifi_cfg;</div>
 <div class="line">    (void)memset(&amp;wifi_cfg, 0, <span class="keyword">sizeof</span>(wifi_cfg));</div>
-<div class="line">    (void)strncpy((<span class="keywordtype">char</span> *)wifi_cfg.sta.ssid,     <a id="_a10" name="_a10"></a><a class="code hl_define" href="BasicUsage_2main_2config_8h.html#a586542b79d00e4db7e1d5a667ae83a2b">WIFI_SSID</a>,</div>
+<div class="line">    (void)strncpy((<span class="keywordtype">char</span> *)wifi_cfg.sta.ssid,     <a id="_a10" name="_a10"></a><a class="code hl_define" href="BasicUsage_2config_8template_8h.html#a586542b79d00e4db7e1d5a667ae83a2b">WIFI_SSID</a>,</div>
 <div class="line">                  <span class="keyword">sizeof</span>(wifi_cfg.sta.ssid)     - 1U);</div>
-<div class="line">    (void)strncpy((<span class="keywordtype">char</span> *)wifi_cfg.sta.password, <a id="_a11" name="_a11"></a><a class="code hl_define" href="BasicUsage_2main_2config_8h.html#a8685d8aff7e570048090a3a51afceb07">WIFI_PASSWORD</a>,</div>
+<div class="line">    (void)strncpy((<span class="keywordtype">char</span> *)wifi_cfg.sta.password, <a id="_a11" name="_a11"></a><a class="code hl_define" href="BasicUsage_2config_8template_8h.html#a8685d8aff7e570048090a3a51afceb07">WIFI_PASSWORD</a>,</div>
 <div class="line">                  <span class="keyword">sizeof</span>(wifi_cfg.sta.password) - 1U);</div>
 <div class="line">    wifi_cfg.sta.threshold.authmode = WIFI_AUTH_WPA2_PSK;</div>
 <div class="line">    ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA));</div>
@@ -322,8 +322,8 @@ $(function(){initNavTree('Sign_2main_2main_8cpp-example.html','',''); });
 <div class="line">        ESP_LOGE(<a class="code hl_variable" href="esp32__random_8cpp.html#a4ef5b5f197804a60836ab1e8907d8301">TAG</a>, <span class="stringliteral">&quot;PN532 init failed&quot;</span>);</div>
 <div class="line">    }</div>
 <div class="line">}</div>
-<div class="ttc" id="aBasicUsage_2main_2config_8h_html_a586542b79d00e4db7e1d5a667ae83a2b"><div class="ttname"><a href="BasicUsage_2main_2config_8h.html#a586542b79d00e4db7e1d5a667ae83a2b">WIFI_SSID</a></div><div class="ttdeci">#define WIFI_SSID</div><div class="ttdef"><b>Definition</b> <a href="BasicUsage_2main_2config_8h_source.html#l00012">config.h:12</a></div></div>
-<div class="ttc" id="aBasicUsage_2main_2config_8h_html_a8685d8aff7e570048090a3a51afceb07"><div class="ttname"><a href="BasicUsage_2main_2config_8h.html#a8685d8aff7e570048090a3a51afceb07">WIFI_PASSWORD</a></div><div class="ttdeci">#define WIFI_PASSWORD</div><div class="ttdef"><b>Definition</b> <a href="BasicUsage_2main_2config_8h_source.html#l00013">config.h:13</a></div></div>
+<div class="ttc" id="aBasicUsage_2config_8template_8h_html_a586542b79d00e4db7e1d5a667ae83a2b"><div class="ttname"><a href="BasicUsage_2config_8template_8h.html#a586542b79d00e4db7e1d5a667ae83a2b">WIFI_SSID</a></div><div class="ttdeci">#define WIFI_SSID</div><div class="ttdef"><b>Definition</b> <a href="BasicUsage_2config_8template_8h_source.html#l00012">config.template.h:12</a></div></div>
+<div class="ttc" id="aBasicUsage_2config_8template_8h_html_a8685d8aff7e570048090a3a51afceb07"><div class="ttname"><a href="BasicUsage_2config_8template_8h.html#a8685d8aff7e570048090a3a51afceb07">WIFI_PASSWORD</a></div><div class="ttdeci">#define WIFI_PASSWORD</div><div class="ttdef"><b>Definition</b> <a href="BasicUsage_2config_8template_8h_source.html#l00013">config.template.h:13</a></div></div>
 <div class="ttc" id="aBasicUsage_2main_2main_8cpp_html_a0c6bd557f1fa31b24d41cbd2f04a2e48"><div class="ttname"><a href="BasicUsage_2main_2main_8cpp.html#a0c6bd557f1fa31b24d41cbd2f04a2e48">NFC_CS</a></div><div class="ttdeci">#define NFC_CS</div><div class="ttdef"><b>Definition</b> <a href="BasicUsage_2main_2main_8cpp_source.html#l00059">main.cpp:59</a></div></div>
 <div class="ttc" id="aBasicUsage_2main_2main_8cpp_html_a630544a7f0a2cc40d8a7fefab7e2fe70"><div class="ttname"><a href="BasicUsage_2main_2main_8cpp.html#a630544a7f0a2cc40d8a7fefab7e2fe70">app_main</a></div><div class="ttdeci">void app_main(void)</div><div class="ttdoc">ESP-IDF application entry point.</div><div class="ttdef"><b>Definition</b> <a href="BasicUsage_2main_2main_8cpp_source.html#l00284">main.cpp:284</a></div></div>
 <div class="ttc" id="aBasicUsage_2main_2main_8cpp_html_a6aaca350cca4b3d105d88a6f399cb381"><div class="ttname"><a href="BasicUsage_2main_2main_8cpp.html#a6aaca350cca4b3d105d88a6f399cb381">s_wifi_event_group</a></div><div class="ttdeci">static EventGroupHandle_t s_wifi_event_group</div><div class="ttdef"><b>Definition</b> <a href="BasicUsage_2main_2main_8cpp_source.html#l00080">main.cpp:80</a></div></div>

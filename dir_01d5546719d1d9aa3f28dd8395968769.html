@@ -101,6 +101,10 @@ Directory dependency graph for BasicUsage:</div>
 <tr class="heading"><td colspan="2"><h2 id="header-subdirs" class="groupheader"><a id="subdirs" name="subdirs"></a>
 Directories</h2></td></tr>
 <tr class="memitem:main" id="r_main"><td class="memItemLeft" align="right" valign="top"><span class="iconfolder"><div class="folder-icon"></div></span>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="dir_312a079c3b217c4901110f6d7117034a.html">main</a></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-files" class="groupheader"><a id="files" name="files"></a>
+Files</h2></td></tr>
+<tr class="memitem:config_2Etemplate_2Eh" id="r_config_2Etemplate_2Eh"><td class="memItemLeft" align="right" valign="top"><a href="BasicUsage_2config_8template_8h_source.html"><span class="icondoc"><div class="doc-icon"></div></span></a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="BasicUsage_2config_8template_8h.html">config.template.h</a></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div align="center"></div><div align="center"><img src="https://github.com/user-attachments/assets/6ce54a27-8fb6-48e6-9d1f-da144f43425a" alt="" class="inline"/></div><div align="center"></div><h3 class="doxsection"><a class="anchor" id="autotoc_md0"></a>
@@ -148,7 +152,10 @@ Quick start</h2>
 <div class="ttc" id="aBasicUsage_2main_2main_8cpp_html_a0d6d5a31061b5468003f29ef7d8db464"><div class="ttname"><a href="BasicUsage_2main_2main_8cpp.html#a0d6d5a31061b5468003f29ef7d8db464">DEFAULT_PIN_LEN</a></div><div class="ttdeci">static const size_t DEFAULT_PIN_LEN</div><div class="ttdef"><b>Definition</b> <a href="BasicUsage_2main_2main_8cpp_source.html#l00176">main.cpp:176</a></div></div>
 <div class="ttc" id="aBasicUsage_2main_2main_8cpp_html_ab42cd1e61da75327d37d39a75b2d7ff3"><div class="ttname"><a href="BasicUsage_2main_2main_8cpp.html#ab42cd1e61da75327d37d39a75b2d7ff3">DEFAULT_PIN</a></div><div class="ttdeci">static const uint8_t DEFAULT_PIN[]</div><div class="ttdoc">Demo PIN — replace with the PIN used during card initialisation.</div><div class="ttdef"><b>Definition</b> <a href="BasicUsage_2main_2main_8cpp_source.html#l00175">main.cpp:175</a></div></div>
 </div><!-- fragment --></li>
-<li><b>Edit <span class="tt">main/config.h</span></b> with your Wi-Fi credentials.</li>
+<li><p class="startli"><b>Create your runtime config from the template</b> (kept out of git so credentials never get committed) and fill in Wi-Fi:</p>
+<div class="fragment"><div class="line">cp config.template.h main/config.h</div>
+<div class="line"># then edit main/config.h: set WIFI_SSID / WIFI_PASSWORD</div>
+</div><!-- fragment --></li>
 <li><p class="startli">Build, flash and monitor:</p>
 <div class="fragment"><div class="line">cd examples/BasicUsage</div>
 <div class="line">idf.py set-target esp32s3                # once</div>
