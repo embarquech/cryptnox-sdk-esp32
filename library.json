@@ -72,7 +72,8 @@
       "cryptnox-sdk-cpp/docs",
       "examples/*/build",
       "examples/*/.pio",
-      "examples/*/sdkconfig"
+      "examples/*/sdkconfig",
+      "examples/*/main/config.h"
     ]
   }
 }
