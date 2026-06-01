@@ -292,15 +292,11 @@ extern "C" void app_main(void)
     ESP_ERROR_CHECK(nvs_ret);
     wifi_start();
 
-    pn532_t        nfc;
-    pn532_config_t nfc_cfg;
-
-    (void)memset(&nfc,     0, sizeof(nfc));
-    (void)memset(&nfc_cfg, 0, sizeof(nfc_cfg));
+    pn532_t        nfc     = {};
+    pn532_config_t nfc_cfg = {};
 
 #if SPI_ENABLED
-    spi_bus_config_t buscfg;
-    (void)memset(&buscfg, 0, sizeof(buscfg));
+    spi_bus_config_t buscfg = {};
     buscfg.mosi_io_num     = SPI_MOSI;
     buscfg.miso_io_num     = SPI_MISO;
     buscfg.sclk_io_num     = SPI_SCLK;

@@ -49,7 +49,13 @@ If you only need **one** of the steps, see the focused examples:
    static const size_t  DEFAULT_PIN_LEN = sizeof(DEFAULT_PIN) - 1U;
    ```
 
-3. **Edit `main/config.h`** with your Wi-Fi credentials.
+3. **Create your runtime config from the template** (kept out of git so
+   credentials never get committed) and fill in Wi-Fi:
+
+   ```bash
+   cp config.template.h main/config.h
+   # then edit main/config.h: set WIFI_SSID / WIFI_PASSWORD
+   ```
 
 4. Build, flash and monitor:
 

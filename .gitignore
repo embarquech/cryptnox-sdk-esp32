@@ -8,6 +8,8 @@ sdkconfig.old
 .pio/
 .pioenvs/
 
-# UsdcSigning runtime secrets — copy config.template.h → main/config.h and fill in credentials
-examples/UsdcSigning/main/config.h
+# Example runtime secrets — every example expects you to copy its
+# config.template.h to main/config.h and fill in real credentials.
+# The runtime copy must never be committed.
+examples/*/main/config.h
 docs/html/
