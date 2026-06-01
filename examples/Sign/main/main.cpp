@@ -249,22 +249,20 @@ extern "C" void app_main(void)
     ESP_ERROR_CHECK(nvs_ret);
     wifi_start();
 
-    spi_bus_config_t buscfg = {
-        .mosi_io_num     = SPI_MOSI,
-        .miso_io_num     = SPI_MISO,
-        .sclk_io_num     = SPI_SCLK,
-        .quadwp_io_num   = SPI_PIN_UNUSED,
-        .quadhd_io_num   = SPI_PIN_UNUSED,
-        .max_transfer_sz = SPI_MAX_TRANSFER_SZ,
-    };
+    spi_bus_config_t buscfg = {};
+    buscfg.mosi_io_num     = SPI_MOSI;
+    buscfg.miso_io_num     = SPI_MISO;
+    buscfg.sclk_io_num     = SPI_SCLK;
+    buscfg.quadwp_io_num   = SPI_PIN_UNUSED;
+    buscfg.quadhd_io_num   = SPI_PIN_UNUSED;
+    buscfg.max_transfer_sz = SPI_MAX_TRANSFER_SZ;
     ESP_ERROR_CHECK(spi_bus_initialize(SPI2_HOST, &buscfg, SPI_DMA_CH_AUTO));
 
     pn532_t nfc = {};
-    pn532_config_t nfc_cfg = {
-        .spi_host      = SPI2_HOST,
-        .pin_cs        = NFC_CS,
-        .skip_bus_init = true,
-    };
+    pn532_config_t nfc_cfg = {};
+    nfc_cfg.spi_host      = SPI2_HOST;
+    nfc_cfg.pin_cs        = NFC_CS;
+    nfc_cfg.skip_bus_init = true;
     esp_err_t nfc_ret = pn532_init(&nfc, &nfc_cfg);
 
     if (nfc_ret == ESP_OK) {

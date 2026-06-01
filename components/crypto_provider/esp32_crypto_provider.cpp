@@ -114,7 +114,7 @@ uint16_t ESP32CryptoProvider::aesCbcEncrypt(const uint8_t* in, uint16_t len, uin
         }
 
         if (encLen > 0U) {
-            mbedtls_aes_context ctx = { 0 };
+            mbedtls_aes_context ctx = {};
             mbedtls_aes_init(&ctx);
 
             unsigned int keyBits = static_cast<unsigned int>(
@@ -153,7 +153,7 @@ uint16_t ESP32CryptoProvider::aesCbcDecrypt(uint8_t* in, uint16_t len, uint8_t* 
         bool blockAligned = ((static_cast<uint32_t>(len) % AES_BLOCK_SIZE_BYTES) == 0U);
 
         if (blockAligned) {
-            mbedtls_aes_context ctx = { 0 };
+            mbedtls_aes_context ctx = {};
             mbedtls_aes_init(&ctx);
 
             unsigned int keyBits = static_cast<unsigned int>(
