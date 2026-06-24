@@ -53,7 +53,7 @@ jobs:
 
       - name: Build PDF (pdflatex)
         run: |
-          sed -i 's/\\documentclass\[twoside\]/\\documentclass[oneside]/' docs/latex/refman.tex
+          python3 docs/patch_latex.py docs/latex/refman.tex "Cryptnox SDK for ESP32"
           make -C docs/latex
           cp docs/latex/refman.pdf docs/html/cryptnox-sdk-esp32.pdf
 
