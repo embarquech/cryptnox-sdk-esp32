@@ -44,6 +44,27 @@ static const char *const PN532_LOG_TAG = "pn532";
 #define PN532_INLISTPASSIVETARGET  (0x4AU)
 #define PN532_INDATAEXCHANGE       (0x40U)
 #define PN532_INRELEASE            (0x52U)
+#define PN532_RFCONFIGURATION      (0x32U)
+
+/* RFConfiguration CfgItems (PN532 user manual §7.3.1). */
+#define PN532_RFCFG_RF_FIELD        (0x01U)  /**< 1 data byte: RF field on/off. */
+#define PN532_RFCFG_MAX_RETRIES     (0x05U)  /**< 3 data bytes: ATR, PSL, passive activation. */
+
+#define PN532_RFCFG_FIELD_ON        (0x01U)  /**< Auto RFCA off, RF field on. */
+#define PN532_RFCFG_RETRY_ATR       (0xFFU)  /**< Datasheet default. */
+#define PN532_RFCFG_RETRY_PSL       (0x01U)  /**< Datasheet default. */
+/* Bound passive activation so InListPassiveTarget returns "0 targets found"
+ * promptly instead of retrying forever — an unbounded 0xFF makes an empty
+ * antenna indistinguishable from a dead RF field. */
+#define PN532_RFCFG_RETRY_PASSIVE   (0x02U)
+
+#define PN532_RFCFG_RESP_LEN        (8U)
+#define PN532_RFCFG_RESP_CODE_OFF   (6U)
+#define PN532_RFCFG_RESP_CODE       (0x33U)  /* RFCONFIGURATION + 1 */
+#define PN532_RFCFG_MAX_DATA        (3U)
+
+static bool pn532_rf_configuration(pn532_t *dev, uint8_t cfg_item,
+                                   const uint8_t *data, uint8_t data_len);
 
 /******************************************************************
  * SPI protocol constants
@@ -708,6 +729,24 @@ esp_err_t pn532_init(pn532_t *dev, const pn532_config_t *config)
         (void)pn532_get_firmware_version(dev);
         vTaskDelay(pdMS_TO_TICKS(PN532_SYNC_DELAY_MS));
 
+        /* Explicitly energise the antenna and bound the passive-activation
+         * retries. Without this the chip keeps its post-SAMConfig default of
+         * unbounded retries, so InListPassiveTarget never reports "0 targets"
+         * and an empty antenna looks exactly like a dead RF field. */
+        const uint8_t field_on = PN532_RFCFG_FIELD_ON;
+        ESP_LOGI(PN532_LOG_TAG, "RF field on: %s",
+                 pn532_rf_configuration(dev, PN532_RFCFG_RF_FIELD,
+                                        &field_on, 1U) ? "OK" : "FAILED");
+
+        const uint8_t retries[PN532_RFCFG_MAX_DATA] = {
+            PN532_RFCFG_RETRY_ATR, PN532_RFCFG_RETRY_PSL, PN532_RFCFG_RETRY_PASSIVE
+        };
+        ESP_LOGI(PN532_LOG_TAG, "MaxRetries (passive=%u): %s",
+                 (unsigned)PN532_RFCFG_RETRY_PASSIVE,
+                 pn532_rf_configuration(dev, PN532_RFCFG_MAX_RETRIES,
+                                        retries, PN532_RFCFG_MAX_DATA) ? "OK" : "FAILED");
+        vTaskDelay(pdMS_TO_TICKS(PN532_SYNC_DELAY_MS));
+
         ESP_LOGI(PN532_LOG_TAG, "PN532 initialized (%s)",
                  (config->transport == PN532_TRANSPORT_I2C) ? "I2C" : "SPI");
     }
@@ -747,6 +786,39 @@ uint32_t pn532_get_firmware_version(pn532_t *dev)
     }
 
     return response;
+}
+
+/**
+ * @brief Send an RFConfiguration command (0x32) for one CfgItem.
+ *
+ * @param dev      Driver instance.
+ * @param cfg_item CfgItem selector (@c PN532_RFCFG_*).
+ * @param data     Configuration bytes for that item.
+ * @param data_len Number of configuration bytes (≤ @c PN532_RFCFG_MAX_DATA).
+ * @return true when the PN532 acknowledged and echoed 0x33.
+ */
+static bool pn532_rf_configuration(pn532_t *dev, uint8_t cfg_item,
+                                   const uint8_t *data, uint8_t data_len)
+{
+    uint8_t pn532_packetbuffer[PN532_RFCFG_RESP_LEN];
+    bool result = false;
+
+    if (data_len > PN532_RFCFG_MAX_DATA) {
+        return false;
+    }
+
+    (void)memset(pn532_packetbuffer, 0, sizeof(pn532_packetbuffer));
+    pn532_packetbuffer[0] = PN532_RFCONFIGURATION;
+    pn532_packetbuffer[1] = cfg_item;
+    (void)memcpy(&pn532_packetbuffer[2], data, data_len);
+
+    if (send_command_check_ack(dev, pn532_packetbuffer,
+                               (uint8_t)(2U + data_len), PN532_CMD_TIMEOUT_MS)) {
+        read_data(dev, pn532_packetbuffer, PN532_RFCFG_RESP_LEN);
+        result = (pn532_packetbuffer[PN532_RFCFG_RESP_CODE_OFF] == PN532_RFCFG_RESP_CODE);
+    }
+
+    return result;
 }
 
 bool pn532_sam_config(pn532_t *dev)
