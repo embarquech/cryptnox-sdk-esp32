@@ -276,15 +276,33 @@ static void read_data(pn532_t *dev, uint8_t *buff, uint8_t n)
         size_t payload_len = (size_t)to_read - 1U;
         (void)memcpy(buff, &tmp[1], payload_len);
     } else {
-        uint8_t i = 0U;
+        /* One continuous transfer, the way Adafruit_PN532 does it on the setup
+         * this transport was validated against: DATAREAD then the frame, with
+         * no gap. Clocking the same bytes as separate transactions a
+         * millisecond apart loses the frame's first byte on an ESP32. */
+        uint8_t tx[PN532_I2C_RX_MAX + 1U];
+        uint8_t rx[PN532_I2C_RX_MAX + 1U];
+        uint16_t to_read = (uint16_t)n + 1U;
+        if (to_read > sizeof(tx)) {
+            to_read = (uint16_t)sizeof(tx);
+        }
+        (void)memset(tx, 0, sizeof(tx));
+        tx[0] = PN532_SPI_DATAREAD;
+
+        spi_transaction_t t;
+        (void)memset(&t, 0, sizeof(t));
+        t.length    = (size_t)to_read * 8U;
+        t.rxlength  = (size_t)to_read * 8U;
+        t.tx_buffer = tx;
+        t.rx_buffer = rx;
+
         (void)gpio_set_level(dev->pin_cs, GPIO_LEVEL_LOW);
         vTaskDelay(pdMS_TO_TICKS(PN532_CS_TOGGLE_DELAY_MS));
-        spi_write_byte(dev, PN532_SPI_DATAREAD);
-        for (i = 0U; i < n; i++) {
-            vTaskDelay(pdMS_TO_TICKS(PN532_BYTE_DELAY_MS));
-            buff[i] = spi_read_byte(dev);
-        }
+        (void)spi_device_transmit(dev->spi, &t);
         (void)gpio_set_level(dev->pin_cs, GPIO_LEVEL_HIGH);
+
+        /* rx[0] was clocked out while DATAREAD went in — the frame starts after. */
+        (void)memcpy(buff, &rx[1], (size_t)to_read - 1U);
     }
 }
 
