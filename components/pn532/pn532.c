@@ -821,19 +821,19 @@ static bool pn532_rf_configuration(pn532_t *dev, uint8_t cfg_item,
     uint8_t pn532_packetbuffer[PN532_RFCFG_RESP_LEN];
     bool result = false;
 
-    if (data_len > PN532_RFCFG_MAX_DATA) {
-        return false;
-    }
+    /* Nested rather than an early return: MISRA C 15.5 wants the one exit, and
+     * an over-long CfgItem is a caller bug, not a runtime path worth its own. */
+    if (data_len <= PN532_RFCFG_MAX_DATA) {
+        (void)memset(pn532_packetbuffer, 0, sizeof(pn532_packetbuffer));
+        pn532_packetbuffer[0] = PN532_RFCONFIGURATION;
+        pn532_packetbuffer[1] = cfg_item;
+        (void)memcpy(&pn532_packetbuffer[2], data, data_len);
 
-    (void)memset(pn532_packetbuffer, 0, sizeof(pn532_packetbuffer));
-    pn532_packetbuffer[0] = PN532_RFCONFIGURATION;
-    pn532_packetbuffer[1] = cfg_item;
-    (void)memcpy(&pn532_packetbuffer[2], data, data_len);
-
-    if (send_command_check_ack(dev, pn532_packetbuffer,
-                               (uint8_t)(2U + data_len), PN532_CMD_TIMEOUT_MS)) {
-        read_data(dev, pn532_packetbuffer, PN532_RFCFG_RESP_LEN);
-        result = (pn532_packetbuffer[PN532_RFCFG_RESP_CODE_OFF] == PN532_RFCFG_RESP_CODE);
+        if (send_command_check_ack(dev, pn532_packetbuffer,
+                                   (uint8_t)(2U + data_len), PN532_CMD_TIMEOUT_MS)) {
+            read_data(dev, pn532_packetbuffer, PN532_RFCFG_RESP_LEN);
+            result = (pn532_packetbuffer[PN532_RFCFG_RESP_CODE_OFF] == PN532_RFCFG_RESP_CODE);
+        }
     }
 
     return result;
