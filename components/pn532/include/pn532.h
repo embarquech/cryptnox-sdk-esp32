@@ -152,8 +152,7 @@ typedef struct {
     int                     pin_rst; /**< Reset GPIO (-1 when unused). */
 
     /* ── Self-recovery state ── */
-    uint8_t fail_count;  /**< Consecutive commands without ACK/response. */
-    bool    recovering;  /**< Re-running the wake-up sequence; blocks nested recovery. */
+    uint8_t fail_count;  /**< Consecutive commands without ACK/response; the card poll re-initialises the reader at 3. */
 } pn532_t;
 
 /* ── Public API ─────────────────────────────────────────────────── */
