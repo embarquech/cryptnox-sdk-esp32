@@ -150,6 +150,10 @@ typedef struct {
     i2c_master_dev_handle_t i2c_dev; /**< I²C device handle returned by @c i2c_master_bus_add_device(). */
     int                     pin_irq; /**< IRQ GPIO (-1 when unused). */
     int                     pin_rst; /**< Reset GPIO (-1 when unused). */
+
+    /* ── Self-recovery state ── */
+    uint8_t fail_count;  /**< Consecutive commands without ACK/response. */
+    bool    recovering;  /**< Re-running the wake-up sequence; blocks nested recovery. */
 } pn532_t;
 
 /* ── Public API ─────────────────────────────────────────────────── */
