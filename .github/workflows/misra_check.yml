@@ -35,7 +35,6 @@ jobs:
             -I components/uECC/include \
             -I components/cryptnox_utils/include \
             -I components/crypto_provider/include \
-            -I components/secure_channel/include \
             -I components/esp32_logger/include \
             --force \
             cryptnox-sdk-cpp/ \
@@ -64,6 +63,5 @@ jobs:
             --force \
             -I components/epd/include \
             -I components/pn532/include \
-            -I components/secure_channel/include \
             components/epd/epd.c \
             components/pn532/pn532.c

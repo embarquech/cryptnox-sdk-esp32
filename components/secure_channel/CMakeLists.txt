@@ -4,14 +4,12 @@ idf_component_register(
     SRCS
         "${SDK_DIR}/CW_SecureChannel.cpp"
         "${SDK_DIR}/CW_Tron.cpp"
-        "${SDK_DIR}/CW_Utils.cpp"
         "${SDK_DIR}/CryptnoxWallet.cpp"
-        "cw_utils_c.cpp"
     INCLUDE_DIRS
         "${SDK_DIR}"
-        "include"
     REQUIRES
         uECC
+        cryptnox_utils
 )
 
 # CW_DEBUG_LOGGING defaults to 0 (off). Enabling it in production builds leaks
