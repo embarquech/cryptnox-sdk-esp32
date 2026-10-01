@@ -15,6 +15,7 @@
  */
 
 #include "pn532.h"
+#include "cw_utils_c.h"     /* cw_safe_memcpy — CW_Utils::safe_memcpy for C */
 #include "driver/gpio.h"
 #include "driver/i2c_master.h"   /* new IDF v5.x master API */
 #include "esp_log.h"
@@ -302,7 +303,7 @@ static void read_data(pn532_t *dev, uint8_t *buff, uint8_t n)
         }
         (void)i2c_master_receive(dev->i2c_dev, tmp, (size_t)to_read, PN532_I2C_TIMEOUT_MS);
         size_t payload_len = (size_t)to_read - 1U;
-        (void)memcpy(buff, &tmp[1], payload_len);
+        (void)cw_safe_memcpy(buff, (size_t)n, &tmp[1], payload_len);
     } else {
         uint8_t i = 0U;
         (void)gpio_set_level(dev->pin_cs, GPIO_LEVEL_LOW);
@@ -479,7 +480,7 @@ static uint16_t read_data_apdu_frame(pn532_t *dev, uint8_t *buff, uint16_t max_l
         (void)i2c_master_receive(dev->i2c_dev, tmp, (size_t)to_read,
                                   PN532_I2C_TIMEOUT_MS);
         size_t payload_len = (size_t)to_read - (size_t)1U;
-        (void)memcpy(buff, &tmp[1], payload_len);
+        (void)cw_safe_memcpy(buff, (size_t)max_len, &tmp[1], payload_len);
 
         is_extended = ((buff[PN532_EXCHANGE_LEN_OFFSET] == PN532_EXT_FRAME_INDICATOR) &&
                        (buff[PN532_EXCHANGE_LEN_OFFSET + 1U] == PN532_EXT_FRAME_INDICATOR));
@@ -863,7 +864,8 @@ static bool pn532_rf_configuration(pn532_t *dev, uint8_t cfg_item,
         (void)memset(pn532_packetbuffer, 0, sizeof(pn532_packetbuffer));
         pn532_packetbuffer[0] = PN532_RFCONFIGURATION;
         pn532_packetbuffer[1] = cfg_item;
-        (void)memcpy(&pn532_packetbuffer[2], data, data_len);
+        (void)cw_safe_memcpy(&pn532_packetbuffer[2], sizeof(pn532_packetbuffer) - 2U,
+                             data, data_len);
 
         if (send_command_check_ack(dev, pn532_packetbuffer,
                                    (uint8_t)(2U + data_len), PN532_CMD_TIMEOUT_MS)) {
@@ -950,7 +952,8 @@ bool pn532_send_apdu(pn532_t *dev, const uint8_t *apdu, uint8_t apdu_len,
 
         cmd[0] = PN532_INDATAEXCHANGE;
         cmd[1] = PN532_EXCHANGE_TG;
-        (void)memcpy(&cmd[PN532_EXCHANGE_CMD_OVERHEAD], apdu, apdu_len);
+        (void)cw_safe_memcpy(&cmd[PN532_EXCHANGE_CMD_OVERHEAD],
+                             sizeof(cmd) - PN532_EXCHANGE_CMD_OVERHEAD, apdu, apdu_len);
         cmd_total_len = (uint8_t)(apdu_len + PN532_EXCHANGE_CMD_OVERHEAD);
 
         ack_received = send_command_check_ack(dev, cmd, cmd_total_len, PN532_APDU_TIMEOUT_MS);
@@ -989,7 +992,8 @@ bool pn532_send_apdu(pn532_t *dev, const uint8_t *apdu, uint8_t apdu_len,
                 uint16_t buf_cap = *response_len;
                 uint16_t copy_len = (data_len <= buf_cap) ? data_len : buf_cap;
 
-                (void)memcpy(response, &frame[data_offset], (size_t)copy_len);
+                (void)cw_safe_memcpy(response, (size_t)buf_cap, &frame[data_offset],
+                                     (size_t)copy_len);
                 *response_len = copy_len;
                 result = true;
             } else {

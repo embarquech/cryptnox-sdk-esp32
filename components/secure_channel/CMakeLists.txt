@@ -6,8 +6,10 @@ idf_component_register(
         "${SDK_DIR}/CW_Tron.cpp"
         "${SDK_DIR}/CW_Utils.cpp"
         "${SDK_DIR}/CryptnoxWallet.cpp"
+        "cw_utils_c.cpp"
     INCLUDE_DIRS
         "${SDK_DIR}"
+        "include"
     REQUIRES
         uECC
 )

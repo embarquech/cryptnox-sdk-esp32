@@ -64,5 +64,6 @@ jobs:
             --force \
             -I components/epd/include \
             -I components/pn532/include \
+            -I components/secure_channel/include \
             components/epd/epd.c \
             components/pn532/pn532.c
