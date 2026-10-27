@@ -85,9 +85,14 @@ static void wifi_event_handler(void *arg, esp_event_base_t event_base,
  * HTTP helper
  ******************************************************************/
 
+/* A response is only usable with a 2xx status. */
+#define HTTP_STATUS_SUCCESS_MIN  (200)
+#define HTTP_STATUS_SUCCESS_MAX  (299)
+
 /*
  * POST 'body' to s_base_url + path over HTTPS and read the response into
- * resp_buf (NUL-terminated on success). Returns true if data was read.
+ * resp_buf (NUL-terminated). Returns true only for a complete 2xx body that
+ * fit in resp_buf — a truncated, errored, or non-2xx read is a failure.
  */
 static bool do_post(const char *path, const char *body,
                     char *resp_buf, size_t resp_buf_size)
@@ -134,16 +139,31 @@ static bool do_post(const char *path, const char *body,
         (void)esp_http_client_fetch_headers(client);  /* may be -1 when chunked */
 
         int total = 0;
-        int read;
+        int read = 0;
         do {
             int space = (int)(resp_buf_size - 1U) - total;
-            if (space <= 0) { break; }
-            read = esp_http_client_read(client, resp_buf + total, space);
-            if (read > 0) { total += read; }
+            if (space <= 0) {
+                read = 0;  /* buffer full: completeness is checked below */
+            } else {
+                read = esp_http_client_read(client, resp_buf + total, space);
+                if (read > 0) {
+                    total += read;
+                }
+            }
         } while (read > 0);
 
         resp_buf[total] = '\0';
-        success = (total > 0);
+
+        int status = esp_http_client_get_status_code(client);
+        if (read < 0) {
+            ESP_LOGE(TAG, "HTTP read error after %d bytes", total);
+        } else if (!esp_http_client_is_complete_data_received(client)) {
+            ESP_LOGE(TAG, "HTTP response truncated at %d bytes", total);
+        } else if ((status < HTTP_STATUS_SUCCESS_MIN) || (status > HTTP_STATUS_SUCCESS_MAX)) {
+            ESP_LOGE(TAG, "HTTP status %d: %s", status, resp_buf);
+        } else {
+            success = (total > 0);
+        }
     }
 
 cleanup:

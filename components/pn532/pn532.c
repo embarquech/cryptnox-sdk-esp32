@@ -15,7 +15,6 @@
  */
 
 #include "pn532.h"
-#include "cw_utils_c.h"     /* cw_safe_memcpy — CW_Utils::safe_memcpy for C */
 #include "driver/gpio.h"
 #include "driver/i2c_master.h"   /* new IDF v5.x master API */
 #include "esp_log.h"
@@ -24,6 +23,24 @@
 #include <string.h>
 
 static const char *const PN532_LOG_TAG = "pn532";
+
+/* Bounds-checked copy, same contract as CW_Utils::safe_memcpy. Kept local so
+ * the driver does not depend on cryptnox_utils (and through it on esp_wifi).
+ * Returns true when copied; false (nothing copied) on a NULL pointer, a zero
+ * count, count larger than dst_size, or overlapping buffers. */
+static bool pn532_safe_memcpy(uint8_t *dst, size_t dst_size,
+                              const uint8_t *src, size_t count)
+{
+    bool ret = false;
+    if ((dst != NULL) && (src != NULL) && (count > 0U) && (count <= dst_size)) {
+        bool overlap = (dst < (src + count)) && (src < (dst + dst_size));
+        if (!overlap) {
+            (void)memcpy(dst, src, count);
+            ret = true;
+        }
+    }
+    return ret;
+}
 
 /******************************************************************
  * PN532 frame constants
@@ -59,7 +76,7 @@ static const char *const PN532_LOG_TAG = "pn532";
  * antenna indistinguishable from a dead RF field. */
 #define PN532_RFCFG_RETRY_PASSIVE   (0x02U)
 
-#define PN532_RFCFG_RESP_LEN        (8U)
+#define PN532_RFCFG_RESP_LEN        (9U)
 #define PN532_RFCFG_RESP_CODE_OFF   (6U)
 #define PN532_RFCFG_RESP_CODE       (0x33U)  /* RFCONFIGURATION + 1 */
 #define PN532_RFCFG_MAX_DATA        (3U)
@@ -166,6 +183,8 @@ static bool pn532_rf_configuration(pn532_t *dev, uint8_t cfg_item,
 #define PN532_PASSIVE_EXPECTED_TARGETS    (1U)
 #define PN532_PASSIVE_UID_LEN_OFFSET      (12U)
 #define PN532_PASSIVE_UID_DATA_OFFSET     (13U)
+/* UID_LEN comes from the card; never index past the response buffer. */
+#define PN532_PASSIVE_UID_MAX_LEN         (PN532_PASSIVE_RESP_LEN - PN532_PASSIVE_UID_DATA_OFFSET)
 #define PN532_BYTE_SHIFT_BITS             (8U)
 
 /******************************************************************
@@ -303,7 +322,7 @@ static void read_data(pn532_t *dev, uint8_t *buff, uint8_t n)
         }
         (void)i2c_master_receive(dev->i2c_dev, tmp, (size_t)to_read, PN532_I2C_TIMEOUT_MS);
         size_t payload_len = (size_t)to_read - 1U;
-        (void)cw_safe_memcpy(buff, (size_t)n, &tmp[1], payload_len);
+        (void)pn532_safe_memcpy(buff, (size_t)n, &tmp[1], payload_len);
     } else {
         uint8_t i = 0U;
         (void)gpio_set_level(dev->pin_cs, GPIO_LEVEL_LOW);
@@ -480,7 +499,7 @@ static uint16_t read_data_apdu_frame(pn532_t *dev, uint8_t *buff, uint16_t max_l
         (void)i2c_master_receive(dev->i2c_dev, tmp, (size_t)to_read,
                                   PN532_I2C_TIMEOUT_MS);
         size_t payload_len = (size_t)to_read - (size_t)1U;
-        (void)cw_safe_memcpy(buff, (size_t)max_len, &tmp[1], payload_len);
+        (void)pn532_safe_memcpy(buff, (size_t)max_len, &tmp[1], payload_len);
 
         is_extended = ((buff[PN532_EXCHANGE_LEN_OFFSET] == PN532_EXT_FRAME_INDICATOR) &&
                        (buff[PN532_EXCHANGE_LEN_OFFSET + 1U] == PN532_EXT_FRAME_INDICATOR));
@@ -864,8 +883,8 @@ static bool pn532_rf_configuration(pn532_t *dev, uint8_t cfg_item,
         (void)memset(pn532_packetbuffer, 0, sizeof(pn532_packetbuffer));
         pn532_packetbuffer[0] = PN532_RFCONFIGURATION;
         pn532_packetbuffer[1] = cfg_item;
-        (void)cw_safe_memcpy(&pn532_packetbuffer[2], sizeof(pn532_packetbuffer) - 2U,
-                             data, data_len);
+        (void)pn532_safe_memcpy(&pn532_packetbuffer[2], sizeof(pn532_packetbuffer) - 2U,
+                                data, data_len);
 
         if (send_command_check_ack(dev, pn532_packetbuffer,
                                    (uint8_t)(2U + data_len), PN532_CMD_TIMEOUT_MS)) {
@@ -926,6 +945,11 @@ uint32_t pn532_read_passive_target_id(pn532_t *dev, uint8_t cardbaudrate)
         if (pn532_packetbuffer[PN532_PASSIVE_NUM_TARGETS_OFFSET] == PN532_PASSIVE_EXPECTED_TARGETS) {
             uint8_t uid_len = pn532_packetbuffer[PN532_PASSIVE_UID_LEN_OFFSET];
             uint8_t i = 0U;
+            if (uid_len > (uint8_t)PN532_PASSIVE_UID_MAX_LEN) {
+                uid_len = (uint8_t)PN532_PASSIVE_UID_MAX_LEN;
+            }
+            /* cid is 32 bits: a 7- or 10-byte UID keeps only its last 4 bytes.
+             * Good enough to tell "a card is present" from "no card". */
             for (i = 0U; i < uid_len; i++) {
                 cid <<= PN532_BYTE_SHIFT_BITS;
                 cid |= (uint32_t)pn532_packetbuffer[PN532_PASSIVE_UID_DATA_OFFSET + i];
@@ -952,14 +976,14 @@ bool pn532_send_apdu(pn532_t *dev, const uint8_t *apdu, uint8_t apdu_len,
 
         cmd[0] = PN532_INDATAEXCHANGE;
         cmd[1] = PN532_EXCHANGE_TG;
-        (void)cw_safe_memcpy(&cmd[PN532_EXCHANGE_CMD_OVERHEAD],
-                             sizeof(cmd) - PN532_EXCHANGE_CMD_OVERHEAD, apdu, apdu_len);
+        (void)pn532_safe_memcpy(&cmd[PN532_EXCHANGE_CMD_OVERHEAD],
+                                sizeof(cmd) - PN532_EXCHANGE_CMD_OVERHEAD, apdu, apdu_len);
         cmd_total_len = (uint8_t)(apdu_len + PN532_EXCHANGE_CMD_OVERHEAD);
 
         ack_received = send_command_check_ack(dev, cmd, cmd_total_len, PN532_APDU_TIMEOUT_MS);
 
         if (ack_received) {
-            (void)read_data_apdu_frame(dev, frame, (uint16_t)PN532_EXCHANGE_FRAME_MAX);
+            uint16_t frame_len = read_data_apdu_frame(dev, frame, (uint16_t)PN532_EXCHANGE_FRAME_MAX);
 
             bool is_extended = ((frame[PN532_EXCHANGE_LEN_OFFSET] == PN532_EXT_FRAME_INDICATOR) &&
                                 (frame[PN532_EXCHANGE_LEN_OFFSET + 1U] == PN532_EXT_FRAME_INDICATOR));
@@ -988,12 +1012,22 @@ bool pn532_send_apdu(pn532_t *dev, const uint8_t *apdu, uint8_t apdu_len,
                 }
             }
 
-            if (err_byte == PN532_EXCHANGE_STATUS_OK) {
+            /* LEN comes from the card: the DataOut it announces must actually
+             * be inside the bytes we read, otherwise the frame is truncated. */
+            bool frame_complete = ((uint32_t)data_offset + (uint32_t)data_len
+                                   + (uint32_t)PN532_FRAME_TAIL_LEN) <= (uint32_t)frame_len;
+
+            if (!frame_complete) {
+                ESP_LOGE(PN532_LOG_TAG, "APDU INS=0x%02X: truncated frame (%u of %u bytes)",
+                         (unsigned)apdu[1], (unsigned)frame_len,
+                         (unsigned)((uint32_t)data_offset + (uint32_t)data_len
+                                    + (uint32_t)PN532_FRAME_TAIL_LEN));
+            } else if (err_byte == PN532_EXCHANGE_STATUS_OK) {
                 uint16_t buf_cap = *response_len;
                 uint16_t copy_len = (data_len <= buf_cap) ? data_len : buf_cap;
 
-                (void)cw_safe_memcpy(response, (size_t)buf_cap, &frame[data_offset],
-                                     (size_t)copy_len);
+                (void)pn532_safe_memcpy(response, (size_t)buf_cap, &frame[data_offset],
+                                        (size_t)copy_len);
                 *response_len = copy_len;
                 result = true;
             } else {

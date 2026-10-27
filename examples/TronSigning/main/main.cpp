@@ -182,10 +182,16 @@ static bool verify_transaction(const char *tx_json, CW_CryptoProvider &crypto,
 static void signing_loop(CryptnoxWallet &wallet, CW_CryptoProvider &crypto,
                          const uint8_t *owner21, const uint8_t *to21)
 {
-    /* CARD_PIN is a string literal ("000000000"); copy into the pin array. */
+    /* CARD_PIN is a string literal ("000000000"); copy into the pin array.
+     * Length comes from the literal itself, so editing the PIN cannot read
+     * past it and send the card a garbage PIN.
+     * ponytail: card_pin is not secure_wipe'd — signing_loop never returns,
+     * so the PIN stays in RAM for the whole run. Read it from a secure source
+     * and wipe after each sign if this goes beyond a demo. */
     uint8_t card_pin[CW_MAX_PIN_LENGTH] = {};
-    const size_t pin_len = (CARD_PIN_LEN < CW_MAX_PIN_LENGTH) ? CARD_PIN_LEN
-                                                              : CW_MAX_PIN_LENGTH;
+    const size_t literal_len = strlen(CARD_PIN);
+    const size_t pin_len = (literal_len < CW_MAX_PIN_LENGTH) ? literal_len
+                                                             : CW_MAX_PIN_LENGTH;
     (void)CW_Utils::safe_memcpy(card_pin, sizeof(card_pin),
                                 reinterpret_cast<const uint8_t *>(CARD_PIN),
                                 pin_len);
@@ -244,7 +250,10 @@ static void signing_loop(CryptnoxWallet &wallet, CW_CryptoProvider &crypto,
             continue;
         }
 
-        /* ── 5. Broadcast r||s||v, trying both parities ─────────── */
+        /* ── 5. Broadcast r||s||v, trying both parities ─────────── *
+         * Retrying cannot double-spend: txID = sha256(raw_data) does not cover
+         * the signature, so both attempts carry the same txID and the node
+         * rejects a duplicate of one already accepted. */
         uint8_t signature[TRON_SIGNATURE_BYTES];
         (void)CW_Utils::safe_memcpy(signature, sizeof(signature),
                                     result.signature, CW_RAW_SIGNATURE_SIZE);

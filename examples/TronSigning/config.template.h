@@ -40,7 +40,6 @@
  */
 
 #define CARD_PIN      "<CARD_PIN>"   /* 4-9 digit PIN, e.g. "000000000" */
-#define CARD_PIN_LEN  (9U)           /* number of digits in CARD_PIN     */
 
 /* =========================
  * TRON Addresses

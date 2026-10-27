@@ -6,6 +6,8 @@
 
 ESP32 SDK for managing Cryptnox smart card wallets
 
+📄 [Download this documentation as PDF](https://docs.cryptnox.com/cryptnox-sdk-esp32/cryptnox-sdk-esp32.pdf)
+
 </div>
 
 <br/>
