@@ -47,6 +47,7 @@ cryptnox seed generate        # generates a BIP39 seed (required for signing)
 | [Sign](Sign/README.md) | Signs a 32-byte hash with the card's secp256k1 key. Returns the raw `r ‖ s` signature ready to broadcast. |
 | [BasicUsage](BasicUsage/README.md) | End-to-end walkthrough in one project: pick SPI **or** I²C, open the channel, sign a hash. Good reference for production wiring. |
 | [UsdcSigning](UsdcSigning/README.md) | Real-world flow: build an EIP-1559 USDC transfer, sign it on the card, broadcast it on Sepolia. |
+| [TronSigning](TronSigning/README.md) | Real-world flow on **TRON**: have a full node build a TRX transfer, verify it locally, sign it on the card, broadcast it on the Nile testnet. |
 
 ## How to build and run an example
 

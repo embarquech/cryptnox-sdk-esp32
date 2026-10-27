@@ -1,0 +1,15 @@
+CONFIG_IDF_TARGET="esp32s3"
+
+# Enough stack for TLS + JSON + crypto operations in app_main
+CONFIG_ESP_MAIN_TASK_STACK_SIZE=16384
+
+# mbedTLS certificate bundle for HTTPS node endpoints
+CONFIG_MBEDTLS_CERTIFICATE_BUNDLE=y
+CONFIG_MBEDTLS_CERTIFICATE_BUNDLE_DEFAULT_FULL=y
+
+# HTTPS support in the HTTP client
+CONFIG_ESP_HTTP_CLIENT_ENABLE_HTTPS=y
+
+# Wi-Fi + mbedTLS + the full CA bundle leave only ~3% free in the default
+# 1 MB app partition. The "large" single-app layout gives 1.5 MB instead.
+CONFIG_PARTITION_TABLE_SINGLE_APP_LARGE=y

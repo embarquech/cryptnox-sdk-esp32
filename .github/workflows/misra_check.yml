@@ -20,6 +20,8 @@ jobs:
       # Common include paths so cppcheck resolves project headers
       # (uECC.h, CW_*.h, ESP-IDF mbedtls/esp_*.h are NOT installed in CI —
       # we suppress missingInclude rather than try to ship the full toolchain).
+      # functionStatic is suppressed only for the cryptnox-sdk-cpp submodule:
+      # it is a separate repo, so its style findings are fixed there.
       - name: cppcheck (Cryptnox SDK + ESP32 adapters, C++)
         run: |
           cppcheck \
@@ -31,11 +33,11 @@ jobs:
             --suppress=missingInclude \
             --suppress=missingIncludeSystem \
             --suppress=unusedFunction \
+            --suppress=functionStatic:cryptnox-sdk-cpp/* \
             -I cryptnox-sdk-cpp \
             -I components/uECC/include \
             -I components/cryptnox_utils/include \
             -I components/crypto_provider/include \
-            -I components/secure_channel/include \
             -I components/esp32_logger/include \
             --force \
             cryptnox-sdk-cpp/ \
@@ -46,11 +48,19 @@ jobs:
             components/secure_channel/ \
             main/
 
+      # ESP-IDF headers are not installed (see above), so the IDF APIs the
+      # driver calls (vTaskDelay, gpio_set_level, ESP_LOGx...) have no visible
+      # prototype and 17.3 would flag every one of them. The real build
+      # enforces 17.3 instead: GCC 14 rejects implicit declarations as errors.
+      # staticFunction: pn532_sam_config / pn532_get_firmware_version are public
+      # API in pn532.h; single-file analysis cannot see external callers
+      # (same reason unusedFunction is suppressed).
       - name: MISRA C analysis (.c drivers only)
         if: always()
         run: |
           cppcheck \
             --enable=all \
+            --check-level=exhaustive \
             --std=c99 \
             --language=c \
             --addon=misra \
@@ -60,6 +70,8 @@ jobs:
             --suppress=missingIncludeSystem \
             --suppress=misra-config \
             --suppress=misra-c2012-8.7 \
+            --suppress=misra-c2012-17.3 \
+            --suppress=staticFunction \
             --suppress=unusedFunction \
             --force \
             -I components/epd/include \
