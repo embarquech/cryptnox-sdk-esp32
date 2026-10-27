@@ -24,20 +24,19 @@
 
 static const char *const PN532_LOG_TAG = "pn532";
 
-/* Bounds-checked copy, same contract as CW_Utils::safe_memcpy. Kept local so
- * the driver does not depend on cryptnox_utils (and through it on esp_wifi).
+/* Bounds-checked copy. Kept local so the driver does not depend on
+ * cryptnox_utils (and through it on esp_wifi).
  * Returns true when copied; false (nothing copied) on a NULL pointer, a zero
- * count, count larger than dst_size, or overlapping buffers. */
+ * count, or count larger than dst_size.
+ * ponytail: no overlap check — every caller copies between distinct local
+ * buffers, and comparing pointers to different objects breaks MISRA 18.3/18.4. */
 static bool pn532_safe_memcpy(uint8_t *dst, size_t dst_size,
                               const uint8_t *src, size_t count)
 {
     bool ret = false;
     if ((dst != NULL) && (src != NULL) && (count > 0U) && (count <= dst_size)) {
-        bool overlap = (dst < (src + count)) && (src < (dst + dst_size));
-        if (!overlap) {
-            (void)memcpy(dst, src, count);
-            ret = true;
-        }
+        (void)memcpy(dst, src, count);
+        ret = true;
     }
     return ret;
 }
