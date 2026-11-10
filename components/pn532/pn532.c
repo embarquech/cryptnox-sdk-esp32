@@ -24,6 +24,23 @@
 
 static const char *const PN532_LOG_TAG = "pn532";
 
+/* Bounds-checked copy. Kept local so the driver does not depend on
+ * cryptnox_utils (and through it on esp_wifi).
+ * Returns true when copied; false (nothing copied) on a NULL pointer, a zero
+ * count, or count larger than dst_size.
+ * ponytail: no overlap check — every caller copies between distinct local
+ * buffers, and comparing pointers to different objects breaks MISRA 18.3/18.4. */
+static bool pn532_safe_memcpy(uint8_t *dst, size_t dst_size,
+                              const uint8_t *src, size_t count)
+{
+    bool ret = false;
+    if ((dst != NULL) && (src != NULL) && (count > 0U) && (count <= dst_size)) {
+        (void)memcpy(dst, src, count);
+        ret = true;
+    }
+    return ret;
+}
+
 /******************************************************************
  * PN532 frame constants
  ******************************************************************/
@@ -44,6 +61,27 @@ static const char *const PN532_LOG_TAG = "pn532";
 #define PN532_INLISTPASSIVETARGET  (0x4AU)
 #define PN532_INDATAEXCHANGE       (0x40U)
 #define PN532_INRELEASE            (0x52U)
+#define PN532_RFCONFIGURATION      (0x32U)
+
+/* RFConfiguration CfgItems (PN532 user manual §7.3.1). */
+#define PN532_RFCFG_RF_FIELD        (0x01U)  /**< 1 data byte: RF field on/off. */
+#define PN532_RFCFG_MAX_RETRIES     (0x05U)  /**< 3 data bytes: ATR, PSL, passive activation. */
+
+#define PN532_RFCFG_FIELD_ON        (0x01U)  /**< Auto RFCA off, RF field on. */
+#define PN532_RFCFG_RETRY_ATR       (0xFFU)  /**< Datasheet default. */
+#define PN532_RFCFG_RETRY_PSL       (0x01U)  /**< Datasheet default. */
+/* Bound passive activation so InListPassiveTarget returns "0 targets found"
+ * promptly instead of retrying forever — an unbounded 0xFF makes an empty
+ * antenna indistinguishable from a dead RF field. */
+#define PN532_RFCFG_RETRY_PASSIVE   (0x02U)
+
+#define PN532_RFCFG_RESP_LEN        (9U)
+#define PN532_RFCFG_RESP_CODE_OFF   (6U)
+#define PN532_RFCFG_RESP_CODE       (0x33U)  /* RFCONFIGURATION + 1 */
+#define PN532_RFCFG_MAX_DATA        (3U)
+
+static bool pn532_rf_configuration(pn532_t *dev, uint8_t cfg_item,
+                                   const uint8_t *data, uint8_t data_len);
 
 /******************************************************************
  * SPI protocol constants
@@ -144,6 +182,8 @@ static const char *const PN532_LOG_TAG = "pn532";
 #define PN532_PASSIVE_EXPECTED_TARGETS    (1U)
 #define PN532_PASSIVE_UID_LEN_OFFSET      (12U)
 #define PN532_PASSIVE_UID_DATA_OFFSET     (13U)
+/* UID_LEN comes from the card; never index past the response buffer. */
+#define PN532_PASSIVE_UID_MAX_LEN         (PN532_PASSIVE_RESP_LEN - PN532_PASSIVE_UID_DATA_OFFSET)
 #define PN532_BYTE_SHIFT_BITS             (8U)
 
 /******************************************************************
@@ -188,7 +228,6 @@ static const char *const PN532_LOG_TAG = "pn532";
  * Module-level static data
  ******************************************************************/
 
-/* cppcheck-suppress misra-c2012-8.9 */
 static const uint8_t pn532_ack[PN532_ACK_LEN] = {
     0x00U, 0x00U, 0xFFU, 0x00U, 0xFFU, 0x00U
 };
@@ -203,6 +242,14 @@ static const uint8_t pn532_response_fw[PN532_FIRMWARE_HDR_LEN] = {
  ******************************************************************/
 
 static bool pn532_buffer_equal(const uint8_t *lhs, const uint8_t *rhs, uint8_t len);
+static void pn532_wakeup(pn532_t *dev);
+static void pn532_recover(pn532_t *dev);
+
+/* Consecutive failed commands after which the driver re-runs the wake-up
+ * sequence. One miss is normal (a card leaving the field mid-APDU); several in
+ * a row means the chip or the I2C master is wedged and only a reboot used to
+ * bring it back. */
+#define PN532_RECOVER_AFTER_FAILS  (3U)
 
 /******************************************************************
  * Low-level SPI helpers
@@ -274,7 +321,7 @@ static void read_data(pn532_t *dev, uint8_t *buff, uint8_t n)
         }
         (void)i2c_master_receive(dev->i2c_dev, tmp, (size_t)to_read, PN532_I2C_TIMEOUT_MS);
         size_t payload_len = (size_t)to_read - 1U;
-        (void)memcpy(buff, &tmp[1], payload_len);
+        (void)pn532_safe_memcpy(buff, (size_t)n, &tmp[1], payload_len);
     } else {
         uint8_t i = 0U;
         (void)gpio_set_level(dev->pin_cs, GPIO_LEVEL_LOW);
@@ -417,6 +464,14 @@ static bool send_command_check_ack(pn532_t *dev, const uint8_t *cmd,
         }
     }
 
+    if (result) {
+        dev->fail_count = 0U;
+    } else {
+        if (dev->fail_count < UINT8_MAX) {
+            dev->fail_count++;
+        }
+    }
+
     return result;
 }
 
@@ -443,7 +498,7 @@ static uint16_t read_data_apdu_frame(pn532_t *dev, uint8_t *buff, uint16_t max_l
         (void)i2c_master_receive(dev->i2c_dev, tmp, (size_t)to_read,
                                   PN532_I2C_TIMEOUT_MS);
         size_t payload_len = (size_t)to_read - (size_t)1U;
-        (void)memcpy(buff, &tmp[1], payload_len);
+        (void)pn532_safe_memcpy(buff, (size_t)max_len, &tmp[1], payload_len);
 
         is_extended = ((buff[PN532_EXCHANGE_LEN_OFFSET] == PN532_EXT_FRAME_INDICATOR) &&
                        (buff[PN532_EXCHANGE_LEN_OFFSET + 1U] == PN532_EXT_FRAME_INDICATOR));
@@ -651,6 +706,103 @@ static esp_err_t pn532_init_i2c(pn532_t *dev, const pn532_config_t *config)
 }
 
 /******************************************************************
+ * Wake-up and recovery
+ ******************************************************************/
+
+/* Bring a freshly powered (or wedged) PN532 to a ready state: the same
+ * sequence pn532_init runs, reused by pn532_recover. */
+static void pn532_wakeup(pn532_t *dev)
+{
+    /* Transport-specific post-wakeup sequencing.
+     *
+     * I2C — Soft-Power-Down recovery:
+     *   When the host soft-reboots with the PN532 still powered the chip
+     *   enters Soft-Power-Down.  The main I2C peripheral is OFF; a
+     *   dedicated wake-up watcher listens on the bus.  The first
+     *   transaction that matches the slave address triggers the watcher,
+     *   but the firmware must then disable the watcher and re-enable the
+     *   main I2C peripheral — a process that takes up to 500 ms and
+     *   DISCARDS the triggering frame.  We therefore send a sacrificial
+     *   SAMConfig first, wait 500 ms, then send the real SAMConfig.
+     *
+     * SPI — post-power-on synchronisation:
+     *   The Adafruit_PN532 library always issues SAMConfig as the very
+     *   first functional command after wakeup.  On some PN532 modules the
+     *   chip's internal power-on sequencing is not complete until roughly
+     *   2 s after VCC is applied; a SAMConfig sent before that point is
+     *   silently ignored (no ACK — 1 s command timeout).  By issuing a
+     *   sacrificial SAMConfig here we absorb that 1 s stall inside
+     *   pn532_init so that the application-level SAMConfig issued by
+     *   wallet.begin() arrives after the chip is fully ready. */
+    if (dev->transport == PN532_TRANSPORT_I2C) {
+        ESP_LOGI(PN532_LOG_TAG, "I2C wake-up trigger (sacrificial SAMConfig)");
+        (void)pn532_sam_config(dev);
+        vTaskDelay(pdMS_TO_TICKS(500));
+        ESP_LOGI(PN532_LOG_TAG, "Real SAMConfig after wake-up");
+        (void)pn532_sam_config(dev);
+        vTaskDelay(pdMS_TO_TICKS(PN532_SYNC_DELAY_MS));
+    } else {
+        ESP_LOGI(PN532_LOG_TAG, "SPI post-power-on SAMConfig (sacrificial)");
+        (void)pn532_sam_config(dev);
+        vTaskDelay(pdMS_TO_TICKS(PN532_SYNC_DELAY_MS));
+    }
+
+    /* Read the firmware version to confirm the chip is alive and to drain
+     * any stale response bytes from the PN532's output FIFO before the
+     * application-level SAMConfig is issued. */
+    (void)pn532_get_firmware_version(dev);
+    vTaskDelay(pdMS_TO_TICKS(PN532_SYNC_DELAY_MS));
+
+    /* Explicitly energise the antenna and bound the passive-activation
+     * retries. Without this the chip keeps its post-SAMConfig default of
+     * unbounded retries, so InListPassiveTarget never reports "0 targets"
+     * and an empty antenna looks exactly like a dead RF field. */
+    const uint8_t field_on = PN532_RFCFG_FIELD_ON;
+    ESP_LOGI(PN532_LOG_TAG, "RF field on: %s",
+             pn532_rf_configuration(dev, PN532_RFCFG_RF_FIELD,
+                                    &field_on, 1U) ? "OK" : "FAILED");
+
+    const uint8_t retries[PN532_RFCFG_MAX_DATA] = {
+        PN532_RFCFG_RETRY_ATR, PN532_RFCFG_RETRY_PSL, PN532_RFCFG_RETRY_PASSIVE
+    };
+    ESP_LOGI(PN532_LOG_TAG, "MaxRetries (passive=%u): %s",
+             (unsigned)PN532_RFCFG_RETRY_PASSIVE,
+             pn532_rf_configuration(dev, PN532_RFCFG_MAX_RETRIES,
+                                    retries, PN532_RFCFG_MAX_DATA) ? "OK" : "FAILED");
+    vTaskDelay(pdMS_TO_TICKS(PN532_SYNC_DELAY_MS));
+}
+
+/* Abort whatever the PN532 is doing, unstick the I2C master and re-run the
+ * wake-up sequence, so a reader that stopped answering comes back without a
+ * reboot. Called from the card poll, never from send_command_check_ack: the
+ * wake-up sequence sends commands itself, and MISRA 17.2 forbids the cycle. */
+static void pn532_recover(pn532_t *dev)
+{
+    ESP_LOGW(PN532_LOG_TAG, "%u commands failed in a row - re-initialising the reader",
+             (unsigned)dev->fail_count);
+    /* An ACK frame from the host aborts the command in progress and drops any
+     * response still queued, which otherwise gets read as the next ACK. */
+    if (dev->transport == PN532_TRANSPORT_I2C) {
+        (void)i2c_master_bus_reset(dev->i2c_bus);
+        (void)i2c_master_transmit(dev->i2c_dev, pn532_ack, PN532_ACK_LEN, PN532_I2C_TIMEOUT_MS);
+    } else {
+        uint8_t i = 0U;
+        (void)gpio_set_level(dev->pin_cs, GPIO_LEVEL_LOW);
+        vTaskDelay(pdMS_TO_TICKS(PN532_CS_TOGGLE_DELAY_MS));
+        spi_write_byte(dev, PN532_SPI_DATAWRITE);
+        for (i = 0U; i < PN532_ACK_LEN; i++) {
+            spi_write_byte(dev, pn532_ack[i]);
+        }
+        (void)gpio_set_level(dev->pin_cs, GPIO_LEVEL_HIGH);
+    }
+    vTaskDelay(pdMS_TO_TICKS(PN532_SYNC_DELAY_MS));
+
+    pn532_wakeup(dev);
+
+    dev->fail_count = 0U;
+}
+
+/******************************************************************
  * Public API
  ******************************************************************/
 
@@ -668,45 +820,7 @@ esp_err_t pn532_init(pn532_t *dev, const pn532_config_t *config)
     }
 
     if (ret == ESP_OK) {
-        /* Transport-specific post-wakeup sequencing.
-         *
-         * I2C — Soft-Power-Down recovery:
-         *   When the host soft-reboots with the PN532 still powered the chip
-         *   enters Soft-Power-Down.  The main I2C peripheral is OFF; a
-         *   dedicated wake-up watcher listens on the bus.  The first
-         *   transaction that matches the slave address triggers the watcher,
-         *   but the firmware must then disable the watcher and re-enable the
-         *   main I2C peripheral — a process that takes up to 500 ms and
-         *   DISCARDS the triggering frame.  We therefore send a sacrificial
-         *   SAMConfig first, wait 500 ms, then send the real SAMConfig.
-         *
-         * SPI — post-power-on synchronisation:
-         *   The Adafruit_PN532 library always issues SAMConfig as the very
-         *   first functional command after wakeup.  On some PN532 modules the
-         *   chip's internal power-on sequencing is not complete until roughly
-         *   2 s after VCC is applied; a SAMConfig sent before that point is
-         *   silently ignored (no ACK — 1 s command timeout).  By issuing a
-         *   sacrificial SAMConfig here we absorb that 1 s stall inside
-         *   pn532_init so that the application-level SAMConfig issued by
-         *   wallet.begin() arrives after the chip is fully ready. */
-        if (config->transport == PN532_TRANSPORT_I2C) {
-            ESP_LOGI(PN532_LOG_TAG, "I2C wake-up trigger (sacrificial SAMConfig)");
-            (void)pn532_sam_config(dev);
-            vTaskDelay(pdMS_TO_TICKS(500));
-            ESP_LOGI(PN532_LOG_TAG, "Real SAMConfig after wake-up");
-            (void)pn532_sam_config(dev);
-            vTaskDelay(pdMS_TO_TICKS(PN532_SYNC_DELAY_MS));
-        } else {
-            ESP_LOGI(PN532_LOG_TAG, "SPI post-power-on SAMConfig (sacrificial)");
-            (void)pn532_sam_config(dev);
-            vTaskDelay(pdMS_TO_TICKS(PN532_SYNC_DELAY_MS));
-        }
-
-        /* Read the firmware version to confirm the chip is alive and to drain
-         * any stale response bytes from the PN532's output FIFO before the
-         * application-level SAMConfig is issued. */
-        (void)pn532_get_firmware_version(dev);
-        vTaskDelay(pdMS_TO_TICKS(PN532_SYNC_DELAY_MS));
+        pn532_wakeup(dev);
 
         ESP_LOGI(PN532_LOG_TAG, "PN532 initialized (%s)",
                  (config->transport == PN532_TRANSPORT_I2C) ? "I2C" : "SPI");
@@ -749,6 +863,38 @@ uint32_t pn532_get_firmware_version(pn532_t *dev)
     return response;
 }
 
+/**
+ * @brief Send an RFConfiguration command (0x32) for one CfgItem.
+ *
+ * @param dev      Driver instance.
+ * @param cfg_item CfgItem selector (@c PN532_RFCFG_*).
+ * @param data     Configuration bytes for that item.
+ * @param data_len Number of configuration bytes (≤ @c PN532_RFCFG_MAX_DATA).
+ * @return true when the PN532 acknowledged and echoed 0x33.
+ */
+static bool pn532_rf_configuration(pn532_t *dev, uint8_t cfg_item,
+                                   const uint8_t *data, uint8_t data_len)
+{
+    uint8_t pn532_packetbuffer[PN532_RFCFG_RESP_LEN];
+    bool result = false;
+
+    if (data_len <= PN532_RFCFG_MAX_DATA) {
+        (void)memset(pn532_packetbuffer, 0, sizeof(pn532_packetbuffer));
+        pn532_packetbuffer[0] = PN532_RFCONFIGURATION;
+        pn532_packetbuffer[1] = cfg_item;
+        (void)pn532_safe_memcpy(&pn532_packetbuffer[2], sizeof(pn532_packetbuffer) - 2U,
+                                data, data_len);
+
+        if (send_command_check_ack(dev, pn532_packetbuffer,
+                                   (uint8_t)(2U + data_len), PN532_CMD_TIMEOUT_MS)) {
+            read_data(dev, pn532_packetbuffer, PN532_RFCFG_RESP_LEN);
+            result = (pn532_packetbuffer[PN532_RFCFG_RESP_CODE_OFF] == PN532_RFCFG_RESP_CODE);
+        }
+    }
+
+    return result;
+}
+
 bool pn532_sam_config(pn532_t *dev)
 {
     uint8_t pn532_packetbuffer[PN532_SAM_RESP_LEN];
@@ -778,6 +924,12 @@ uint32_t pn532_read_passive_target_id(pn532_t *dev, uint8_t cardbaudrate)
     uint32_t cid = 0U;
     bool ack_received = false;
 
+    /* The poll is where a wedged reader shows: the host keeps asking for a card
+     * and every command fails. */
+    if (dev->fail_count >= PN532_RECOVER_AFTER_FAILS) {
+        pn532_recover(dev);
+    }
+
     (void)memset(pn532_packetbuffer, 0, sizeof(pn532_packetbuffer));
     pn532_packetbuffer[0] = PN532_INLISTPASSIVETARGET;
     pn532_packetbuffer[1] = PN532_PASSIVE_MAX_TARGETS;
@@ -792,6 +944,11 @@ uint32_t pn532_read_passive_target_id(pn532_t *dev, uint8_t cardbaudrate)
         if (pn532_packetbuffer[PN532_PASSIVE_NUM_TARGETS_OFFSET] == PN532_PASSIVE_EXPECTED_TARGETS) {
             uint8_t uid_len = pn532_packetbuffer[PN532_PASSIVE_UID_LEN_OFFSET];
             uint8_t i = 0U;
+            if (uid_len > (uint8_t)PN532_PASSIVE_UID_MAX_LEN) {
+                uid_len = (uint8_t)PN532_PASSIVE_UID_MAX_LEN;
+            }
+            /* cid is 32 bits: a 7- or 10-byte UID keeps only its last 4 bytes.
+             * Good enough to tell "a card is present" from "no card". */
             for (i = 0U; i < uid_len; i++) {
                 cid <<= PN532_BYTE_SHIFT_BITS;
                 cid |= (uint32_t)pn532_packetbuffer[PN532_PASSIVE_UID_DATA_OFFSET + i];
@@ -818,13 +975,14 @@ bool pn532_send_apdu(pn532_t *dev, const uint8_t *apdu, uint8_t apdu_len,
 
         cmd[0] = PN532_INDATAEXCHANGE;
         cmd[1] = PN532_EXCHANGE_TG;
-        (void)memcpy(&cmd[PN532_EXCHANGE_CMD_OVERHEAD], apdu, apdu_len);
+        (void)pn532_safe_memcpy(&cmd[PN532_EXCHANGE_CMD_OVERHEAD],
+                                sizeof(cmd) - PN532_EXCHANGE_CMD_OVERHEAD, apdu, apdu_len);
         cmd_total_len = (uint8_t)(apdu_len + PN532_EXCHANGE_CMD_OVERHEAD);
 
         ack_received = send_command_check_ack(dev, cmd, cmd_total_len, PN532_APDU_TIMEOUT_MS);
 
         if (ack_received) {
-            (void)read_data_apdu_frame(dev, frame, (uint16_t)PN532_EXCHANGE_FRAME_MAX);
+            uint16_t frame_len = read_data_apdu_frame(dev, frame, (uint16_t)PN532_EXCHANGE_FRAME_MAX);
 
             bool is_extended = ((frame[PN532_EXCHANGE_LEN_OFFSET] == PN532_EXT_FRAME_INDICATOR) &&
                                 (frame[PN532_EXCHANGE_LEN_OFFSET + 1U] == PN532_EXT_FRAME_INDICATOR));
@@ -853,11 +1011,22 @@ bool pn532_send_apdu(pn532_t *dev, const uint8_t *apdu, uint8_t apdu_len,
                 }
             }
 
-            if (err_byte == PN532_EXCHANGE_STATUS_OK) {
+            /* LEN comes from the card: the DataOut it announces must actually
+             * be inside the bytes we read, otherwise the frame is truncated. */
+            bool frame_complete = ((uint32_t)data_offset + (uint32_t)data_len
+                                   + (uint32_t)PN532_FRAME_TAIL_LEN) <= (uint32_t)frame_len;
+
+            if (!frame_complete) {
+                ESP_LOGE(PN532_LOG_TAG, "APDU INS=0x%02X: truncated frame (%u of %u bytes)",
+                         (unsigned)apdu[1], (unsigned)frame_len,
+                         (unsigned)((uint32_t)data_offset + (uint32_t)data_len
+                                    + (uint32_t)PN532_FRAME_TAIL_LEN));
+            } else if (err_byte == PN532_EXCHANGE_STATUS_OK) {
                 uint16_t buf_cap = *response_len;
                 uint16_t copy_len = (data_len <= buf_cap) ? data_len : buf_cap;
 
-                (void)memcpy(response, &frame[data_offset], (size_t)copy_len);
+                (void)pn532_safe_memcpy(response, (size_t)buf_cap, &frame[data_offset],
+                                        (size_t)copy_len);
                 *response_len = copy_len;
                 result = true;
             } else {
