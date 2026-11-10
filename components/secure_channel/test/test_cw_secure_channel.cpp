@@ -128,8 +128,6 @@ public:
     }
     void println(int, int = DEC) override {
     }
-    ~MockLogger() override {
-    }
 };
 
 /******************************************************************
@@ -139,8 +137,6 @@ public:
 class MockPlatform : public CW_Platform {
 public:
     void sleep_ms(uint32_t /*ms*/) override {
-    }
-    ~MockPlatform() override {
     }
 };
 
@@ -203,9 +199,6 @@ public:
             }
         }
         return result;
-    }
-
-    ~ScriptedMockNfcTransport() override {
     }
 };
 
@@ -301,9 +294,6 @@ public:
         }
 
         return result;
-    }
-
-    ~ReflectiveMockNfcTransport() override {
     }
 };
 
