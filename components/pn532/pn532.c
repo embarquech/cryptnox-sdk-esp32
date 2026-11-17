@@ -24,8 +24,11 @@
 
 static const char *const PN532_LOG_TAG = "pn532";
 
-/* Bounds-checked copy. Kept local so the driver does not depend on
- * cryptnox_utils (and through it on esp_wifi).
+/* Bounds-checked copy. Deliberately a local duplicate of CW_Utils::safe_memcpy:
+ * that one is a C++ static member (not callable from C without a wrapper), and
+ * its component, cryptnox_utils, requires esp_wifi for the RNG entropy check.
+ * secure_channel needs both anyway; a consumer that only reads tags through
+ * this driver should not have to link the Wi-Fi stack.
  * Returns true when copied; false (nothing copied) on a NULL pointer, a zero
  * count, or count larger than dst_size.
  * ponytail: no overlap check — every caller copies between distinct local
