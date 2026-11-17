@@ -26,16 +26,18 @@ bool CW_Utils::fill_secure_random(uint8_t *dest, size_t len) {
         bool bt_on = false;
 #endif
 
-        /* ESP32-S3 TRNG operates from thermal noise and ring-oscillator jitter
-         * even without a radio, but a live WiFi/BT subsystem feeds additional
-         * hardware entropy.  Always fill the buffer; warn when reduced-entropy
-         * mode is active so callers are aware. */
-        if ((!wifi_on) && (!bt_on)) {
-            ESP_LOGW(TAG, "RNG: no radio active — reduced entropy (TRNG only)");
-        }
-
+        /* SEC-001: esp_fill_random() is only a true RNG while Wi-Fi or BT runs
+         * (esp_random.h). On the classic ESP32 the radio-off output is not true
+         * random, so that case is a hard failure, as CW_Utils.h documents.
+         * The buffer is still filled, so a caller that may accept weaker bytes
+         * (a keypad layout, never a key) can do so knowingly.
+         * ponytail: wifi mode != NULL means the driver is configured, not that
+         * esp_wifi_start() ran; IDF has no public "RF running" query. */
         esp_fill_random(dest, len);
-        result = true;
+        result = wifi_on || bt_on;
+        if (!result) {
+            ESP_LOGE(TAG, "RNG: no radio active - not a true RNG (SEC-001)");
+        }
     }
 
     return result;
