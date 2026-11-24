@@ -9,7 +9,7 @@ idf_component_register(
         "${SDK_DIR}"
     REQUIRES
         uECC
-        cryptnox_utils
+        cw_utils   # the helpers only — not cryptnox_utils, which brings esp_wifi
 )
 
 # CW_DEBUG_LOGGING defaults to 0 (off). Enabling it in production builds leaks
