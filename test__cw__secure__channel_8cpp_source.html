@@ -849,18 +849,19 @@ $(function(){initNavTree('test__cw__secure__channel_8cpp_source.html','',''); })
 <div class="line"><a id="l00655" name="l00655"></a><span class="lineno">  655</span>        plaintext,</div>
 <div class="line"><a id="l00656" name="l00656"></a><span class="lineno">  656</span>        <span class="keyword">static_cast&lt;</span>uint16_t<span class="keyword">&gt;</span>(<span class="keyword">sizeof</span>(plaintext)),</div>
 <div class="line"><a id="l00657" name="l00657"></a><span class="lineno">  657</span>        decryptedOut,</div>
-<div class="line"><a id="l00658" name="l00658"></a><span class="lineno">  658</span>        &amp;decryptedLen);</div>
-<div class="line"><a id="l00659" name="l00659"></a><span class="lineno">  659</span> </div>
-<div class="line"><a id="l00660" name="l00660"></a><span class="lineno">  660</span>    TEST_ASSERT_TRUE(ok);</div>
-<div class="line"><a id="l00661" name="l00661"></a><span class="lineno">  661</span> </div>
-<div class="line"><a id="l00662" name="l00662"></a><span class="lineno">  662</span>    <span class="comment">/* decryptedLen = card response payload without the two SW bytes */</span></div>
-<div class="line"><a id="l00663" name="l00663"></a><span class="lineno">  663</span>    TEST_ASSERT_EQUAL_UINT16(<span class="keyword">static_cast&lt;</span>uint16_t<span class="keyword">&gt;</span>(<a class="code hl_define" href="test__cw__secure__channel_8cpp.html#aa2af7b070e6bbcb85e0c1b328f2cce19">SC_CARD_RESP_PAYLOAD_BYTES</a>),</div>
-<div class="line"><a id="l00664" name="l00664"></a><span class="lineno">  664</span>                              decryptedLen);</div>
-<div class="line"><a id="l00665" name="l00665"></a><span class="lineno">  665</span> </div>
-<div class="line"><a id="l00666" name="l00666"></a><span class="lineno">  666</span>    <span class="comment">/* Decrypted payload must match K_CARD_RESP_PLAINTEXT (excl. SW) */</span></div>
-<div class="line"><a id="l00667" name="l00667"></a><span class="lineno">  667</span>    TEST_ASSERT_EQUAL_HEX8_ARRAY(<a class="code hl_variable" href="test__cw__secure__channel_8cpp.html#a037ca69b426256120440c49492847a8d">K_CARD_RESP_PLAINTEXT</a>, decryptedOut,</div>
-<div class="line"><a id="l00668" name="l00668"></a><span class="lineno">  668</span>                                  <a class="code hl_define" href="test__cw__secure__channel_8cpp.html#aa2af7b070e6bbcb85e0c1b328f2cce19">SC_CARD_RESP_PAYLOAD_BYTES</a>);</div>
-<div class="line"><a id="l00669" name="l00669"></a><span class="lineno">  669</span>}</div>
+<div class="line"><a id="l00658" name="l00658"></a><span class="lineno">  658</span>        <span class="keyword">static_cast&lt;</span>uint16_t<span class="keyword">&gt;</span>(<span class="keyword">sizeof</span>(decryptedOut)),</div>
+<div class="line"><a id="l00659" name="l00659"></a><span class="lineno">  659</span>        &amp;decryptedLen);</div>
+<div class="line"><a id="l00660" name="l00660"></a><span class="lineno">  660</span> </div>
+<div class="line"><a id="l00661" name="l00661"></a><span class="lineno">  661</span>    TEST_ASSERT_TRUE(ok);</div>
+<div class="line"><a id="l00662" name="l00662"></a><span class="lineno">  662</span> </div>
+<div class="line"><a id="l00663" name="l00663"></a><span class="lineno">  663</span>    <span class="comment">/* decryptedLen = card response payload without the two SW bytes */</span></div>
+<div class="line"><a id="l00664" name="l00664"></a><span class="lineno">  664</span>    TEST_ASSERT_EQUAL_UINT16(<span class="keyword">static_cast&lt;</span>uint16_t<span class="keyword">&gt;</span>(<a class="code hl_define" href="test__cw__secure__channel_8cpp.html#aa2af7b070e6bbcb85e0c1b328f2cce19">SC_CARD_RESP_PAYLOAD_BYTES</a>),</div>
+<div class="line"><a id="l00665" name="l00665"></a><span class="lineno">  665</span>                              decryptedLen);</div>
+<div class="line"><a id="l00666" name="l00666"></a><span class="lineno">  666</span> </div>
+<div class="line"><a id="l00667" name="l00667"></a><span class="lineno">  667</span>    <span class="comment">/* Decrypted payload must match K_CARD_RESP_PLAINTEXT (excl. SW) */</span></div>
+<div class="line"><a id="l00668" name="l00668"></a><span class="lineno">  668</span>    TEST_ASSERT_EQUAL_HEX8_ARRAY(<a class="code hl_variable" href="test__cw__secure__channel_8cpp.html#a037ca69b426256120440c49492847a8d">K_CARD_RESP_PLAINTEXT</a>, decryptedOut,</div>
+<div class="line"><a id="l00669" name="l00669"></a><span class="lineno">  669</span>                                  <a class="code hl_define" href="test__cw__secure__channel_8cpp.html#aa2af7b070e6bbcb85e0c1b328f2cce19">SC_CARD_RESP_PAYLOAD_BYTES</a>);</div>
+<div class="line"><a id="l00670" name="l00670"></a><span class="lineno">  670</span>}</div>
 </div>
 <div class="ttc" id="aclassESP32CryptoProvider_html"><div class="ttname"><a href="classESP32CryptoProvider.html">ESP32CryptoProvider</a></div><div class="ttdoc">CW_CryptoProvider backed by mbedTLS and the ESP32 hardware TRNG.</div><div class="ttdef"><b>Definition</b> <a href="esp32__crypto__provider_8h_source.html#l00062">esp32_crypto_provider.h:62</a></div></div>
 <div class="ttc" id="aclassMockLogger_html"><div class="ttname"><a href="classMockLogger.html">MockLogger</a></div><div class="ttdef"><b>Definition</b> <a href="#l00096">test_cw_secure_channel.cpp:96</a></div></div>
