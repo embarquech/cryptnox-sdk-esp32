@@ -208,9 +208,6 @@ public:
     bool ecdsaVerify(const uint8_t* pubKey64, const uint8_t* hash,
                      size_t hashLen, const uint8_t* sig,
                      CW_Curve curve) override;
-
-    /** @brief Default destructor. */
-    ~ESP32CryptoProvider() override {}
 };
 
 #endif /* ESP32_CRYPTO_PROVIDER_H */

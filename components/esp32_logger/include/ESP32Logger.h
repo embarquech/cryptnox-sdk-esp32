@@ -187,9 +187,6 @@ public:
 
     ///@}
 
-    /** @brief Default destructor. */
-    ~ESP32Logger() override {}
-
 private:
     bool m_initialized = false; ///< @c true after a successful @ref begin call.
 };
