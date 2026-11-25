@@ -655,6 +655,7 @@ TEST_CASE("aesCbcEncrypt/aesCbcDecrypt: round-trip via reflective mock returns c
         plaintext,
         static_cast<uint16_t>(sizeof(plaintext)),
         decryptedOut,
+        static_cast<uint16_t>(sizeof(decryptedOut)),
         &decryptedLen);
 
     TEST_ASSERT_TRUE(ok);
