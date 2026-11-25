@@ -24,8 +24,11 @@
 
 static const char *const PN532_LOG_TAG = "pn532";
 
-/* Bounds-checked copy. Kept local so the driver does not depend on
- * cryptnox_utils (and through it on esp_wifi).
+/* Bounds-checked copy. Deliberately a local duplicate of CW_Utils::safe_memcpy:
+ * that one is a C++ static member (not callable from C without a wrapper), and
+ * its component, cryptnox_utils, requires esp_wifi for the RNG entropy check.
+ * secure_channel needs both anyway; a consumer that only reads tags through
+ * this driver should not have to link the Wi-Fi stack.
  * Returns true when copied; false (nothing copied) on a NULL pointer, a zero
  * count, or count larger than dst_size.
  * ponytail: no overlap check — every caller copies between distinct local
@@ -282,10 +285,74 @@ static uint8_t spi_read_byte(pn532_t *dev)
  * Low-level I2C helpers
  ******************************************************************/
 
+/* Bus and device config, kept so the bus can be rebuilt.
+ * ponytail: one PN532 per firmware; move into pn532_t if a second reader appears. */
+static i2c_master_bus_config_t s_bus_cfg;
+static i2c_device_config_t s_dev_cfg;
+
+/* After a failed transfer IDF 5.5's I2C master can keep a late interrupt or an
+ * extra semaphore give, and the next transfer then runs on corrupted ops and
+ * panics in s_i2c_write_command. Deleting the bus frees all of that, so every
+ * failure throws the driver state away and starts clean.
+ * i2c_del_master_bus() has no NULL check, so a failed rebuild must not be torn
+ * down again. The reset first returns a bus left mid-transfer to IDLE, else
+ * rm_device refuses, the port stays held and the rebuild cannot get it back. */
+static void i2c_reopen(pn532_t *dev)
+{
+    if (dev->i2c_bus != NULL) {
+        (void)i2c_master_bus_reset(dev->i2c_bus);
+    }
+    if (dev->i2c_dev != NULL) {
+        (void)i2c_master_bus_rm_device(dev->i2c_dev);
+        dev->i2c_dev = NULL;
+    }
+    if (dev->i2c_bus != NULL) {
+        (void)i2c_del_master_bus(dev->i2c_bus);
+        dev->i2c_bus = NULL;
+    }
+    if (i2c_new_master_bus(&s_bus_cfg, &dev->i2c_bus) != ESP_OK) {
+        ESP_LOGE(PN532_LOG_TAG, "I2C bus rebuild failed");
+    } else if (i2c_master_bus_add_device(dev->i2c_bus, &s_dev_cfg, &dev->i2c_dev) != ESP_OK) {
+        ESP_LOGE(PN532_LOG_TAG, "I2C device rebuild failed");
+    } else {
+        /* rebuilt */
+    }
+}
+
+static esp_err_t i2c_rx(pn532_t *dev, uint8_t *buf, size_t len)
+{
+    esp_err_t ret = ESP_ERR_INVALID_STATE;
+    if (dev->i2c_dev != NULL) {
+        ret = i2c_master_receive(dev->i2c_dev, buf, len, PN532_I2C_TIMEOUT_MS);
+    }
+    if (ret != ESP_OK) {
+        i2c_reopen(dev);
+    }
+    return ret;
+}
+
+static esp_err_t i2c_tx(pn532_t *dev, const uint8_t *buf, size_t len)
+{
+    esp_err_t ret = ESP_ERR_INVALID_STATE;
+    if (dev->i2c_dev != NULL) {
+        ret = i2c_master_transmit(dev->i2c_dev, buf, len, PN532_I2C_TIMEOUT_MS);
+    }
+    if (ret != ESP_OK) {
+        i2c_reopen(dev);
+    }
+    return ret;
+}
+
+/* A failed ready poll just means "not ready". It does not rebuild the bus: the
+ * poll runs every 10 ms, and a rebuild per poll is hundreds of allocator round
+ * trips per command. The command and payload transfers own the recovery. */
 static uint8_t i2c_read_ready(pn532_t *dev)
 {
     uint8_t rdy = 0U;
-    (void)i2c_master_receive(dev->i2c_dev, &rdy, 1U, PN532_I2C_TIMEOUT_MS);
+    if ((dev->i2c_dev == NULL) ||
+        (i2c_master_receive(dev->i2c_dev, &rdy, 1U, PN532_I2C_TIMEOUT_MS) != ESP_OK)) {
+        rdy = 0U;
+    }
     return rdy;
 }
 
@@ -314,12 +381,17 @@ static void read_data(pn532_t *dev, uint8_t *buff, uint8_t n)
 {
     if (dev->transport == PN532_TRANSPORT_I2C) {
         /* PN532 I2C returns N+1 bytes: byte[0] = RDY (0x01), byte[1..N] = payload. */
-        uint8_t tmp[PN532_I2C_RX_MAX + 1U];
+        /* static keeps ~200 B off the task stack, so the driver is single-task
+         * only. A failed read is zeroed so the leftover of a previous frame is
+         * never parsed as a reply. */
+        static uint8_t tmp[PN532_I2C_RX_MAX + 1U];
         uint16_t to_read = (uint16_t)n + 1U;
         if (to_read > sizeof(tmp)) {
             to_read = (uint16_t)sizeof(tmp);
         }
-        (void)i2c_master_receive(dev->i2c_dev, tmp, (size_t)to_read, PN532_I2C_TIMEOUT_MS);
+        if (i2c_rx(dev, tmp, (size_t)to_read) != ESP_OK) {
+            (void)memset(tmp, 0, sizeof(tmp));
+        }
         size_t payload_len = (size_t)to_read - 1U;
         (void)pn532_safe_memcpy(buff, (size_t)n, &tmp[1], payload_len);
     } else {
@@ -385,7 +457,7 @@ static void write_command(pn532_t *dev, const uint8_t *cmd, uint8_t cmd_len)
         frame[pos] = (uint8_t)(~checksum); pos++;
         frame[pos] = PN532_POSTAMBLE;      pos++;
 
-        (void)i2c_master_transmit(dev->i2c_dev, frame, (size_t)pos, PN532_I2C_TIMEOUT_MS);
+        (void)i2c_tx(dev, frame, (size_t)pos);
     } else {
         (void)gpio_set_level(dev->pin_cs, GPIO_LEVEL_LOW);
         vTaskDelay(pdMS_TO_TICKS(PN532_CS_TOGGLE_DELAY_MS));
@@ -414,7 +486,7 @@ static void write_command(pn532_t *dev, const uint8_t *cmd, uint8_t cmd_len)
 static bool send_command_check_ack(pn532_t *dev, const uint8_t *cmd,
                                    uint8_t cmd_len, uint16_t timeout)
 {
-    uint16_t timer = 0U;
+    TickType_t start = xTaskGetTickCount();   /* real time: a failed read can take the full I2C timeout */
     bool timed_out = false;
     bool result = false;
 
@@ -423,8 +495,8 @@ static bool send_command_check_ack(pn532_t *dev, const uint8_t *cmd,
     /* Wait until the PN532 signals it is ready to send the ACK frame. */
     while ((!timed_out) && (read_ready(dev) != PN532_SPI_READY)) {
         if (timeout != 0U) {
-            timer = (uint16_t)(timer + PN532_POLL_INTERVAL_MS);
-            if (timer > timeout) {
+            /* elapsed time, not iterations, so the budget holds */
+            if ((xTaskGetTickCount() - start) > pdMS_TO_TICKS(timeout)) {
                 timed_out = true;
             }
         }
@@ -439,14 +511,13 @@ static bool send_command_check_ack(pn532_t *dev, const uint8_t *cmd,
         bool ack_ok = check_ack(dev);
 
         if (ack_ok) {
-            timer = 0U;
+            start = xTaskGetTickCount();
             timed_out = false;
 
             /* Wait until the PN532 signals it is ready to send the response. */
             while ((!timed_out) && (read_ready(dev) != PN532_SPI_READY)) {
                 if (timeout != 0U) {
-                    timer = (uint16_t)(timer + PN532_POLL_INTERVAL_MS);
-                    if (timer > timeout) {
+                    if ((xTaskGetTickCount() - start) > pdMS_TO_TICKS(timeout)) {
                         timed_out = true;
                     }
                 }
@@ -490,13 +561,15 @@ static uint16_t read_data_apdu_frame(pn532_t *dev, uint8_t *buff, uint16_t max_l
         /* PN532 I²C returns 1 RDY byte + N payload bytes in a single read.
          * Pull the whole maximum response at once, then parse the frame
          * header to figure out the actual length. */
-        uint8_t tmp[PN532_EXCHANGE_FRAME_MAX + 1U];
+        /* static and zeroed on failure, as in read_data. */
+        static uint8_t tmp[PN532_EXCHANGE_FRAME_MAX + 1U];
         uint16_t to_read = max_len + 1U;
         if (to_read > (uint16_t)sizeof(tmp)) {
             to_read = (uint16_t)sizeof(tmp);
         }
-        (void)i2c_master_receive(dev->i2c_dev, tmp, (size_t)to_read,
-                                  PN532_I2C_TIMEOUT_MS);
+        if (i2c_rx(dev, tmp, (size_t)to_read) != ESP_OK) {
+            (void)memset(tmp, 0, sizeof(tmp));
+        }
         size_t payload_len = (size_t)to_read - (size_t)1U;
         (void)pn532_safe_memcpy(buff, (size_t)max_len, &tmp[1], payload_len);
 
@@ -674,6 +747,7 @@ static esp_err_t pn532_init_i2c(pn532_t *dev, const pn532_config_t *config)
     bus_cfg.glitch_ignore_cnt = 7;
     bus_cfg.flags.enable_internal_pullup = true;
 
+    s_bus_cfg = bus_cfg;
     ret = i2c_new_master_bus(&bus_cfg, &dev->i2c_bus);
     if (ret != ESP_OK) {
         ESP_LOGE(PN532_LOG_TAG, "i2c_new_master_bus failed: %d", ret);
@@ -685,6 +759,7 @@ static esp_err_t pn532_init_i2c(pn532_t *dev, const pn532_config_t *config)
         dev_cfg.device_address  = PN532_I2C_ADDRESS;
         dev_cfg.scl_speed_hz    = (config->i2c_clock_hz != 0U) ? config->i2c_clock_hz : 100000U;
 
+        s_dev_cfg = dev_cfg;
         ret = i2c_master_bus_add_device(dev->i2c_bus, &dev_cfg, &dev->i2c_dev);
         if (ret != ESP_OK) {
             ESP_LOGE(PN532_LOG_TAG, "i2c_master_bus_add_device failed: %d", ret);
@@ -783,8 +858,8 @@ static void pn532_recover(pn532_t *dev)
     /* An ACK frame from the host aborts the command in progress and drops any
      * response still queued, which otherwise gets read as the next ACK. */
     if (dev->transport == PN532_TRANSPORT_I2C) {
-        (void)i2c_master_bus_reset(dev->i2c_bus);
-        (void)i2c_master_transmit(dev->i2c_dev, pn532_ack, PN532_ACK_LEN, PN532_I2C_TIMEOUT_MS);
+        i2c_reopen(dev);
+        (void)i2c_tx(dev, pn532_ack, PN532_ACK_LEN);
     } else {
         uint8_t i = 0U;
         (void)gpio_set_level(dev->pin_cs, GPIO_LEVEL_LOW);
@@ -1017,7 +1092,7 @@ bool pn532_send_apdu(pn532_t *dev, const uint8_t *apdu, uint8_t apdu_len,
                                    + (uint32_t)PN532_FRAME_TAIL_LEN) <= (uint32_t)frame_len;
 
             if (!frame_complete) {
-                ESP_LOGE(PN532_LOG_TAG, "APDU INS=0x%02X: truncated frame (%u of %u bytes)",
+                ESP_LOGE(PN532_LOG_TAG, "APDU INS=0x%02X: oversized frame (%u read, %u announced)",
                          (unsigned)apdu[1], (unsigned)frame_len,
                          (unsigned)((uint32_t)data_offset + (uint32_t)data_len
                                     + (uint32_t)PN532_FRAME_TAIL_LEN));

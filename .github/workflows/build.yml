@@ -1,0 +1,26 @@
+name: Build examples
+permissions:
+  contents: read
+on:
+  push:
+  pull_request:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        example: [BasicUsage, Connect, Sign, TronSigning, UsdcSigning, VerifyPin]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      # The placeholder template compiles as-is; real credentials never reach CI.
+      - run: cp examples/${{ matrix.example }}/config.template.h examples/${{ matrix.example }}/main/config.h
+
+      - uses: espressif/esp-idf-ci-action@v1
+        with:
+          esp_idf_version: v5.5
+          target: esp32s3
+          path: examples/${{ matrix.example }}
