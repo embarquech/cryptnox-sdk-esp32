@@ -90,9 +90,6 @@ var pn532_8c =
     [ "PN532_WAKEUP_DELAY_MS", "pn532_8c.html#a12fe767c20782c956a0e90fea9778ca9", null ],
     [ "check_ack", "pn532_8c.html#ad36fed65db129ddef3bd167af6304bbf", null ],
     [ "i2c_read_ready", "pn532_8c.html#ae8000a40804162972b902cfc57835421", null ],
-    [ "i2c_reopen", "pn532_8c.html#a8ca98dc966cffbed0fbf3ea279ac6ebf", null ],
-    [ "i2c_rx", "pn532_8c.html#af24931b3b7328b4024adea892643145d", null ],
-    [ "i2c_tx", "pn532_8c.html#ae69057e0483b74e359a5768cd173999a", null ],
     [ "pn532_buffer_equal", "pn532_8c.html#a949bd73c0a97c845238d14ebd0e3dc93", null ],
     [ "pn532_get_firmware_version", "group__pn532__driver.html#ga85ff53b4eb70efa903d9eb40776093ec", null ],
     [ "pn532_init", "group__pn532__driver.html#ga21f52f38564e794861cf365433702df5", null ],
@@ -115,7 +112,5 @@ var pn532_8c =
     [ "write_command", "pn532_8c.html#a4fe0501a086e0bba9bd46e307001cf93", null ],
     [ "pn532_ack", "pn532_8c.html#a711ef7ca4dd3d69e4ebeec5588897be7", null ],
     [ "PN532_LOG_TAG", "pn532_8c.html#aa2b493f4c151028a293150b453fde84f", null ],
-    [ "pn532_response_fw", "pn532_8c.html#a87f87ce8c465f27011258c3be90d5fd9", null ],
-    [ "s_bus_cfg", "pn532_8c.html#acab2ad9f6656024ab8ab829ec35ba068", null ],
-    [ "s_dev_cfg", "pn532_8c.html#af312989894a67c93ec6dcc9da31a654c", null ]
+    [ "pn532_response_fw", "pn532_8c.html#a87f87ce8c465f27011258c3be90d5fd9", null ]
 ];
