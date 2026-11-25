@@ -103,7 +103,7 @@ $(function(){initNavTree('pn532_8c.html','',''); });
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for pn532.c:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="pn532_8c__incl.svg" width="1070" height="183"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="pn532_8c__incl.svg" width="1064" height="190"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div>
 <p><a href="pn532_8c_source.html">Go to the source code of this file.</a></p>
@@ -120,6 +120,17 @@ Macros</h2></td></tr>
 <tr class="memitem:a29b8ffd50e32388c10056e33a914d7f2" id="r_a29b8ffd50e32388c10056e33a914d7f2"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a29b8ffd50e32388c10056e33a914d7f2">PN532_INLISTPASSIVETARGET</a>&#160;&#160;&#160;(0x4AU)</td></tr>
 <tr class="memitem:a4b689f9d80fc479a8416932cc492f85c" id="r_a4b689f9d80fc479a8416932cc492f85c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4b689f9d80fc479a8416932cc492f85c">PN532_INDATAEXCHANGE</a>&#160;&#160;&#160;(0x40U)</td></tr>
 <tr class="memitem:a88d89fc4d304d31e166a1d5f4bdd84c9" id="r_a88d89fc4d304d31e166a1d5f4bdd84c9"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a88d89fc4d304d31e166a1d5f4bdd84c9">PN532_INRELEASE</a>&#160;&#160;&#160;(0x52U)</td></tr>
+<tr class="memitem:ad72cbb010a3b5c9c371fe0b3ee34b2d9" id="r_ad72cbb010a3b5c9c371fe0b3ee34b2d9"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad72cbb010a3b5c9c371fe0b3ee34b2d9">PN532_RFCONFIGURATION</a>&#160;&#160;&#160;(0x32U)</td></tr>
+<tr class="memitem:addf46a573008a1644d78a2d84c41aa36" id="r_addf46a573008a1644d78a2d84c41aa36"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#addf46a573008a1644d78a2d84c41aa36">PN532_RFCFG_RF_FIELD</a>&#160;&#160;&#160;(0x01U)</td></tr>
+<tr class="memitem:a9ae1c39a15875ed517f43bfa8db11845" id="r_a9ae1c39a15875ed517f43bfa8db11845"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9ae1c39a15875ed517f43bfa8db11845">PN532_RFCFG_MAX_RETRIES</a>&#160;&#160;&#160;(0x05U)</td></tr>
+<tr class="memitem:a5a521c8fa19e79a15e7543d06cbd2757" id="r_a5a521c8fa19e79a15e7543d06cbd2757"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5a521c8fa19e79a15e7543d06cbd2757">PN532_RFCFG_FIELD_ON</a>&#160;&#160;&#160;(0x01U)</td></tr>
+<tr class="memitem:acf7e5a0334ff57f97b7a780f155d33ae" id="r_acf7e5a0334ff57f97b7a780f155d33ae"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acf7e5a0334ff57f97b7a780f155d33ae">PN532_RFCFG_RETRY_ATR</a>&#160;&#160;&#160;(0xFFU)</td></tr>
+<tr class="memitem:a67ed327d087f70596f83af110252151c" id="r_a67ed327d087f70596f83af110252151c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a67ed327d087f70596f83af110252151c">PN532_RFCFG_RETRY_PSL</a>&#160;&#160;&#160;(0x01U)</td></tr>
+<tr class="memitem:a1448817612c10e15896a320cef7d0f2c" id="r_a1448817612c10e15896a320cef7d0f2c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1448817612c10e15896a320cef7d0f2c">PN532_RFCFG_RETRY_PASSIVE</a>&#160;&#160;&#160;(0x02U)</td></tr>
+<tr class="memitem:a3474e7d0cda4d2a0365bb99b17bac544" id="r_a3474e7d0cda4d2a0365bb99b17bac544"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3474e7d0cda4d2a0365bb99b17bac544">PN532_RFCFG_RESP_LEN</a>&#160;&#160;&#160;(9U)</td></tr>
+<tr class="memitem:a5e8535fc1489a9ffcfe5c1ecf22e7b12" id="r_a5e8535fc1489a9ffcfe5c1ecf22e7b12"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5e8535fc1489a9ffcfe5c1ecf22e7b12">PN532_RFCFG_RESP_CODE_OFF</a>&#160;&#160;&#160;(6U)</td></tr>
+<tr class="memitem:af551c107a77a3c1405467cdcaf52e37c" id="r_af551c107a77a3c1405467cdcaf52e37c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af551c107a77a3c1405467cdcaf52e37c">PN532_RFCFG_RESP_CODE</a>&#160;&#160;&#160;(0x33U)  /* RFCONFIGURATION + 1 */</td></tr>
+<tr class="memitem:a1319caaa5762a9f500bf884546a26ba9" id="r_a1319caaa5762a9f500bf884546a26ba9"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1319caaa5762a9f500bf884546a26ba9">PN532_RFCFG_MAX_DATA</a>&#160;&#160;&#160;(3U)</td></tr>
 <tr class="memitem:a48de65c533155be0970021cde1087ea9" id="r_a48de65c533155be0970021cde1087ea9"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a48de65c533155be0970021cde1087ea9">PN532_SPI_STATREAD</a>&#160;&#160;&#160;(0x02U)</td></tr>
 <tr class="memitem:aed59c66a641298424472a3516942ee0d" id="r_aed59c66a641298424472a3516942ee0d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aed59c66a641298424472a3516942ee0d">PN532_SPI_DATAWRITE</a>&#160;&#160;&#160;(0x01U)</td></tr>
 <tr class="memitem:ac9384513045d24d258d595b6295542b7" id="r_ac9384513045d24d258d595b6295542b7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac9384513045d24d258d595b6295542b7">PN532_SPI_DATAREAD</a>&#160;&#160;&#160;(0x03U)</td></tr>
@@ -166,6 +177,7 @@ Macros</h2></td></tr>
 <tr class="memitem:aff486a09bcadc193472a356eeaec00c0" id="r_aff486a09bcadc193472a356eeaec00c0"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aff486a09bcadc193472a356eeaec00c0">PN532_PASSIVE_EXPECTED_TARGETS</a>&#160;&#160;&#160;(1U)</td></tr>
 <tr class="memitem:a8ad073c830d5ca06547f3797988a78df" id="r_a8ad073c830d5ca06547f3797988a78df"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8ad073c830d5ca06547f3797988a78df">PN532_PASSIVE_UID_LEN_OFFSET</a>&#160;&#160;&#160;(12U)</td></tr>
 <tr class="memitem:abffff98727ace61a2b6e882e6d921056" id="r_abffff98727ace61a2b6e882e6d921056"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abffff98727ace61a2b6e882e6d921056">PN532_PASSIVE_UID_DATA_OFFSET</a>&#160;&#160;&#160;(13U)</td></tr>
+<tr class="memitem:a702fae527b8a83ef2b737c772da3948c" id="r_a702fae527b8a83ef2b737c772da3948c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a702fae527b8a83ef2b737c772da3948c">PN532_PASSIVE_UID_MAX_LEN</a>&#160;&#160;&#160;(<a class="el" href="#ade6d38c2d64ec927aa82089abeda038f">PN532_PASSIVE_RESP_LEN</a> - <a class="el" href="#abffff98727ace61a2b6e882e6d921056">PN532_PASSIVE_UID_DATA_OFFSET</a>)</td></tr>
 <tr class="memitem:a369bcdb78d0b881a46a321f81792afd8" id="r_a369bcdb78d0b881a46a321f81792afd8"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a369bcdb78d0b881a46a321f81792afd8">PN532_BYTE_SHIFT_BITS</a>&#160;&#160;&#160;(8U)</td></tr>
 <tr class="memitem:ae5b5a3c0c489d67ef821a842ed0f00f7" id="r_ae5b5a3c0c489d67ef821a842ed0f00f7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae5b5a3c0c489d67ef821a842ed0f00f7">PN532_EXCHANGE_CMD_OVERHEAD</a>&#160;&#160;&#160;(2U)</td></tr>
 <tr class="memitem:a847a6fead14e3fa1e804f0c7c60bafd8" id="r_a847a6fead14e3fa1e804f0c7c60bafd8"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a847a6fead14e3fa1e804f0c7c60bafd8">PN532_EXCHANGE_TG</a>&#160;&#160;&#160;(0x01U)</td></tr>
@@ -185,10 +197,16 @@ Macros</h2></td></tr>
 <tr class="memitem:a27f51434f74c281b21bb40bd70a59dcf" id="r_a27f51434f74c281b21bb40bd70a59dcf"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a27f51434f74c281b21bb40bd70a59dcf">PN532_EXT_EXCHANGE_DATA_OFFSET</a>&#160;&#160;&#160;(11U)</td></tr>
 <tr class="memitem:aa30c651654ba14c71274c3e709a74320" id="r_aa30c651654ba14c71274c3e709a74320"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa30c651654ba14c71274c3e709a74320">PN532_INRELEASE_CMD_LEN</a>&#160;&#160;&#160;(2U)</td></tr>
 <tr class="memitem:a619fb5e13da4fddd7b5eb40f77f9178b" id="r_a619fb5e13da4fddd7b5eb40f77f9178b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a619fb5e13da4fddd7b5eb40f77f9178b">PN532_INRELEASE_RESP_LEN</a>&#160;&#160;&#160;(10U)</td></tr>
+<tr class="memitem:aa4baa2df4e27cc5cc4fc55dff5795040" id="r_aa4baa2df4e27cc5cc4fc55dff5795040"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa4baa2df4e27cc5cc4fc55dff5795040">PN532_RECOVER_AFTER_FAILS</a>&#160;&#160;&#160;(3U)</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:a324df7bb21715dda7419dc46996dc497" id="r_a324df7bb21715dda7419dc46996dc497"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a324df7bb21715dda7419dc46996dc497">pn532_safe_memcpy</a> (uint8_t *dst, size_t dst_size, const uint8_t *src, size_t count)</td></tr>
+<tr class="memitem:aab2536caaba69adc8578ffda80db3fc0" id="r_aab2536caaba69adc8578ffda80db3fc0"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aab2536caaba69adc8578ffda80db3fc0">pn532_rf_configuration</a> (<a class="el" href="structpn532__t.html">pn532_t</a> *dev, uint8_t cfg_item, const uint8_t *data, uint8_t data_len)</td></tr>
+<tr class="memdesc:aab2536caaba69adc8578ffda80db3fc0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send an RFConfiguration command (0x32) for one CfgItem.  <br /></td></tr>
 <tr class="memitem:a949bd73c0a97c845238d14ebd0e3dc93" id="r_a949bd73c0a97c845238d14ebd0e3dc93"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a949bd73c0a97c845238d14ebd0e3dc93">pn532_buffer_equal</a> (const uint8_t *lhs, const uint8_t *rhs, uint8_t len)</td></tr>
+<tr class="memitem:a718507e62c0f7ee1196fda65b2458390" id="r_a718507e62c0f7ee1196fda65b2458390"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a718507e62c0f7ee1196fda65b2458390">pn532_wakeup</a> (<a class="el" href="structpn532__t.html">pn532_t</a> *dev)</td></tr>
+<tr class="memitem:a0da2e51fee924a480c4088542980adda" id="r_a0da2e51fee924a480c4088542980adda"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0da2e51fee924a480c4088542980adda">pn532_recover</a> (<a class="el" href="structpn532__t.html">pn532_t</a> *dev)</td></tr>
 <tr class="memitem:a456b2f6dda3d4b255323a71d49c62a92" id="r_a456b2f6dda3d4b255323a71d49c62a92"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a456b2f6dda3d4b255323a71d49c62a92">spi_write_byte</a> (<a class="el" href="structpn532__t.html">pn532_t</a> *dev, uint8_t data)</td></tr>
 <tr class="memitem:a1c7aa33693375b2ac0aa52c24bb1a2e7" id="r_a1c7aa33693375b2ac0aa52c24bb1a2e7"><td class="memItemLeft" align="right" valign="top">static uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1c7aa33693375b2ac0aa52c24bb1a2e7">spi_read_byte</a> (<a class="el" href="structpn532__t.html">pn532_t</a> *dev)</td></tr>
 <tr class="memitem:ae8000a40804162972b902cfc57835421" id="r_ae8000a40804162972b902cfc57835421"><td class="memItemLeft" align="right" valign="top">static uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae8000a40804162972b902cfc57835421">i2c_read_ready</a> (<a class="el" href="structpn532__t.html">pn532_t</a> *dev)</td></tr>
@@ -232,9 +250,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00090">90</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00128">128</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00579">pn532_init_i2c()</a>, <a class="el" href="pn532_8c_source.html#l00519">pn532_init_spi()</a>, <a class="el" href="pn532_8c_source.html#l00266">read_data()</a>, <a class="el" href="pn532_8c_source.html#l00428">read_data_apdu_frame()</a>, <a class="el" href="pn532_8c_source.html#l00249">read_ready()</a>, and <a class="el" href="pn532_8c_source.html#l00315">write_command()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00634">pn532_init_i2c()</a>, <a class="el" href="pn532_8c_source.html#l00574">pn532_init_spi()</a>, <a class="el" href="pn532_8c_source.html#l00779">pn532_recover()</a>, <a class="el" href="pn532_8c_source.html#l00313">read_data()</a>, <a class="el" href="pn532_8c_source.html#l00483">read_data_apdu_frame()</a>, <a class="el" href="pn532_8c_source.html#l00296">read_ready()</a>, and <a class="el" href="pn532_8c_source.html#l00362">write_command()</a>.</p>
 
 </div>
 </div>
@@ -250,9 +268,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00089">89</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00127">127</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00579">pn532_init_i2c()</a>, <a class="el" href="pn532_8c_source.html#l00519">pn532_init_spi()</a>, <a class="el" href="pn532_8c_source.html#l00266">read_data()</a>, <a class="el" href="pn532_8c_source.html#l00428">read_data_apdu_frame()</a>, <a class="el" href="pn532_8c_source.html#l00249">read_ready()</a>, and <a class="el" href="pn532_8c_source.html#l00315">write_command()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00634">pn532_init_i2c()</a>, <a class="el" href="pn532_8c_source.html#l00574">pn532_init_spi()</a>, <a class="el" href="pn532_8c_source.html#l00779">pn532_recover()</a>, <a class="el" href="pn532_8c_source.html#l00313">read_data()</a>, <a class="el" href="pn532_8c_source.html#l00483">read_data_apdu_frame()</a>, <a class="el" href="pn532_8c_source.html#l00296">read_ready()</a>, and <a class="el" href="pn532_8c_source.html#l00362">write_command()</a>.</p>
 
 </div>
 </div>
@@ -268,9 +286,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00091">91</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00129">129</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00579">pn532_init_i2c()</a>, and <a class="el" href="pn532_8c_source.html#l00519">pn532_init_spi()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00634">pn532_init_i2c()</a>, and <a class="el" href="pn532_8c_source.html#l00574">pn532_init_spi()</a>.</p>
 
 </div>
 </div>
@@ -286,9 +304,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00103">103</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00141">141</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00291">check_ack()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00338">check_ack()</a>, and <a class="el" href="pn532_8c_source.html#l00779">pn532_recover()</a>.</p>
 
 </div>
 </div>
@@ -304,9 +322,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00082">82</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00120">120</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00805">pn532_send_apdu()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00962">pn532_send_apdu()</a>.</p>
 
 </div>
 </div>
@@ -322,9 +340,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00083">83</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00121">121</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00266">read_data()</a>, and <a class="el" href="pn532_8c_source.html#l00428">read_data_apdu_frame()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00313">read_data()</a>, and <a class="el" href="pn532_8c_source.html#l00483">read_data_apdu_frame()</a>.</p>
 
 </div>
 </div>
@@ -340,9 +358,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00147">147</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00187">187</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00718">pn532_get_firmware_version()</a>, and <a class="el" href="pn532_8c_source.html#l00775">pn532_read_passive_target_id()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00832">pn532_get_firmware_version()</a>, and <a class="el" href="pn532_8c_source.html#l00921">pn532_read_passive_target_id()</a>.</p>
 
 </div>
 </div>
@@ -358,9 +376,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00080">80</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00118">118</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00718">pn532_get_firmware_version()</a>, <a class="el" href="pn532_8c_source.html#l00775">pn532_read_passive_target_id()</a>, <a class="el" href="pn532_8c_source.html#l00875">pn532_release_target()</a>, and <a class="el" href="pn532_8c_source.html#l00752">pn532_sam_config()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00832">pn532_get_firmware_version()</a>, <a class="el" href="pn532_8c_source.html#l00921">pn532_read_passive_target_id()</a>, <a class="el" href="pn532_8c_source.html#l01044">pn532_release_target()</a>, <a class="el" href="pn532_8c_source.html#l00875">pn532_rf_configuration()</a>, and <a class="el" href="pn532_8c_source.html#l00898">pn532_sam_config()</a>.</p>
 
 </div>
 </div>
@@ -376,9 +394,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00076">76</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00114">114</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00519">pn532_init_spi()</a>, <a class="el" href="pn532_8c_source.html#l00266">read_data()</a>, <a class="el" href="pn532_8c_source.html#l00428">read_data_apdu_frame()</a>, <a class="el" href="pn532_8c_source.html#l00249">read_ready()</a>, and <a class="el" href="pn532_8c_source.html#l00315">write_command()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00574">pn532_init_spi()</a>, <a class="el" href="pn532_8c_source.html#l00779">pn532_recover()</a>, <a class="el" href="pn532_8c_source.html#l00313">read_data()</a>, <a class="el" href="pn532_8c_source.html#l00483">read_data_apdu_frame()</a>, <a class="el" href="pn532_8c_source.html#l00296">read_ready()</a>, and <a class="el" href="pn532_8c_source.html#l00362">write_command()</a>.</p>
 
 </div>
 </div>
@@ -394,9 +412,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00153">153</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00193">193</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00805">pn532_send_apdu()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00962">pn532_send_apdu()</a>.</p>
 
 </div>
 </div>
@@ -412,9 +430,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00159">159</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00199">199</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00805">pn532_send_apdu()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00962">pn532_send_apdu()</a>.</p>
 
 </div>
 </div>
@@ -430,9 +448,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00156">156</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00196">196</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00805">pn532_send_apdu()</a>, and <a class="el" href="pn532_8c_source.html#l00428">read_data_apdu_frame()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00962">pn532_send_apdu()</a>, and <a class="el" href="pn532_8c_source.html#l00483">read_data_apdu_frame()</a>.</p>
 
 </div>
 </div>
@@ -448,9 +466,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00160">160</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00200">200</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00805">pn532_send_apdu()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00962">pn532_send_apdu()</a>.</p>
 
 </div>
 </div>
@@ -466,9 +484,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00157">157</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00197">197</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00805">pn532_send_apdu()</a>, and <a class="el" href="pn532_8c_source.html#l00428">read_data_apdu_frame()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00962">pn532_send_apdu()</a>, and <a class="el" href="pn532_8c_source.html#l00483">read_data_apdu_frame()</a>.</p>
 
 </div>
 </div>
@@ -484,9 +502,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00158">158</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00198">198</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00875">pn532_release_target()</a>, and <a class="el" href="pn532_8c_source.html#l00805">pn532_send_apdu()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l01044">pn532_release_target()</a>, and <a class="el" href="pn532_8c_source.html#l00962">pn532_send_apdu()</a>.</p>
 
 </div>
 </div>
@@ -502,9 +520,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00161">161</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00201">201</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00875">pn532_release_target()</a>, and <a class="el" href="pn532_8c_source.html#l00805">pn532_send_apdu()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l01044">pn532_release_target()</a>, and <a class="el" href="pn532_8c_source.html#l00962">pn532_send_apdu()</a>.</p>
 
 </div>
 </div>
@@ -520,9 +538,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00154">154</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00194">194</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00875">pn532_release_target()</a>, and <a class="el" href="pn532_8c_source.html#l00805">pn532_send_apdu()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l01044">pn532_release_target()</a>, and <a class="el" href="pn532_8c_source.html#l00962">pn532_send_apdu()</a>.</p>
 
 </div>
 </div>
@@ -538,9 +556,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00177">177</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00217">217</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00805">pn532_send_apdu()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00962">pn532_send_apdu()</a>.</p>
 
 </div>
 </div>
@@ -556,9 +574,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00176">176</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00216">216</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00805">pn532_send_apdu()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00962">pn532_send_apdu()</a>.</p>
 
 </div>
 </div>
@@ -574,9 +592,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00173">173</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00213">213</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00428">read_data_apdu_frame()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00483">read_data_apdu_frame()</a>.</p>
 
 </div>
 </div>
@@ -592,9 +610,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00172">172</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00212">212</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00805">pn532_send_apdu()</a>, and <a class="el" href="pn532_8c_source.html#l00428">read_data_apdu_frame()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00962">pn532_send_apdu()</a>, and <a class="el" href="pn532_8c_source.html#l00483">read_data_apdu_frame()</a>.</p>
 
 </div>
 </div>
@@ -610,9 +628,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00174">174</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00214">214</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00805">pn532_send_apdu()</a>, and <a class="el" href="pn532_8c_source.html#l00428">read_data_apdu_frame()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00962">pn532_send_apdu()</a>, and <a class="el" href="pn532_8c_source.html#l00483">read_data_apdu_frame()</a>.</p>
 
 </div>
 </div>
@@ -628,9 +646,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00175">175</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00215">215</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00805">pn532_send_apdu()</a>, and <a class="el" href="pn532_8c_source.html#l00428">read_data_apdu_frame()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00962">pn532_send_apdu()</a>, and <a class="el" href="pn532_8c_source.html#l00483">read_data_apdu_frame()</a>.</p>
 
 </div>
 </div>
@@ -646,9 +664,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00116">116</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00154">154</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00718">pn532_get_firmware_version()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00832">pn532_get_firmware_version()</a>.</p>
 
 </div>
 </div>
@@ -664,9 +682,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00118">118</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00156">156</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00718">pn532_get_firmware_version()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00832">pn532_get_firmware_version()</a>.</p>
 
 </div>
 </div>
@@ -682,9 +700,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00117">117</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00155">155</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00718">pn532_get_firmware_version()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00832">pn532_get_firmware_version()</a>.</p>
 
 </div>
 </div>
@@ -700,9 +718,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00042">42</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00059">59</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00718">pn532_get_firmware_version()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00832">pn532_get_firmware_version()</a>.</p>
 
 </div>
 </div>
@@ -718,9 +736,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00165">165</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00205">205</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00428">read_data_apdu_frame()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00483">read_data_apdu_frame()</a>.</p>
 
 </div>
 </div>
@@ -736,9 +754,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00166">166</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00206">206</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00428">read_data_apdu_frame()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00962">pn532_send_apdu()</a>, and <a class="el" href="pn532_8c_source.html#l00483">read_data_apdu_frame()</a>.</p>
 
 </div>
 </div>
@@ -754,9 +772,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00110">110</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00148">148</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00315">write_command()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00362">write_command()</a>.</p>
 
 </div>
 </div>
@@ -772,9 +790,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00119">119</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00157">157</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00718">pn532_get_firmware_version()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00832">pn532_get_firmware_version()</a>.</p>
 
 </div>
 </div>
@@ -790,9 +808,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00121">121</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00159">159</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00718">pn532_get_firmware_version()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00832">pn532_get_firmware_version()</a>.</p>
 
 </div>
 </div>
@@ -808,9 +826,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00122">122</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00160">160</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00718">pn532_get_firmware_version()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00832">pn532_get_firmware_version()</a>.</p>
 
 </div>
 </div>
@@ -826,9 +844,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00120">120</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00158">158</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00718">pn532_get_firmware_version()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00832">pn532_get_firmware_version()</a>.</p>
 
 </div>
 </div>
@@ -844,9 +862,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00036">36</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00053">53</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00315">write_command()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00362">write_command()</a>.</p>
 
 </div>
 </div>
@@ -862,9 +880,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00070">70</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00108">108</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00266">read_data()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00313">read_data()</a>.</p>
 
 </div>
 </div>
@@ -880,9 +898,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00066">66</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00104">104</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00238">i2c_read_ready()</a>, <a class="el" href="pn532_8c_source.html#l00266">read_data()</a>, <a class="el" href="pn532_8c_source.html#l00428">read_data_apdu_frame()</a>, and <a class="el" href="pn532_8c_source.html#l00315">write_command()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00285">i2c_read_ready()</a>, <a class="el" href="pn532_8c_source.html#l00779">pn532_recover()</a>, <a class="el" href="pn532_8c_source.html#l00313">read_data()</a>, <a class="el" href="pn532_8c_source.html#l00483">read_data_apdu_frame()</a>, and <a class="el" href="pn532_8c_source.html#l00362">write_command()</a>.</p>
 
 </div>
 </div>
@@ -898,9 +916,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00068">68</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00106">106</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00315">write_command()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00362">write_command()</a>.</p>
 
 </div>
 </div>
@@ -916,9 +934,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00045">45</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00062">62</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00805">pn532_send_apdu()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00962">pn532_send_apdu()</a>.</p>
 
 </div>
 </div>
@@ -934,9 +952,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00044">44</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00061">61</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00775">pn532_read_passive_target_id()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00921">pn532_read_passive_target_id()</a>.</p>
 
 </div>
 </div>
@@ -952,9 +970,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00046">46</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00063">63</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00875">pn532_release_target()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l01044">pn532_release_target()</a>.</p>
 
 </div>
 </div>
@@ -970,9 +988,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00184">184</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00224">224</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00875">pn532_release_target()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l01044">pn532_release_target()</a>.</p>
 
 </div>
 </div>
@@ -988,9 +1006,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00185">185</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00225">225</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00875">pn532_release_target()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l01044">pn532_release_target()</a>.</p>
 
 </div>
 </div>
@@ -1006,9 +1024,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00140">140</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00178">178</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00775">pn532_read_passive_target_id()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00921">pn532_read_passive_target_id()</a>.</p>
 
 </div>
 </div>
@@ -1024,9 +1042,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00144">144</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00182">182</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00775">pn532_read_passive_target_id()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00921">pn532_read_passive_target_id()</a>.</p>
 
 </div>
 </div>
@@ -1042,9 +1060,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00142">142</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00180">180</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00775">pn532_read_passive_target_id()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00921">pn532_read_passive_target_id()</a>.</p>
 
 </div>
 </div>
@@ -1060,9 +1078,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00143">143</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00181">181</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00775">pn532_read_passive_target_id()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00921">pn532_read_passive_target_id()</a>.</p>
 
 </div>
 </div>
@@ -1078,9 +1096,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00141">141</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00179">179</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00775">pn532_read_passive_target_id()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00921">pn532_read_passive_target_id()</a>.</p>
 
 </div>
 </div>
@@ -1096,9 +1114,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00146">146</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00184">184</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00775">pn532_read_passive_target_id()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00921">pn532_read_passive_target_id()</a>.</p>
 
 </div>
 </div>
@@ -1114,9 +1132,27 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00145">145</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00183">183</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00775">pn532_read_passive_target_id()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00921">pn532_read_passive_target_id()</a>.</p>
+
+</div>
+</div>
+<a id="a702fae527b8a83ef2b737c772da3948c" name="a702fae527b8a83ef2b737c772da3948c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a702fae527b8a83ef2b737c772da3948c">&#9670;&#160;</a></span>PN532_PASSIVE_UID_MAX_LEN</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define PN532_PASSIVE_UID_MAX_LEN&#160;&#160;&#160;(<a class="el" href="#ade6d38c2d64ec927aa82089abeda038f">PN532_PASSIVE_RESP_LEN</a> - <a class="el" href="#abffff98727ace61a2b6e882e6d921056">PN532_PASSIVE_UID_DATA_OFFSET</a>)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00186">186</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00921">pn532_read_passive_target_id()</a>.</p>
 
 </div>
 </div>
@@ -1132,9 +1168,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00079">79</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00117">117</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00367">send_command_check_ack()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00414">send_command_check_ack()</a>.</p>
 
 </div>
 </div>
@@ -1150,9 +1186,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00035">35</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00052">52</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00315">write_command()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00362">write_command()</a>.</p>
 
 </div>
 </div>
@@ -1168,9 +1204,230 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00031">31</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00048">48</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00519">pn532_init_spi()</a>, and <a class="el" href="pn532_8c_source.html#l00315">write_command()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00574">pn532_init_spi()</a>, and <a class="el" href="pn532_8c_source.html#l00362">write_command()</a>.</p>
+
+</div>
+</div>
+<a id="aa4baa2df4e27cc5cc4fc55dff5795040" name="aa4baa2df4e27cc5cc4fc55dff5795040"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa4baa2df4e27cc5cc4fc55dff5795040">&#9670;&#160;</a></span>PN532_RECOVER_AFTER_FAILS</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define PN532_RECOVER_AFTER_FAILS&#160;&#160;&#160;(3U)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00252">252</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00921">pn532_read_passive_target_id()</a>.</p>
+
+</div>
+</div>
+<a id="a5a521c8fa19e79a15e7543d06cbd2757" name="a5a521c8fa19e79a15e7543d06cbd2757"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5a521c8fa19e79a15e7543d06cbd2757">&#9670;&#160;</a></span>PN532_RFCFG_FIELD_ON</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define PN532_RFCFG_FIELD_ON&#160;&#160;&#160;(0x01U)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Auto RFCA off, RF field on. </p>
+
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00070">70</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00714">pn532_wakeup()</a>.</p>
+
+</div>
+</div>
+<a id="a1319caaa5762a9f500bf884546a26ba9" name="a1319caaa5762a9f500bf884546a26ba9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1319caaa5762a9f500bf884546a26ba9">&#9670;&#160;</a></span>PN532_RFCFG_MAX_DATA</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define PN532_RFCFG_MAX_DATA&#160;&#160;&#160;(3U)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00081">81</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00875">pn532_rf_configuration()</a>, and <a class="el" href="pn532_8c_source.html#l00714">pn532_wakeup()</a>.</p>
+
+</div>
+</div>
+<a id="a9ae1c39a15875ed517f43bfa8db11845" name="a9ae1c39a15875ed517f43bfa8db11845"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9ae1c39a15875ed517f43bfa8db11845">&#9670;&#160;</a></span>PN532_RFCFG_MAX_RETRIES</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define PN532_RFCFG_MAX_RETRIES&#160;&#160;&#160;(0x05U)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>3 data bytes: ATR, PSL, passive activation. </p>
+
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00068">68</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00714">pn532_wakeup()</a>.</p>
+
+</div>
+</div>
+<a id="af551c107a77a3c1405467cdcaf52e37c" name="af551c107a77a3c1405467cdcaf52e37c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af551c107a77a3c1405467cdcaf52e37c">&#9670;&#160;</a></span>PN532_RFCFG_RESP_CODE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define PN532_RFCFG_RESP_CODE&#160;&#160;&#160;(0x33U)  /* RFCONFIGURATION + 1 */</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00080">80</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00875">pn532_rf_configuration()</a>.</p>
+
+</div>
+</div>
+<a id="a5e8535fc1489a9ffcfe5c1ecf22e7b12" name="a5e8535fc1489a9ffcfe5c1ecf22e7b12"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5e8535fc1489a9ffcfe5c1ecf22e7b12">&#9670;&#160;</a></span>PN532_RFCFG_RESP_CODE_OFF</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define PN532_RFCFG_RESP_CODE_OFF&#160;&#160;&#160;(6U)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00079">79</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00875">pn532_rf_configuration()</a>.</p>
+
+</div>
+</div>
+<a id="a3474e7d0cda4d2a0365bb99b17bac544" name="a3474e7d0cda4d2a0365bb99b17bac544"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3474e7d0cda4d2a0365bb99b17bac544">&#9670;&#160;</a></span>PN532_RFCFG_RESP_LEN</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define PN532_RFCFG_RESP_LEN&#160;&#160;&#160;(9U)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00078">78</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00875">pn532_rf_configuration()</a>.</p>
+
+</div>
+</div>
+<a id="acf7e5a0334ff57f97b7a780f155d33ae" name="acf7e5a0334ff57f97b7a780f155d33ae"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acf7e5a0334ff57f97b7a780f155d33ae">&#9670;&#160;</a></span>PN532_RFCFG_RETRY_ATR</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define PN532_RFCFG_RETRY_ATR&#160;&#160;&#160;(0xFFU)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Datasheet default. </p>
+
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00071">71</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00714">pn532_wakeup()</a>.</p>
+
+</div>
+</div>
+<a id="a1448817612c10e15896a320cef7d0f2c" name="a1448817612c10e15896a320cef7d0f2c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1448817612c10e15896a320cef7d0f2c">&#9670;&#160;</a></span>PN532_RFCFG_RETRY_PASSIVE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define PN532_RFCFG_RETRY_PASSIVE&#160;&#160;&#160;(0x02U)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00076">76</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00714">pn532_wakeup()</a>.</p>
+
+</div>
+</div>
+<a id="a67ed327d087f70596f83af110252151c" name="a67ed327d087f70596f83af110252151c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a67ed327d087f70596f83af110252151c">&#9670;&#160;</a></span>PN532_RFCFG_RETRY_PSL</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define PN532_RFCFG_RETRY_PSL&#160;&#160;&#160;(0x01U)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Datasheet default. </p>
+
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00072">72</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00714">pn532_wakeup()</a>.</p>
+
+</div>
+</div>
+<a id="addf46a573008a1644d78a2d84c41aa36" name="addf46a573008a1644d78a2d84c41aa36"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#addf46a573008a1644d78a2d84c41aa36">&#9670;&#160;</a></span>PN532_RFCFG_RF_FIELD</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define PN532_RFCFG_RF_FIELD&#160;&#160;&#160;(0x01U)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>1 data byte: RF field on/off. </p>
+
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00067">67</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00714">pn532_wakeup()</a>.</p>
+
+</div>
+</div>
+<a id="ad72cbb010a3b5c9c371fe0b3ee34b2d9" name="ad72cbb010a3b5c9c371fe0b3ee34b2d9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad72cbb010a3b5c9c371fe0b3ee34b2d9">&#9670;&#160;</a></span>PN532_RFCONFIGURATION</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define PN532_RFCONFIGURATION&#160;&#160;&#160;(0x32U)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00064">64</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00875">pn532_rf_configuration()</a>.</p>
 
 </div>
 </div>
@@ -1186,9 +1443,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00128">128</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00166">166</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00752">pn532_sam_config()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00898">pn532_sam_config()</a>.</p>
 
 </div>
 </div>
@@ -1204,9 +1461,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00132">132</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00170">170</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00752">pn532_sam_config()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00898">pn532_sam_config()</a>.</p>
 
 </div>
 </div>
@@ -1222,9 +1479,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00131">131</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00169">169</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00752">pn532_sam_config()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00898">pn532_sam_config()</a>.</p>
 
 </div>
 </div>
@@ -1240,9 +1497,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00130">130</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00168">168</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00752">pn532_sam_config()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00898">pn532_sam_config()</a>.</p>
 
 </div>
 </div>
@@ -1258,9 +1515,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00129">129</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00167">167</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00752">pn532_sam_config()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00898">pn532_sam_config()</a>.</p>
 
 </div>
 </div>
@@ -1276,9 +1533,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00133">133</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00171">171</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00752">pn532_sam_config()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00898">pn532_sam_config()</a>.</p>
 
 </div>
 </div>
@@ -1294,9 +1551,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00134">134</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00172">172</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00752">pn532_sam_config()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00898">pn532_sam_config()</a>.</p>
 
 </div>
 </div>
@@ -1312,9 +1569,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00043">43</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00060">60</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00752">pn532_sam_config()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00898">pn532_sam_config()</a>.</p>
 
 </div>
 </div>
@@ -1330,9 +1587,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00060">60</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00098">98</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00220">spi_read_byte()</a>, and <a class="el" href="pn532_8c_source.html#l00211">spi_write_byte()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00267">spi_read_byte()</a>, and <a class="el" href="pn532_8c_source.html#l00258">spi_write_byte()</a>.</p>
 
 </div>
 </div>
@@ -1348,9 +1605,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00056">56</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00094">94</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00519">pn532_init_spi()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00574">pn532_init_spi()</a>.</p>
 
 </div>
 </div>
@@ -1366,9 +1623,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00054">54</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00092">92</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00266">read_data()</a>, and <a class="el" href="pn532_8c_source.html#l00428">read_data_apdu_frame()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00313">read_data()</a>, and <a class="el" href="pn532_8c_source.html#l00483">read_data_apdu_frame()</a>.</p>
 
 </div>
 </div>
@@ -1384,9 +1641,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00053">53</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00091">91</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00315">write_command()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00779">pn532_recover()</a>, and <a class="el" href="pn532_8c_source.html#l00362">write_command()</a>.</p>
 
 </div>
 </div>
@@ -1402,9 +1659,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00057">57</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00095">95</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00519">pn532_init_spi()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00574">pn532_init_spi()</a>.</p>
 
 </div>
 </div>
@@ -1420,9 +1677,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00058">58</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00096">96</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00519">pn532_init_spi()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00574">pn532_init_spi()</a>.</p>
 
 </div>
 </div>
@@ -1438,9 +1695,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00059">59</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00097">97</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00519">pn532_init_spi()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00574">pn532_init_spi()</a>.</p>
 
 </div>
 </div>
@@ -1456,9 +1713,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00055">55</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00093">93</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00367">send_command_check_ack()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00414">send_command_check_ack()</a>.</p>
 
 </div>
 </div>
@@ -1474,9 +1731,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00052">52</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00090">90</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00249">read_ready()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00296">read_ready()</a>.</p>
 
 </div>
 </div>
@@ -1492,7 +1749,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00033">33</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00050">50</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
 </div>
 </div>
@@ -1508,9 +1765,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00034">34</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00051">51</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00315">write_command()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00362">write_command()</a>.</p>
 
 </div>
 </div>
@@ -1526,9 +1783,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00078">78</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00116">116</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00657">pn532_init()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00779">pn532_recover()</a>, and <a class="el" href="pn532_8c_source.html#l00714">pn532_wakeup()</a>.</p>
 
 </div>
 </div>
@@ -1544,9 +1801,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00097">97</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00135">135</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00519">pn532_init_spi()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00574">pn532_init_spi()</a>.</p>
 
 </div>
 </div>
@@ -1562,9 +1819,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00077">77</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00115">115</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00519">pn532_init_spi()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00574">pn532_init_spi()</a>.</p>
 
 </div>
 </div>
@@ -1592,11 +1849,11 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00291">291</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00338">338</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">References <a class="el" href="pn532_8c_source.html#l00192">pn532_ack</a>, <a class="el" href="pn532_8c_source.html#l00103">PN532_ACK_LEN</a>, <a class="el" href="pn532_8c_source.html#l00301">pn532_buffer_equal()</a>, and <a class="el" href="pn532_8c_source.html#l00266">read_data()</a>.</p>
+<p class="reference">References <a class="el" href="pn532_8c_source.html#l00231">pn532_ack</a>, <a class="el" href="pn532_8c_source.html#l00141">PN532_ACK_LEN</a>, <a class="el" href="pn532_8c_source.html#l00348">pn532_buffer_equal()</a>, and <a class="el" href="pn532_8c_source.html#l00313">read_data()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00367">send_command_check_ack()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00414">send_command_check_ack()</a>.</p>
 
 </div>
 </div>
@@ -1623,11 +1880,11 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00238">238</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00285">285</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">References <a class="el" href="pn532_8h_source.html#l00150">pn532_t::i2c_dev</a>, and <a class="el" href="pn532_8c_source.html#l00066">PN532_I2C_TIMEOUT_MS</a>.</p>
+<p class="reference">References <a class="el" href="pn532_8h_source.html#l00150">pn532_t::i2c_dev</a>, and <a class="el" href="pn532_8c_source.html#l00104">PN532_I2C_TIMEOUT_MS</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00249">read_ready()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00296">read_ready()</a>.</p>
 
 </div>
 </div>
@@ -1663,9 +1920,9 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00301">301</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00348">348</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00291">check_ack()</a>, and <a class="el" href="pn532_8c_source.html#l00718">pn532_get_firmware_version()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00338">check_ack()</a>, and <a class="el" href="pn532_8c_source.html#l00832">pn532_get_firmware_version()</a>.</p>
 
 </div>
 </div>
@@ -1696,11 +1953,11 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00579">579</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00634">634</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">References <a class="el" href="pn532_8c_source.html#l00090">GPIO_LEVEL_HIGH</a>, <a class="el" href="pn532_8c_source.html#l00089">GPIO_LEVEL_LOW</a>, <a class="el" href="pn532_8c_source.html#l00091">GPIO_PIN_BITMASK_BASE</a>, <a class="el" href="pn532_8h_source.html#l00149">pn532_t::i2c_bus</a>, <a class="el" href="pn532_8h_source.html#l00128">pn532_config_t::i2c_clock_hz</a>, <a class="el" href="pn532_8h_source.html#l00150">pn532_t::i2c_dev</a>, <a class="el" href="pn532_8h_source.html#l00123">pn532_config_t::i2c_port</a>, <a class="el" href="pn532_8h_source.html#l00126">pn532_config_t::pin_irq</a>, <a class="el" href="pn532_8h_source.html#l00151">pn532_t::pin_irq</a>, <a class="el" href="pn532_8h_source.html#l00127">pn532_config_t::pin_rst</a>, <a class="el" href="pn532_8h_source.html#l00152">pn532_t::pin_rst</a>, <a class="el" href="pn532_8h_source.html#l00125">pn532_config_t::pin_scl</a>, <a class="el" href="pn532_8h_source.html#l00124">pn532_config_t::pin_sda</a>, <a class="el" href="pn532_8h_source.html#l00063">PN532_I2C_ADDRESS</a>, and <a class="el" href="pn532_8c_source.html#l00025">PN532_LOG_TAG</a>.</p>
+<p class="reference">References <a class="el" href="pn532_8c_source.html#l00128">GPIO_LEVEL_HIGH</a>, <a class="el" href="pn532_8c_source.html#l00127">GPIO_LEVEL_LOW</a>, <a class="el" href="pn532_8c_source.html#l00129">GPIO_PIN_BITMASK_BASE</a>, <a class="el" href="pn532_8h_source.html#l00149">pn532_t::i2c_bus</a>, <a class="el" href="pn532_8h_source.html#l00128">pn532_config_t::i2c_clock_hz</a>, <a class="el" href="pn532_8h_source.html#l00150">pn532_t::i2c_dev</a>, <a class="el" href="pn532_8h_source.html#l00123">pn532_config_t::i2c_port</a>, <a class="el" href="pn532_8h_source.html#l00126">pn532_config_t::pin_irq</a>, <a class="el" href="pn532_8h_source.html#l00151">pn532_t::pin_irq</a>, <a class="el" href="pn532_8h_source.html#l00127">pn532_config_t::pin_rst</a>, <a class="el" href="pn532_8h_source.html#l00152">pn532_t::pin_rst</a>, <a class="el" href="pn532_8h_source.html#l00125">pn532_config_t::pin_scl</a>, <a class="el" href="pn532_8h_source.html#l00124">pn532_config_t::pin_sda</a>, <a class="el" href="pn532_8h_source.html#l00063">PN532_I2C_ADDRESS</a>, and <a class="el" href="pn532_8c_source.html#l00025">PN532_LOG_TAG</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00657">pn532_init()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00809">pn532_init()</a>.</p>
 
 </div>
 </div>
@@ -1731,11 +1988,173 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00519">519</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00574">574</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">References <a class="el" href="pn532_8c_source.html#l00090">GPIO_LEVEL_HIGH</a>, <a class="el" href="pn532_8c_source.html#l00089">GPIO_LEVEL_LOW</a>, <a class="el" href="pn532_8c_source.html#l00091">GPIO_PIN_BITMASK_BASE</a>, <a class="el" href="pn532_8h_source.html#l00119">pn532_config_t::pin_cs</a>, <a class="el" href="pn532_8h_source.html#l00146">pn532_t::pin_cs</a>, <a class="el" href="pn532_8h_source.html#l00117">pn532_config_t::pin_miso</a>, <a class="el" href="pn532_8h_source.html#l00116">pn532_config_t::pin_mosi</a>, <a class="el" href="pn532_8h_source.html#l00118">pn532_config_t::pin_sclk</a>, <a class="el" href="pn532_8c_source.html#l00076">PN532_CS_TOGGLE_DELAY_MS</a>, <a class="el" href="pn532_8c_source.html#l00031">PN532_PREAMBLE</a>, <a class="el" href="pn532_8c_source.html#l00056">PN532_SPI_CLOCK_HZ</a>, <a class="el" href="pn532_8c_source.html#l00057">PN532_SPI_MODE</a>, <a class="el" href="pn532_8c_source.html#l00058">PN532_SPI_NO_PIN</a>, <a class="el" href="pn532_8c_source.html#l00059">PN532_SPI_QUEUE_SIZE</a>, <a class="el" href="pn532_8c_source.html#l00097">PN532_WAKEUP_BYTE</a>, <a class="el" href="pn532_8c_source.html#l00077">PN532_WAKEUP_DELAY_MS</a>, <a class="el" href="pn532_8h_source.html#l00120">pn532_config_t::skip_bus_init</a>, <a class="el" href="pn532_8h_source.html#l00145">pn532_t::spi</a>, <a class="el" href="pn532_8h_source.html#l00115">pn532_config_t::spi_host</a>, and <a class="el" href="pn532_8c_source.html#l00211">spi_write_byte()</a>.</p>
+<p class="reference">References <a class="el" href="pn532_8c_source.html#l00128">GPIO_LEVEL_HIGH</a>, <a class="el" href="pn532_8c_source.html#l00127">GPIO_LEVEL_LOW</a>, <a class="el" href="pn532_8c_source.html#l00129">GPIO_PIN_BITMASK_BASE</a>, <a class="el" href="pn532_8h_source.html#l00119">pn532_config_t::pin_cs</a>, <a class="el" href="pn532_8h_source.html#l00146">pn532_t::pin_cs</a>, <a class="el" href="pn532_8h_source.html#l00117">pn532_config_t::pin_miso</a>, <a class="el" href="pn532_8h_source.html#l00116">pn532_config_t::pin_mosi</a>, <a class="el" href="pn532_8h_source.html#l00118">pn532_config_t::pin_sclk</a>, <a class="el" href="pn532_8c_source.html#l00114">PN532_CS_TOGGLE_DELAY_MS</a>, <a class="el" href="pn532_8c_source.html#l00048">PN532_PREAMBLE</a>, <a class="el" href="pn532_8c_source.html#l00094">PN532_SPI_CLOCK_HZ</a>, <a class="el" href="pn532_8c_source.html#l00095">PN532_SPI_MODE</a>, <a class="el" href="pn532_8c_source.html#l00096">PN532_SPI_NO_PIN</a>, <a class="el" href="pn532_8c_source.html#l00097">PN532_SPI_QUEUE_SIZE</a>, <a class="el" href="pn532_8c_source.html#l00135">PN532_WAKEUP_BYTE</a>, <a class="el" href="pn532_8c_source.html#l00115">PN532_WAKEUP_DELAY_MS</a>, <a class="el" href="pn532_8h_source.html#l00120">pn532_config_t::skip_bus_init</a>, <a class="el" href="pn532_8h_source.html#l00145">pn532_t::spi</a>, <a class="el" href="pn532_8h_source.html#l00115">pn532_config_t::spi_host</a>, and <a class="el" href="pn532_8c_source.html#l00258">spi_write_byte()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00657">pn532_init()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00809">pn532_init()</a>.</p>
+
+</div>
+</div>
+<a id="a0da2e51fee924a480c4088542980adda" name="a0da2e51fee924a480c4088542980adda"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0da2e51fee924a480c4088542980adda">&#9670;&#160;</a></span>pn532_recover()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void pn532_recover </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structpn532__t.html">pn532_t</a> *</td>          <td class="paramname"><span class="paramname"><em>dev</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00779">779</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+
+<p class="reference">References <a class="el" href="pn532_8h_source.html#l00155">pn532_t::fail_count</a>, <a class="el" href="pn532_8c_source.html#l00128">GPIO_LEVEL_HIGH</a>, <a class="el" href="pn532_8c_source.html#l00127">GPIO_LEVEL_LOW</a>, <a class="el" href="pn532_8h_source.html#l00149">pn532_t::i2c_bus</a>, <a class="el" href="pn532_8h_source.html#l00150">pn532_t::i2c_dev</a>, <a class="el" href="pn532_8h_source.html#l00146">pn532_t::pin_cs</a>, <a class="el" href="pn532_8c_source.html#l00231">pn532_ack</a>, <a class="el" href="pn532_8c_source.html#l00141">PN532_ACK_LEN</a>, <a class="el" href="pn532_8c_source.html#l00114">PN532_CS_TOGGLE_DELAY_MS</a>, <a class="el" href="pn532_8c_source.html#l00104">PN532_I2C_TIMEOUT_MS</a>, <a class="el" href="pn532_8c_source.html#l00025">PN532_LOG_TAG</a>, <a class="el" href="pn532_8c_source.html#l00091">PN532_SPI_DATAWRITE</a>, <a class="el" href="pn532_8c_source.html#l00116">PN532_SYNC_DELAY_MS</a>, <a class="el" href="pn532_8h_source.html#l00078">PN532_TRANSPORT_I2C</a>, <a class="el" href="pn532_8c_source.html#l00714">pn532_wakeup()</a>, <a class="el" href="pn532_8c_source.html#l00258">spi_write_byte()</a>, and <a class="el" href="pn532_8h_source.html#l00142">pn532_t::transport</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00921">pn532_read_passive_target_id()</a>.</p>
+
+</div>
+</div>
+<a id="aab2536caaba69adc8578ffda80db3fc0" name="aab2536caaba69adc8578ffda80db3fc0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aab2536caaba69adc8578ffda80db3fc0">&#9670;&#160;</a></span>pn532_rf_configuration()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool pn532_rf_configuration </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structpn532__t.html">pn532_t</a> *</td>          <td class="paramname"><span class="paramname"><em>dev</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t</td>          <td class="paramname"><span class="paramname"><em>cfg_item</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const uint8_t *</td>          <td class="paramname"><span class="paramname"><em>data</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t</td>          <td class="paramname"><span class="paramname"><em>data_len</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Send an RFConfiguration command (0x32) for one CfgItem. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">dev</td><td>Driver instance. </td></tr>
+    <tr><td class="paramname">cfg_item</td><td>CfgItem selector (<code>PN532_RFCFG_*</code>). </td></tr>
+    <tr><td class="paramname">data</td><td>Configuration bytes for that item. </td></tr>
+    <tr><td class="paramname">data_len</td><td>Number of configuration bytes (≤ <code>PN532_RFCFG_MAX_DATA</code>). </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true when the PN532 acknowledged and echoed 0x33. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00875">875</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+
+<p class="reference">References <a class="el" href="pn532_8c_source.html#l00118">PN532_CMD_TIMEOUT_MS</a>, <a class="el" href="pn532_8c_source.html#l00081">PN532_RFCFG_MAX_DATA</a>, <a class="el" href="pn532_8c_source.html#l00080">PN532_RFCFG_RESP_CODE</a>, <a class="el" href="pn532_8c_source.html#l00079">PN532_RFCFG_RESP_CODE_OFF</a>, <a class="el" href="pn532_8c_source.html#l00078">PN532_RFCFG_RESP_LEN</a>, <a class="el" href="pn532_8c_source.html#l00064">PN532_RFCONFIGURATION</a>, <a class="el" href="pn532_8c_source.html#l00033">pn532_safe_memcpy()</a>, <a class="el" href="pn532_8c_source.html#l00313">read_data()</a>, and <a class="el" href="pn532_8c_source.html#l00414">send_command_check_ack()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00714">pn532_wakeup()</a>.</p>
+
+</div>
+</div>
+<a id="a324df7bb21715dda7419dc46996dc497" name="a324df7bb21715dda7419dc46996dc497"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a324df7bb21715dda7419dc46996dc497">&#9670;&#160;</a></span>pn532_safe_memcpy()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool pn532_safe_memcpy </td>
+          <td>(</td>
+          <td class="paramtype">uint8_t *</td>          <td class="paramname"><span class="paramname"><em>dst</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t</td>          <td class="paramname"><span class="paramname"><em>dst_size</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const uint8_t *</td>          <td class="paramname"><span class="paramname"><em>src</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t</td>          <td class="paramname"><span class="paramname"><em>count</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00033">33</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00875">pn532_rf_configuration()</a>, <a class="el" href="pn532_8c_source.html#l00962">pn532_send_apdu()</a>, <a class="el" href="pn532_8c_source.html#l00313">read_data()</a>, and <a class="el" href="pn532_8c_source.html#l00483">read_data_apdu_frame()</a>.</p>
+
+</div>
+</div>
+<a id="a718507e62c0f7ee1196fda65b2458390" name="a718507e62c0f7ee1196fda65b2458390"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a718507e62c0f7ee1196fda65b2458390">&#9670;&#160;</a></span>pn532_wakeup()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void pn532_wakeup </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structpn532__t.html">pn532_t</a> *</td>          <td class="paramname"><span class="paramname"><em>dev</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00714">714</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+
+<p class="reference">References <a class="el" href="pn532_8c_source.html#l00832">pn532_get_firmware_version()</a>, <a class="el" href="pn532_8c_source.html#l00025">PN532_LOG_TAG</a>, <a class="el" href="pn532_8c_source.html#l00875">pn532_rf_configuration()</a>, <a class="el" href="pn532_8c_source.html#l00070">PN532_RFCFG_FIELD_ON</a>, <a class="el" href="pn532_8c_source.html#l00081">PN532_RFCFG_MAX_DATA</a>, <a class="el" href="pn532_8c_source.html#l00068">PN532_RFCFG_MAX_RETRIES</a>, <a class="el" href="pn532_8c_source.html#l00071">PN532_RFCFG_RETRY_ATR</a>, <a class="el" href="pn532_8c_source.html#l00076">PN532_RFCFG_RETRY_PASSIVE</a>, <a class="el" href="pn532_8c_source.html#l00072">PN532_RFCFG_RETRY_PSL</a>, <a class="el" href="pn532_8c_source.html#l00067">PN532_RFCFG_RF_FIELD</a>, <a class="el" href="pn532_8c_source.html#l00898">pn532_sam_config()</a>, <a class="el" href="pn532_8c_source.html#l00116">PN532_SYNC_DELAY_MS</a>, <a class="el" href="pn532_8h_source.html#l00078">PN532_TRANSPORT_I2C</a>, and <a class="el" href="pn532_8h_source.html#l00142">pn532_t::transport</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00809">pn532_init()</a>, and <a class="el" href="pn532_8c_source.html#l00779">pn532_recover()</a>.</p>
 
 </div>
 </div>
@@ -1771,11 +2190,11 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00266">266</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00313">313</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">References <a class="el" href="pn532_8c_source.html#l00090">GPIO_LEVEL_HIGH</a>, <a class="el" href="pn532_8c_source.html#l00089">GPIO_LEVEL_LOW</a>, <a class="el" href="pn532_8h_source.html#l00150">pn532_t::i2c_dev</a>, <a class="el" href="pn532_8h_source.html#l00146">pn532_t::pin_cs</a>, <a class="el" href="pn532_8c_source.html#l00083">PN532_BYTE_DELAY_MS</a>, <a class="el" href="pn532_8c_source.html#l00076">PN532_CS_TOGGLE_DELAY_MS</a>, <a class="el" href="pn532_8c_source.html#l00070">PN532_I2C_RX_MAX</a>, <a class="el" href="pn532_8c_source.html#l00066">PN532_I2C_TIMEOUT_MS</a>, <a class="el" href="pn532_8c_source.html#l00054">PN532_SPI_DATAREAD</a>, <a class="el" href="pn532_8h_source.html#l00078">PN532_TRANSPORT_I2C</a>, <a class="el" href="pn532_8c_source.html#l00220">spi_read_byte()</a>, <a class="el" href="pn532_8c_source.html#l00211">spi_write_byte()</a>, and <a class="el" href="pn532_8h_source.html#l00142">pn532_t::transport</a>.</p>
+<p class="reference">References <a class="el" href="pn532_8c_source.html#l00128">GPIO_LEVEL_HIGH</a>, <a class="el" href="pn532_8c_source.html#l00127">GPIO_LEVEL_LOW</a>, <a class="el" href="pn532_8h_source.html#l00150">pn532_t::i2c_dev</a>, <a class="el" href="pn532_8h_source.html#l00146">pn532_t::pin_cs</a>, <a class="el" href="pn532_8c_source.html#l00121">PN532_BYTE_DELAY_MS</a>, <a class="el" href="pn532_8c_source.html#l00114">PN532_CS_TOGGLE_DELAY_MS</a>, <a class="el" href="pn532_8c_source.html#l00108">PN532_I2C_RX_MAX</a>, <a class="el" href="pn532_8c_source.html#l00104">PN532_I2C_TIMEOUT_MS</a>, <a class="el" href="pn532_8c_source.html#l00033">pn532_safe_memcpy()</a>, <a class="el" href="pn532_8c_source.html#l00092">PN532_SPI_DATAREAD</a>, <a class="el" href="pn532_8h_source.html#l00078">PN532_TRANSPORT_I2C</a>, <a class="el" href="pn532_8c_source.html#l00267">spi_read_byte()</a>, <a class="el" href="pn532_8c_source.html#l00258">spi_write_byte()</a>, and <a class="el" href="pn532_8h_source.html#l00142">pn532_t::transport</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00291">check_ack()</a>, <a class="el" href="pn532_8c_source.html#l00718">pn532_get_firmware_version()</a>, <a class="el" href="pn532_8c_source.html#l00775">pn532_read_passive_target_id()</a>, <a class="el" href="pn532_8c_source.html#l00875">pn532_release_target()</a>, and <a class="el" href="pn532_8c_source.html#l00752">pn532_sam_config()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00338">check_ack()</a>, <a class="el" href="pn532_8c_source.html#l00832">pn532_get_firmware_version()</a>, <a class="el" href="pn532_8c_source.html#l00921">pn532_read_passive_target_id()</a>, <a class="el" href="pn532_8c_source.html#l01044">pn532_release_target()</a>, <a class="el" href="pn532_8c_source.html#l00875">pn532_rf_configuration()</a>, and <a class="el" href="pn532_8c_source.html#l00898">pn532_sam_config()</a>.</p>
 
 </div>
 </div>
@@ -1811,11 +2230,11 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00428">428</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00483">483</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">References <a class="el" href="pn532_8c_source.html#l00090">GPIO_LEVEL_HIGH</a>, <a class="el" href="pn532_8c_source.html#l00089">GPIO_LEVEL_LOW</a>, <a class="el" href="pn532_8h_source.html#l00150">pn532_t::i2c_dev</a>, <a class="el" href="pn532_8h_source.html#l00146">pn532_t::pin_cs</a>, <a class="el" href="pn532_8c_source.html#l00083">PN532_BYTE_DELAY_MS</a>, <a class="el" href="pn532_8c_source.html#l00076">PN532_CS_TOGGLE_DELAY_MS</a>, <a class="el" href="pn532_8c_source.html#l00156">PN532_EXCHANGE_FRAME_MAX</a>, <a class="el" href="pn532_8c_source.html#l00157">PN532_EXCHANGE_LEN_OFFSET</a>, <a class="el" href="pn532_8c_source.html#l00173">PN532_EXT_FRAME_HDR_LEN</a>, <a class="el" href="pn532_8c_source.html#l00172">PN532_EXT_FRAME_INDICATOR</a>, <a class="el" href="pn532_8c_source.html#l00174">PN532_EXT_FRAME_LENHI_OFFSET</a>, <a class="el" href="pn532_8c_source.html#l00175">PN532_EXT_FRAME_LENLO_OFFSET</a>, <a class="el" href="pn532_8c_source.html#l00165">PN532_FRAME_HDR_LEN</a>, <a class="el" href="pn532_8c_source.html#l00166">PN532_FRAME_TAIL_LEN</a>, <a class="el" href="pn532_8c_source.html#l00066">PN532_I2C_TIMEOUT_MS</a>, <a class="el" href="pn532_8c_source.html#l00054">PN532_SPI_DATAREAD</a>, <a class="el" href="pn532_8h_source.html#l00078">PN532_TRANSPORT_I2C</a>, <a class="el" href="pn532_8c_source.html#l00220">spi_read_byte()</a>, <a class="el" href="pn532_8c_source.html#l00211">spi_write_byte()</a>, and <a class="el" href="pn532_8h_source.html#l00142">pn532_t::transport</a>.</p>
+<p class="reference">References <a class="el" href="pn532_8c_source.html#l00128">GPIO_LEVEL_HIGH</a>, <a class="el" href="pn532_8c_source.html#l00127">GPIO_LEVEL_LOW</a>, <a class="el" href="pn532_8h_source.html#l00150">pn532_t::i2c_dev</a>, <a class="el" href="pn532_8h_source.html#l00146">pn532_t::pin_cs</a>, <a class="el" href="pn532_8c_source.html#l00121">PN532_BYTE_DELAY_MS</a>, <a class="el" href="pn532_8c_source.html#l00114">PN532_CS_TOGGLE_DELAY_MS</a>, <a class="el" href="pn532_8c_source.html#l00196">PN532_EXCHANGE_FRAME_MAX</a>, <a class="el" href="pn532_8c_source.html#l00197">PN532_EXCHANGE_LEN_OFFSET</a>, <a class="el" href="pn532_8c_source.html#l00213">PN532_EXT_FRAME_HDR_LEN</a>, <a class="el" href="pn532_8c_source.html#l00212">PN532_EXT_FRAME_INDICATOR</a>, <a class="el" href="pn532_8c_source.html#l00214">PN532_EXT_FRAME_LENHI_OFFSET</a>, <a class="el" href="pn532_8c_source.html#l00215">PN532_EXT_FRAME_LENLO_OFFSET</a>, <a class="el" href="pn532_8c_source.html#l00205">PN532_FRAME_HDR_LEN</a>, <a class="el" href="pn532_8c_source.html#l00206">PN532_FRAME_TAIL_LEN</a>, <a class="el" href="pn532_8c_source.html#l00104">PN532_I2C_TIMEOUT_MS</a>, <a class="el" href="pn532_8c_source.html#l00033">pn532_safe_memcpy()</a>, <a class="el" href="pn532_8c_source.html#l00092">PN532_SPI_DATAREAD</a>, <a class="el" href="pn532_8h_source.html#l00078">PN532_TRANSPORT_I2C</a>, <a class="el" href="pn532_8c_source.html#l00267">spi_read_byte()</a>, <a class="el" href="pn532_8c_source.html#l00258">spi_write_byte()</a>, and <a class="el" href="pn532_8h_source.html#l00142">pn532_t::transport</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00805">pn532_send_apdu()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00962">pn532_send_apdu()</a>.</p>
 
 </div>
 </div>
@@ -1842,11 +2261,11 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00249">249</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00296">296</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">References <a class="el" href="pn532_8c_source.html#l00090">GPIO_LEVEL_HIGH</a>, <a class="el" href="pn532_8c_source.html#l00089">GPIO_LEVEL_LOW</a>, <a class="el" href="pn532_8c_source.html#l00238">i2c_read_ready()</a>, <a class="el" href="pn532_8h_source.html#l00146">pn532_t::pin_cs</a>, <a class="el" href="pn532_8c_source.html#l00076">PN532_CS_TOGGLE_DELAY_MS</a>, <a class="el" href="pn532_8c_source.html#l00052">PN532_SPI_STATREAD</a>, <a class="el" href="pn532_8h_source.html#l00078">PN532_TRANSPORT_I2C</a>, <a class="el" href="pn532_8c_source.html#l00220">spi_read_byte()</a>, <a class="el" href="pn532_8c_source.html#l00211">spi_write_byte()</a>, and <a class="el" href="pn532_8h_source.html#l00142">pn532_t::transport</a>.</p>
+<p class="reference">References <a class="el" href="pn532_8c_source.html#l00128">GPIO_LEVEL_HIGH</a>, <a class="el" href="pn532_8c_source.html#l00127">GPIO_LEVEL_LOW</a>, <a class="el" href="pn532_8c_source.html#l00285">i2c_read_ready()</a>, <a class="el" href="pn532_8h_source.html#l00146">pn532_t::pin_cs</a>, <a class="el" href="pn532_8c_source.html#l00114">PN532_CS_TOGGLE_DELAY_MS</a>, <a class="el" href="pn532_8c_source.html#l00090">PN532_SPI_STATREAD</a>, <a class="el" href="pn532_8h_source.html#l00078">PN532_TRANSPORT_I2C</a>, <a class="el" href="pn532_8c_source.html#l00267">spi_read_byte()</a>, <a class="el" href="pn532_8c_source.html#l00258">spi_write_byte()</a>, and <a class="el" href="pn532_8h_source.html#l00142">pn532_t::transport</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00367">send_command_check_ack()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00414">send_command_check_ack()</a>.</p>
 
 </div>
 </div>
@@ -1887,11 +2306,11 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00367">367</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00414">414</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">References <a class="el" href="pn532_8c_source.html#l00291">check_ack()</a>, <a class="el" href="pn532_8c_source.html#l00025">PN532_LOG_TAG</a>, <a class="el" href="pn532_8c_source.html#l00079">PN532_POLL_INTERVAL_MS</a>, <a class="el" href="pn532_8c_source.html#l00055">PN532_SPI_READY</a>, <a class="el" href="pn532_8c_source.html#l00249">read_ready()</a>, and <a class="el" href="pn532_8c_source.html#l00315">write_command()</a>.</p>
+<p class="reference">References <a class="el" href="pn532_8c_source.html#l00338">check_ack()</a>, <a class="el" href="pn532_8h_source.html#l00155">pn532_t::fail_count</a>, <a class="el" href="pn532_8c_source.html#l00025">PN532_LOG_TAG</a>, <a class="el" href="pn532_8c_source.html#l00117">PN532_POLL_INTERVAL_MS</a>, <a class="el" href="pn532_8c_source.html#l00093">PN532_SPI_READY</a>, <a class="el" href="pn532_8c_source.html#l00296">read_ready()</a>, and <a class="el" href="pn532_8c_source.html#l00362">write_command()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00718">pn532_get_firmware_version()</a>, <a class="el" href="pn532_8c_source.html#l00775">pn532_read_passive_target_id()</a>, <a class="el" href="pn532_8c_source.html#l00875">pn532_release_target()</a>, <a class="el" href="pn532_8c_source.html#l00752">pn532_sam_config()</a>, and <a class="el" href="pn532_8c_source.html#l00805">pn532_send_apdu()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00832">pn532_get_firmware_version()</a>, <a class="el" href="pn532_8c_source.html#l00921">pn532_read_passive_target_id()</a>, <a class="el" href="pn532_8c_source.html#l01044">pn532_release_target()</a>, <a class="el" href="pn532_8c_source.html#l00875">pn532_rf_configuration()</a>, <a class="el" href="pn532_8c_source.html#l00898">pn532_sam_config()</a>, and <a class="el" href="pn532_8c_source.html#l00962">pn532_send_apdu()</a>.</p>
 
 </div>
 </div>
@@ -1918,11 +2337,11 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00220">220</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00267">267</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">References <a class="el" href="pn532_8c_source.html#l00060">PN532_SPI_BITS</a>, and <a class="el" href="pn532_8h_source.html#l00145">pn532_t::spi</a>.</p>
+<p class="reference">References <a class="el" href="pn532_8c_source.html#l00098">PN532_SPI_BITS</a>, and <a class="el" href="pn532_8h_source.html#l00145">pn532_t::spi</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00266">read_data()</a>, <a class="el" href="pn532_8c_source.html#l00428">read_data_apdu_frame()</a>, and <a class="el" href="pn532_8c_source.html#l00249">read_ready()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00313">read_data()</a>, <a class="el" href="pn532_8c_source.html#l00483">read_data_apdu_frame()</a>, and <a class="el" href="pn532_8c_source.html#l00296">read_ready()</a>.</p>
 
 </div>
 </div>
@@ -1953,11 +2372,11 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00211">211</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00258">258</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">References <a class="el" href="pn532_8c_source.html#l00060">PN532_SPI_BITS</a>, and <a class="el" href="pn532_8h_source.html#l00145">pn532_t::spi</a>.</p>
+<p class="reference">References <a class="el" href="pn532_8c_source.html#l00098">PN532_SPI_BITS</a>, and <a class="el" href="pn532_8h_source.html#l00145">pn532_t::spi</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00519">pn532_init_spi()</a>, <a class="el" href="pn532_8c_source.html#l00266">read_data()</a>, <a class="el" href="pn532_8c_source.html#l00428">read_data_apdu_frame()</a>, <a class="el" href="pn532_8c_source.html#l00249">read_ready()</a>, and <a class="el" href="pn532_8c_source.html#l00315">write_command()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00574">pn532_init_spi()</a>, <a class="el" href="pn532_8c_source.html#l00779">pn532_recover()</a>, <a class="el" href="pn532_8c_source.html#l00313">read_data()</a>, <a class="el" href="pn532_8c_source.html#l00483">read_data_apdu_frame()</a>, <a class="el" href="pn532_8c_source.html#l00296">read_ready()</a>, and <a class="el" href="pn532_8c_source.html#l00362">write_command()</a>.</p>
 
 </div>
 </div>
@@ -1993,11 +2412,11 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00315">315</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00362">362</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">References <a class="el" href="pn532_8c_source.html#l00090">GPIO_LEVEL_HIGH</a>, <a class="el" href="pn532_8c_source.html#l00089">GPIO_LEVEL_LOW</a>, <a class="el" href="pn532_8h_source.html#l00150">pn532_t::i2c_dev</a>, <a class="el" href="pn532_8h_source.html#l00146">pn532_t::pin_cs</a>, <a class="el" href="pn532_8c_source.html#l00076">PN532_CS_TOGGLE_DELAY_MS</a>, <a class="el" href="pn532_8c_source.html#l00110">PN532_FRAME_TFI_OVERHEAD</a>, <a class="el" href="pn532_8c_source.html#l00036">PN532_HOSTTOPN532</a>, <a class="el" href="pn532_8c_source.html#l00066">PN532_I2C_TIMEOUT_MS</a>, <a class="el" href="pn532_8c_source.html#l00068">PN532_I2C_TX_MAX</a>, <a class="el" href="pn532_8c_source.html#l00035">PN532_POSTAMBLE</a>, <a class="el" href="pn532_8c_source.html#l00031">PN532_PREAMBLE</a>, <a class="el" href="pn532_8c_source.html#l00053">PN532_SPI_DATAWRITE</a>, <a class="el" href="pn532_8c_source.html#l00034">PN532_STARTCODE2</a>, <a class="el" href="pn532_8h_source.html#l00078">PN532_TRANSPORT_I2C</a>, <a class="el" href="pn532_8c_source.html#l00211">spi_write_byte()</a>, and <a class="el" href="pn532_8h_source.html#l00142">pn532_t::transport</a>.</p>
+<p class="reference">References <a class="el" href="pn532_8c_source.html#l00128">GPIO_LEVEL_HIGH</a>, <a class="el" href="pn532_8c_source.html#l00127">GPIO_LEVEL_LOW</a>, <a class="el" href="pn532_8h_source.html#l00150">pn532_t::i2c_dev</a>, <a class="el" href="pn532_8h_source.html#l00146">pn532_t::pin_cs</a>, <a class="el" href="pn532_8c_source.html#l00114">PN532_CS_TOGGLE_DELAY_MS</a>, <a class="el" href="pn532_8c_source.html#l00148">PN532_FRAME_TFI_OVERHEAD</a>, <a class="el" href="pn532_8c_source.html#l00053">PN532_HOSTTOPN532</a>, <a class="el" href="pn532_8c_source.html#l00104">PN532_I2C_TIMEOUT_MS</a>, <a class="el" href="pn532_8c_source.html#l00106">PN532_I2C_TX_MAX</a>, <a class="el" href="pn532_8c_source.html#l00052">PN532_POSTAMBLE</a>, <a class="el" href="pn532_8c_source.html#l00048">PN532_PREAMBLE</a>, <a class="el" href="pn532_8c_source.html#l00091">PN532_SPI_DATAWRITE</a>, <a class="el" href="pn532_8c_source.html#l00051">PN532_STARTCODE2</a>, <a class="el" href="pn532_8h_source.html#l00078">PN532_TRANSPORT_I2C</a>, <a class="el" href="pn532_8c_source.html#l00258">spi_write_byte()</a>, and <a class="el" href="pn532_8h_source.html#l00142">pn532_t::transport</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00367">send_command_check_ack()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00414">send_command_check_ack()</a>.</p>
 
 </div>
 </div>
@@ -2025,9 +2444,9 @@ Variables</h2></td></tr>
 <div class="line">    0x00U, 0x00U, 0xFFU, 0x00U, 0xFFU, 0x00U</div>
 <div class="line">}</div>
 </div><!-- fragment -->
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00192">192</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00231">231</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00291">check_ack()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00338">check_ack()</a>, and <a class="el" href="pn532_8c_source.html#l00779">pn532_recover()</a>.</p>
 
 </div>
 </div>
@@ -2053,7 +2472,7 @@ Variables</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00025">25</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00718">pn532_get_firmware_version()</a>, <a class="el" href="pn532_8c_source.html#l00657">pn532_init()</a>, <a class="el" href="pn532_8c_source.html#l00579">pn532_init_i2c()</a>, <a class="el" href="pn532_8c_source.html#l00805">pn532_send_apdu()</a>, and <a class="el" href="pn532_8c_source.html#l00367">send_command_check_ack()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00832">pn532_get_firmware_version()</a>, <a class="el" href="pn532_8c_source.html#l00809">pn532_init()</a>, <a class="el" href="pn532_8c_source.html#l00634">pn532_init_i2c()</a>, <a class="el" href="pn532_8c_source.html#l00779">pn532_recover()</a>, <a class="el" href="pn532_8c_source.html#l00962">pn532_send_apdu()</a>, <a class="el" href="pn532_8c_source.html#l00714">pn532_wakeup()</a>, and <a class="el" href="pn532_8c_source.html#l00414">send_command_check_ack()</a>.</p>
 
 </div>
 </div>
@@ -2080,9 +2499,9 @@ Variables</h2></td></tr>
 <div class="line">    0x00U, 0x00U, 0xFFU, 0x06U, 0xFAU, 0xD5U, 0x03U</div>
 <div class="line">}</div>
 </div><!-- fragment -->
-<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00197">197</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="pn532_8c_source.html#l00236">236</a> of file <a class="el" href="pn532_8c_source.html">pn532.c</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00718">pn532_get_firmware_version()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00832">pn532_get_firmware_version()</a>.</p>
 
 </div>
 </div>

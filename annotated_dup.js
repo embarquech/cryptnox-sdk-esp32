@@ -7,6 +7,8 @@ var annotated_dup =
     [ "MockLogger", "classMockLogger.html", "classMockLogger" ],
     [ "MockPlatform", "classMockPlatform.html", "classMockPlatform" ],
     [ "MockScriptEntry", "structMockScriptEntry.html", "structMockScriptEntry" ],
+    [ "pb_field_t", "structpb__field__t.html", "structpb__field__t" ],
+    [ "pb_reader_t", "structpb__reader__t.html", "structpb__reader__t" ],
     [ "pn532_config_t", "structpn532__config__t.html", "structpn532__config__t" ],
     [ "pn532_t", "structpn532__t.html", "structpn532__t" ],
     [ "PN532Adapter", "classPN532Adapter.html", "classPN532Adapter" ],

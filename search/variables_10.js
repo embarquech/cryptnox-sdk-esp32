@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['wifi_5fmax_5fretry_0',['WIFI_MAX_RETRY',['../BasicUsage_2main_2main_8cpp.html#a2e2b374160676af9e0b64c1db750d00e',1,'WIFI_MAX_RETRY:&#160;main.cpp'],['../Connect_2main_2main_8cpp.html#a2e2b374160676af9e0b64c1db750d00e',1,'WIFI_MAX_RETRY:&#160;main.cpp'],['../Sign_2main_2main_8cpp.html#a2e2b374160676af9e0b64c1db750d00e',1,'WIFI_MAX_RETRY:&#160;main.cpp'],['../VerifyPin_2main_2main_8cpp.html#a2e2b374160676af9e0b64c1db750d00e',1,'WIFI_MAX_RETRY:&#160;main.cpp']]],
-  ['wifi_5ftimeout_5fms_1',['WIFI_TIMEOUT_MS',['../BasicUsage_2main_2main_8cpp.html#aab326ff44a0f4631aab7bbafffc51d7e',1,'WIFI_TIMEOUT_MS:&#160;main.cpp'],['../Connect_2main_2main_8cpp.html#aab326ff44a0f4631aab7bbafffc51d7e',1,'WIFI_TIMEOUT_MS:&#160;main.cpp'],['../Sign_2main_2main_8cpp.html#aab326ff44a0f4631aab7bbafffc51d7e',1,'WIFI_TIMEOUT_MS:&#160;main.cpp'],['../VerifyPin_2main_2main_8cpp.html#aab326ff44a0f4631aab7bbafffc51d7e',1,'WIFI_TIMEOUT_MS:&#160;main.cpp']]]
+  ['uart_5flog_5fport_0',['UART_LOG_PORT',['../ESP32Logger_8cpp.html#a3912184adb219bd27ac5e640e29b6118',1,'ESP32Logger.cpp']]],
+  ['uart_5frx_5fflow_5fthresh_5fnone_1',['UART_RX_FLOW_THRESH_NONE',['../ESP32Logger_8cpp.html#af9ec984fc1accdd8f7cb1e8b1b1f4d68',1,'ESP32Logger.cpp']]],
+  ['uecc_5flog_5ftag_2',['UECC_LOG_TAG',['../uECC__esp32_8cpp.html#aca6c63686da026056143b656560f6d53',1,'uECC_esp32.cpp']]]
 ];

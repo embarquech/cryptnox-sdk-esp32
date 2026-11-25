@@ -1,6 +1,5 @@
 var classMockLogger =
 [
-    [ "~MockLogger", "classMockLogger.html#a6d2421760288efa10f8a138a82b18e85", null ],
     [ "begin", "classMockLogger.html#a4e879e6ccb21b89d1a094fefb7d32623", null ],
     [ "print", "classMockLogger.html#a39065111eb02e2fb183fdf02c71d8902", null ],
     [ "print", "classMockLogger.html#ac023c1829e379a97f222602b8f348d39", null ],

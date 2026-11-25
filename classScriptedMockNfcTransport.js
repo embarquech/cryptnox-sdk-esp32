@@ -1,6 +1,5 @@
 var classScriptedMockNfcTransport =
 [
-    [ "~ScriptedMockNfcTransport", "classScriptedMockNfcTransport.html#a68ae66e520120b4cd2af7d6b883d17dc", null ],
     [ "addScript", "classScriptedMockNfcTransport.html#ae5bbe2b2966463fdaf801de7f39e1b36", null ],
     [ "begin", "classScriptedMockNfcTransport.html#a7a267d35177a28fcb10935adedfda150", null ],
     [ "inListPassiveTarget", "classScriptedMockNfcTransport.html#a26d84b7b3607e61f74f4a91007a5dac5", null ],

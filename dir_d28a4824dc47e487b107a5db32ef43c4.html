@@ -96,7 +96,7 @@ $(function(){initNavTree('dir_d28a4824dc47e487b107a5db32ef43c4.html','',''); });
 <div class="dynheader">
 Directory dependency graph for examples:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="dir_d28a4824dc47e487b107a5db32ef43c4_dep.svg" width="668" height="131"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="dir_d28a4824dc47e487b107a5db32ef43c4_dep.svg" width="779" height="136"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-subdirs" class="groupheader"><a id="subdirs" name="subdirs"></a>
@@ -104,6 +104,7 @@ Directories</h2></td></tr>
 <tr class="memitem:BasicUsage" id="r_BasicUsage"><td class="memItemLeft" align="right" valign="top"><span class="iconfolder"><div class="folder-icon"></div></span>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="dir_01d5546719d1d9aa3f28dd8395968769.html">BasicUsage</a></td></tr>
 <tr class="memitem:Connect" id="r_Connect"><td class="memItemLeft" align="right" valign="top"><span class="iconfolder"><div class="folder-icon"></div></span>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="dir_61c733bd969c2471ac02d97f3b0ee95b.html">Connect</a></td></tr>
 <tr class="memitem:Sign" id="r_Sign"><td class="memItemLeft" align="right" valign="top"><span class="iconfolder"><div class="folder-icon"></div></span>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="dir_2365b4822c04e78cb5bc3fb96cb35526.html">Sign</a></td></tr>
+<tr class="memitem:TronSigning" id="r_TronSigning"><td class="memItemLeft" align="right" valign="top"><span class="iconfolder"><div class="folder-icon"></div></span>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="dir_be28a1a7db410cd885b7e9b60ee3a29c.html">TronSigning</a></td></tr>
 <tr class="memitem:UsdcSigning" id="r_UsdcSigning"><td class="memItemLeft" align="right" valign="top"><span class="iconfolder"><div class="folder-icon"></div></span>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="dir_5b19b165ccbe70e79cec239ffc7400ef.html">UsdcSigning</a></td></tr>
 <tr class="memitem:VerifyPin" id="r_VerifyPin"><td class="memItemLeft" align="right" valign="top"><span class="iconfolder"><div class="folder-icon"></div></span>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="dir_cc81cf6f1c823b08adf4153a5960c30a.html">VerifyPin</a></td></tr>
 </table>
@@ -148,6 +149,8 @@ Available examples</h2>
 <td class="markdownTableBodyNone"><a class="el" href="dir_01d5546719d1d9aa3f28dd8395968769.html">BasicUsage</a>  </td><td class="markdownTableBodyNone">End-to-end walkthrough in one project: pick SPI <b>or</b> I²C, open the channel, sign a hash. Good reference for production wiring.  </td></tr>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><a class="el" href="dir_5b19b165ccbe70e79cec239ffc7400ef.html">UsdcSigning</a>  </td><td class="markdownTableBodyNone">Real-world flow: build an EIP-1559 USDC transfer, sign it on the card, broadcast it on Sepolia.  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><a class="el" href="dir_be28a1a7db410cd885b7e9b60ee3a29c.html">TronSigning</a>  </td><td class="markdownTableBodyNone">Real-world flow on <b>TRON</b>: have a full node build a TRX transfer, verify it locally, sign it on the card, broadcast it on the Nile testnet.  </td></tr>
 </table>
 <h2 class="doxsection"><a class="anchor" id="autotoc_md23"></a>
 How to build and run an example</h2>
@@ -159,7 +162,7 @@ How to build and run an example</h2>
 <div class="line">idf.py set-target esp32s3                   # once, writes sdkconfig</div>
 <div class="line">idf.py build flash monitor                  # build, flash, open serial @ 115200 baud</div>
 </div><!-- fragment --><p>Exit the monitor with <span class="tt">Ctrl-]</span>. Place the card on the PN532 antenna when the firmware prompts for it.</p>
-<dl class="section note"><dt>Note</dt><dd>All examples default to PIN <span class="tt">000000000</span> (nine zeros). If your card was initialised with a different PIN, edit the <span class="tt"><a class="el" href="BasicUsage_2main_2main_8cpp.html#ab42cd1e61da75327d37d39a75b2d7ff3" title="Demo PIN — replace with the PIN used during card initialisation.">DEFAULT_PIN</a></span> / <span class="tt">DEMO_PIN</span> / <span class="tt"><a class="el" href="UsdcSigning_2config_8template_8h.html#a2de009963ca3d1582d4c3a4397ef65bc">CARD_PIN</a></span> macro at the top of the relevant source file before building.</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>All examples default to PIN <span class="tt">000000000</span> (nine zeros). If your card was initialised with a different PIN, edit the <span class="tt"><a class="el" href="BasicUsage_2main_2main_8cpp.html#ab42cd1e61da75327d37d39a75b2d7ff3" title="Demo PIN — replace with the PIN used during card initialisation.">DEFAULT_PIN</a></span> / <span class="tt">DEMO_PIN</span> / <span class="tt"><a class="el" href="TronSigning_2config_8template_8h.html#a2de009963ca3d1582d4c3a4397ef65bc">CARD_PIN</a></span> macro at the top of the relevant source file before building.</dd></dl>
 <h2 class="doxsection"><a class="anchor" id="autotoc_md24"></a>
 Adding a new example</h2>
 <p>Follow the conventions used by the existing projects:</p>

@@ -1,6 +1,5 @@
 var classReflectiveMockNfcTransport =
 [
-    [ "~ReflectiveMockNfcTransport", "classReflectiveMockNfcTransport.html#aaf49af552bee886706a97140f76cb976", null ],
     [ "begin", "classReflectiveMockNfcTransport.html#a2d97a8f65864d9dafea9d1b19efec490", null ],
     [ "inListPassiveTarget", "classReflectiveMockNfcTransport.html#a43719315454de263891fcaa1472a0ad2", null ],
     [ "printFirmwareVersion", "classReflectiveMockNfcTransport.html#aa94cead78bfeed7ca32f859d4dc65a27", null ],

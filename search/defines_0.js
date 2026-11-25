@@ -7,5 +7,8 @@ var searchData=
   ['aes_5fkey_5fbits_5fper_5fbyte_4',['AES_KEY_BITS_PER_BYTE',['../esp32__crypto__provider_8cpp.html#ad434703866ca9ab041e6b225adf5adf9',1,'esp32_crypto_provider.cpp']]],
   ['aes_5fpad_5fbuf_5fmax_5finput_5',['AES_PAD_BUF_MAX_INPUT',['../esp32__crypto__provider_8cpp.html#a6ee1338d99bef0ccdbdc1cff5caf0fae',1,'esp32_crypto_provider.cpp']]],
   ['aes_5fpad_5fbuf_5fsize_6',['AES_PAD_BUF_SIZE',['../esp32__crypto__provider_8cpp.html#ab798f582c9c2c78f1ecd8ef8d2a82e10',1,'esp32_crypto_provider.cpp']]],
-  ['amount_5fusdc_7',['AMOUNT_USDC',['../UsdcSigning_2config_8template_8h.html#a16f579ca30ffe23f4e8dc7aebca0d84c',1,'config.template.h']]]
+  ['amount_5fsun_7',['AMOUNT_SUN',['../TronSigning_2config_8template_8h.html#a807a82f385d201cab0b1818a4e8d13e3',1,'config.template.h']]],
+  ['amount_5fusdc_8',['AMOUNT_USDC',['../UsdcSigning_2config_8template_8h.html#a16f579ca30ffe23f4e8dc7aebca0d84c',1,'config.template.h']]],
+  ['any_5ffield_5ftype_5furl_9',['ANY_FIELD_TYPE_URL',['../tron__verify_8cpp.html#a3563e19eb719896b95d54ec026fdc0a0',1,'tron_verify.cpp']]],
+  ['any_5ffield_5fvalue_10',['ANY_FIELD_VALUE',['../tron__verify_8cpp.html#aecc70a780557f240e72af700cfb58d79',1,'tron_verify.cpp']]]
 ];

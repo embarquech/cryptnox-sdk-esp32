@@ -1,15 +1,17 @@
 <map id="components/esp32_logger/include/ESP32Logger.h" name="components/esp32_logger/include/ESP32Logger.h">
-<area shape="rect" id="Node000001" title="CW_Logger implementation that writes to ESP32 UART0 via printf." alt="" coords="503,5,696,45"/>
-<area shape="rect" id="Node000002" href="$ESP32Logger_8cpp.html" title="Implementation of ESP32Logger — ESP32 UART0 logging backend." alt="" coords="5,93,199,133"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="490,48,210,96,200,98,199,93,210,91,489,43"/>
-<area shape="rect" id="Node000003" href="$BasicUsage_2main_2main_8cpp.html" title=" " alt="" coords="223,93,389,133"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="523,52,371,96,369,91,521,47"/>
-<area shape="rect" id="Node000004" href="$Connect_2main_2main_8cpp.html" title=" " alt="" coords="413,93,593,133"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="569,57,526,95,523,91,566,53"/>
-<area shape="rect" id="Node000005" href="$Sign_2main_2main_8cpp.html" title=" " alt="" coords="618,93,773,133"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="633,53,676,91,672,95,629,57"/>
-<area shape="rect" id="Node000006" href="$UsdcSigning_2main_2main_8cpp.html" title=" " alt="" coords="797,93,967,133"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="675,47,821,91,819,96,674,52"/>
-<area shape="rect" id="Node000007" href="$VerifyPin_2main_2main_8cpp.html" title=" " alt="" coords="991,93,1138,133"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="710,42,980,91,992,93,991,98,979,96,709,47"/>
+<area shape="rect" id="Node000001" title="CW_Logger implementation that writes to ESP32 UART0 via printf." alt="" coords="595,5,787,50"/>
+<area shape="rect" id="Node000002" href="$ESP32Logger_8cpp.html" title="Implementation of ESP32Logger — ESP32 UART0 logging backend." alt="" coords="5,98,198,143"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="580,46,210,101,199,103,198,97,209,95,579,41"/>
+<area shape="rect" id="Node000003" href="$BasicUsage_2main_2main_8cpp.html" title=" " alt="" coords="222,98,387,143"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="586,54,388,102,387,97,581,54"/>
+<area shape="rect" id="Node000004" href="$Connect_2main_2main_8cpp.html" title=" " alt="" coords="410,98,590,143"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="634,56,546,100,545,95,629,58"/>
+<area shape="rect" id="Node000005" href="$Sign_2main_2main_8cpp.html" title=" " alt="" coords="614,98,768,143"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="693,64,693,100,689,96,689,67"/>
+<area shape="rect" id="Node000006" href="$TronSigning_2main_2main_8cpp.html" title=" " alt="" coords="793,98,957,143"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="749,55,834,98,828,97,748,60"/>
+<area shape="rect" id="Node000007" href="$UsdcSigning_2main_2main_8cpp.html" title=" " alt="" coords="981,98,1150,143"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="796,51,983,99,978,99,795,57"/>
+<area shape="rect" id="Node000008" href="$VerifyPin_2main_2main_8cpp.html" title=" " alt="" coords="1174,98,1320,143"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="803,39,973,63,1163,95,1176,100,1171,100,1162,101,972,68,802,45"/>
 </map>

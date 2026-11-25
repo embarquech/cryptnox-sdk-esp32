@@ -16,6 +16,7 @@ var group__pn532__driver =
       [ "transport", "structpn532__config__t.html#a7d0daa09bd383e751df8357e9952e697", null ]
     ] ],
     [ "pn532_t", "structpn532__t.html", [
+      [ "fail_count", "structpn532__t.html#a38e18ad8a25a9bd462967ed577f73813", null ],
       [ "i2c_bus", "structpn532__t.html#a1342293d447c20b46f171c07186e9ecf", null ],
       [ "i2c_dev", "structpn532__t.html#a0b293d7e81f46fbf64e782854f9d4be3", null ],
       [ "pin_cs", "structpn532__t.html#a73e2d4468f0b54e7f7515501f1ec5a5c", null ],

@@ -101,12 +101,12 @@ $(function(){initNavTree('classESP32CryptoProvider.html','','classESP32CryptoPro
 <div class="dynheader">
 Inheritance diagram for ESP32CryptoProvider:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classESP32CryptoProvider__inherit__graph.svg" width="170" height="110"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classESP32CryptoProvider__inherit__graph.svg" width="170" height="115"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
 Collaboration diagram for ESP32CryptoProvider:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classESP32CryptoProvider__coll__graph.svg" width="170" height="110"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="classESP32CryptoProvider__coll__graph.svg" width="170" height="115"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
@@ -127,8 +127,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a5eee84979570f230e9dfcceadcd816d1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fill a buffer with cryptographically random bytes.  <br /></td></tr>
 <tr class="memitem:a69c9e0461b9f4afb4785fb803a58c320" id="r_a69c9e0461b9f4afb4785fb803a58c320"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a69c9e0461b9f4afb4785fb803a58c320">ecdsaVerify</a> (const uint8_t *pubKey64, const uint8_t *hash, size_t hashLen, const uint8_t *sig, CW_Curve curve) override</td></tr>
 <tr class="memdesc:a69c9e0461b9f4afb4785fb803a58c320"><td class="mdescLeft">&#160;</td><td class="mdescRight">Verify an ECDSA signature.  <br /></td></tr>
-<tr class="memitem:a62f76a9d7e7d6b75618990cd2d6a6126" id="r_a62f76a9d7e7d6b75618990cd2d6a6126"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a62f76a9d7e7d6b75618990cd2d6a6126">~ESP32CryptoProvider</a> () override</td></tr>
-<tr class="memdesc:a62f76a9d7e7d6b75618990cd2d6a6126"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default destructor.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>CW_CryptoProvider backed by mbedTLS and the ESP32 hardware TRNG. </p>
@@ -147,41 +145,11 @@ Public Member Functions</h2></td></tr>
 <dl class="section see"><dt>See also</dt><dd>CW_CryptoProvider </dd>
 <dd>
 CryptnoxWallet </dd></dl>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="BasicUsage_2main_2main_8cpp-example.html#_a39">BasicUsage/main/main.cpp</a>, <a class="el" href="Connect_2main_2main_8cpp-example.html#_a28">Connect/main/main.cpp</a>, <a class="el" href="Sign_2main_2main_8cpp-example.html#_a28">Sign/main/main.cpp</a>, <a class="el" href="UsdcSigning_2main_2main_8cpp-example.html#_a55">UsdcSigning/main/main.cpp</a>, and <a class="el" href="VerifyPin_2main_2main_8cpp-example.html#_a28">VerifyPin/main/main.cpp</a>.</dd>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="BasicUsage_2main_2main_8cpp-example.html#_a39">BasicUsage/main/main.cpp</a>, <a class="el" href="Connect_2main_2main_8cpp-example.html#_a28">Connect/main/main.cpp</a>, <a class="el" href="Sign_2main_2main_8cpp-example.html#_a28">Sign/main/main.cpp</a>, <a class="el" href="TronSigning_2main_2main_8cpp-example.html#_a42">TronSigning/main/main.cpp</a>, <a class="el" href="UsdcSigning_2main_2main_8cpp-example.html#_a55">UsdcSigning/main/main.cpp</a>, and <a class="el" href="VerifyPin_2main_2main_8cpp-example.html#_a28">VerifyPin/main/main.cpp</a>.</dd>
 </dl>
 
 <p class="definition">Definition at line <a class="el" href="esp32__crypto__provider_8h_source.html#l00062">62</a> of file <a class="el" href="esp32__crypto__provider_8h_source.html">esp32_crypto_provider.h</a>.</p>
-</div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a62f76a9d7e7d6b75618990cd2d6a6126" name="a62f76a9d7e7d6b75618990cd2d6a6126"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a62f76a9d7e7d6b75618990cd2d6a6126">&#9670;&#160;</a></span>~ESP32CryptoProvider()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">ESP32CryptoProvider::~ESP32CryptoProvider </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel override">override</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Default destructor. </p>
-
-<p class="definition">Definition at line <a class="el" href="esp32__crypto__provider_8h_source.html#l00213">213</a> of file <a class="el" href="esp32__crypto__provider_8h_source.html">esp32_crypto_provider.h</a>.</p>
-
-</div>
-</div>
-<a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
+</div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
 <a id="a7622c13009e7d22bb4944a31400be0d3" name="a7622c13009e7d22bb4944a31400be0d3"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7622c13009e7d22bb4944a31400be0d3">&#9670;&#160;</a></span>aesCbcDecrypt()</h2>
 

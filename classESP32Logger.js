@@ -1,6 +1,5 @@
 var classESP32Logger =
 [
-    [ "~ESP32Logger", "classESP32Logger.html#afc6ca8a4f201fb43d0bfdbfa352765d4", null ],
     [ "begin", "classESP32Logger.html#a6e68aa4b9e35384aaf32d68091715734", null ],
     [ "print", "classESP32Logger.html#a93ba4bbf2ad5a4639d31e8380c6cfee9", null ],
     [ "print", "classESP32Logger.html#a8536a2e9add433e21ff62a36943cf1da", null ],

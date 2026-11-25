@@ -1,22 +1,22 @@
 <map id="components/secure_channel/test/test_cw_secure_channel.cpp" name="components/secure_channel/test/test_cw_secure_channel.cpp">
-<area shape="rect" id="Node000001" title=" " alt="" coords="322,5,562,45"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,93,71,119"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="332,48,85,96,84,91,331,43"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="95,93,255,119"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="379,48,228,92,227,87,377,43"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="366,167,459,192"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="379,48,346,67,332,80,320,95,317,104,317,113,327,130,346,146,370,159,367,163,343,150,323,134,312,114,311,103,316,92,328,76,343,63,377,43"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="330,93,423,119"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="428,47,397,84,393,81,424,44"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="448,93,567,119"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="460,44,491,81,487,84,456,47"/>
-<area shape="rect" id="Node000007" href="$esp32__crypto__provider_8h.html" title="CW_CryptoProvider implementation for ESP32 using mbedTLS and the hardware TRNG." alt="" coords="591,93,773,119"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="500,43,635,87,633,92,499,48"/>
-<area shape="rect" id="Node000009" title=" " alt="" coords="797,93,868,119"/>
-<area shape="poly" id="edge9_Node000001_Node000009" title=" " alt="" coords="544,43,784,91,783,96,543,48"/>
-<area shape="rect" id="Node000010" title=" " alt="" coords="893,93,959,119"/>
-<area shape="poly" id="edge10_Node000001_Node000010" title=" " alt="" coords="563,39,710,61,880,91,879,96,709,66,562,44"/>
-<area shape="poly" id="edge8_Node000007_Node000004" title=" " alt="" coords="639,121,470,166,469,161,638,116"/>
-<area shape="rect" id="Node000008" title=" " alt="" coords="603,167,761,192"/>
-<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="685,119,685,153,679,153,679,119"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="319,5,558,50"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,98,70,126"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="319,52,86,100,84,95,319,47"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="94,98,253,126"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="366,52,231,96,229,91,371,49"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="363,174,456,201"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="375,49,343,72,318,99,315,109,315,118,324,135,342,151,366,167,361,166,339,155,320,138,310,119,310,108,314,97,339,68,370,52"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="329,98,421,126"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="424,49,396,87,393,83,420,52"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="445,98,563,126"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="457,48,487,86,482,85,455,53"/>
+<area shape="rect" id="Node000007" href="$esp32__crypto__provider_8h.html" title="CW_CryptoProvider implementation for ESP32 using mbedTLS and the hardware TRNG." alt="" coords="587,98,768,126"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="502,48,628,92,622,93,502,53"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="792,98,862,126"/>
+<area shape="poly" id="edge9_Node000001_Node000009" title=" " alt="" coords="555,48,779,97,774,98,555,53"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="886,98,952,126"/>
+<area shape="poly" id="edge10_Node000001_Node000010" title=" " alt="" coords="559,42,704,64,874,98,868,98,704,69,559,47"/>
+<area shape="poly" id="edge8_Node000007_Node000004" title=" " alt="" coords="632,126,471,172,470,167,627,127"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="598,174,757,201"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="679,124,680,160,675,156,676,128"/>
 </map>

@@ -6,7 +6,6 @@ var group__esp32__adapters =
     [ "pn532_adapter.h", "pn532__adapter_8h.html", null ],
     [ "Pn532NfcTransport.h", "Pn532NfcTransport_8h.html", null ],
     [ "ESP32CryptoProvider", "classESP32CryptoProvider.html", [
-      [ "~ESP32CryptoProvider", "classESP32CryptoProvider.html#a62f76a9d7e7d6b75618990cd2d6a6126", null ],
       [ "aesCbcDecrypt", "classESP32CryptoProvider.html#a7622c13009e7d22bb4944a31400be0d3", null ],
       [ "aesCbcEncrypt", "classESP32CryptoProvider.html#af795007419c3f3f378dec336a70349c0", null ],
       [ "ecdh", "classESP32CryptoProvider.html#a0e52e168ab1849ae5a72266bd87a6a6e", null ],
@@ -17,7 +16,6 @@ var group__esp32__adapters =
       [ "sha512", "classESP32CryptoProvider.html#acb92227bc122e4951ce792490f8cd3b1", null ]
     ] ],
     [ "ESP32Logger", "classESP32Logger.html", [
-      [ "~ESP32Logger", "classESP32Logger.html#afc6ca8a4f201fb43d0bfdbfa352765d4", null ],
       [ "begin", "classESP32Logger.html#a6e68aa4b9e35384aaf32d68091715734", null ],
       [ "print", "classESP32Logger.html#a93ba4bbf2ad5a4639d31e8380c6cfee9", null ],
       [ "print", "classESP32Logger.html#a8536a2e9add433e21ff62a36943cf1da", null ],

@@ -96,7 +96,7 @@ $(function(){initNavTree('dir_5b19b165ccbe70e79cec239ffc7400ef.html','',''); });
 <div class="dynheader">
 Directory dependency graph for UsdcSigning:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="dir_5b19b165ccbe70e79cec239ffc7400ef_dep.svg" width="258" height="167"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="dir_5b19b165ccbe70e79cec239ffc7400ef_dep.svg" width="254" height="174"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-subdirs" class="groupheader"><a id="subdirs" name="subdirs"></a>
@@ -108,14 +108,14 @@ Files</h2></td></tr>
 <tr class="memitem:config_2Etemplate_2Eh" id="r_config_2Etemplate_2Eh"><td class="memItemLeft" align="right" valign="top"><a href="UsdcSigning_2config_8template_8h_source.html"><span class="icondoc"><div class="doc-icon"></div></span></a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="UsdcSigning_2config_8template_8h.html">config.template.h</a></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div align="center"></div><div align="center"><img src="https://github.com/user-attachments/assets/6ce54a27-8fb6-48e6-9d1f-da144f43425a" alt="" class="inline"/></div><div align="center"></div><h3 class="doxsection"><a class="anchor" id="autotoc_md38"></a>
+<div align="center"></div><div align="center"><img src="https://github.com/user-attachments/assets/6ce54a27-8fb6-48e6-9d1f-da144f43425a" alt="" class="inline"/></div><div align="center"></div><h3 class="doxsection"><a class="anchor" id="autotoc_md51"></a>
 <div align="center">cryptnox-sdk-esp32</div></h3>
-<div align="center"></div><div align="center">ESP32 SDK for managing Cryptnox smart card wallets</div><div align="center"></div><h1 class="doxsection"><a class="anchor" id="autotoc_md39"></a>
+<div align="center"></div><div align="center">ESP32 SDK for managing Cryptnox smart card wallets</div><div align="center"></div><h1 class="doxsection"><a class="anchor" id="autotoc_md52"></a>
 UsdcSigning — Broadcast a Real EIP-1559 USDC Transfer on Sepolia</h1>
 <p>End-to-end demonstration of the Cryptnox Hardware Wallet on an ESP32-S3: connect to a Wi-Fi access point, fetch the nonce and fee parameters over JSON-RPC, build and Keccak-256-hash the unsigned EIP-1559 transaction, sign it on the card (BIP-44 <span class="tt">m/44'/60'/0'/0/0</span>, secp256k1, canonical low-S), recover <span class="tt">yParity</span>, broadcast the signed transaction, and print the on-chain tx hash.</p>
 <p>The private key never leaves the card. The ESP32 only ever holds the <span class="tt">Account</span> derived from the card's public key, the unsigned tx hash, and the resulting <span class="tt">(r, s)</span>.</p>
-<dl class="section warning"><dt>Warning</dt><dd>Every wrong PIN attempt decrements an on-card retry counter. At zero the PIN is permanently blocked. The firmware halts on <span class="tt">CW_SIGN_PIN_INCORRECT</span> — verify <span class="tt"><a class="el" href="UsdcSigning_2config_8template_8h.html#a2de009963ca3d1582d4c3a4397ef65bc">CARD_PIN</a></span> in <span class="tt">main/config.h</span> matches the value used during <span class="tt">cryptnox init</span> <b>before</b> flashing.</dd></dl>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md40"></a>
+<dl class="section warning"><dt>Warning</dt><dd>Every wrong PIN attempt decrements an on-card retry counter. At zero the PIN is permanently blocked. The firmware halts on <span class="tt">CW_SIGN_PIN_INCORRECT</span> — verify <span class="tt"><a class="el" href="TronSigning_2config_8template_8h.html#a2de009963ca3d1582d4c3a4397ef65bc">CARD_PIN</a></span> in <span class="tt">main/config.h</span> matches the value used during <span class="tt">cryptnox init</span> <b>before</b> flashing.</dd></dl>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md53"></a>
 Requirements</h2>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -133,12 +133,12 @@ Requirements</h2>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><b>RPC endpoint</b>  </td><td class="markdownTableBodyNone">A Sepolia JSON-RPC endpoint — <a href="https://ethereum-sepolia-rpc.publicnode.com">PublicNode</a> (no signup, default) or <a href="https://app.infura.io/">Infura</a>  </td></tr>
 </table>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md41"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md54"></a>
 Quick start</h2>
 <ol type="1">
 <li><p class="startli"><b>Create <span class="tt">main/config.h</span></b> by copying the template:</p>
 <div class="fragment"><div class="line">cp config.template.h main/config.h</div>
-</div><!-- fragment --><p class="startli">Fill in at minimum: <span class="tt"><a class="el" href="BasicUsage_2config_8template_8h.html#a586542b79d00e4db7e1d5a667ae83a2b">WIFI_SSID</a></span>, <span class="tt"><a class="el" href="BasicUsage_2config_8template_8h.html#a8685d8aff7e570048090a3a51afceb07">WIFI_PASSWORD</a></span>, <span class="tt"><a class="el" href="UsdcSigning_2config_8template_8h.html#a2de009963ca3d1582d4c3a4397ef65bc">CARD_PIN</a></span>, <span class="tt"><a class="el" href="UsdcSigning_2config_8template_8h.html#a5d8bab74920aab1e98e0b25ea1353a2b">ADDR_FROM</a></span> (the address derived from <span class="tt">m/44'/60'/0'/0/0</span> on the card), <span class="tt"><a class="el" href="UsdcSigning_2config_8template_8h.html#add6e87e7e1503d3d6117bbf1aa674e03">ADDR_TO</a></span> (recipient), <span class="tt"><a class="el" href="UsdcSigning_2config_8template_8h.html#a16f579ca30ffe23f4e8dc7aebca0d84c">AMOUNT_USDC</a></span> (token base units — 1 USDC = 1 000 000).</p>
+</div><!-- fragment --><p class="startli">Fill in at minimum: <span class="tt"><a class="el" href="BasicUsage_2config_8template_8h.html#a586542b79d00e4db7e1d5a667ae83a2b">WIFI_SSID</a></span>, <span class="tt"><a class="el" href="BasicUsage_2config_8template_8h.html#a8685d8aff7e570048090a3a51afceb07">WIFI_PASSWORD</a></span>, <span class="tt"><a class="el" href="TronSigning_2config_8template_8h.html#a2de009963ca3d1582d4c3a4397ef65bc">CARD_PIN</a></span>, <span class="tt"><a class="el" href="UsdcSigning_2config_8template_8h.html#a5d8bab74920aab1e98e0b25ea1353a2b">ADDR_FROM</a></span> (the address derived from <span class="tt">m/44'/60'/0'/0/0</span> on the card), <span class="tt"><a class="el" href="UsdcSigning_2config_8template_8h.html#add6e87e7e1503d3d6117bbf1aa674e03">ADDR_TO</a></span> (recipient), <span class="tt"><a class="el" href="UsdcSigning_2config_8template_8h.html#a16f579ca30ffe23f4e8dc7aebca0d84c">AMOUNT_USDC</a></span> (token base units — 1 USDC = 1 000 000).</p>
 </li>
 </ol>
 <dl class="section important"><dt>Important</dt><dd><span class="tt">main/config.h</span> is gitignored — never commit it.</dd></dl>
@@ -150,7 +150,7 @@ Quick start</h2>
 </div><!-- fragment --></li>
 <li>Exit the monitor with <span class="tt">Ctrl-]</span>. Place the card on the PN532 antenna when the firmware prompts for it.</li>
 </ol>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md42"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md55"></a>
 Expected output</h3>
 <div class="fragment"><div class="line">I (1234) usdc_signing: Wi-Fi connected, TRNG seeded</div>
 <div class="line">I (1290) usdc_signing: PN532 ready</div>
@@ -165,7 +165,7 @@ Expected output</h3>
 <div class="line">I (2351) usdc_signing: [tx] hash=0xab12cd34ef56...</div>
 <div class="line">I (2351) usdc_signing: Transaction sent successfully!</div>
 </div><!-- fragment --><p>Paste the final <span class="tt">[tx] hash</span> into <a href="https://sepolia.etherscan.io/">Sepolia Etherscan</a> to watch confirmation.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md43"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md56"></a>
 How it works</h2>
 <div class="fragment"><div class="line"> 1. wifi_init() + esp_wifi_connect()</div>
 <div class="line">        │</div>
@@ -204,16 +204,16 @@ How it works</h2>
 <div class="line">        │                              &quot;result&quot;:&quot;0x…&quot; tx hash</div>
 <div class="line">        │</div>
 <div class="line">13. secure_wipe(req.pin, ...)          Zero the PIN buffer</div>
-</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md44"></a>
+</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md57"></a>
 TLS</h3>
 <p>The ESP-IDF HTTP client uses the bundled certificate bundle (set via <span class="tt">CONFIG_MBEDTLS_CERTIFICATE_BUNDLE=y</span> in <span class="tt">sdkconfig.defaults</span>) so the RPC connection is validated against the same root store ESP-IDF applications use by default. No per-provider PEM is required as long as the endpoint chains to one of the included roots.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md45"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md58"></a>
 <span class="tt">yParity</span> recovery</h3>
 <p>EIP-1559 signatures carry a 1-bit <span class="tt">yParity</span> instead of EIP-155's <span class="tt">v</span>. The card returns only <span class="tt">r</span> and <span class="tt">s</span>, so the firmware calls the <a href="https://www.evm.codes/precompiled?fork=cancun"><span class="tt">ecrecover</span> precompile</a> at address <span class="tt">0x01</span> with <span class="tt">v = 27</span> (yParity = 0). If the recovered address matches <span class="tt"><a class="el" href="UsdcSigning_2config_8template_8h.html#a5d8bab74920aab1e98e0b25ea1353a2b">ADDR_FROM</a></span> the firmware keeps yParity = 0; otherwise it retries with <span class="tt">v = 28</span> (yParity = 1). One of the two will match when the card's key and <span class="tt"><a class="el" href="UsdcSigning_2config_8template_8h.html#a5d8bab74920aab1e98e0b25ea1353a2b">ADDR_FROM</a></span> are consistent.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md46"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md59"></a>
 Configuration reference</h2>
 <p>All fields live in <span class="tt">main/config.h</span> (gitignored). Start from <a href="config.template.h"><span class="tt">config.template.h</span></a> and fill in:</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md47"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md60"></a>
 Wi-Fi</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -224,24 +224,24 @@ Wi-Fi</h3>
 <td class="markdownTableBodyNone"><span class="tt"><a class="el" href="BasicUsage_2config_8template_8h.html#a8685d8aff7e570048090a3a51afceb07">WIFI_PASSWORD</a></span>  </td><td class="markdownTableBodyCenter">yes  </td><td class="markdownTableBodyNone"><span class="tt">"password"</span>  </td></tr>
 </table>
 <dl class="section note"><dt>Note</dt><dd>The ESP32-S3 (and every Wi-Fi-capable ESP32 family member) supports <b>2.4 GHz</b> Wi-Fi only.</dd></dl>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md48"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md61"></a>
 RPC endpoint — choose one provider</h3>
 <p><b>PublicNode</b> (free, no signup, default):</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#define RPC_URL    &quot;https://ethereum-sepolia-rpc.publicnode.com&quot;</span></div>
 </div><!-- fragment --><p><b>Infura</b> (free tier, requires API key):</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#define RPC_URL    &quot;https://sepolia.infura.io/v3/&lt;YOUR_INFURA_PROJECT_ID&gt;&quot;</span></div>
-</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md49"></a>
+</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md62"></a>
 Wallet</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
 <th class="markdownTableHeadNone">Field  </th><th class="markdownTableHeadNone">Example  </th></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><span class="tt"><a class="el" href="UsdcSigning_2config_8template_8h.html#a2de009963ca3d1582d4c3a4397ef65bc">CARD_PIN</a></span>  </td><td class="markdownTableBodyNone"><span class="tt">"000000000"</span> (must match <span class="tt">cryptnox init</span>)  </td></tr>
+<td class="markdownTableBodyNone"><span class="tt"><a class="el" href="TronSigning_2config_8template_8h.html#a2de009963ca3d1582d4c3a4397ef65bc">CARD_PIN</a></span>  </td><td class="markdownTableBodyNone"><span class="tt">"000000000"</span> (must match <span class="tt">cryptnox init</span>)  </td></tr>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><span class="tt"><a class="el" href="UsdcSigning_2config_8template_8h.html#a5d8bab74920aab1e98e0b25ea1353a2b">ADDR_FROM</a></span>  </td><td class="markdownTableBodyNone"><span class="tt">"&lt;40 lowercase hex chars&gt;"</span> — your card's Ethereum address (no <span class="tt">0x</span> prefix)  </td></tr>
 </table>
 <p><span class="tt"><a class="el" href="UsdcSigning_2config_8template_8h.html#a5d8bab74920aab1e98e0b25ea1353a2b">ADDR_FROM</a></span> must equal the address derived from <span class="tt">m/44'/60'/0'/0/0</span> on the card. If they disagree, the <span class="tt">yParity</span> recovery loop cannot find a matching value and the firmware halts.</p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md50"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md63"></a>
 Transaction</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -261,7 +261,7 @@ Transaction</h3>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><span class="tt"><a class="el" href="UsdcSigning_2config_8template_8h.html#acb66e21431c90911d0fdef95cf34261b">GAS_LIMIT_ERC20</a></span>  </td><td class="markdownTableBodyNone"><span class="tt">60000ULL</span>  </td><td class="markdownTableBodyNone">Standard ERC-20 transfer  </td></tr>
 </table>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md51"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md64"></a>
 Memory footprint</h2>
 <p>After <span class="tt">idf.py build</span>:</p>
 <table class="markdownTable">
@@ -273,7 +273,7 @@ Memory footprint</h2>
 <td class="markdownTableBodyNone">RAM at runtime  </td><td class="markdownTableBodyRight">~80 KB  </td></tr>
 </table>
 <p>The bulk of the flash is the IDF Wi-Fi stack, mbedTLS, and the bundled CA store (~250 KB). The Cryptnox SDK itself plus the example's <span class="tt">eth_rlp</span> / <span class="tt">eth_rpc</span> / <span class="tt"><a class="el" href="keccak256_8cpp.html#ac46ff4528d9f4c773725ff87e624b7e7">keccak256</a></span> helpers sit around ~50 KB.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md52"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md65"></a>
 Troubleshooting</h2>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -289,11 +289,11 @@ Troubleshooting</h2>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone">RPC returns <span class="tt">nonce too low</span> in the JSON <span class="tt">error.message</span>  </td><td class="markdownTableBodyNone">Stale nonce from the RPC  </td><td class="markdownTableBodyNone">Wait a few seconds and re-run; the firmware fetches the nonce just before signing  </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><span class="tt">Wrong PIN — halting to protect retry counter</span>  </td><td class="markdownTableBodyNone"><span class="tt"><a class="el" href="UsdcSigning_2config_8template_8h.html#a2de009963ca3d1582d4c3a4397ef65bc">CARD_PIN</a></span> does not match the card  </td><td class="markdownTableBodyNone">Fix <span class="tt"><a class="el" href="UsdcSigning_2config_8template_8h.html#a2de009963ca3d1582d4c3a4397ef65bc">CARD_PIN</a></span> — do <b>not</b> keep retrying, every attempt burns one of the on-card tries (see <a class="el" href="dir_cc81cf6f1c823b08adf4153a5960c30a.html">VerifyPin</a>)  </td></tr>
+<td class="markdownTableBodyNone"><span class="tt">Wrong PIN — halting to protect retry counter</span>  </td><td class="markdownTableBodyNone"><span class="tt"><a class="el" href="TronSigning_2config_8template_8h.html#a2de009963ca3d1582d4c3a4397ef65bc">CARD_PIN</a></span> does not match the card  </td><td class="markdownTableBodyNone">Fix <span class="tt"><a class="el" href="TronSigning_2config_8template_8h.html#a2de009963ca3d1582d4c3a4397ef65bc">CARD_PIN</a></span> — do <b>not</b> keep retrying, every attempt burns one of the on-card tries (see <a class="el" href="dir_cc81cf6f1c823b08adf4153a5960c30a.html">VerifyPin</a>)  </td></tr>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><span class="tt">Sign failed: 0x81</span>  </td><td class="markdownTableBodyNone">Card has no seed  </td><td class="markdownTableBodyNone"><span class="tt">cryptnox seed generate</span>  </td></tr>
 </table>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md53"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md66"></a>
 License</h2>
 <p><span class="tt">cryptnox-sdk-esp32</span> is dual-licensed:</p>
 <ul>

@@ -1,11 +1,7 @@
 var searchData=
 [
-  ['_7eesp32cryptoprovider_0',['~ESP32CryptoProvider',['../classESP32CryptoProvider.html#a62f76a9d7e7d6b75618990cd2d6a6126',1,'ESP32CryptoProvider']]],
-  ['_7eesp32logger_1',['~ESP32Logger',['../classESP32Logger.html#afc6ca8a4f201fb43d0bfdbfa352765d4',1,'ESP32Logger']]],
-  ['_7eesp32platform_2',['~ESP32Platform',['../classESP32Platform.html#a087164d1380a41160ccbea5231126f98',1,'ESP32Platform']]],
-  ['_7emocklogger_3',['~MockLogger',['../classMockLogger.html#a6d2421760288efa10f8a138a82b18e85',1,'MockLogger']]],
-  ['_7emockplatform_4',['~MockPlatform',['../classMockPlatform.html#aedf0bb2b454d7aece9ad7a821e368b00',1,'MockPlatform']]],
-  ['_7epn532nfctransport_5',['~Pn532NfcTransport',['../classPn532NfcTransport.html#a17e9e28daa39faab0b6de4730410c224',1,'Pn532NfcTransport']]],
-  ['_7ereflectivemocknfctransport_6',['~ReflectiveMockNfcTransport',['../classReflectiveMockNfcTransport.html#aaf49af552bee886706a97140f76cb976',1,'ReflectiveMockNfcTransport']]],
-  ['_7escriptedmocknfctransport_7',['~ScriptedMockNfcTransport',['../classScriptedMockNfcTransport.html#a68ae66e520120b4cd2af7d6b883d17dc',1,'ScriptedMockNfcTransport']]]
+  ['wifi_5fevent_5fhandler_0',['wifi_event_handler',['../BasicUsage_2main_2main_8cpp.html#ac31e38637f7a5e5c8ce4d033b0955fec',1,'wifi_event_handler(void *arg, esp_event_base_t event_base, int32_t event_id, void *event_data):&#160;main.cpp'],['../Connect_2main_2main_8cpp.html#ac31e38637f7a5e5c8ce4d033b0955fec',1,'wifi_event_handler(void *arg, esp_event_base_t event_base, int32_t event_id, void *event_data):&#160;main.cpp'],['../Sign_2main_2main_8cpp.html#ac31e38637f7a5e5c8ce4d033b0955fec',1,'wifi_event_handler(void *arg, esp_event_base_t event_base, int32_t event_id, void *event_data):&#160;main.cpp'],['../tron__api_8cpp.html#ac31e38637f7a5e5c8ce4d033b0955fec',1,'wifi_event_handler(void *arg, esp_event_base_t event_base, int32_t event_id, void *event_data):&#160;tron_api.cpp'],['../eth__rpc_8cpp.html#ac31e38637f7a5e5c8ce4d033b0955fec',1,'wifi_event_handler(void *arg, esp_event_base_t event_base, int32_t event_id, void *event_data):&#160;eth_rpc.cpp'],['../VerifyPin_2main_2main_8cpp.html#ac31e38637f7a5e5c8ce4d033b0955fec',1,'wifi_event_handler(void *arg, esp_event_base_t event_base, int32_t event_id, void *event_data):&#160;main.cpp']]],
+  ['wifi_5fstart_1',['wifi_start',['../BasicUsage_2main_2main_8cpp.html#af629eac4dcd2612341863d51413aaf10',1,'wifi_start(void):&#160;main.cpp'],['../Connect_2main_2main_8cpp.html#af629eac4dcd2612341863d51413aaf10',1,'wifi_start(void):&#160;main.cpp'],['../Sign_2main_2main_8cpp.html#af629eac4dcd2612341863d51413aaf10',1,'wifi_start(void):&#160;main.cpp'],['../VerifyPin_2main_2main_8cpp.html#af629eac4dcd2612341863d51413aaf10',1,'wifi_start(void):&#160;main.cpp']]],
+  ['write_5fcommand_2',['write_command',['../pn532_8c.html#a4fe0501a086e0bba9bd46e307001cf93',1,'pn532.c']]],
+  ['write_5fuint_5fto_5fuart_3',['write_uint_to_uart',['../ESP32Logger_8cpp.html#ad2eb427427611a64c666135106f82f0c',1,'ESP32Logger.cpp']]]
 ];

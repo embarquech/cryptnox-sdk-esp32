@@ -18,7 +18,8 @@ var searchData=
   ['uecc_5fverify_15',['uECC_verify',['../uECC_8h.html#ad2e45757f991fa441f6c438133aa4047',1,'uECC_verify(const uint8_t *public_key, const uint8_t *hash, unsigned hash_size, const uint8_t *signature, const uECC_Curve_t *curve):&#160;uECC_esp32.cpp'],['../uECC__esp32_8cpp.html#ad2e45757f991fa441f6c438133aa4047',1,'uECC_verify(const uint8_t *public_key, const uint8_t *hash, unsigned hash_size, const uint8_t *signature, const uECC_Curve_t *curve):&#160;uECC_esp32.cpp']]],
   ['uncompressed_5fprefix_16',['UNCOMPRESSED_PREFIX',['../uECC__esp32_8cpp.html#a27364685363d9f54a67dceeea066e269',1,'uECC_esp32.cpp']]],
   ['uncompressed_5fpub_5fsize_17',['UNCOMPRESSED_PUB_SIZE',['../uECC__esp32_8cpp.html#af49d5994a1f93099734080265b28269f',1,'uECC_esp32.cpp']]],
-  ['usage_20examples_18',['Quick usage examples',['../index.html#autotoc_md76',1,'']]],
-  ['usdc_20transfer_20on_20sepolia_19',['UsdcSigning — Broadcast a Real EIP-1559 USDC Transfer on Sepolia',['../dir_5b19b165ccbe70e79cec239ffc7400ef.html#autotoc_md39',1,'']]],
-  ['usdcsigning_20—_20broadcast_20a_20real_20eip_201559_20usdc_20transfer_20on_20sepolia_20',['UsdcSigning — Broadcast a Real EIP-1559 USDC Transfer on Sepolia',['../dir_5b19b165ccbe70e79cec239ffc7400ef.html#autotoc_md39',1,'']]]
+  ['url_5fbuf_5fsize_18',['URL_BUF_SIZE',['../tron__api_8cpp.html#adf1010260a0d576709d6eb9f26f7c72a',1,'tron_api.cpp']]],
+  ['usage_20examples_19',['Quick usage examples',['../index.html#autotoc_md89',1,'']]],
+  ['usdc_20transfer_20on_20sepolia_20',['UsdcSigning — Broadcast a Real EIP-1559 USDC Transfer on Sepolia',['../dir_5b19b165ccbe70e79cec239ffc7400ef.html#autotoc_md52',1,'']]],
+  ['usdcsigning_20—_20broadcast_20a_20real_20eip_201559_20usdc_20transfer_20on_20sepolia_21',['UsdcSigning — Broadcast a Real EIP-1559 USDC Transfer on Sepolia',['../dir_5b19b165ccbe70e79cec239ffc7400ef.html#autotoc_md52',1,'']]]
 ];

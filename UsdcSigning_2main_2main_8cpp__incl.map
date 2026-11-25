@@ -1,72 +1,72 @@
 <map id="examples/UsdcSigning/main/main.cpp" name="examples/UsdcSigning/main/main.cpp">
-<area shape="rect" id="Node000001" title=" " alt="" coords="1101,5,1272,45"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,93,72,119"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1101,29,919,32,669,41,381,61,233,77,86,96,85,91,232,71,381,56,669,36,919,26,1101,24"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="97,93,167,119"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="1101,30,934,34,707,44,447,64,181,96,181,91,447,59,706,39,933,29,1101,25"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="191,93,262,119"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="1101,31,948,36,745,47,513,66,276,96,275,91,513,61,744,42,948,31,1101,26"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="286,93,373,119"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="1101,33,790,53,591,71,387,96,386,91,590,66,789,48,1101,28"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="397,93,547,119"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="1101,38,561,96,560,91,1101,33"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="572,93,689,119"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="1101,41,708,96,703,97,702,91,708,91,1101,36"/>
-<area shape="rect" id="Node000008" title=" " alt="" coords="1013,240,1160,265"/>
-<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="1101,30,1005,34,901,45,852,53,810,64,776,78,754,95,743,111,738,125,739,138,744,150,766,173,802,192,848,208,899,221,1000,239,999,244,898,226,847,213,800,197,763,177,739,153,733,139,733,124,739,108,750,91,774,74,808,59,851,48,900,39,1005,29,1101,24"/>
-<area shape="rect" id="Node000009" title=" " alt="" coords="764,93,868,119"/>
-<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="1102,47,882,93,881,88,1101,42"/>
-<area shape="rect" id="Node000010" title=" " alt="" coords="893,93,977,119"/>
-<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="1127,48,985,92,984,87,1126,43"/>
-<area shape="rect" id="Node000011" title=" " alt="" coords="1001,93,1095,119"/>
-<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="1155,48,1082,89,1079,84,1152,43"/>
-<area shape="rect" id="Node000012" title=" " alt="" coords="1119,93,1254,119"/>
-<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="1189,46,1189,79,1184,79,1184,46"/>
-<area shape="rect" id="Node000013" title=" " alt="" coords="1279,93,1372,119"/>
-<area shape="poly" id="edge12_Node000001_Node000013" title=" " alt="" coords="1221,43,1294,84,1292,89,1219,48"/>
-<area shape="rect" id="Node000014" href="$Pn532NfcTransport_8h.html" title="CW_NfcTransport adapter wrapping the ESP&#45;IDF PN532 NFC driver." alt="" coords="1538,93,1694,119"/>
-<area shape="poly" id="edge13_Node000001_Node000014" title=" " alt="" coords="1272,40,1540,88,1539,93,1272,45"/>
-<area shape="rect" id="Node000017" href="$pn532_8h.html" title="Low&#45;level PN532 NFC controller driver for ESP&#45;IDF (SPI and I²C)." alt="" coords="1579,167,1653,192"/>
-<area shape="poly" id="edge28_Node000001_Node000017" title=" " alt="" coords="1272,29,1395,38,1531,51,1646,69,1685,79,1707,91,1713,102,1714,113,1704,132,1682,149,1658,163,1655,158,1679,145,1699,129,1709,112,1708,104,1703,95,1683,84,1645,74,1530,56,1395,43,1272,34"/>
-<area shape="rect" id="Node000021" href="$ESP32Logger_8h.html" title="CW_Logger implementation that writes to ESP32 UART0 via printf." alt="" coords="1396,93,1513,119"/>
-<area shape="poly" id="edge21_Node000001_Node000021" title=" " alt="" coords="1252,43,1403,87,1402,92,1250,48"/>
-<area shape="rect" id="Node000022" href="$esp32__crypto__provider_8h.html" title="CW_CryptoProvider implementation for ESP32 using mbedTLS and the hardware TRNG." alt="" coords="1769,93,1951,119"/>
-<area shape="poly" id="edge23_Node000001_Node000022" title=" " alt="" coords="1273,34,1756,90,1755,95,1272,39"/>
-<area shape="rect" id="Node000025" href="$ESP32Platform_8h.html" title="CW_Platform implementation for ESP32 using FreeRTOS." alt="" coords="1975,93,2105,119"/>
-<area shape="poly" id="edge26_Node000001_Node000025" title=" " alt="" coords="1273,30,1573,53,1961,91,1961,96,1572,58,1272,35"/>
-<area shape="rect" id="Node000027" href="$keccak256_8h.html" title=" " alt="" coords="2229,167,2331,192"/>
-<area shape="poly" id="edge29_Node000001_Node000027" title=" " alt="" coords="1272,25,1472,28,1726,39,1971,58,2072,73,2147,91,2179,104,2210,121,2258,156,2255,160,2207,126,2177,109,2146,96,2071,78,1970,64,1725,44,1472,34,1272,30"/>
-<area shape="rect" id="Node000029" href="$eth__rlp_8h.html" title=" " alt="" coords="2355,167,2434,192"/>
-<area shape="poly" id="edge32_Node000001_Node000029" title=" " alt="" coords="1272,26,1480,33,1745,45,2004,64,2110,76,2191,91,2239,105,2286,122,2362,158,2360,162,2284,127,2237,110,2190,96,2110,82,2003,70,1745,51,1480,38,1272,31"/>
-<area shape="rect" id="Node000030" href="$eth__rpc_8h.html" title=" " alt="" coords="2121,167,2204,192"/>
-<area shape="poly" id="edge35_Node000001_Node000030" title=" " alt="" coords="1272,25,1486,31,1750,43,1987,62,2070,75,2119,91,2133,104,2145,120,2159,152,2154,154,2140,122,2129,107,2116,96,2069,80,1986,67,1750,48,1486,36,1272,31"/>
-<area shape="rect" id="Node000031" title=" " alt="" coords="2282,93,2355,119"/>
-<area shape="poly" id="edge39_Node000001_Node000031" title=" " alt="" coords="1272,25,1453,30,1699,41,1979,61,2263,91,2268,91,2268,97,2262,96,1979,66,1698,47,1452,36,1272,31"/>
-<area shape="rect" id="Node000015" title=" " alt="" coords="1409,167,1554,192"/>
-<area shape="poly" id="edge14_Node000014_Node000015" title=" " alt="" coords="1596,121,1517,162,1514,158,1593,116"/>
-<area shape="rect" id="Node000016" title=" " alt="" coords="1277,167,1384,192"/>
-<area shape="poly" id="edge15_Node000014_Node000016" title=" " alt="" coords="1571,121,1391,166,1389,161,1570,116"/>
-<area shape="poly" id="edge16_Node000014_Node000017" title=" " alt="" coords="1619,119,1619,153,1613,153,1613,119"/>
-<area shape="poly" id="edge19_Node000017_Node000008" title=" " alt="" coords="1579,192,1566,195,1355,225,1174,246,1174,240,1355,220,1565,189,1578,187"/>
-<area shape="rect" id="Node000018" title=" " alt="" coords="2137,240,2207,265"/>
-<area shape="poly" id="edge17_Node000017_Node000018" title=" " alt="" coords="1654,187,1666,189,1795,209,1923,225,2123,245,2122,250,1922,230,1794,214,1665,195,1653,192"/>
-<area shape="rect" id="Node000019" title=" " alt="" coords="1876,240,1959,265"/>
-<area shape="poly" id="edge18_Node000017_Node000019" title=" " alt="" coords="1654,187,1863,236,1862,241,1653,192"/>
-<area shape="rect" id="Node000020" title=" " alt="" coords="1543,240,1689,265"/>
-<area shape="poly" id="edge20_Node000017_Node000020" title=" " alt="" coords="1619,192,1619,226,1613,226,1613,192"/>
-<area shape="poly" id="edge22_Node000021_Node000016" title=" " alt="" coords="1436,121,1364,162,1361,157,1433,116"/>
-<area shape="rect" id="Node000023" title=" " alt="" coords="1678,167,1837,192"/>
-<area shape="poly" id="edge24_Node000022_Node000023" title=" " alt="" coords="1845,121,1787,161,1784,156,1842,116"/>
-<area shape="rect" id="Node000024" title=" " alt="" coords="1861,167,1955,192"/>
-<area shape="poly" id="edge25_Node000022_Node000024" title=" " alt="" coords="1870,118,1895,154,1890,157,1866,121"/>
-<area shape="rect" id="Node000026" title=" " alt="" coords="1979,167,2098,192"/>
-<area shape="poly" id="edge27_Node000025_Node000026" title=" " alt="" coords="2042,119,2042,153,2036,153,2037,119"/>
-<area shape="poly" id="edge30_Node000027_Node000018" title=" " alt="" coords="2264,194,2203,235,2200,230,2261,190"/>
-<area shape="rect" id="Node000028" title=" " alt="" coords="2243,240,2317,265"/>
-<area shape="poly" id="edge31_Node000027_Node000028" title=" " alt="" coords="2283,192,2283,226,2277,226,2277,192"/>
-<area shape="poly" id="edge33_Node000029_Node000018" title=" " alt="" coords="2360,195,2221,238,2220,233,2358,189"/>
-<area shape="poly" id="edge34_Node000029_Node000028" title=" " alt="" coords="2378,194,2312,235,2309,230,2375,190"/>
-<area shape="poly" id="edge36_Node000030_Node000018" title=" " alt="" coords="2167,192,2171,226,2166,227,2162,193"/>
-<area shape="poly" id="edge38_Node000030_Node000019" title=" " alt="" coords="2124,195,1971,239,1969,234,2123,189"/>
-<area shape="poly" id="edge37_Node000030_Node000028" title=" " alt="" coords="2183,190,2250,230,2248,235,2180,194"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="1093,5,1263,50"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,98,71,126"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1090,29,912,33,664,42,379,63,231,80,87,101,85,96,231,74,378,58,664,37,912,28,1095,28"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="95,98,165,126"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="1090,30,927,36,702,46,444,66,312,81,181,100,180,95,311,76,444,61,701,41,926,30,1096,29"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="189,98,258,126"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="1090,31,941,38,739,49,509,69,274,100,273,95,509,63,739,43,941,32,1095,30"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="282,98,368,126"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="1091,33,785,55,587,74,384,101,383,95,586,69,784,50,1096,32"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="392,98,542,126"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="1091,38,857,65,558,100,557,95,856,60,1096,37"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="566,98,683,126"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="1090,42,702,101,699,101,697,96,702,95,1095,40"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="1005,249,1151,277"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="1090,30,997,38,894,49,846,57,804,69,770,83,748,100,737,115,732,130,733,143,737,155,759,178,795,198,840,215,890,229,992,251,987,251,889,234,838,220,793,203,756,182,733,158,727,144,727,129,733,113,744,96,767,78,802,64,845,52,893,43,997,32,1096,30"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="758,98,862,126"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="1096,47,877,98,876,93,1091,48"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="886,98,969,126"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="1114,50,983,95,981,90,1109,51"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="994,98,1088,126"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="1144,50,1077,92,1075,87,1139,52"/>
+<area shape="rect" id="Node000012" title=" " alt="" coords="1111,98,1245,126"/>
+<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="1180,48,1180,84,1176,81,1176,52"/>
+<area shape="rect" id="Node000013" title=" " alt="" coords="1269,98,1362,126"/>
+<area shape="poly" id="edge12_Node000001_Node000013" title=" " alt="" coords="1215,48,1283,90,1278,89,1214,53"/>
+<area shape="rect" id="Node000014" href="$Pn532NfcTransport_8h.html" title="CW_NfcTransport adapter wrapping the ESP&#45;IDF PN532 NFC driver." alt="" coords="1526,98,1681,126"/>
+<area shape="poly" id="edge13_Node000001_Node000014" title=" " alt="" coords="1263,43,1523,94,1517,95,1263,48"/>
+<area shape="rect" id="Node000017" href="$pn532_8h.html" title="Low&#45;level PN532 NFC controller driver for ESP&#45;IDF (SPI and I²C)." alt="" coords="1568,174,1641,201"/>
+<area shape="poly" id="edge28_Node000001_Node000017" title=" " alt="" coords="1263,32,1385,41,1520,55,1634,73,1673,84,1695,96,1701,106,1702,117,1692,137,1673,154,1648,169,1647,164,1670,150,1688,133,1697,116,1696,108,1691,100,1671,89,1633,79,1519,60,1384,47,1263,37"/>
+<area shape="rect" id="Node000021" href="$ESP32Logger_8h.html" title="CW_Logger implementation that writes to ESP32 UART0 via printf." alt="" coords="1385,98,1502,126"/>
+<area shape="poly" id="edge21_Node000001_Node000021" title=" " alt="" coords="1249,48,1389,93,1384,93,1248,53"/>
+<area shape="rect" id="Node000022" href="$esp32__crypto__provider_8h.html" title="CW_CryptoProvider implementation for ESP32 using mbedTLS and the hardware TRNG." alt="" coords="1756,98,1936,126"/>
+<area shape="poly" id="edge23_Node000001_Node000022" title=" " alt="" coords="1263,37,1743,97,1738,98,1263,42"/>
+<area shape="rect" id="Node000025" href="$ESP32Platform_8h.html" title="CW_Platform implementation for ESP32 using FreeRTOS." alt="" coords="1960,98,2089,126"/>
+<area shape="poly" id="edge26_Node000001_Node000025" title=" " alt="" coords="1263,32,1561,55,1750,73,1947,98,1942,98,1750,78,1560,60,1263,37"/>
+<area shape="rect" id="Node000027" href="$keccak256_8h.html" title=" " alt="" coords="2212,174,2314,201"/>
+<area shape="poly" id="edge29_Node000001_Node000027" title=" " alt="" coords="1263,27,1462,31,1715,41,1841,50,1958,62,2058,77,2134,95,2164,109,2193,126,2240,164,2235,162,2190,130,2162,113,2132,101,2057,82,1958,67,1841,55,1714,47,1462,36,1263,32"/>
+<area shape="rect" id="Node000029" href="$eth__rlp_8h.html" title=" " alt="" coords="2339,174,2417,201"/>
+<area shape="poly" id="edge32_Node000001_Node000029" title=" " alt="" coords="1263,28,1470,35,1735,48,1992,68,2098,81,2179,95,2253,124,2341,167,2336,166,2251,129,2177,101,2097,86,1991,73,1734,53,1470,41,1263,34"/>
+<area shape="rect" id="Node000030" href="$eth__rpc_8h.html" title=" " alt="" coords="2107,174,2188,201"/>
+<area shape="poly" id="edge35_Node000001_Node000030" title=" " alt="" coords="1263,28,1476,34,1738,46,1972,66,2056,80,2103,96,2118,109,2129,125,2143,160,2139,157,2125,127,2114,112,2101,100,2054,85,1972,72,1737,52,1475,39,1263,33"/>
+<area shape="rect" id="Node000031" title=" " alt="" coords="2266,98,2338,126"/>
+<area shape="poly" id="edge39_Node000001_Node000031" title=" " alt="" coords="1263,27,1442,32,1687,42,1966,63,2108,77,2248,95,2253,99,2248,98,2247,101,2108,83,1965,68,1687,48,1442,37,1263,33"/>
+<area shape="rect" id="Node000015" title=" " alt="" coords="1399,174,1544,201"/>
+<area shape="poly" id="edge14_Node000014_Node000015" title=" " alt="" coords="1582,125,1509,168,1507,163,1577,127"/>
+<area shape="rect" id="Node000016" title=" " alt="" coords="1269,174,1375,201"/>
+<area shape="poly" id="edge15_Node000014_Node000016" title=" " alt="" coords="1556,126,1387,172,1386,167,1550,127"/>
+<area shape="poly" id="edge16_Node000014_Node000017" title=" " alt="" coords="1605,124,1606,160,1602,156,1602,128"/>
+<area shape="poly" id="edge19_Node000017_Node000008" title=" " alt="" coords="1570,198,1556,204,1347,236,1167,257,1166,251,1346,231,1555,199,1565,199"/>
+<area shape="rect" id="Node000018" title=" " alt="" coords="2122,249,2192,277"/>
+<area shape="poly" id="edge17_Node000017_Node000018" title=" " alt="" coords="1642,196,1654,199,1781,219,1908,236,2109,258,2103,258,1907,241,1781,225,1654,204,1642,201"/>
+<area shape="rect" id="Node000019" title=" " alt="" coords="1864,249,1945,277"/>
+<area shape="poly" id="edge18_Node000017_Node000019" title=" " alt="" coords="1642,196,1655,199,1851,249,1846,248,1653,204,1642,201"/>
+<area shape="rect" id="Node000020" title=" " alt="" coords="1532,249,1678,277"/>
+<area shape="poly" id="edge20_Node000017_Node000020" title=" " alt="" coords="1607,200,1607,235,1603,232,1603,204"/>
+<area shape="poly" id="edge22_Node000021_Node000016" title=" " alt="" coords="1424,125,1357,168,1356,163,1419,127"/>
+<area shape="rect" id="Node000023" title=" " alt="" coords="1666,174,1824,201"/>
+<area shape="poly" id="edge24_Node000022_Node000023" title=" " alt="" coords="1830,125,1776,167,1774,162,1825,127"/>
+<area shape="rect" id="Node000024" title=" " alt="" coords="1848,174,1940,201"/>
+<area shape="poly" id="edge25_Node000022_Node000024" title=" " alt="" coords="1856,124,1880,162,1875,160,1853,129"/>
+<area shape="rect" id="Node000026" title=" " alt="" coords="1964,174,2082,201"/>
+<area shape="poly" id="edge27_Node000025_Node000026" title=" " alt="" coords="2026,124,2026,160,2022,156,2023,128"/>
+<area shape="poly" id="edge30_Node000027_Node000018" title=" " alt="" coords="2247,201,2189,243,2187,238,2242,203"/>
+<area shape="rect" id="Node000028" title=" " alt="" coords="2227,249,2300,277"/>
+<area shape="poly" id="edge31_Node000027_Node000028" title=" " alt="" coords="2265,200,2265,235,2261,232,2261,204"/>
+<area shape="poly" id="edge33_Node000029_Node000018" title=" " alt="" coords="2341,201,2207,248,2206,243,2336,202"/>
+<area shape="poly" id="edge34_Node000029_Node000028" title=" " alt="" coords="2360,201,2297,243,2296,238,2355,203"/>
+<area shape="poly" id="edge36_Node000030_Node000018" title=" " alt="" coords="2151,200,2155,236,2151,232,2147,204"/>
+<area shape="poly" id="edge38_Node000030_Node000019" title=" " alt="" coords="2109,201,1960,248,1960,243,2104,202"/>
+<area shape="poly" id="edge37_Node000030_Node000028" title=" " alt="" coords="2169,199,2232,241,2227,240,2167,204"/>
 </map>

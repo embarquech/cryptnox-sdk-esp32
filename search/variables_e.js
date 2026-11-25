@@ -1,7 +1,26 @@
 var searchData=
 [
-  ['tag_0',['TAG',['../esp32__random_8cpp.html#a4ef5b5f197804a60836ab1e8907d8301',1,'TAG:&#160;esp32_random.cpp'],['../pn532__adapter_8cpp.html#a5a85b9c772bbeb480b209a3e6ea92b4c',1,'TAG:&#160;pn532_adapter.cpp'],['../BasicUsage_2main_2main_8cpp.html#a4ef5b5f197804a60836ab1e8907d8301',1,'TAG:&#160;main.cpp'],['../Connect_2main_2main_8cpp.html#a4ef5b5f197804a60836ab1e8907d8301',1,'TAG:&#160;main.cpp'],['../Sign_2main_2main_8cpp.html#a4ef5b5f197804a60836ab1e8907d8301',1,'TAG:&#160;main.cpp'],['../eth__rpc_8cpp.html#a4ef5b5f197804a60836ab1e8907d8301',1,'TAG:&#160;eth_rpc.cpp'],['../UsdcSigning_2main_2main_8cpp.html#a4ef5b5f197804a60836ab1e8907d8301',1,'TAG:&#160;main.cpp'],['../VerifyPin_2main_2main_8cpp.html#a4ef5b5f197804a60836ab1e8907d8301',1,'TAG:&#160;main.cpp']]],
-  ['to_1',['to',['../structeth__tx__t.html#a90ce2d22febdda083bd3abe74bdffd51',1,'eth_tx_t']]],
-  ['transfer_5fselector_2',['TRANSFER_SELECTOR',['../UsdcSigning_2main_2main_8cpp.html#a0a0c78f86940abc6a3f2d706a275b98a',1,'main.cpp']]],
-  ['transport_3',['transport',['../structpn532__config__t.html#a7d0daa09bd383e751df8357e9952e697',1,'pn532_config_t::transport'],['../structpn532__t.html#a77270c8e30444d2f9fd3f4df8feb5ee7',1,'pn532_t::transport']]]
+  ['s_5fapi_5fkey_0',['s_api_key',['../tron__api_8cpp.html#a981f7a370c91d7dacb957ae0ffe17e8c',1,'tron_api.cpp']]],
+  ['s_5fapi_5fsecret_1',['s_api_secret',['../eth__rpc_8cpp.html#a230d620c0f594c10f5744a7f9df83b35',1,'eth_rpc.cpp']]],
+  ['s_5fbase_5furl_2',['s_base_url',['../tron__api_8cpp.html#ae1e66c6bd0a4d731a332d48f3aac0c6a',1,'tron_api.cpp']]],
+  ['s_5fcrypto_3',['s_crypto',['../test__cw__secure__channel_8cpp.html#a82132a3777f4efff1f860a867f67c8af',1,'test_cw_secure_channel.cpp']]],
+  ['s_5ffrom_5faddr_4',['s_from_addr',['../eth__rpc_8cpp.html#a240d51d467ff67657712dfa898e32181',1,'eth_rpc.cpp']]],
+  ['s_5flogger_5',['s_logger',['../test__cw__secure__channel_8cpp.html#af8e54cf004e7b4f9c01266ea64558ff1',1,'test_cw_secure_channel.cpp']]],
+  ['s_5fplatform_6',['s_platform',['../test__cw__secure__channel_8cpp.html#afa31438f58ba81b57b6cc5ebb2452ea7',1,'test_cw_secure_channel.cpp']]],
+  ['s_5fproject_5fid_7',['s_project_id',['../eth__rpc_8cpp.html#a6e07c2c2b99eb897fda8a9409185aa6f',1,'eth_rpc.cpp']]],
+  ['s_5fprovider_8',['s_provider',['../test__esp32__crypto__provider_8cpp.html#adcfb965f7ab7f77c640ba54645d3e748',1,'test_esp32_crypto_provider.cpp']]],
+  ['s_5freflectivetransport_9',['s_reflectiveTransport',['../test__cw__secure__channel_8cpp.html#a43ac337b56f174c6f69fcf2ca33b24ca',1,'test_cw_secure_channel.cpp']]],
+  ['s_5fretry_5fnum_10',['s_retry_num',['../BasicUsage_2main_2main_8cpp.html#ae4da33fdcdaa6688ed25dab508ed5592',1,'s_retry_num:&#160;main.cpp'],['../Connect_2main_2main_8cpp.html#ae4da33fdcdaa6688ed25dab508ed5592',1,'s_retry_num:&#160;main.cpp'],['../Sign_2main_2main_8cpp.html#ae4da33fdcdaa6688ed25dab508ed5592',1,'s_retry_num:&#160;main.cpp'],['../tron__api_8cpp.html#ae4da33fdcdaa6688ed25dab508ed5592',1,'s_retry_num:&#160;tron_api.cpp'],['../eth__rpc_8cpp.html#ae4da33fdcdaa6688ed25dab508ed5592',1,'s_retry_num:&#160;eth_rpc.cpp'],['../VerifyPin_2main_2main_8cpp.html#ae4da33fdcdaa6688ed25dab508ed5592',1,'s_retry_num:&#160;main.cpp']]],
+  ['s_5frpc_5furl_11',['s_rpc_url',['../eth__rpc_8cpp.html#a5d75174757ec540057663c024a4011bd',1,'eth_rpc.cpp']]],
+  ['s_5fscriptedtransport_12',['s_scriptedTransport',['../test__cw__secure__channel_8cpp.html#a95f0da8827235325fd4e6c2dbcd0efc9',1,'test_cw_secure_channel.cpp']]],
+  ['s_5fsecp256k1_13',['s_secp256k1',['../uECC__esp32_8cpp.html#afb6ce31a6df68ceed9a88ef557f675d2',1,'uECC_esp32.cpp']]],
+  ['s_5fsecp256r1_14',['s_secp256r1',['../uECC__esp32_8cpp.html#afb2903a4b8b6849432df9e06b0d1b235',1,'uECC_esp32.cpp']]],
+  ['s_5fwifi_5fevent_5fgroup_15',['s_wifi_event_group',['../BasicUsage_2main_2main_8cpp.html#a6aaca350cca4b3d105d88a6f399cb381',1,'s_wifi_event_group:&#160;main.cpp'],['../Connect_2main_2main_8cpp.html#a6aaca350cca4b3d105d88a6f399cb381',1,'s_wifi_event_group:&#160;main.cpp'],['../Sign_2main_2main_8cpp.html#a6aaca350cca4b3d105d88a6f399cb381',1,'s_wifi_event_group:&#160;main.cpp'],['../tron__api_8cpp.html#a6aaca350cca4b3d105d88a6f399cb381',1,'s_wifi_event_group:&#160;tron_api.cpp'],['../eth__rpc_8cpp.html#a6aaca350cca4b3d105d88a6f399cb381',1,'s_wifi_event_group:&#160;eth_rpc.cpp'],['../VerifyPin_2main_2main_8cpp.html#a6aaca350cca4b3d105d88a6f399cb381',1,'s_wifi_event_group:&#160;main.cpp']]],
+  ['scriptcount_16',['scriptCount',['../classScriptedMockNfcTransport.html#ad5291515ac7becdb806d5871a8eedb6c',1,'ScriptedMockNfcTransport']]],
+  ['scripts_17',['scripts',['../classScriptedMockNfcTransport.html#a403ec99c0e3f81169f5eb9703aeb9f63',1,'ScriptedMockNfcTransport']]],
+  ['session_18',['session',['../classReflectiveMockNfcTransport.html#a91a1b058d030c08a6dafc2f6d2100861',1,'ReflectiveMockNfcTransport']]],
+  ['skip_5fbus_5finit_19',['skip_bus_init',['../structpn532__config__t.html#adc58d2d83648e65a11f1e98d981b78ee',1,'pn532_config_t']]],
+  ['spi_20',['spi',['../structpn532__t.html#a3921d7271fb072d4532da5b0dbba5fe8',1,'pn532_t']]],
+  ['spi_5fhost_21',['spi_host',['../structpn532__config__t.html#a5bba748f452a5b23a887d7991ff7d2b1',1,'pn532_config_t']]],
+  ['succeed_22',['succeed',['../structMockScriptEntry.html#a67ece115cbb36d080914c651282132f5',1,'MockScriptEntry']]]
 ];

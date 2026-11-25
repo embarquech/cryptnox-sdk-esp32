@@ -1,17 +1,17 @@
 <map id="components/pn532_nfc_transport/include/Pn532NfcTransport.h" name="components/pn532_nfc_transport/include/Pn532NfcTransport.h">
-<area shape="rect" id="Node000001" title="CW_NfcTransport adapter wrapping the ESP&#45;IDF PN532 NFC driver." alt="" coords="126,5,331,60"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,108,151,133"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="184,62,112,103,109,99,181,58"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="175,108,282,133"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="231,60,231,94,226,94,226,60"/>
-<area shape="rect" id="Node000004" href="$pn532_8h.html" title="Low&#45;level PN532 NFC controller driver for ESP&#45;IDF (SPI and I²C)." alt="" coords="306,108,381,133"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="265,58,318,97,315,102,262,62"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="137,181,208,207"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="317,136,214,178,212,174,315,131"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="233,181,315,207"/>
-<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="334,136,297,173,293,170,330,132"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="339,181,486,207"/>
-<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="357,132,394,170,390,173,353,136"/>
-<area shape="rect" id="Node000008" title=" " alt="" coords="510,181,657,207"/>
-<area shape="poly" id="edge7_Node000004_Node000008" title=" " alt="" coords="382,130,532,175,531,180,380,136"/>
+<area shape="rect" id="Node000001" title="CW_NfcTransport adapter wrapping the ESP&#45;IDF PN532 NFC driver." alt="" coords="125,5,329,67"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,115,150,143"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="175,69,114,109,111,104,179,66"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="174,115,280,143"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="228,65,229,100,224,98,225,70"/>
+<area shape="rect" id="Node000004" href="$pn532_8h.html" title="Low&#45;level PN532 NFC controller driver for ESP&#45;IDF (SPI and I²C)." alt="" coords="304,115,377,143"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="265,65,315,105,309,105,264,70"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="136,191,206,218"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="313,143,216,187,214,182,307,144"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="230,191,312,218"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="330,142,295,181,292,177,325,144"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="335,191,481,218"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="353,141,388,180,383,179,351,146"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="506,191,652,218"/>
+<area shape="poly" id="edge7_Node000004_Node000008" title=" " alt="" coords="378,139,524,185,519,186,377,144"/>
 </map>

@@ -5,7 +5,7 @@ var searchData=
   ['sendapdularge_2',['sendAPDULarge',['../classPN532Adapter.html#aee6d8a358ec3cd8aa5939f6912f3c719',1,'PN532Adapter::sendAPDULarge()'],['../classPn532NfcTransport.html#a875e990dadfed0d4832d8837251fd42f',1,'Pn532NfcTransport::sendAPDULarge()']]],
   ['sha256_3',['sha256',['../classESP32CryptoProvider.html#aead546a65bd342b46950c75cc535dd93',1,'ESP32CryptoProvider']]],
   ['sha512_4',['sha512',['../classESP32CryptoProvider.html#acb92227bc122e4951ce792490f8cd3b1',1,'ESP32CryptoProvider']]],
-  ['signing_5floop_5',['signing_loop',['../UsdcSigning_2main_2main_8cpp.html#a26cad48a64eeacd2e75da51d53dd3aea',1,'main.cpp']]],
+  ['signing_5floop_5',['signing_loop',['../TronSigning_2main_2main_8cpp.html#aae870805980d10617a2ff6d32116a781',1,'signing_loop(CryptnoxWallet &amp;wallet, CW_CryptoProvider &amp;crypto, const uint8_t *owner21, const uint8_t *to21):&#160;main.cpp'],['../UsdcSigning_2main_2main_8cpp.html#a26cad48a64eeacd2e75da51d53dd3aea',1,'signing_loop(CryptnoxWallet &amp;wallet):&#160;main.cpp']]],
   ['sleep_5fms_6',['sleep_ms',['../classESP32Platform.html#aa4b732b3e96a92a7ec346ff2701eb563',1,'ESP32Platform::sleep_ms()'],['../classMockPlatform.html#a662cb1b60501f56bf594bab19e43e420',1,'MockPlatform::sleep_ms()']]],
   ['spi_5fread_5fbyte_7',['spi_read_byte',['../pn532_8c.html#a1c7aa33693375b2ac0aa52c24bb1a2e7',1,'pn532.c']]],
   ['spi_5fwrite_5fbyte_8',['spi_write_byte',['../pn532_8c.html#a456b2f6dda3d4b255323a71d49c62a92',1,'pn532.c']]]

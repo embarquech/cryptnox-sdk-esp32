@@ -108,15 +108,35 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a0b293d7e81f46fbf64e782854f9d4be3" id="r_a0b293d7e81f46fbf64e782854f9d4be3"><td class="memItemLeft" align="right" valign="top">i2c_master_dev_handle_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0b293d7e81f46fbf64e782854f9d4be3">i2c_dev</a></td></tr>
 <tr class="memitem:a0ba51203354b3169cbcf3833a971cb91" id="r_a0ba51203354b3169cbcf3833a971cb91"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0ba51203354b3169cbcf3833a971cb91">pin_irq</a></td></tr>
 <tr class="memitem:ad6345a13c97f1d76bd235746d4b69d2b" id="r_ad6345a13c97f1d76bd235746d4b69d2b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad6345a13c97f1d76bd235746d4b69d2b">pin_rst</a></td></tr>
+<tr class="memitem:a38e18ad8a25a9bd462967ed577f73813" id="r_a38e18ad8a25a9bd462967ed577f73813"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a38e18ad8a25a9bd462967ed577f73813">fail_count</a></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Opaque-like runtime state for a single PN532 instance. </p>
 <p>Populated by <a class="el" href="group__pn532__driver.html#ga21f52f38564e794861cf365433702df5">pn532_init</a>; must remain valid for the lifetime of all subsequent driver calls. Do not read or write fields directly — treat this as an opaque handle. </p>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="BasicUsage_2main_2main_8cpp-example.html#_a16">BasicUsage/main/main.cpp</a>, <a class="el" href="Connect_2main_2main_8cpp-example.html#_a19">Connect/main/main.cpp</a>, <a class="el" href="Sign_2main_2main_8cpp-example.html#_a19">Sign/main/main.cpp</a>, <a class="el" href="UsdcSigning_2main_2main_8cpp-example.html#_a32">UsdcSigning/main/main.cpp</a>, and <a class="el" href="VerifyPin_2main_2main_8cpp-example.html#_a19">VerifyPin/main/main.cpp</a>.</dd>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="BasicUsage_2main_2main_8cpp-example.html#_a16">BasicUsage/main/main.cpp</a>, <a class="el" href="Connect_2main_2main_8cpp-example.html#_a19">Connect/main/main.cpp</a>, <a class="el" href="Sign_2main_2main_8cpp-example.html#_a19">Sign/main/main.cpp</a>, <a class="el" href="TronSigning_2main_2main_8cpp-example.html#_a19">TronSigning/main/main.cpp</a>, <a class="el" href="UsdcSigning_2main_2main_8cpp-example.html#_a32">UsdcSigning/main/main.cpp</a>, and <a class="el" href="VerifyPin_2main_2main_8cpp-example.html#_a19">VerifyPin/main/main.cpp</a>.</dd>
 </dl>
 
 <p class="definition">Definition at line <a class="el" href="pn532_8h_source.html#l00141">141</a> of file <a class="el" href="pn532_8h_source.html">pn532.h</a>.</p>
 </div><a name="doc-variable-members" id="doc-variable-members"></a><h2 id="header-doc-variable-members" class="groupheader">Member Data Documentation</h2>
+<a id="a38e18ad8a25a9bd462967ed577f73813" name="a38e18ad8a25a9bd462967ed577f73813"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a38e18ad8a25a9bd462967ed577f73813">&#9670;&#160;</a></span>fail_count</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t pn532_t::fail_count</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Consecutive commands without ACK/response; the card poll re-initialises the reader at 3. </p>
+
+<p class="definition">Definition at line <a class="el" href="pn532_8h_source.html#l00155">155</a> of file <a class="el" href="pn532_8h_source.html">pn532.h</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00921">pn532_read_passive_target_id()</a>, <a class="el" href="pn532_8c_source.html#l00779">pn532_recover()</a>, and <a class="el" href="pn532_8c_source.html#l00414">send_command_check_ack()</a>.</p>
+
+</div>
+</div>
 <a id="a1342293d447c20b46f171c07186e9ecf" name="a1342293d447c20b46f171c07186e9ecf"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1342293d447c20b46f171c07186e9ecf">&#9670;&#160;</a></span>i2c_bus</h2>
 
@@ -132,7 +152,7 @@ Public Attributes</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="pn532_8h_source.html#l00149">149</a> of file <a class="el" href="pn532_8h_source.html">pn532.h</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00579">pn532_init_i2c()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00634">pn532_init_i2c()</a>, and <a class="el" href="pn532_8c_source.html#l00779">pn532_recover()</a>.</p>
 
 </div>
 </div>
@@ -151,7 +171,7 @@ Public Attributes</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="pn532_8h_source.html#l00150">150</a> of file <a class="el" href="pn532_8h_source.html">pn532.h</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00238">i2c_read_ready()</a>, <a class="el" href="pn532_8c_source.html#l00579">pn532_init_i2c()</a>, <a class="el" href="pn532_8c_source.html#l00266">read_data()</a>, <a class="el" href="pn532_8c_source.html#l00428">read_data_apdu_frame()</a>, and <a class="el" href="pn532_8c_source.html#l00315">write_command()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00285">i2c_read_ready()</a>, <a class="el" href="pn532_8c_source.html#l00634">pn532_init_i2c()</a>, <a class="el" href="pn532_8c_source.html#l00779">pn532_recover()</a>, <a class="el" href="pn532_8c_source.html#l00313">read_data()</a>, <a class="el" href="pn532_8c_source.html#l00483">read_data_apdu_frame()</a>, and <a class="el" href="pn532_8c_source.html#l00362">write_command()</a>.</p>
 
 </div>
 </div>
@@ -170,7 +190,7 @@ Public Attributes</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="pn532_8h_source.html#l00146">146</a> of file <a class="el" href="pn532_8h_source.html">pn532.h</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00519">pn532_init_spi()</a>, <a class="el" href="pn532_8c_source.html#l00266">read_data()</a>, <a class="el" href="pn532_8c_source.html#l00428">read_data_apdu_frame()</a>, <a class="el" href="pn532_8c_source.html#l00249">read_ready()</a>, and <a class="el" href="pn532_8c_source.html#l00315">write_command()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00574">pn532_init_spi()</a>, <a class="el" href="pn532_8c_source.html#l00779">pn532_recover()</a>, <a class="el" href="pn532_8c_source.html#l00313">read_data()</a>, <a class="el" href="pn532_8c_source.html#l00483">read_data_apdu_frame()</a>, <a class="el" href="pn532_8c_source.html#l00296">read_ready()</a>, and <a class="el" href="pn532_8c_source.html#l00362">write_command()</a>.</p>
 
 </div>
 </div>
@@ -189,7 +209,7 @@ Public Attributes</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="pn532_8h_source.html#l00151">151</a> of file <a class="el" href="pn532_8h_source.html">pn532.h</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00579">pn532_init_i2c()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00634">pn532_init_i2c()</a>.</p>
 
 </div>
 </div>
@@ -208,7 +228,7 @@ Public Attributes</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="pn532_8h_source.html#l00152">152</a> of file <a class="el" href="pn532_8h_source.html">pn532.h</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00579">pn532_init_i2c()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00634">pn532_init_i2c()</a>.</p>
 
 </div>
 </div>
@@ -227,7 +247,7 @@ Public Attributes</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="pn532_8h_source.html#l00145">145</a> of file <a class="el" href="pn532_8h_source.html">pn532.h</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00519">pn532_init_spi()</a>, <a class="el" href="pn532_8c_source.html#l00220">spi_read_byte()</a>, and <a class="el" href="pn532_8c_source.html#l00211">spi_write_byte()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00574">pn532_init_spi()</a>, <a class="el" href="pn532_8c_source.html#l00267">spi_read_byte()</a>, and <a class="el" href="pn532_8c_source.html#l00258">spi_write_byte()</a>.</p>
 
 </div>
 </div>
@@ -246,7 +266,7 @@ Public Attributes</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="pn532_8h_source.html#l00142">142</a> of file <a class="el" href="pn532_8h_source.html">pn532.h</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00657">pn532_init()</a>, <a class="el" href="pn532_8c_source.html#l00266">read_data()</a>, <a class="el" href="pn532_8c_source.html#l00428">read_data_apdu_frame()</a>, <a class="el" href="pn532_8c_source.html#l00249">read_ready()</a>, and <a class="el" href="pn532_8c_source.html#l00315">write_command()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="pn532_8c_source.html#l00809">pn532_init()</a>, <a class="el" href="pn532_8c_source.html#l00779">pn532_recover()</a>, <a class="el" href="pn532_8c_source.html#l00714">pn532_wakeup()</a>, <a class="el" href="pn532_8c_source.html#l00313">read_data()</a>, <a class="el" href="pn532_8c_source.html#l00483">read_data_apdu_frame()</a>, <a class="el" href="pn532_8c_source.html#l00296">read_ready()</a>, and <a class="el" href="pn532_8c_source.html#l00362">write_command()</a>.</p>
 
 </div>
 </div>

@@ -1,0 +1,7 @@
+<map id="examples/TronSigning/main/tron_api.h" name="examples/TronSigning/main/tron_api.h">
+<area shape="rect" id="Node000001" title="Minimal TRON full&#45;node HTTP client (Wi&#45;Fi + /wallet endpoints)." alt="" coords="99,5,263,50"/>
+<area shape="rect" id="Node000002" href="$TronSigning_2main_2main_8cpp.html" title=" " alt="" coords="5,98,170,143"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="150,60,111,100,108,96,146,62"/>
+<area shape="rect" id="Node000003" href="$tron__api_8cpp.html" title="Implementation of the minimal TRON full&#45;node HTTP client." alt="" coords="193,98,358,143"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="215,58,256,98,251,98,213,63"/>
+</map>

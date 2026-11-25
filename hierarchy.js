@@ -19,6 +19,8 @@ var hierarchy =
     ] ],
     [ "eth_tx_t", "structeth__tx__t.html", null ],
     [ "MockScriptEntry", "structMockScriptEntry.html", null ],
+    [ "pb_field_t", "structpb__field__t.html", null ],
+    [ "pb_reader_t", "structpb__reader__t.html", null ],
     [ "pn532_config_t", "structpn532__config__t.html", null ],
     [ "pn532_t", "structpn532__t.html", null ],
     [ "uECC_Curve_t", "structuECC__Curve__t.html", null ]
