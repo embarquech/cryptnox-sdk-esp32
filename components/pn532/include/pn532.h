@@ -242,11 +242,10 @@ uint32_t pn532_read_passive_target_id(pn532_t *dev, uint8_t cardbaudrate);
  * @param[in,out] response_len In: capacity of @p response in bytes.
  *                             Out: number of DataOut bytes actually written.
  * @return @c true on success (PN532 error byte = 0x00), @c false on a PN532
- *         transport error, a card-level error, or if @p apdu_len exceeds
- *         @ref PN532_MAX_APDU_LEN.
- *
- * @warning @p response must be large enough to hold the full DataOut; if
- *          capacity is exceeded the copy is silently truncated to @p *response_len.
+ *         transport error, a card-level error, if @p apdu_len exceeds
+ *         @ref PN532_MAX_APDU_LEN, or if the DataOut does not fit the
+ *         capacity (nothing is copied and @p *response_len is set to 0;
+ *         a response is never truncated and reported as complete).
  *
  * @see pn532_release_target
  */
