@@ -92,9 +92,9 @@ public:
      * @param[in]     apduLen     Length of @p apdu (≤ @ref PN532_MAX_APDU_LEN).
      * @param[out]    response    Caller-allocated buffer for the DataOut bytes.
      * @param[in,out] responseLen In: capacity of @p response.
-     *                            Out: number of DataOut bytes written, capped
-     *                            at @c UINT8_MAX on overflow.
-     * @return @c true on success, @c false on transport or card error.
+     *                            Out: number of DataOut bytes written; 0 on failure.
+     * @return @c true on success, @c false on transport or card error, or a
+     *         response larger than the capacity.
      *
      * @see sendAPDULarge
      */

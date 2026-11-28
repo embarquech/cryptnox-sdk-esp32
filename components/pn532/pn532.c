@@ -1097,13 +1097,17 @@ bool pn532_send_apdu(pn532_t *dev, const uint8_t *apdu, uint8_t apdu_len,
                          (unsigned)((uint32_t)data_offset + (uint32_t)data_len
                                     + (uint32_t)PN532_FRAME_TAIL_LEN));
             } else if (err_byte == PN532_EXCHANGE_STATUS_OK) {
-                uint16_t buf_cap = *response_len;
-                uint16_t copy_len = (data_len <= buf_cap) ? data_len : buf_cap;
-
-                (void)pn532_safe_memcpy(response, (size_t)buf_cap, &frame[data_offset],
-                                        (size_t)copy_len);
-                *response_len = copy_len;
-                result = true;
+                /* CW_NfcTransport contract: a response that does not fit fails,
+                 * it is never truncated and reported as complete. */
+                if (pn532_safe_memcpy(response, (size_t)*response_len, &frame[data_offset],
+                                      (size_t)data_len) || (data_len == 0U)) {
+                    *response_len = data_len;
+                    result = true;
+                } else {
+                    ESP_LOGE(PN532_LOG_TAG, "APDU INS=0x%02X: response %u B exceeds capacity %u B",
+                             (unsigned)apdu[1], (unsigned)data_len, (unsigned)*response_len);
+                    *response_len = 0U;
+                }
             } else {
                 ESP_LOGE(PN532_LOG_TAG, "APDU INS=0x%02X: ERR=0x%02X",
                          (unsigned)apdu[1], (unsigned)err_byte);

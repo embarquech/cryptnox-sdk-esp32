@@ -65,9 +65,9 @@ bool PN532Adapter::sendAPDU(const uint8_t *apdu, uint8_t apduLen,
 
     if (_initialized) {
         uint16_t len = static_cast<uint16_t>(responseLen);
+        /* The driver refuses anything over the capacity (<= 255), so len fits. */
         result = pn532_send_apdu(&_dev, apdu, apduLen, response, &len);
-        responseLen = static_cast<uint8_t>((len > static_cast<uint16_t>(UINT8_MAX))
-                                           ? static_cast<uint16_t>(UINT8_MAX) : len);
+        responseLen = result ? static_cast<uint8_t>(len) : 0U;
     }
 
     return result;
